@@ -1,0 +1,198 @@
+{
+  "version": 1,
+  "methods": [
+    {
+      "id": "simple-random",
+      "conceptId": "simple-random-sampling",
+      "family": "random",
+      "definitionFocus": "Each possible sample of size n has the same chance of selection.",
+      "procedure": [
+        {
+          "id": "frame",
+          "text": "Create a complete sampling frame of all eligible units."
+        },
+        {
+          "id": "number",
+          "text": "Assign each unit a different number from 1 to N."
+        },
+        {
+          "id": "generate",
+          "text": "Generate random integers from 1 to N using a suitable generator."
+        },
+        {
+          "id": "repeats",
+          "text": "Ignore repeated numbers and continue until n different numbers have been obtained."
+        },
+        {
+          "id": "select",
+          "text": "Select the units corresponding to those n numbers."
+        }
+      ],
+      "conditionalProcedure": [
+        {
+          "condition": "If using random digit tables or a source that can yield numbers outside 1 to N",
+          "text": "Ignore numbers outside the valid range as well as repeats."
+        }
+      ],
+      "workedExample": "For 15 out of 120 pupils, number pupils 1-120 and generate random integers from 1-120, ignoring repeats until 15 distinct numbers are obtained.",
+      "examKeywords": [
+        "complete sampling frame",
+        "unique numbers 1 to N",
+        "random integers",
+        "ignore repeats",
+        "n distinct selections"
+      ],
+      "warning": "Do not automatically add 'ignore out-of-range numbers' when the generator is constrained to 1,...,N; that detail applies to digit tables or an unconstrained source.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "systematic",
+      "conceptId": "systematic-sampling",
+      "family": "random",
+      "definitionFocus": "Regular intervals from an ordered list with a random start.",
+      "procedure": [
+        {
+          "id": "frame",
+          "text": "List or number all N eligible units in a sampling frame."
+        },
+        {
+          "id": "interval",
+          "text": "For an exact integer ratio, calculate the interval k = N/n."
+        },
+        {
+          "id": "start",
+          "text": "Select a random starting position from 1 to k."
+        },
+        {
+          "id": "select",
+          "text": "Select that position and then every kth unit until n units have been chosen."
+        }
+      ],
+      "conditionalProcedure": [
+        {
+          "condition": "When N/n is not an integer",
+          "text": "Use a random starting point followed by a suitable systematic pattern that gives the requested number; there is no single universal 'round N/n' rule."
+        }
+      ],
+      "workedExample": "For 20 from 100, k = 5. A random start of 2 yields 2, 7, 12, ..., 97.",
+      "examKeywords": [
+        "sampling interval",
+        "random start",
+        "regular intervals",
+        "ordered sampling frame"
+      ],
+      "warning": "An ordering with a periodic pattern can distort a systematic sample. A random start does not remove every ordering problem.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "stratified",
+      "conceptId": "stratified-sampling",
+      "family": "random",
+      "definitionFocus": "Create mutually exclusive strata, then select randomly within each.",
+      "procedure": [
+        {
+          "id": "strata",
+          "text": "Divide the population into mutually exclusive strata using a relevant characteristic."
+        },
+        {
+          "id": "allocate",
+          "text": "For proportional allocation, calculate each share as (size of stratum / population size) × total sample size; ensure the final whole-number allocations sum to n."
+        },
+        {
+          "id": "random",
+          "text": "Use a sampling frame to randomly select the required number of different units from each stratum; ignore repeats within a stratum."
+        },
+        {
+          "id": "combine",
+          "text": "Combine the selected units from all strata into one sample."
+        }
+      ],
+      "workedExample": "A school has 300 Year 12 and 200 Year 13 pupils. For a proportional sample of 50, randomly select 30 from Year 12 and 20 from Year 13.",
+      "examKeywords": [
+        "mutually exclusive strata",
+        "proportional numbers",
+        "randomly select within each stratum",
+        "ignore repeats"
+      ],
+      "warning": "Stratified sampling is not the same as quota sampling: selection within each stratum must be random.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "quota",
+      "conceptId": "quota-sampling",
+      "family": "non-random",
+      "definitionFocus": "Fill predefined group quotas without random selection of individuals.",
+      "procedure": [
+        {
+          "id": "groups",
+          "text": "Choose relevant population characteristics and divide the population into suitable groups."
+        },
+        {
+          "id": "targets",
+          "text": "Set the target number to recruit from each group, often reflecting population proportions."
+        },
+        {
+          "id": "recruit",
+          "text": "Approach available eligible people without a random selection procedure, adding them to their appropriate group."
+        },
+        {
+          "id": "stop",
+          "text": "Stop recruiting for a group when its quota is full; continue until all group targets have been filled."
+        }
+      ],
+      "workedExample": "To survey 50 shoppers with a 60:40 split, interview eligible available shoppers until 30 from one group and 20 from the other have responded.",
+      "examKeywords": [
+        "group characteristics",
+        "set quotas",
+        "non-random selection",
+        "fill each quota"
+      ],
+      "warning": "A proportional quota does not guarantee the full sample is representative, because selection within groups is non-random.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "opportunity",
+      "conceptId": "opportunity-sampling",
+      "family": "non-random",
+      "definitionFocus": "Recruit available eligible people at the time and place of investigation.",
+      "procedure": [
+        {
+          "id": "criteria",
+          "text": "Identify the eligible population or required criteria."
+        },
+        {
+          "id": "available",
+          "text": "Approach people who are readily available at the chosen place and time."
+        },
+        {
+          "id": "recruit",
+          "text": "Collect responses from available, eligible volunteers until the required sample size is reached."
+        }
+      ],
+      "workedExample": "Ask the first 20 eligible shoppers willing to respond at one supermarket entrance on Monday morning.",
+      "examKeywords": [
+        "available at the time",
+        "fit the criteria",
+        "non-random"
+      ],
+      "warning": "The time and location may systematically exclude relevant members of the population.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    }
+  ]
+}

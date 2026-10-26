@@ -1,0 +1,430 @@
+{
+  "version": 1,
+  "cloze": [
+    {
+      "id": "cz-pop",
+      "conceptId": "population",
+      "prompt": "The {{blank}} is the whole set of people or items being investigated.",
+      "answer": "population",
+      "choices": [
+        "population",
+        "sample",
+        "sampling frame",
+        "stratum"
+      ],
+      "explanation": "A population is the full group of interest.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-census",
+      "conceptId": "census",
+      "prompt": "A census observes or measures {{blank}} member of the defined population.",
+      "answer": "every",
+      "choices": [
+        "every",
+        "some",
+        "random",
+        "available"
+      ],
+      "explanation": "A census includes every member.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-sample",
+      "conceptId": "sample",
+      "prompt": "A {{blank}} is used to draw conclusions about a wider population.",
+      "answer": "sample",
+      "choices": [
+        "sample",
+        "census",
+        "boundary",
+        "quota"
+      ],
+      "explanation": "A sample uses only part of the population.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-raw",
+      "conceptId": "raw-data",
+      "prompt": "Data that have not yet been processed or summarised are called {{blank}} data.",
+      "answer": "raw",
+      "choices": [
+        "raw",
+        "grouped",
+        "continuous",
+        "stratified"
+      ],
+      "explanation": "Raw data are the original observations.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-unit",
+      "conceptId": "sampling-unit",
+      "prompt": "An individual item that could be selected is a sampling {{blank}}.",
+      "answer": "unit",
+      "choices": [
+        "unit",
+        "frame",
+        "interval",
+        "quota"
+      ],
+      "explanation": "Sampling unit refers to a person or item.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-frame",
+      "conceptId": "sampling-frame",
+      "prompt": "A numbered list of eligible sampling units can form a sampling {{blank}}.",
+      "answer": "frame",
+      "choices": [
+        "frame",
+        "unit",
+        "sample",
+        "boundary"
+      ],
+      "explanation": "A sampling frame identifies the units from which selection occurs.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-srs-all",
+      "conceptId": "simple-random-sampling",
+      "prompt": "In a simple random sample of size n, every possible {{blank}} of size n is equally likely.",
+      "answer": "sample",
+      "choices": [
+        "sample",
+        "individual",
+        "stratum",
+        "interval"
+      ],
+      "explanation": "The definition concerns possible groups of n, not only individual chances.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-srs-repeats",
+      "conceptId": "simple-random-sampling",
+      "prompt": "When generating random numbers without replacement, {{blank}} repeated numbers.",
+      "answer": "ignore",
+      "choices": [
+        "ignore",
+        "keep",
+        "double",
+        "average"
+      ],
+      "explanation": "Each selected unit must appear only once.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-srs-range",
+      "conceptId": "simple-random-sampling",
+      "prompt": "When reading an unrestricted random-digit source, {{blank}} numbers outside the numbered frame.",
+      "answer": "ignore",
+      "choices": [
+        "ignore",
+        "keep",
+        "add",
+        "halve"
+      ],
+      "explanation": "Out-of-range rejection matters for unrestricted sources, not generators constrained to 1 to N.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-sys-int",
+      "conceptId": "systematic-sampling",
+      "prompt": "Systematic sampling takes units at {{blank}} intervals from an ordered list.",
+      "answer": "regular",
+      "choices": [
+        "regular",
+        "irregular",
+        "randomly varying",
+        "unequal"
+      ],
+      "explanation": "An ordered list and regular interval are essential.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-sys-start",
+      "conceptId": "systematic-sampling",
+      "prompt": "For systematic sampling, the first position is selected at {{blank}}.",
+      "answer": "random",
+      "choices": [
+        "random",
+        "the end",
+        "the midpoint",
+        "convenience"
+      ],
+      "explanation": "A random start is required.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-strata",
+      "conceptId": "stratified-sampling",
+      "prompt": "In stratified sampling, the population is separated into mutually exclusive {{blank}}.",
+      "answer": "strata",
+      "choices": [
+        "strata",
+        "quotas",
+        "samples",
+        "intervals"
+      ],
+      "explanation": "Strata are distinct population groups.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-strata-select",
+      "conceptId": "stratified-sampling",
+      "prompt": "Within each stratum, the members are selected {{blank}}.",
+      "answer": "randomly",
+      "choices": [
+        "randomly",
+        "conveniently",
+        "in order of arrival",
+        "by interviewer preference"
+      ],
+      "explanation": "Random selection within groups distinguishes stratified from quota sampling.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-prop",
+      "conceptId": "proportional-allocation",
+      "prompt": "The number selected from each stratum is proportional to the {{blank}} of that stratum in the population.",
+      "answer": "size",
+      "choices": [
+        "size",
+        "name",
+        "midpoint",
+        "sampling interval"
+      ],
+      "explanation": "Proportional allocation reflects each group's relative size.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-quota",
+      "conceptId": "quota-sampling",
+      "prompt": "In quota sampling, interviewers recruit until each group {{blank}} is filled.",
+      "answer": "quota",
+      "choices": [
+        "quota",
+        "interval",
+        "frame",
+        "random draw"
+      ],
+      "explanation": "Targets are filled without random selection within groups.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-op",
+      "conceptId": "opportunity-sampling",
+      "prompt": "Opportunity sampling selects eligible people who are readily {{blank}}.",
+      "answer": "available",
+      "choices": [
+        "available",
+        "randomly numbered",
+        "stratified",
+        "uniform"
+      ],
+      "explanation": "Selection is by availability at the time of the study.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-variation",
+      "conceptId": "sampling-variation",
+      "prompt": "Different random samples can give different conclusions because of sampling {{blank}}.",
+      "answer": "variation",
+      "choices": [
+        "variation",
+        "certainty",
+        "identity",
+        "census"
+      ],
+      "explanation": "Different subsets contain different observations.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-qual",
+      "conceptId": "qualitative-data",
+      "prompt": "Data recording categories rather than measured numerical amounts are {{blank}}.",
+      "answer": "qualitative",
+      "choices": [
+        "qualitative",
+        "quantitative",
+        "continuous",
+        "systematic"
+      ],
+      "explanation": "Qualitative values describe categories.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-quant",
+      "conceptId": "quantitative-data",
+      "prompt": "Numerical amounts from counts or measurements are {{blank}} data.",
+      "answer": "quantitative",
+      "choices": [
+        "quantitative",
+        "qualitative",
+        "convenience",
+        "quota"
+      ],
+      "explanation": "Quantitative data measure or count amounts.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-disc",
+      "conceptId": "discrete-variable",
+      "prompt": "The number of pupils in a class is a {{blank}} variable.",
+      "answer": "discrete",
+      "choices": [
+        "discrete",
+        "continuous",
+        "qualitative",
+        "systematic"
+      ],
+      "explanation": "Counts take separate possible values.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-cont",
+      "conceptId": "continuous-variable",
+      "prompt": "Time taken to complete a race is modelled as a {{blank}} variable.",
+      "answer": "continuous",
+      "choices": [
+        "continuous",
+        "discrete",
+        "qualitative",
+        "quota"
+      ],
+      "explanation": "Time can take any value in an interval, regardless of recorded rounding.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-group",
+      "conceptId": "grouped-frequency-table",
+      "prompt": "A frequency table collecting observations into class {{blank}} is grouped.",
+      "answer": "intervals",
+      "choices": [
+        "intervals",
+        "quotas",
+        "samples",
+        "frames"
+      ],
+      "explanation": "Grouped data use intervals.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-bound",
+      "conceptId": "class-boundaries",
+      "prompt": "The upper and lower values defining a class are its class {{blank}}.",
+      "answer": "boundaries",
+      "choices": [
+        "boundaries",
+        "midpoints",
+        "sample sizes",
+        "frequencies"
+      ],
+      "explanation": "Class boundaries define interval ends.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-width",
+      "conceptId": "class-width",
+      "prompt": "Class width is upper boundary {{blank}} lower boundary.",
+      "answer": "minus",
+      "choices": [
+        "minus",
+        "plus",
+        "times",
+        "divided by"
+      ],
+      "explanation": "Subtract the class boundaries.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-mid",
+      "conceptId": "class-midpoint",
+      "prompt": "Class midpoint is the {{blank}} of the two class boundaries.",
+      "answer": "mean",
+      "choices": [
+        "mean",
+        "mode",
+        "range",
+        "frequency"
+      ],
+      "explanation": "Midpoint = (lower + upper)/2.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    }
+  ]
+}

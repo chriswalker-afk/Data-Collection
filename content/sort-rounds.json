@@ -1,0 +1,178 @@
+{
+  "version": 1,
+  "rounds": [
+    {
+      "id": "sort-census",
+      "type": "polarity",
+      "subject": "census",
+      "categories": [
+        "advantage",
+        "disadvantage"
+      ],
+      "evaluationIds": [
+        "census-full",
+        "census-subgroup",
+        "census-cost",
+        "census-destructive",
+        "census-process"
+      ]
+    },
+    {
+      "id": "sort-sample",
+      "type": "polarity",
+      "subject": "sample",
+      "categories": [
+        "advantage",
+        "disadvantage"
+      ],
+      "evaluationIds": [
+        "sample-speed",
+        "sample-burden",
+        "sample-process",
+        "sample-variation",
+        "sample-small-group",
+        "sample-bias"
+      ]
+    },
+    {
+      "id": "sort-srs",
+      "type": "polarity",
+      "subject": "simple-random",
+      "categories": [
+        "advantage",
+        "disadvantage"
+      ],
+      "evaluationIds": [
+        "srs-objective",
+        "srs-equal",
+        "srs-small",
+        "srs-frame",
+        "srs-large",
+        "srs-subgroups"
+      ]
+    },
+    {
+      "id": "sort-systematic",
+      "type": "polarity",
+      "subject": "systematic",
+      "categories": [
+        "advantage",
+        "disadvantage"
+      ],
+      "evaluationIds": [
+        "sys-speed",
+        "sys-scale",
+        "sys-frame",
+        "sys-periodic"
+      ]
+    },
+    {
+      "id": "sort-stratified",
+      "type": "polarity",
+      "subject": "stratified",
+      "categories": [
+        "advantage",
+        "disadvantage"
+      ],
+      "evaluationIds": [
+        "strata-proportions",
+        "strata-comparison",
+        "strata-classify",
+        "strata-random"
+      ]
+    },
+    {
+      "id": "sort-quota",
+      "type": "polarity",
+      "subject": "quota",
+      "categories": [
+        "advantage",
+        "disadvantage"
+      ],
+      "evaluationIds": [
+        "quota-proportions",
+        "quota-no-frame",
+        "quota-fast",
+        "quota-comparison",
+        "quota-selection",
+        "quota-classify",
+        "quota-nonresponse"
+      ]
+    },
+    {
+      "id": "sort-opportunity",
+      "type": "polarity",
+      "subject": "opportunity",
+      "categories": [
+        "advantage",
+        "disadvantage"
+      ],
+      "evaluationIds": [
+        "opp-easy",
+        "opp-cost",
+        "opp-unrepresentative",
+        "opp-researcher"
+      ]
+    },
+    {
+      "id": "compare-quota-stratified",
+      "type": "comparison",
+      "categories": [
+        "stratified",
+        "quota"
+      ],
+      "cards": [
+        {
+          "prompt": "Select a random sample from a separate register within every population group.",
+          "answer": "stratified",
+          "why": "Selection within each stratum is random."
+        },
+        {
+          "prompt": "Stop recruiting available people in a category once its target number is reached.",
+          "answer": "quota",
+          "why": "Non-random recruitment continues until each quota is filled."
+        },
+        {
+          "prompt": "Requires randomly selecting actual individuals after deciding the size of each stratum.",
+          "answer": "stratified",
+          "why": "Group allocation alone is not enough: within-group selection must be random."
+        },
+        {
+          "prompt": "Can recruit respondents directly without a complete population-wide sampling frame.",
+          "answer": "quota",
+          "why": "Quota sampling is not based on drawing names from a frame."
+        }
+      ]
+    },
+    {
+      "id": "compare-simple-systematic",
+      "type": "comparison",
+      "categories": [
+        "simple-random",
+        "systematic"
+      ],
+      "cards": [
+        {
+          "prompt": "Each possible group of the required sample size has the same chance.",
+          "answer": "simple-random",
+          "why": "This is the defining condition for a simple random sample."
+        },
+        {
+          "prompt": "After a random start, select every kth member of an ordered list.",
+          "answer": "systematic",
+          "why": "Regular intervals characterise systematic sampling."
+        },
+        {
+          "prompt": "Choose distinct random integers corresponding to people on a frame.",
+          "answer": "simple-random",
+          "why": "Selections are random draws, not a regular interval."
+        },
+        {
+          "prompt": "An ordering that repeats in a cycle can affect who is selected.",
+          "answer": "systematic",
+          "why": "A periodic order can interact with the fixed interval."
+        }
+      ]
+    }
+  ]
+}
