@@ -3,7 +3,7 @@
 export const ACTIVITY_GUIDANCE=Object.freeze({
   flashcards:Object.freeze({
     practice:'Recall terminology and the advantages and disadvantages of sampling methods.',
-    task:'Recall the definition or the main evaluation points, flip to check, then rate your recall. Browse all cards whenever you want.'}),
+    task:'Try the answer, flip the card to check, then rate your recall. For evaluation cards, recall the main strengths or limitations. Browse all cards whenever you want.'}),
   match:Object.freeze({
     practice:'Connect the correct mathematical term to its definition.',
     task:'Select a term or definition, then its partner. Correct pairs briefly light up before disappearing.'}),
@@ -37,7 +37,7 @@ export function guideForActivity(id,options={}){
   if(!original)throw new Error('Unknown activity '+id);
   const result={...original};
   if(id==='flashcards'&&options.reversed===true)
-    result.task='Read the definition, recall the term, then flip to check. Evaluation cards still ask for strengths or limitations. Rate your recall.';
+    result.task='Read the definition, recall the term, flip the card to check, then rate your recall. Evaluation cards still ask for strengths or limitations.';
   if(id==='cloze'){
     const level=options.level||'choices';
     result.task=level==='choices'
