@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-import {SCENARIO_EVIDENCE,CHOICE_CONTRASTS} from '../../src/identify.js';
+import {SCENARIO_EVIDENCE,CHOICE_CONTRASTS,evidenceParts} from '../../src/identify.js';
 const progressKey='sampling-arcade-progress-v1';
 async function current(page){
  const id=await page.locator('[data-item-id]').getAttribute('data-item-id');
@@ -33,7 +33,7 @@ test('correct answer highlights the exact evidence and retains the original chec
  const item=await current(page);
  await page.locator('[data-action="classify-option"][data-choice="'+item.correctMethod+'"]').click();
  await expect(page.locator('.classification-feedback')).toBeFocused();
- await expect(page.locator('.identify-evidence-mark')).toHaveText(SCENARIO_EVIDENCE[item.id]);
+ await expect(page.locator('.identify-evidence-mark')).toHaveText(evidenceParts(item).quote);
  await expect(page.locator('.identify-evidence-detail')).toContainText(item.reason);
  await expect(page.locator('.feedback-contrast')).toHaveText(item.contrast);
  await expect(page.locator('.identify-why-not')).toHaveCount(0);
@@ -49,7 +49,7 @@ test('incorrect answer explains why the specifically chosen plausible alternativ
  await expect(page.locator('.feedback-heading')).toContainText('Not quite');
  await expect(page.locator('.identify-why-not')).toContainText('WHY NOT '+wrong.replaceAll('-',' ').toUpperCase().split(' ')[0].toUpperCase());
  await expect(page.locator('.identify-targeted-contrast')).toHaveText(CHOICE_CONTRASTS[item.correctMethod][wrong]);
- await expect(page.locator('.identify-evidence-mark')).toHaveText(SCENARIO_EVIDENCE[item.id]);
+ await expect(page.locator('.identify-evidence-mark')).toHaveText(evidenceParts(item).quote);
  await expect(page.locator('.feedback-contrast')).toHaveText(item.contrast);
  await expect(page.locator('[data-choice="'+item.correctMethod+'"]')).toHaveClass(/is-correct/);
  const progress=await stored(page);
@@ -63,12 +63,12 @@ test('incorrect answer explains why the specifically chosen plausible alternativ
 test('five-case round includes every method and completion offers an ungraded review of missed case studies',async({page})=>{
  await open(page,5);
  const seen=new Set();
- let missedId;
+ let missedItem;
  for(let i=0;i<5;i++){
   const item=await current(page);
   seen.add(item.correctMethod);
   const chosen=i===0?Object.keys(CHOICE_CONTRASTS[item.correctMethod])[0]:item.correctMethod;
-  if(i===0)missedId=item.id;
+  if(i===0)missedItem=item;
   await page.locator('[data-action="classify-option"][data-choice="'+chosen+'"]').click();
   await page.locator('[data-action="classify-next"]').click();
  }
@@ -83,7 +83,7 @@ test('five-case round includes every method and completion offers an ungraded re
  expect(before.sessions).toBe(1);
  await page.locator('.identify-review-toggle').click();
  await expect(page.locator('.identify-review-case')).toHaveCount(1);
- await expect(page.locator('.identify-review-key')).toContainText(SCENARIO_EVIDENCE[missedId]);
+ await expect(page.locator('.identify-review-key')).toContainText(evidenceParts(missedItem).quote);
  expect((await stored(page)).answers).toBe(5);
  await page.getByRole('button',{name:/Play another round/}).click();
  await expect(page.locator('.identify-summary')).toHaveCount(0);

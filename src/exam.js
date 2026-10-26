@@ -29,9 +29,24 @@ export function moveStep(steps,id,direction) {
   if(index<0||other<0||other>=steps.length)return [...steps];
   const next=[...steps];[next[index],next[other]]=[next[other],next[index]];return next;
 }
-export function makeErrorDeck(errors,level,random=Math.random) {
+export const ERROR_ROUND_LENGTHS=Object.freeze([5,10]);
+export const REASON_ROUND_LENGTHS=Object.freeze([3,5,10]);
+const SAMPLE_METHODS=Object.freeze(['simple-random','systematic','stratified','quota','opportunity']);
+// Short rounds sample distinct methods where possible. A full round allows all
+// authored investigations at the selected difficulty to be completed.
+function caseDeck(items,count,methodFor,random){
+  const methods=shuffled(SAMPLE_METHODS,random);
+  if(count<=methods.length){
+    const selected=methods.slice(0,count).map(method=>
+      shuffled(items.filter(q=>methodFor(q)===method),random)[0]).filter(Boolean);
+    if(selected.length===count)return shuffled(selected,random);
+  }
+  return shuffled(items,random).slice(0,Math.min(count,items.length));
+}
+export function makeErrorDeck(errors,level,random=Math.random,count=5) {
   if(!EXAM_LEVELS.includes(level))throw new Error('Invalid difficulty');
-  return shuffled(errors.filter(x=>x.level===level),random);
+  if(!ERROR_ROUND_LENGTHS.includes(count))throw new Error('Invalid Spot the Error round length');
+  return caseDeck(errors.filter(x=>x.level===level),count,q=>q.methodId,random);
 }
 export function gradeError(item,line,repair) {
   return {lineCorrect:Number(line)===item.errorLine,repairCorrect:repair===item.repair,
@@ -46,7 +61,10 @@ export function gradeErrorDiagnosis(item,line,repair,impact) {
 export function validateErrorBank(errors){
  const levels=['foundation','develop','extend'];
  const methods=['simple-random','systematic','stratified','quota','opportunity'];
- if(errors.length<15)throw Error('Error bank needs at least 15 cases');
+ if(errors.length<30)throw Error('Error bank needs at least 30 cases');
+ for(const level of levels)for(const method of methods)
+  if(errors.filter(q=>q.level===level&&q.methodId===method).length!==2)
+   throw Error('Unbalanced error cases: '+level+'/'+method);
  for(const q of errors){
   if(!levels.includes(q.level)||!methods.includes(q.methodId))throw Error('Bad case level/method: '+q.id);
   if(q.lines.length<3||!Number.isInteger(q.errorLine)||q.errorLine<0||q.errorLine>=q.lines.length)throw Error('Invalid error step: '+q.id);
@@ -56,9 +74,10 @@ export function validateErrorBank(errors){
  }
  return true;
 }
-export function makeReasoningDeck(items,level,random=Math.random) {
+export function makeReasoningDeck(items,level,random=Math.random,count=3) {
   if(!EXAM_LEVELS.includes(level))throw new Error('Invalid difficulty');
-  return shuffled(items.filter(x=>x.level===level),random);
+  if(!REASON_ROUND_LENGTHS.includes(count))throw new Error('Invalid reasoning round length');
+  return caseDeck(items.filter(x=>x.level===level),count,q=>q.answers.method,random);
 }
 export function assessReasoning(item,selections) {
   const categories=['method','reason','limitation','improvement'];

@@ -666,6 +666,1623 @@
           "2": "Only interviewing runners would further narrow the groups represented."
         }
       }
+    },
+    {
+      "id": "cr-10",
+      "level": "foundation",
+      "scenario": "A school has a complete numbered register of 300 pupils and can survey 30 about journeys to school. It wants an estimate for the whole school, not a particular year group.",
+      "priority": "Use a fair school-wide probability selection without imposing unnecessary subgroup targets.",
+      "evidence": [
+        {
+          "label": "Population",
+          "text": "300 pupils on a complete register"
+        },
+        {
+          "label": "Sample",
+          "text": "30 distinct pupils"
+        },
+        {
+          "label": "Aim",
+          "text": "Estimate overall travel habits"
+        }
+      ],
+      "options": {
+        "method": [
+          "simple-random",
+          "quota",
+          "opportunity"
+        ],
+        "reason": [
+          "Number all 300 pupils and use fair random integers to obtain 30 different labels, ignoring repeats.",
+          "Interview the first 30 arrivals because every pupil is equally likely to arrive first.",
+          "Choose ten pupils from each year group even though year-group sizes are unknown."
+        ],
+        "limitation": [
+          "Some randomly selected pupils may refuse, so the responses could differ from the intended random selection.",
+          "Random selection ensures all 300 pupils answer even if no reminders are sent.",
+          "A sample of 30 is identical to asking all 300 pupils."
+        ],
+        "improvement": [
+          "Follow up the original selected pupils and report response rates and limitations before estimating school-wide habits.",
+          "Replace any refusal with the selected pupil's closest friend.",
+          "Treat the first 30 completed responses as a guaranteed census."
+        ]
+      },
+      "answers": {
+        "method": "simple-random",
+        "reason": 0,
+        "limitation": 0,
+        "improvement": 0
+      },
+      "model": "I would number the complete register and draw 30 distinct random integers, ignoring repeats. This provides a simple random sample of the whole school. Some selected pupils might not reply, so I would follow up and report the response rate rather than claiming perfect representativeness.",
+      "tradeoff": "Stratified sampling might be useful if year-group differences were the purpose, but no group breakdown is needed for this overall estimate.",
+      "coaching": {
+        "method": "The available evidence supports simple random sampling: Number all 300 pupils and use fair random integers to obtain 30 different labels, ignoring repeats.",
+        "reason": "The justification should use the stated frame and task: Number all 300 pupils and use fair random integers to obtain 30 different labels, ignoring repeats.",
+        "limitation": "A genuine risk in this context is: Some randomly selected pupils may refuse, so the responses could differ from the intended random selection.",
+        "improvement": "This improvement addresses the named risk: Follow up the original selected pupils and report response rates and limitations before estimating school-wide habits."
+      },
+      "misconceptions": {
+        "method": {
+          "quota": "Quota recruitment would impose fixed group totals but no such targets are needed or supported by group-size data.",
+          "opportunity": "Opportunity recruitment would favour pupils arriving or standing nearby rather than a fair draw from the register."
+        },
+        "reason": {
+          "1": "Arrival time is not a fair random-number mechanism for drawing 30 from the full register.",
+          "2": "Equal group counts require group information and would not necessarily be proportional."
+        },
+        "limitation": {
+          "1": "A selected pupil can decline; random selection does not force or guarantee responses.",
+          "2": "Thirty observations cannot be the whole population of 300."
+        },
+        "improvement": {
+          "1": "Choosing a friend removes the original random mechanism and may add social-selection bias.",
+          "2": "A partial responding sample cannot be renamed a complete census."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-11",
+      "level": "foundation",
+      "scenario": "A factory has 100 numbered safety clips in a batch. Testing a clip to destruction prevents its sale, so inspectors need to test only 10 while treating each clip fairly.",
+      "priority": "Choose ten different clips without destroying the entire batch or favouring a convenient box.",
+      "evidence": [
+        {
+          "label": "Batch",
+          "text": "100 individually numbered clips"
+        },
+        {
+          "label": "Budget",
+          "text": "10 destructive tests"
+        },
+        {
+          "label": "Frame",
+          "text": "All 100 clips can be identified"
+        }
+      ],
+      "options": {
+        "method": [
+          "systematic",
+          "simple-random",
+          "quota"
+        ],
+        "reason": [
+          "Destroy all 100 clips because a census is always more reliable.",
+          "Use a lottery of ten different numbers from 1 to 100 and destructively test the corresponding clips.",
+          "Take the ten clips easiest to reach and call them randomly selected."
+        ],
+        "limitation": [
+          "A correctly selected sample guarantees that none of the remaining 90 clips is faulty.",
+          "Different random sets of ten could contain different defect rates, so the batch estimate has sampling variation.",
+          "Without testing every clip it is impossible to obtain any useful information."
+        ],
+        "improvement": [
+          "Use only the most accessible clips for better speed and claim the result represents the batch.",
+          "Document the random draw and communicate the uncertainty of conclusions from just ten tests.",
+          "Increase the test count to 100 regardless of the destructive cost."
+        ]
+      },
+      "answers": {
+        "method": "simple-random",
+        "reason": 1,
+        "limitation": 1,
+        "improvement": 1
+      },
+      "model": "I would select ten different numbers at random from the numbered batch and destroy only those clips in testing. This avoids deliberate selection and preserves most stock, but a defect estimate can vary from one random sample to another. I would report that uncertainty and record the drawing procedure.",
+      "tradeoff": "A census would remove sampling variation but destroy all saleable clips, so it is unacceptable.",
+      "coaching": {
+        "method": "The available evidence supports simple random sampling: Use a lottery of ten different numbers from 1 to 100 and destructively test the corresponding clips.",
+        "reason": "The justification should use the stated frame and task: Use a lottery of ten different numbers from 1 to 100 and destructively test the corresponding clips.",
+        "limitation": "A genuine risk in this context is: Different random sets of ten could contain different defect rates, so the batch estimate has sampling variation.",
+        "improvement": "This improvement addresses the named risk: Document the random draw and communicate the uncertainty of conclusions from just ten tests."
+      },
+      "misconceptions": {
+        "method": {
+          "systematic": "Systematic selection would choose positions at a regular interval, not give every ten-clip subset equal chance.",
+          "quota": "Quota selection needs category targets and non-random recruitment; neither is appropriate here."
+        },
+        "reason": {
+          "0": "Destroying the whole stock defeats the investigation's stated practical constraint.",
+          "2": "Choosing the nearest clips is convenience selection, not simple random sampling."
+        },
+        "limitation": {
+          "0": "Ten tests cannot prove every untested unit is free of defects.",
+          "2": "A sample can inform an estimate even though it cannot guarantee the whole batch."
+        },
+        "improvement": {
+          "0": "Taking nearby items reintroduces the location bias the numbered random draw avoids.",
+          "2": "A destructive census would leave no saleable clips and is not practical."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-12",
+      "level": "foundation",
+      "scenario": "A museum has 500 chronologically ordered ticket records and needs to inspect 50 for data-entry errors. The list has no known repeating cycle connected with the errors.",
+      "priority": "Use a quick probability-based rule for evenly spaced positions across the ordered register.",
+      "evidence": [
+        {
+          "label": "Frame",
+          "text": "500 sequential ticket records"
+        },
+        {
+          "label": "Target",
+          "text": "50 records"
+        },
+        {
+          "label": "Ordering",
+          "text": "No known periodic pattern related to errors"
+        }
+      ],
+      "options": {
+        "method": [
+          "simple-random",
+          "opportunity",
+          "systematic"
+        ],
+        "reason": [
+          "Pick every tenth record starting at position one without any randomisation.",
+          "Inspect the first 50 records, as they are fastest to access.",
+          "Choose a random start from positions 1–10 and then inspect every tenth record."
+        ],
+        "limitation": [
+          "A random starting position guarantees the selected records cover every possible pattern.",
+          "Spacing selections evenly makes every possible 50-record sample equally likely.",
+          "If the register contains an unnoticed ten-record cycle, the fixed interval could distort the selected records."
+        ],
+        "improvement": [
+          "Remove the random start so the same records are always checked.",
+          "Discard records in the middle of the list to speed up inspection.",
+          "Inspect the list for periodic ordering and change or randomise the ordering if a relevant pattern is found."
+        ]
+      },
+      "answers": {
+        "method": "systematic",
+        "reason": 2,
+        "limitation": 2,
+        "improvement": 2
+      },
+      "model": "I would choose one of positions 1 to 10 at random and then take every tenth ticket record to make 50. This is quick across the complete list. I would check for periodic patterns because a ten-record cycle could distort the result, even with a random start.",
+      "tradeoff": "Simple random sampling is defensible but requires many separate draws; systematic sampling is easier to administer here.",
+      "coaching": {
+        "method": "The available evidence supports systematic sampling: Choose a random start from positions 1–10 and then inspect every tenth record.",
+        "reason": "The justification should use the stated frame and task: Choose a random start from positions 1–10 and then inspect every tenth record.",
+        "limitation": "A genuine risk in this context is: If the register contains an unnoticed ten-record cycle, the fixed interval could distort the selected records.",
+        "improvement": "This improvement addresses the named risk: Inspect the list for periodic ordering and change or randomise the ordering if a relevant pattern is found."
+      },
+      "misconceptions": {
+        "method": {
+          "simple-random": "A simple random sample uses individual chance draws rather than the required easy fixed-interval inspection.",
+          "opportunity": "Opportunity selection of the first available records would overrepresent one part of this chronological register."
+        },
+        "reason": {
+          "0": "Beginning deterministically is an incomplete systematic random procedure.",
+          "1": "Taking the earliest records alone offers no planned coverage across the full list."
+        },
+        "limitation": {
+          "0": "A random start does not neutralise a period-ten cycle in the data.",
+          "1": "Systematic selection restricts possible subsets; it is not a simple random sample."
+        },
+        "improvement": {
+          "0": "Omitting randomness makes selection less defensible, not more.",
+          "1": "Skipping the middle defeats the aim of covering the whole record list."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-13",
+      "level": "foundation",
+      "scenario": "A boarding school has 240 boarders and 160 day pupils. Researchers need a sample of 40 to compare homework travel arrangements across the two groups. Complete lists are available.",
+      "priority": "Keep the two boarding categories proportionally represented and select pupils randomly inside each.",
+      "evidence": [
+        {
+          "label": "Boarders",
+          "text": "240"
+        },
+        {
+          "label": "Day pupils",
+          "text": "160"
+        },
+        {
+          "label": "Sample",
+          "text": "40 pupils with complete group lists"
+        }
+      ],
+      "options": {
+        "method": [
+          "stratified",
+          "quota",
+          "simple-random"
+        ],
+        "reason": [
+          "Select 24 boarders and 16 day pupils randomly from the two complete group registers.",
+          "Approach any 24 boarders and 16 day pupils near the canteen, without random draws.",
+          "Choose 20 from each group because there are two groups."
+        ],
+        "limitation": [
+          "Differential nonresponse by boarders and day pupils could distort the final comparison.",
+          "Matching the planned 24:16 split guarantees everyone selected will respond.",
+          "Using separate registers means all sampled homework habits will be identical."
+        ],
+        "improvement": [
+          "Follow up selected nonrespondents in both groups and report response rates separately.",
+          "Replace refusing boarders with their closest roommates.",
+          "Discard the smaller day-pupil group from the analysis."
+        ]
+      },
+      "answers": {
+        "method": "stratified",
+        "reason": 0,
+        "limitation": 0,
+        "improvement": 0
+      },
+      "model": "I would make two strata, allocate 24 places to boarders and 16 to day pupils, and randomly select those pupils from the separate registers. Nonresponse may still affect the realised sample, so I would follow up and compare response rates for both groups.",
+      "tradeoff": "Quota sampling could achieve fixed counts without complete registers, but it would lose the available within-group random selection.",
+      "coaching": {
+        "method": "The available evidence supports stratified sampling: Select 24 boarders and 16 day pupils randomly from the two complete group registers.",
+        "reason": "The justification should use the stated frame and task: Select 24 boarders and 16 day pupils randomly from the two complete group registers.",
+        "limitation": "A genuine risk in this context is: Differential nonresponse by boarders and day pupils could distort the final comparison.",
+        "improvement": "This improvement addresses the named risk: Follow up selected nonrespondents in both groups and report response rates separately."
+      },
+      "misconceptions": {
+        "method": {
+          "quota": "Quota sampling matches targets but uses non-random recruitment within the groups.",
+          "simple-random": "One simple random draw could leave unpredictable representation of the smaller day-pupil group."
+        },
+        "reason": {
+          "1": "Approaching convenient pupils makes this quota, not stratified random selection.",
+          "2": "Equal 20:20 counts misrepresent the actual 60:40 population split."
+        },
+        "limitation": {
+          "1": "Selection proportions do not force responses, so response composition can differ.",
+          "2": "Different pupils can have widely different homework and travel arrangements."
+        },
+        "improvement": {
+          "1": "Roommate substitution introduces convenience and social-network effects.",
+          "2": "Removing day pupils prevents the stated comparison altogether."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-14",
+      "level": "foundation",
+      "scenario": "An event organiser has no full visitor register but wants 12 weekday and 8 weekend visitors to comment on a new booking system. Interviewers can recruit willing visitors on site.",
+      "priority": "Fill the requested group targets without pretending a probability frame exists.",
+      "evidence": [
+        {
+          "label": "Targets",
+          "text": "12 weekday and 8 weekend visitors"
+        },
+        {
+          "label": "Frame",
+          "text": "No complete visitor list"
+        },
+        {
+          "label": "Access",
+          "text": "On-site willing visitors"
+        }
+      ],
+      "options": {
+        "method": [
+          "stratified",
+          "quota",
+          "simple-random"
+        ],
+        "reason": [
+          "Allocate 12 and 8 places but claim people were randomly selected from nonexistent registers.",
+          "Invite willing visitors within each group and stop when its stated target is filled.",
+          "Survey any 20 visitors regardless of which day they attended."
+        ],
+        "limitation": [
+          "Meeting the two targets guarantees accurate representation of every age and booking preference.",
+          "Within each quota, people available and willing to speak may differ from other visitors.",
+          "Quota sampling automatically makes every possible twenty-person sample equally likely."
+        ],
+        "improvement": [
+          "Call the sample stratified because the two totals were fixed.",
+          "Recruit at varied times, record refusals where feasible, and state the non-random selection limitation.",
+          "Only interview the friendliest weekday visitors to save time."
+        ]
+      },
+      "answers": {
+        "method": "quota",
+        "reason": 1,
+        "limitation": 1,
+        "improvement": 1
+      },
+      "model": "I would use quota sampling, approaching available volunteers until there are 12 weekday and 8 weekend visitors. This respects the requested groups without a complete frame. Willing people may differ from those unavailable, so I would sample at several times and explain that limitation.",
+      "tradeoff": "Opportunity sampling is quicker but does not guarantee the organiser's weekday/weekend totals.",
+      "coaching": {
+        "method": "The available evidence supports quota sampling: Invite willing visitors within each group and stop when its stated target is filled.",
+        "reason": "The justification should use the stated frame and task: Invite willing visitors within each group and stop when its stated target is filled.",
+        "limitation": "A genuine risk in this context is: Within each quota, people available and willing to speak may differ from other visitors.",
+        "improvement": "This improvement addresses the named risk: Recruit at varied times, record refusals where feasible, and state the non-random selection limitation."
+      },
+      "misconceptions": {
+        "method": {
+          "stratified": "Stratified random sampling would require actual random selection within each group, not on-site volunteering.",
+          "simple-random": "Simple random sampling from all visitors cannot be carried out with no usable population frame."
+        },
+        "reason": {
+          "0": "Targets alone do not make a non-random recruitment process into probability sampling.",
+          "2": "Ignoring weekday/weekend totals would not satisfy the specified group composition."
+        },
+        "limitation": {
+          "0": "A quota on day type does not balance every other characteristic or willingness to participate.",
+          "2": "Quota sampling does not satisfy the defining equal-subset probability of simple random sampling."
+        },
+        "improvement": {
+          "0": "Changing the label does not change how respondents were selected.",
+          "2": "Selecting only friendly volunteers increases rather than reduces convenience bias."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-15",
+      "level": "foundation",
+      "scenario": "A council wants feedback from 30 renters and 20 homeowners. It has broad population estimates but cannot obtain household names; a small team can visit several public sites.",
+      "priority": "Achieve the requested tenure-group numbers using available respondents and be explicit about non-random recruitment.",
+      "evidence": [
+        {
+          "label": "Targets",
+          "text": "30 renters; 20 homeowners"
+        },
+        {
+          "label": "Household list",
+          "text": "Unavailable"
+        },
+        {
+          "label": "Resources",
+          "text": "Small team at public sites"
+        }
+      ],
+      "options": {
+        "method": [
+          "systematic",
+          "opportunity",
+          "quota"
+        ],
+        "reason": [
+          "Interview the first 50 people encountered with no check on housing type.",
+          "Choose every fifth household from a list the council does not possess.",
+          "Ask eligible volunteers at several sites and stop recruiting each housing group at its target."
+        ],
+        "limitation": [
+          "Once 30 renters reply, every renter in the council area has an equal chance of inclusion.",
+          "Survey totals exactly matching two groups prove that the results are unbiased.",
+          "People who visit these sites and agree to respond may not represent others in the same housing group."
+        ],
+        "improvement": [
+          "Treat the totals as random draws because the group counts look plausible.",
+          "Ignore group targets if one housing category proves hard to recruit.",
+          "Vary sites and times, monitor both quotas and report how convenience-based recruitment limits inference."
+        ]
+      },
+      "answers": {
+        "method": "quota",
+        "reason": 2,
+        "limitation": 2,
+        "improvement": 2
+      },
+      "model": "I would recruit volunteers to fill the 30 renter and 20 homeowner quotas at several locations. This guarantees the requested category counts but not a random sample of either group. I would vary recruitment times and acknowledge that people absent from the sites may hold different views.",
+      "tradeoff": "Stratified random sampling would be preferable with complete tenure lists but those lists are unavailable.",
+      "coaching": {
+        "method": "The available evidence supports quota sampling: Ask eligible volunteers at several sites and stop recruiting each housing group at its target.",
+        "reason": "The justification should use the stated frame and task: Ask eligible volunteers at several sites and stop recruiting each housing group at its target.",
+        "limitation": "A genuine risk in this context is: People who visit these sites and agree to respond may not represent others in the same housing group.",
+        "improvement": "This improvement addresses the named risk: Vary sites and times, monitor both quotas and report how convenience-based recruitment limits inference."
+      },
+      "misconceptions": {
+        "method": {
+          "systematic": "Systematic sampling needs an ordered frame and random start, neither of which is available.",
+          "opportunity": "Opportunity sampling alone does not enforce the explicit 30:20 group totals."
+        },
+        "reason": {
+          "0": "Uncontrolled convenience recruitment could omit a required tenure group.",
+          "1": "The missing list prevents a valid interval-based household selection."
+        },
+        "limitation": {
+          "0": "Volunteer recruitment does not give every renter a known or equal inclusion chance.",
+          "1": "Filling one demographic margin does not remove self-selection bias."
+        },
+        "improvement": {
+          "0": "Renaming volunteer recruitment does not make it a probability draw.",
+          "1": "Dropping the quotas defeats the council's stated coverage objective."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-16",
+      "level": "foundation",
+      "scenario": "A cafeteria manager wants quick initial feedback on a new kiosk from people who actually use it today. The aim is exploratory; no claim is needed about all school pupils.",
+      "priority": "Collect practical feedback from immediately available kiosk users, recognising its limited scope.",
+      "evidence": [
+        {
+          "label": "Aim",
+          "text": "Quick exploratory feedback"
+        },
+        {
+          "label": "Access",
+          "text": "Users of the kiosk today"
+        },
+        {
+          "label": "Claim",
+          "text": "Not an estimate of all pupils"
+        }
+      ],
+      "options": {
+        "method": [
+          "opportunity",
+          "quota",
+          "simple-random"
+        ],
+        "reason": [
+          "Ask willing kiosk users available during the day and state that the results describe this convenient group.",
+          "Invent age quotas so the exploratory task can be labelled stratified.",
+          "Claim all school pupils have an equal inclusion chance because the kiosk is open."
+        ],
+        "limitation": [
+          "Pupils who did not visit the kiosk today may have different views or needs.",
+          "Since the question is exploratory, an opportunity sample cannot have any limitations.",
+          "The sample is a census of all pupils as long as every kiosk user agrees."
+        ],
+        "improvement": [
+          "Gather feedback over several days and keep conclusions about kiosk users rather than the whole school.",
+          "Report the results as exact population percentages for all school pupils.",
+          "Invite only people who praised the kiosk to maximise positive feedback."
+        ]
+      },
+      "answers": {
+        "method": "opportunity",
+        "reason": 0,
+        "limitation": 0,
+        "improvement": 0
+      },
+      "model": "I would ask willing kiosk users who are available today for initial feedback. This opportunity sample is fast but cannot describe pupils who did not use the kiosk. I would collect responses on other days and keep my conclusions limited to the kiosk-user group.",
+      "tradeoff": "A school-wide random survey could support general conclusions but is unnecessary for an immediate pilot among current kiosk users.",
+      "coaching": {
+        "method": "The available evidence supports opportunity sampling: Ask willing kiosk users available during the day and state that the results describe this convenient group.",
+        "reason": "The justification should use the stated frame and task: Ask willing kiosk users available during the day and state that the results describe this convenient group.",
+        "limitation": "A genuine risk in this context is: Pupils who did not visit the kiosk today may have different views or needs.",
+        "improvement": "This improvement addresses the named risk: Gather feedback over several days and keep conclusions about kiosk users rather than the whole school."
+      },
+      "misconceptions": {
+        "method": {
+          "quota": "Quota sampling would require explicit subgroup targets not needed for this exploratory user-feedback task.",
+          "simple-random": "Simple random selection requires a full frame and does not match the immediate kiosk-user access."
+        },
+        "reason": {
+          "1": "Inventing groups does not turn convenient participants into a random stratified sample.",
+          "2": "Opening the kiosk to everyone does not mean everyone attends or is sampled."
+        },
+        "limitation": {
+          "1": "Exploratory aims still require explaining whom the findings might omit.",
+          "2": "Even a census of kiosk users is not a census of every pupil."
+        },
+        "improvement": {
+          "1": "Convenience percentages do not support unrestricted population estimates.",
+          "2": "Selective recruitment of enthusiastic users makes feedback less balanced."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-17",
+      "level": "develop",
+      "scenario": "A regional music festival has a complete numbered register of 600 ticket holders. Organisers want to estimate satisfaction from 60 respondents across the event, with no subgroup comparison planned.",
+      "priority": "Give every possible group of 60 ticketholders the same selection chance and address refusals.",
+      "evidence": [
+        {
+          "label": "Frame",
+          "text": "600 numbered ticket holders"
+        },
+        {
+          "label": "Aim",
+          "text": "Estimate overall satisfaction"
+        },
+        {
+          "label": "Available invitations",
+          "text": "60"
+        }
+      ],
+      "options": {
+        "method": [
+          "opportunity",
+          "simple-random",
+          "stratified"
+        ],
+        "reason": [
+          "Interview the first 60 people through the entrance because the order is unpredictable.",
+          "Draw 60 different random numbers from the complete 1–600 register and contact those holders.",
+          "Take 30 early-bird and 30 late ticket holders regardless of their population sizes."
+        ],
+        "limitation": [
+          "Random selection guarantees every selected holder replies to the invitation.",
+          "Selected ticket holders may not respond, and the resulting sample can differ from one random draw to another.",
+          "Sixty responses necessarily produce the population's exact satisfaction percentage."
+        ],
+        "improvement": [
+          "Replace refusals with willing friends and still call the result simple random.",
+          "Send reminders to the originally selected holders, report response, and describe uncertainty in the estimate.",
+          "Describe all ticket holders as satisfied if the selected respondents are positive."
+        ]
+      },
+      "answers": {
+        "method": "simple-random",
+        "reason": 1,
+        "limitation": 1,
+        "improvement": 1
+      },
+      "model": "I would generate 60 distinct random ticket numbers from the complete 600-name frame and survey those holders. This is a simple random sample, but refusals and sampling variation may affect the estimate. I would follow up the originally selected holders and report both the response rate and uncertainty.",
+      "tradeoff": "A census of 600 could avoid sampling variation but would require far more data collection.",
+      "coaching": {
+        "method": "This selection rule fits Give every possible group of 60 ticketholders the same selection chance and address refusals.: Draw 60 different random numbers from the complete 1–600 register and contact those holders.",
+        "reason": "The justification must use this investigation's numbers or context: Draw 60 different random numbers from the complete 1–600 register and contact those holders.",
+        "limitation": "The main concern to evaluate is: Selected ticket holders may not respond, and the resulting sample can differ from one random draw to another.",
+        "improvement": "Address that concern rather than changing the study's aim: Send reminders to the originally selected holders, report response, and describe uncertainty in the estimate."
+      },
+      "misconceptions": {
+        "method": {
+          "opportunity": "Opportunity interviews at one entrance select available arrivals, not fair labelled subsets.",
+          "stratified": "Stratification would need relevant group shares and random draws within groups; no subgroup comparison is requested."
+        },
+        "reason": {
+          "0": "Unpredictable arrival is not an equal-probability sampling mechanism.",
+          "2": "An arbitrary equal split may overrepresent a smaller ticket category."
+        },
+        "limitation": {
+          "0": "A random invitation does not force participation or eliminate missing responses.",
+          "2": "Sampling variation means 60 observations do not establish an exact population percentage."
+        },
+        "improvement": {
+          "0": "Friend replacement reintroduces self-selection and alters the original draw.",
+          "2": "Positive sample respondents do not justify an absolute statement about all attendees."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-18",
+      "level": "develop",
+      "scenario": "A supplier has 840 invoices in an ordered digital list and can audit 70. The invoices arrive in blocks from different shifts, and the auditor wants positions spread across the list.",
+      "priority": "Use an efficient interval-based selection while recognising possible ordering effects.",
+      "evidence": [
+        {
+          "label": "Total invoices",
+          "text": "840"
+        },
+        {
+          "label": "Sample needed",
+          "text": "70"
+        },
+        {
+          "label": "Ordering",
+          "text": "Shift-based blocks"
+        }
+      ],
+      "options": {
+        "method": [
+          "quota",
+          "opportunity",
+          "systematic"
+        ],
+        "reason": [
+          "Take the first 70 invoices because early records are easiest to retrieve.",
+          "Choose 35 invoices from each shift, regardless of its actual list length.",
+          "Randomly choose a starting position from 1–12, then audit every twelfth invoice."
+        ],
+        "limitation": [
+          "A random start makes all possible 70-invoice samples equally likely.",
+          "Shift blocks guarantee that the chosen sample has no systematic selection risk.",
+          "If shift-related invoice patterns repeat every twelfth position, the interval could overrepresent some errors."
+        ],
+        "improvement": [
+          "Remove the random start so the pattern is easier to reproduce.",
+          "Ignore suspicious blocks so the selection finishes more quickly.",
+          "Check the list for cycles or patterns relevant to errors, and reorder or select randomly if necessary."
+        ]
+      },
+      "answers": {
+        "method": "systematic",
+        "reason": 2,
+        "limitation": 2,
+        "improvement": 2
+      },
+      "model": "I would calculate an interval of 840/70=12, choose a random start from 1 to 12, then inspect every twelfth invoice. This is efficient, although the shift-based ordering could introduce periodicity. I would inspect that order and change the design if it creates a relevant cycle.",
+      "tradeoff": "Simple random sampling avoids interval-pattern alignment but requires individual random draws for every invoice.",
+      "coaching": {
+        "method": "This selection rule fits Use an efficient interval-based selection while recognising possible ordering effects.: Randomly choose a starting position from 1–12, then audit every twelfth invoice.",
+        "reason": "The justification must use this investigation's numbers or context: Randomly choose a starting position from 1–12, then audit every twelfth invoice.",
+        "limitation": "The main concern to evaluate is: If shift-related invoice patterns repeat every twelfth position, the interval could overrepresent some errors.",
+        "improvement": "Address that concern rather than changing the study's aim: Check the list for cycles or patterns relevant to errors, and reorder or select randomly if necessary."
+      },
+      "misconceptions": {
+        "method": {
+          "quota": "Quota sampling imposes category counts through non-random recruitment, not a single interval through a full list.",
+          "opportunity": "Opportunity selection would use the first or easiest files, not an interval across all 840."
+        },
+        "reason": {
+          "0": "Selecting the first 70 covers only one end of the ordered register.",
+          "1": "Without knowing shift sizes, equal shift counts need not be proportional."
+        },
+        "limitation": {
+          "0": "Regular-interval samples have fewer possible subsets than simple random sampling.",
+          "1": "Grouping by shifts does not eliminate potentially recurring patterns within the list."
+        },
+        "improvement": {
+          "0": "A deterministic start increases the risk of systematic alignment with list patterns.",
+          "1": "Omitting difficult records introduces selection bias rather than checking the concern."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-19",
+      "level": "develop",
+      "scenario": "An orchard has 450 numbered young trees planted in a winding route and needs 30 soil samples. Every fifteenth tree along the route is the same variety because of the planting cycle.",
+      "priority": "Use an orderly field procedure without allowing the planting cycle to determine the variety represented.",
+      "evidence": [
+        {
+          "label": "Population",
+          "text": "450 numbered trees"
+        },
+        {
+          "label": "Target",
+          "text": "30 trees"
+        },
+        {
+          "label": "Known cycle",
+          "text": "The same variety occurs every 15th tree"
+        }
+      ],
+      "options": {
+        "method": [
+          "systematic",
+          "simple-random",
+          "quota"
+        ],
+        "reason": [
+          "A systematic sample would use interval 15 with a random start, but this ordering must first be adjusted or the method reconsidered.",
+          "Start at tree 1 and sample every fifteenth tree because the pattern guarantees balance.",
+          "Choose only 30 trees closest to the orchard entrance to avoid walking."
+        ],
+        "limitation": [
+          "An interval of 15 aligns with the variety cycle, so a particular starting point could select only one variety.",
+          "A random start guarantees all varieties appear in the sample.",
+          "Soil characteristics cannot differ by tree variety, so periodicity cannot matter."
+        ],
+        "improvement": [
+          "Randomise the ordered frame or use a probability design ensuring variety coverage before applying a selection rule.",
+          "Keep the cycle unchanged because the random start removes its influence.",
+          "Discard every variety except the easiest one to recognise."
+        ]
+      },
+      "answers": {
+        "method": "systematic",
+        "reason": 0,
+        "limitation": 0,
+        "improvement": 0
+      },
+      "model": "An ordinary interval of 450/30=15 is convenient, but every fifteenth tree has the same variety, so the original ordering could give a biased view. I would randomise the ordering or switch to an appropriate probability design before relying on fixed-interval selection.",
+      "tradeoff": "A completely random draw of trees could avoid cycle alignment but might require more movement around the orchard.",
+      "coaching": {
+        "method": "This selection rule fits Use an orderly field procedure without allowing the planting cycle to determine the variety represented.: A systematic sample would use interval 15 with a random start, but this ordering must first be adjusted or the method reconsidered.",
+        "reason": "The justification must use this investigation's numbers or context: A systematic sample would use interval 15 with a random start, but this ordering must first be adjusted or the method reconsidered.",
+        "limitation": "The main concern to evaluate is: An interval of 15 aligns with the variety cycle, so a particular starting point could select only one variety.",
+        "improvement": "Address that concern rather than changing the study's aim: Randomise the ordered frame or use a probability design ensuring variety coverage before applying a selection rule."
+      },
+      "misconceptions": {
+        "method": {
+          "simple-random": "A simple random sample may be a sensible alternative, but the question asks for an interval-based field plan while addressing the known cycle.",
+          "quota": "Quota selection would fill non-random category targets and does not address the stated regular-route problem."
+        },
+        "reason": {
+          "1": "Sampling every fifteenth tree from position one could repeatedly select the same variety.",
+          "2": "Convenient entrance trees would omit most of the orchard and ignore the stated route."
+        },
+        "limitation": {
+          "1": "A random start picks a phase of the cycle; it does not mix phases within the sample.",
+          "2": "Variety-related soil differences are possible and are exactly why the known cycle should be checked."
+        },
+        "improvement": {
+          "1": "The random start does not neutralise a matching periodic interval.",
+          "2": "Restricting to one variety contradicts the intent to understand conditions across the orchard."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-20",
+      "level": "develop",
+      "scenario": "A town has 900 East Ward and 600 West Ward residents on complete registers. Researchers need 150 for a comparison of local bus reliability and want the wards represented proportionally.",
+      "priority": "Use proportional ward allocation with random selection inside each ward.",
+      "evidence": [
+        {
+          "label": "East Ward",
+          "text": "900 residents"
+        },
+        {
+          "label": "West Ward",
+          "text": "600 residents"
+        },
+        {
+          "label": "Total sample",
+          "text": "150"
+        }
+      ],
+      "options": {
+        "method": [
+          "quota",
+          "stratified",
+          "simple-random"
+        ],
+        "reason": [
+          "Approach the first 90 East and 60 West residents encountered at stations.",
+          "Randomly draw 90 East and 60 West residents from the respective ward registers.",
+          "Choose 75 residents from each ward because each has one vote in the council."
+        ],
+        "limitation": [
+          "Drawing random names ensures each sampled resident will complete the survey.",
+          "Different willingness to reply in the two wards could disturb the achieved 90:60 split.",
+          "The 90:60 split guarantees every selected resident uses a bus regularly."
+        ],
+        "improvement": [
+          "Replace each nonrespondent with a convenient person in the same ward.",
+          "Follow up original nonrespondents and report the response rates separately for East and West.",
+          "Drop West Ward if it produces fewer responses."
+        ]
+      },
+      "answers": {
+        "method": "stratified",
+        "reason": 1,
+        "limitation": 1,
+        "improvement": 1
+      },
+      "model": "I would allocate 150 places in a 900:600 ratio, giving 90 East and 60 West residents, then draw each group randomly from its register. Nonresponse could distort the realised ward proportions, so I would follow up and compare response rates between wards.",
+      "tradeoff": "Simple random sampling would be easier to describe but gives less control over ward coverage.",
+      "coaching": {
+        "method": "This selection rule fits Use proportional ward allocation with random selection inside each ward.: Randomly draw 90 East and 60 West residents from the respective ward registers.",
+        "reason": "The justification must use this investigation's numbers or context: Randomly draw 90 East and 60 West residents from the respective ward registers.",
+        "limitation": "The main concern to evaluate is: Different willingness to reply in the two wards could disturb the achieved 90:60 split.",
+        "improvement": "Address that concern rather than changing the study's aim: Follow up original nonrespondents and report the response rates separately for East and West."
+      },
+      "misconceptions": {
+        "method": {
+          "quota": "Quota sampling would match the ward counts without random within-ward selection.",
+          "simple-random": "Simple random sampling could give unplanned ward proportions despite the comparison focus."
+        },
+        "reason": {
+          "0": "Station passers-by are convenient recruits rather than randomly selected ward residents.",
+          "2": "Equal ward counts are not proportional to a 900:600 population split."
+        },
+        "limitation": {
+          "0": "Selected residents can decline or be unreachable.",
+          "2": "Ward proportions do not force all selected residents to be bus users."
+        },
+        "improvement": {
+          "0": "Convenient substitutions change the within-ward random selection.",
+          "2": "Dropping West Ward prevents the intended ward comparison."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-21",
+      "level": "develop",
+      "scenario": "A community exhibition wants 40 adult and 20 senior responses about accessibility. There is no complete list of visitors, but volunteers can recruit willing respondents on site.",
+      "priority": "Meet two specified visitor-group targets without falsely claiming random sampling.",
+      "evidence": [
+        {
+          "label": "Adults",
+          "text": "Target of 40"
+        },
+        {
+          "label": "Seniors",
+          "text": "Target of 20"
+        },
+        {
+          "label": "Lists",
+          "text": "No complete visitor register"
+        }
+      ],
+      "options": {
+        "method": [
+          "stratified",
+          "systematic",
+          "quota"
+        ],
+        "reason": [
+          "Randomly select visitors from an imaginary list in each group and describe them as stratified.",
+          "Interview the first 60 available visitors without checking group membership.",
+          "Approach available visitors and stop once 40 adult and 20 senior responses have been collected."
+        ],
+        "limitation": [
+          "Filling the age quotas guarantees all accessibility needs are represented.",
+          "A 40:20 target automatically gives all visitors an equal selection probability.",
+          "People who consent within each quota may have different accessibility experiences from those who refuse."
+        ],
+        "improvement": [
+          "Discard anyone with a negative experience to reduce conflicting responses.",
+          "Call the sample a census because both age groups are present.",
+          "Recruit across different sessions, note refusals and explain the limitations of within-group convenience sampling."
+        ]
+      },
+      "answers": {
+        "method": "quota",
+        "reason": 2,
+        "limitation": 2,
+        "improvement": 2
+      },
+      "model": "I would use quota sampling to gather 40 adult and 20 senior responses from willing visitors. The totals ensure inclusion of those two groups but not unbiased views within them. I would recruit at different exhibition sessions and acknowledge possible nonresponse and convenience bias.",
+      "tradeoff": "Stratified sampling would be stronger with complete visitor lists; otherwise quota sampling is a practical but limited design.",
+      "coaching": {
+        "method": "This selection rule fits Meet two specified visitor-group targets without falsely claiming random sampling.: Approach available visitors and stop once 40 adult and 20 senior responses have been collected.",
+        "reason": "The justification must use this investigation's numbers or context: Approach available visitors and stop once 40 adult and 20 senior responses have been collected.",
+        "limitation": "The main concern to evaluate is: People who consent within each quota may have different accessibility experiences from those who refuse.",
+        "improvement": "Address that concern rather than changing the study's aim: Recruit across different sessions, note refusals and explain the limitations of within-group convenience sampling."
+      },
+      "misconceptions": {
+        "method": {
+          "stratified": "Stratified selection requires group frames and random draws, not simply age targets.",
+          "systematic": "Systematic selection would require an ordered list and random starting position."
+        },
+        "reason": {
+          "0": "The given lack of a complete frame prevents random draws from each named stratum.",
+          "1": "Uncontrolled recruitment could fail to include twenty seniors."
+        },
+        "limitation": {
+          "0": "Age-group totals do not cover every accessibility need or response tendency.",
+          "1": "Within-group volunteering is non-random, so equal inclusion probabilities are not established."
+        },
+        "improvement": {
+          "0": "Removing dissatisfied visitors creates selection bias in the outcome of interest.",
+          "1": "Including both groups in a sample does not make it a census of every visitor."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-22",
+      "level": "develop",
+      "scenario": "A college needs a quick pilot of a new lunchtime booking app. The only immediately available participants are students standing near the canteen; the study is explicitly exploratory.",
+      "priority": "Collect quick pilot feedback without generalising to every college student.",
+      "evidence": [
+        {
+          "label": "Purpose",
+          "text": "Test an early app prototype"
+        },
+        {
+          "label": "Access",
+          "text": "Students near the canteen"
+        },
+        {
+          "label": "Inference",
+          "text": "Exploratory only"
+        }
+      ],
+      "options": {
+        "method": [
+          "opportunity",
+          "quota",
+          "simple-random"
+        ],
+        "reason": [
+          "Ask available willing students near the canteen and identify the result as an opportunity sample.",
+          "Create made-up quotas by age to imply that the app is being tested randomly.",
+          "Claim every student in the college could be selected because they are free to visit the canteen."
+        ],
+        "limitation": [
+          "Students not near the canteen, particularly those on other lunch schedules, may have different app needs.",
+          "Exploratory feedback is never affected by who volunteers.",
+          "A small pilot automatically represents every college year group."
+        ],
+        "improvement": [
+          "Repeat the pilot at different locations or lunch times and keep claims specific to participating students.",
+          "Convert the volunteers' percentages into definitive college-wide estimates.",
+          "Recruit only students who already praise the app."
+        ]
+      },
+      "answers": {
+        "method": "opportunity",
+        "reason": 0,
+        "limitation": 0,
+        "improvement": 0
+      },
+      "model": "I would approach willing students near the canteen to run a quick opportunity pilot. These responses can identify usability problems but may miss students who lunch elsewhere or at other times. I would repeat the pilot in other settings before drawing broader conclusions.",
+      "tradeoff": "A later random survey could support college-wide estimates, but speed and exploratory usability are the current priorities.",
+      "coaching": {
+        "method": "This selection rule fits Collect quick pilot feedback without generalising to every college student.: Ask available willing students near the canteen and identify the result as an opportunity sample.",
+        "reason": "The justification must use this investigation's numbers or context: Ask available willing students near the canteen and identify the result as an opportunity sample.",
+        "limitation": "The main concern to evaluate is: Students not near the canteen, particularly those on other lunch schedules, may have different app needs.",
+        "improvement": "Address that concern rather than changing the study's aim: Repeat the pilot at different locations or lunch times and keep claims specific to participating students."
+      },
+      "misconceptions": {
+        "method": {
+          "quota": "Quota sampling would require explicit group targets that are not part of this exploratory pilot.",
+          "simple-random": "Simple random selection needs a complete student sampling frame and chance-based draws, not convenience."
+        },
+        "reason": {
+          "1": "Invented quotas do not make the recruited canteen users random.",
+          "2": "Potential access to the canteen is not the same as equal chances of actual inclusion."
+        },
+        "limitation": {
+          "1": "Even exploratory testing can miss needs of students with different lunch arrangements.",
+          "2": "A small available group need not reflect each year group's views."
+        },
+        "improvement": {
+          "1": "A convenient pilot does not support precise population estimates.",
+          "2": "Preselecting favourable opinions would make feedback systematically misleading."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-23",
+      "level": "develop",
+      "scenario": "A ferry operator wants immediate feedback on boarding signage from the next 25 passengers at one gate. It has no passenger list and will use the responses to decide what to check next, not to claim a region-wide satisfaction rate.",
+      "priority": "Gather exploratory responses from passengers who can be approached at this gate.",
+      "evidence": [
+        {
+          "label": "Target",
+          "text": "25 passengers"
+        },
+        {
+          "label": "Frame",
+          "text": "No complete passenger list"
+        },
+        {
+          "label": "Location",
+          "text": "One departure gate today"
+        }
+      ],
+      "options": {
+        "method": [
+          "systematic",
+          "opportunity",
+          "stratified"
+        ],
+        "reason": [
+          "Call every passenger in the queue equally likely because an exact interval is not needed.",
+          "Interview the next 25 willing passengers at the gate and report the scope as a local opportunity sample.",
+          "Divide the people present into unspecified strata and assume this gives a probability sample."
+        ],
+        "limitation": [
+          "Passengers at this gate necessarily represent every route and departure time.",
+          "Different departure times and gate layouts may lead to very different boarding experiences.",
+          "A sample-size target of 25 removes any selection bias."
+        ],
+        "improvement": [
+          "Treat the 25 interviews as a census of all ferry passengers.",
+          "Survey at other gates and times, and avoid extending conclusions beyond the passengers actually approached.",
+          "Exclude anyone who finds the signage confusing."
+        ]
+      },
+      "answers": {
+        "method": "opportunity",
+        "reason": 1,
+        "limitation": 1,
+        "improvement": 1
+      },
+      "model": "I would survey the next 25 willing passengers at this gate as an opportunity sample. It can show immediate signage concerns but may not represent passengers on other routes or at different times. I would extend recruitment to more gates before proposing changes across the entire service.",
+      "tradeoff": "A probability sample across routes would support broader inference but is not available for this initial gate-level investigation.",
+      "coaching": {
+        "method": "This selection rule fits Gather exploratory responses from passengers who can be approached at this gate.: Interview the next 25 willing passengers at the gate and report the scope as a local opportunity sample.",
+        "reason": "The justification must use this investigation's numbers or context: Interview the next 25 willing passengers at the gate and report the scope as a local opportunity sample.",
+        "limitation": "The main concern to evaluate is: Different departure times and gate layouts may lead to very different boarding experiences.",
+        "improvement": "Address that concern rather than changing the study's aim: Survey at other gates and times, and avoid extending conclusions beyond the passengers actually approached."
+      },
+      "misconceptions": {
+        "method": {
+          "systematic": "Systematic random sampling uses a random start and fixed interval rather than the next accessible people.",
+          "stratified": "Stratified random sampling requires named, non-overlapping strata and random selection inside them."
+        },
+        "reason": {
+          "0": "An uncontrolled queue gives no equal-probability selection guarantee.",
+          "2": "Unspecified group labels do not provide a real stratified sampling frame."
+        },
+        "limitation": {
+          "0": "A single gate and time may have its own signage conditions.",
+          "2": "Twenty-five available volunteers are not automatically an unbiased probability sample."
+        },
+        "improvement": {
+          "0": "A census of one boarding queue is not a census of all ferry passengers.",
+          "2": "Removing critical respondents suppresses exactly the problems the pilot seeks."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-24",
+      "level": "extend",
+      "scenario": "A researcher wants 40 records from a numbered list of 197. A simple interval of five would fit 40 positions if the random starting position is one or two; 197/40 is not an integer.",
+      "priority": "Construct a defensible systematic selection rule without falsely claiming there is a single mandatory rounding convention.",
+      "evidence": [
+        {
+          "label": "Population",
+          "text": "197 ordered records"
+        },
+        {
+          "label": "Sample",
+          "text": "40 records"
+        },
+        {
+          "label": "Feasible step",
+          "text": "Five, with start one or two"
+        }
+      ],
+      "options": {
+        "method": [
+          "simple-random",
+          "quota",
+          "systematic"
+        ],
+        "reason": [
+          "Choose a random start from 1 to 5 and claim 40 valid records always result.",
+          "Round 197/40 down to four and claim that this is the unique valid systematic procedure.",
+          "Randomly choose starting position 1 or 2, then take it and 39 more positions spaced five apart."
+        ],
+        "limitation": [
+          "Using a random start makes all possible sets of 40 records equally likely.",
+          "A non-integer N/n means systematic sampling is mathematically impossible.",
+          "The rule permits only particular subsets, and any list pattern related to a five-record cycle could distort them."
+        ],
+        "improvement": [
+          "Keep starts 1–5 even when the fortieth position falls outside 197.",
+          "State that dividing 197 by 40 proves every fifth selection rule is universally compulsory.",
+          "Check the ordered list for periodicity and explain the chosen five-step procedure, including its restricted start range."
+        ]
+      },
+      "answers": {
+        "method": "systematic",
+        "reason": 2,
+        "limitation": 2,
+        "improvement": 2
+      },
+      "model": "I would use a systematic rule with interval five, choosing a random start of one or two and taking 40 records. The last selected position is at most 197. This is a defensible design, though not a simple random sample, and I would check for a five-position pattern in the ordered list.",
+      "tradeoff": "A simple random sample avoids fixed-interval patterns but requires forty distinct random draws.",
+      "coaching": {
+        "method": "The context favours systematic sampling because: Randomly choose starting position 1 or 2, then take it and 39 more positions spaced five apart.",
+        "reason": "A defensible explanation needs the actual numbers and rules: Randomly choose starting position 1 or 2, then take it and 39 more positions spaced five apart.",
+        "limitation": "Carefully distinguish this real limitation from a guarantee: The rule permits only particular subsets, and any list pattern related to a five-record cycle could distort them.",
+        "improvement": "This change targets the identified risk: Check the ordered list for periodicity and explain the chosen five-step procedure, including its restricted start range."
+      },
+      "misconceptions": {
+        "method": {
+          "simple-random": "Simple random sampling could also select 40, but it would draw independent positions, not test the proposed interval-based design.",
+          "quota": "Quota sampling uses non-random targets for groups, not positions selected by a regular interval."
+        },
+        "reason": {
+          "0": "Starts three to five would send the fortieth position above 197: start+195 would exceed the list.",
+          "1": "There is no universal rounding requirement that makes an interval of four the only acceptable method."
+        },
+        "limitation": {
+          "0": "A random-start systematic design still restricts the possible combinations.",
+          "1": "A valid fixed-step plan exists; non-integer division alone does not prohibit the method."
+        },
+        "improvement": {
+          "0": "Ignoring out-of-frame positions would not guarantee the required sample size of 40.",
+          "1": "The practical starting range and list structure must be justified instead of asserting a universal convention."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-25",
+      "level": "extend",
+      "scenario": "A quality-control inspector needs 100 items from 700 time-ordered production records. Errors may recur by weekday, so the team can randomise the ordering of the full frame before taking evenly spaced records.",
+      "priority": "Retain a convenient regular-interval plan while preventing a known seven-day pattern from aligning with interval seven.",
+      "evidence": [
+        {
+          "label": "Records",
+          "text": "700"
+        },
+        {
+          "label": "Target",
+          "text": "100"
+        },
+        {
+          "label": "Potential cycle",
+          "text": "Weekly variation over seven positions"
+        }
+      ],
+      "options": {
+        "method": [
+          "systematic",
+          "opportunity",
+          "quota"
+        ],
+        "reason": [
+          "First randomise the complete list independently of error status, then choose a random start from 1–7 and every seventh position.",
+          "Use the unshuffled chronological list and begin at position one because a weekly cycle ensures fair coverage.",
+          "Take the first 100 items from the easiest day and describe them as randomly selected."
+        ],
+        "limitation": [
+          "If the list remains in time order, a fixed interval of seven could repeatedly select the same part of the weekly cycle.",
+          "Any fixed interval guarantees an equal chance for every 100-item subset.",
+          "A weekly error pattern cannot affect sample conclusions after choosing a random starting position."
+        ],
+        "improvement": [
+          "Preserve and document the independently randomised list order, and inspect whether residual patterns remain.",
+          "Remove the randomisation step and rely on selecting every seventh item.",
+          "Discard records from difficult weekdays to reduce inspection costs."
+        ]
+      },
+      "answers": {
+        "method": "systematic",
+        "reason": 0,
+        "limitation": 0,
+        "improvement": 0
+      },
+      "model": "I would randomise the complete list first, then choose one of positions 1–7 at random and inspect every seventh record. Using the original chronological order risks selecting the same weekday pattern repeatedly, so the randomised ordering must be preserved and documented.",
+      "tradeoff": "Simple random sampling might also remove weekly-pattern alignment, but reordering followed by a fixed interval is practical in this digital frame.",
+      "coaching": {
+        "method": "The context favours systematic sampling because: First randomise the complete list independently of error status, then choose a random start from 1–7 and every seventh position.",
+        "reason": "A defensible explanation needs the actual numbers and rules: First randomise the complete list independently of error status, then choose a random start from 1–7 and every seventh position.",
+        "limitation": "Carefully distinguish this real limitation from a guarantee: If the list remains in time order, a fixed interval of seven could repeatedly select the same part of the weekly cycle.",
+        "improvement": "This change targets the identified risk: Preserve and document the independently randomised list order, and inspect whether residual patterns remain."
+      },
+      "misconceptions": {
+        "method": {
+          "opportunity": "Opportunity selection would be based on convenient early or accessible records rather than a reproducible interval plan.",
+          "quota": "Quota recruitment would set category totals and select non-randomly rather than spread positions across a frame."
+        },
+        "reason": {
+          "1": "A regular interval matching the original weekly cycle can produce a distorted one-phase sample.",
+          "2": "Selecting the easiest day gives unbalanced coverage, not an interval-based probability design."
+        },
+        "limitation": {
+          "1": "Systematic sampling does not give equal probability to all possible 100-item subsets.",
+          "2": "Starting at a random phase does not guarantee a mixture of phases in a seven-step cycle."
+        },
+        "improvement": {
+          "1": "Keeping the original ordered list would restore the specific periodicity risk.",
+          "2": "Excluding particular weekdays means results could not cover the full time-ordered population."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-26",
+      "level": "extend",
+      "scenario": "A university has 800 undergraduate and 200 postgraduate students. It can randomly select 100 students, but postgraduate students historically respond less often to surveys.",
+      "priority": "Maintain proportional planned coverage of both student groups and evaluate different response rates.",
+      "evidence": [
+        {
+          "label": "Undergraduates",
+          "text": "800"
+        },
+        {
+          "label": "Postgraduates",
+          "text": "200"
+        },
+        {
+          "label": "Historical issue",
+          "text": "Postgraduates respond less often"
+        }
+      ],
+      "options": {
+        "method": [
+          "quota",
+          "stratified",
+          "simple-random"
+        ],
+        "reason": [
+          "Approach 80 undergraduates and 20 postgraduates who are easiest to contact, then label the draws random.",
+          "Randomly select 80 undergraduates and 20 postgraduates from separate complete student lists.",
+          "Choose 50 from each group because equal group sizes make comparison simpler."
+        ],
+        "limitation": [
+          "A planned 80:20 selection guarantees an 80:20 set of completed questionnaires.",
+          "A lower postgraduate response rate could make the final responding sample less than 20% postgraduate.",
+          "Random selection removes all concern about nonresponse in either group."
+        ],
+        "improvement": [
+          "Replace every nonresponding postgraduate with a willing friend's name.",
+          "Follow up originally selected postgraduates, record both group response rates and qualify the final estimates.",
+          "Discard the postgraduate stratum and interpret only undergraduate responses as university-wide."
+        ]
+      },
+      "answers": {
+        "method": "stratified",
+        "reason": 1,
+        "limitation": 1,
+        "improvement": 1
+      },
+      "model": "I would allocate 80 undergraduate and 20 postgraduate places and select names randomly within each list. Because postgraduates respond less often, the achieved sample may not keep the intended 80:20 split. I would follow up those selected and report response rates by group.",
+      "tradeoff": "A census would avoid sampling variation in selection but still face postgraduate nonresponse.",
+      "coaching": {
+        "method": "The context favours stratified sampling because: Randomly select 80 undergraduates and 20 postgraduates from separate complete student lists.",
+        "reason": "A defensible explanation needs the actual numbers and rules: Randomly select 80 undergraduates and 20 postgraduates from separate complete student lists.",
+        "limitation": "Carefully distinguish this real limitation from a guarantee: A lower postgraduate response rate could make the final responding sample less than 20% postgraduate.",
+        "improvement": "This change targets the identified risk: Follow up originally selected postgraduates, record both group response rates and qualify the final estimates."
+      },
+      "misconceptions": {
+        "method": {
+          "quota": "Quota recruitment could meet 80:20 totals but would not use available within-group random selection.",
+          "simple-random": "A single simple random draw would not guarantee the intended planned postgraduate coverage."
+        },
+        "reason": {
+          "0": "Convenient draws within each group are non-random even if the group totals are right.",
+          "2": "Equal 50:50 selection would overrepresent a 20% postgraduate population share."
+        },
+        "limitation": {
+          "0": "The realised responding group can differ from planned allocations.",
+          "2": "Random selection cannot make invited students return questionnaires."
+        },
+        "improvement": {
+          "0": "Friends of respondents are not selected by the original random mechanism.",
+          "2": "Ignoring postgraduate nonresponse destroys the university-wide purpose."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-27",
+      "level": "extend",
+      "scenario": "An ecology team has mapped 650 woodland plots and 350 grassland plots. It can measure 100 plots and wants each habitat included in proportion to its mapped area, with random choices within habitats.",
+      "priority": "Protect proportional representation of both habitats while recognising ecological variation within each one.",
+      "evidence": [
+        {
+          "label": "Woodland plots",
+          "text": "650"
+        },
+        {
+          "label": "Grassland plots",
+          "text": "350"
+        },
+        {
+          "label": "Measurements",
+          "text": "100 plots total"
+        }
+      ],
+      "options": {
+        "method": [
+          "simple-random",
+          "opportunity",
+          "stratified"
+        ],
+        "reason": [
+          "Sample 50 from each habitat because they are two equally important habitats.",
+          "Walk the nearest accessible path and measure the first 100 plots encountered.",
+          "Randomly select 65 woodland plots and 35 grassland plots from their respective maps."
+        ],
+        "limitation": [
+          "Having exactly 65 woodland plots means every woodland location has been measured.",
+          "Random choice guarantees the measured habitat mean equals its true population mean.",
+          "Even random plots within a habitat may differ in soil and vegetation, so the resulting habitat estimates have sampling variation."
+        ],
+        "improvement": [
+          "Substitute difficult-to-reach plots with the nearest easy plot without qualification.",
+          "Treat the 100 measured plots as a census of all 1,000 mapped plots.",
+          "If resources permit, increase random plot measurements in both habitats and report variation and uncertainty."
+        ]
+      },
+      "answers": {
+        "method": "stratified",
+        "reason": 2,
+        "limitation": 2,
+        "improvement": 2
+      },
+      "model": "I would divide plots into woodland and grassland and randomly choose 65 and 35 respectively, reflecting their 650:350 shares. Within-habitat variation means the measured averages still have sampling uncertainty, so I would increase random coverage if feasible and report the variation.",
+      "tradeoff": "A single simple random draw would be easier but could miss the intended proportional habitat coverage.",
+      "coaching": {
+        "method": "The context favours stratified sampling because: Randomly select 65 woodland plots and 35 grassland plots from their respective maps.",
+        "reason": "A defensible explanation needs the actual numbers and rules: Randomly select 65 woodland plots and 35 grassland plots from their respective maps.",
+        "limitation": "Carefully distinguish this real limitation from a guarantee: Even random plots within a habitat may differ in soil and vegetation, so the resulting habitat estimates have sampling variation.",
+        "improvement": "This change targets the identified risk: If resources permit, increase random plot measurements in both habitats and report variation and uncertainty."
+      },
+      "misconceptions": {
+        "method": {
+          "simple-random": "A simple random sample might include an unpredictable habitat mix rather than guaranteed planned 65:35 coverage.",
+          "opportunity": "Opportunity routes would overrepresent accessible plots and might omit parts of a habitat."
+        },
+        "reason": {
+          "0": "Equal sample counts do not match the 650:350 mapped habitat share.",
+          "1": "Nearest accessible plots are not random within either habitat."
+        },
+        "limitation": {
+          "0": "The woodland stratum contains many more plots than the 65 selected.",
+          "1": "Random samples still vary from the actual habitat population quantities."
+        },
+        "improvement": {
+          "0": "Convenient substitutions risk accessibility bias in both habitats.",
+          "1": "A 100-plot subsample does not become the census of 1,000 plots."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-28",
+      "level": "extend",
+      "scenario": "A public transport consultation has target totals of 60 women and 40 men based on population estimates. There is no complete commuter frame, and recruiters will approach volunteers at several stations.",
+      "priority": "Fill a pre-specified gender quota while accurately evaluating what that controls and what it cannot.",
+      "evidence": [
+        {
+          "label": "Targets",
+          "text": "60 women and 40 men"
+        },
+        {
+          "label": "Frame",
+          "text": "No full commuter register"
+        },
+        {
+          "label": "Recruitment",
+          "text": "Volunteers at stations"
+        }
+      ],
+      "options": {
+        "method": [
+          "quota",
+          "stratified",
+          "simple-random"
+        ],
+        "reason": [
+          "Recruit willing people until the two prescribed gender totals are met, then report the non-random method.",
+          "Take the first 100 passers-by at one station, even if the gender totals are not met.",
+          "Describe the 60:40 volunteers as a simple random sample because the population shares match."
+        ],
+        "limitation": [
+          "Matching gender shares alone may leave age, journey frequency and willingness to participate unrepresentative.",
+          "A correct gender quota guarantees every other commuter characteristic matches the population.",
+          "Every possible sample of 100 has the same selection chance when quotas reflect population proportions."
+        ],
+        "improvement": [
+          "Vary stations and times, keep the quotas, and explicitly report possible within-group convenience bias.",
+          "Remove anyone whose commuting account differs from the typical respondent.",
+          "Rename the sample stratified random without changing recruitment."
+        ]
+      },
+      "answers": {
+        "method": "quota",
+        "reason": 0,
+        "limitation": 0,
+        "improvement": 0
+      },
+      "model": "I would recruit volunteers until 60 women and 40 men had responded, making this quota sampling. The gender allocation matches the stated estimates but cannot control other characteristics or self-selection. I would vary times and stations and be cautious about generalising.",
+      "tradeoff": "Stratified random sampling would better support probability inference if complete commuter lists existed.",
+      "coaching": {
+        "method": "The context favours quota sampling because: Recruit willing people until the two prescribed gender totals are met, then report the non-random method.",
+        "reason": "A defensible explanation needs the actual numbers and rules: Recruit willing people until the two prescribed gender totals are met, then report the non-random method.",
+        "limitation": "Carefully distinguish this real limitation from a guarantee: Matching gender shares alone may leave age, journey frequency and willingness to participate unrepresentative.",
+        "improvement": "This change targets the identified risk: Vary stations and times, keep the quotas, and explicitly report possible within-group convenience bias."
+      },
+      "misconceptions": {
+        "method": {
+          "stratified": "Stratified random sampling would require random selection within gender groups from reliable lists.",
+          "simple-random": "Simple random sampling requires a probability-based draw rather than volunteers filling quotas."
+        },
+        "reason": {
+          "1": "Uncontrolled passers-by may not satisfy either required gender target.",
+          "2": "Correct population totals do not make volunteer selection random."
+        },
+        "limitation": {
+          "1": "Quota control of gender does not balance age, travel frequency or responses.",
+          "2": "Within-group volunteers do not create equal inclusion probabilities across subsets."
+        },
+        "improvement": {
+          "1": "Excluding unusual commuters would hide relevant variation and increase selection bias.",
+          "2": "Relabelling non-random recruitment does not convert it into random stratified sampling."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-29",
+      "level": "extend",
+      "scenario": "A company wants feedback from 70 remote and 30 on-site employees but has no comprehensive contact list for the project. It uses a virtual staff forum and an office information desk to recruit willing people.",
+      "priority": "Include both working arrangements in the planned proportions without calling volunteer recruitment random.",
+      "evidence": [
+        {
+          "label": "Remote target",
+          "text": "70"
+        },
+        {
+          "label": "On-site target",
+          "text": "30"
+        },
+        {
+          "label": "Channels",
+          "text": "Virtual forum and office desk"
+        }
+      ],
+      "options": {
+        "method": [
+          "opportunity",
+          "quota",
+          "stratified"
+        ],
+        "reason": [
+          "Survey everyone who comes to the office desk and ignore the remote category.",
+          "Fill the 70:30 group totals with eligible volunteers through the relevant channels, stopping each group at its target.",
+          "Claim that sampling from a virtual forum is automatically random because staff access it online."
+        ],
+        "limitation": [
+          "A 70:30 quota removes all nonresponse effects within each category.",
+          "Remote staff active in the forum and on-site staff at the desk may differ from those who do not use those channels.",
+          "The different recruitment channels guarantee that every employee has a known inclusion probability."
+        ],
+        "improvement": [
+          "Replace reluctant remote respondents with the organiser's friends.",
+          "Use several recruitment opportunities in each group, monitor refusals and explain channel-related selection bias.",
+          "Stop checking totals once 100 responses have arrived, even if they all came from one group."
+        ]
+      },
+      "answers": {
+        "method": "quota",
+        "reason": 1,
+        "limitation": 1,
+        "improvement": 1
+      },
+      "model": "I would set quotas of 70 remote and 30 on-site staff and recruit eligible volunteers through the available channels. The resulting selection is non-random and may favour staff active in those channels. I would widen recruitment opportunities and report that limitation.",
+      "tradeoff": "Using stratified random sampling would require a verified list for each group and random invitations, which the project currently lacks.",
+      "coaching": {
+        "method": "The context favours quota sampling because: Fill the 70:30 group totals with eligible volunteers through the relevant channels, stopping each group at its target.",
+        "reason": "A defensible explanation needs the actual numbers and rules: Fill the 70:30 group totals with eligible volunteers through the relevant channels, stopping each group at its target.",
+        "limitation": "Carefully distinguish this real limitation from a guarantee: Remote staff active in the forum and on-site staff at the desk may differ from those who do not use those channels.",
+        "improvement": "This change targets the identified risk: Use several recruitment opportunities in each group, monitor refusals and explain channel-related selection bias."
+      },
+      "misconceptions": {
+        "method": {
+          "opportunity": "Opportunity sampling without quotas would not guarantee both work-arrangement groups are represented as required.",
+          "stratified": "Stratified random sampling would need frames and a random draw within each group, not volunteers on two channels."
+        },
+        "reason": {
+          "0": "Office-only recruitment would underrepresent remote workers.",
+          "2": "Online availability does not turn voluntary responses into random draws."
+        },
+        "limitation": {
+          "0": "Quotas control one planned ratio but cannot force each invited worker to respond.",
+          "2": "Different access channels give unequal selection opportunities to employees."
+        },
+        "improvement": {
+          "0": "Friend replacements compound self-selection and may reflect one social network.",
+          "2": "An overall total of 100 is insufficient when the two group targets must also be met."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "cr-30",
+      "level": "extend",
+      "scenario": "A rural council wants initial ideas about transport services from residents attending one weekly market. There is no resident register for a probability sample and the initial exercise must finish today.",
+      "priority": "Use an immediate exploratory investigation without pretending that market attendees represent the whole rural district.",
+      "evidence": [
+        {
+          "label": "Access",
+          "text": "One weekly market"
+        },
+        {
+          "label": "Frame",
+          "text": "No resident-wide list"
+        },
+        {
+          "label": "Purpose",
+          "text": "Generate initial suggestions, not district-wide percentages"
+        }
+      ],
+      "options": {
+        "method": [
+          "simple-random",
+          "quota",
+          "opportunity"
+        ],
+        "reason": [
+          "Describe the first 30 willing residents as simple random because the order of attendance is unpredictable.",
+          "Set fictional age quotas and claim that doing so guarantees unbiased district-wide estimates.",
+          "Interview willing eligible market attendees and explain the limited convenience-based coverage."
+        ],
+        "limitation": [
+          "The market necessarily attracts a representative cross-section of all rural residents.",
+          "A small survey at the market rules out selection and nonresponse bias.",
+          "Residents who cannot reach the market or attend at other times are absent, and may have very different transport needs."
+        ],
+        "improvement": [
+          "Publish exact district-wide support percentages based only on the market survey.",
+          "Ask only people who already support the council's plans.",
+          "Use the suggestions as exploratory evidence, recruit at other sites/times later and seek a better frame for population estimates."
+        ]
+      },
+      "answers": {
+        "method": "opportunity",
+        "reason": 2,
+        "limitation": 2,
+        "improvement": 2
+      },
+      "model": "I would interview willing market attendees as an opportunity sample to generate initial transport ideas. People unable to attend may have different needs, so I would not report the responses as district-wide percentages. I would extend the study to other locations and seek a better frame before making population claims.",
+      "tradeoff": "A proper district-wide random survey would support stronger inference, but it is not possible within today's frame and time constraints.",
+      "coaching": {
+        "method": "The context favours opportunity sampling because: Interview willing eligible market attendees and explain the limited convenience-based coverage.",
+        "reason": "A defensible explanation needs the actual numbers and rules: Interview willing eligible market attendees and explain the limited convenience-based coverage.",
+        "limitation": "Carefully distinguish this real limitation from a guarantee: Residents who cannot reach the market or attend at other times are absent, and may have very different transport needs.",
+        "improvement": "This change targets the identified risk: Use the suggestions as exploratory evidence, recruit at other sites/times later and seek a better frame for population estimates."
+      },
+      "misconceptions": {
+        "method": {
+          "simple-random": "A simple random sample of all residents requires an actual resident frame and a probability draw.",
+          "quota": "Quota targets would be additional non-random controls and would not solve the missing resident-wide frame."
+        },
+        "reason": {
+          "0": "Unpredictable arrival order does not give equal selection probabilities to all residents.",
+          "1": "Artificial quotas do not guarantee an unbiased estimate for people absent from the market."
+        },
+        "limitation": {
+          "0": "Attendance at one market may exclude residents with the greatest transport access needs.",
+          "1": "Convenient location and voluntary participation can introduce two separate biases."
+        },
+        "improvement": {
+          "0": "Market-based percentages cannot be treated as exact district-wide estimates.",
+          "1": "Selecting supporters produces misleadingly favourable feedback."
+        }
+      },
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ]
     }
   ]
 }

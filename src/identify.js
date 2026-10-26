@@ -62,7 +62,7 @@ export const CHOICE_CONTRASTS=Object.freeze({
 });
 
 export function evidenceParts(scenario){
- const phrase=SCENARIO_EVIDENCE[scenario.id];
+ const phrase=scenario.evidence||SCENARIO_EVIDENCE[scenario.id];
  if(!phrase)throw new Error('Missing Which Method? evidence for '+scenario.id);
  const index=scenario.prompt.indexOf(phrase);
  if(index<0)throw new Error('Evidence quotation not present in '+scenario.id);
@@ -91,14 +91,16 @@ export function reviewScenarioDeck(items,missedIds){
  return items.filter(item=>ids.has(item.id));
 }
 export function validateIdentifyBank(scenarios){
- if(!Array.isArray(scenarios)||scenarios.length<20)throw new Error('Incomplete Which Method? scenario bank');
+ if(!Array.isArray(scenarios)||scenarios.length<50)throw new Error('Incomplete Which Method? scenario bank');
  if(new Set(scenarios.map(x=>x.id)).size!==scenarios.length)throw new Error('Repeated scenario ID');
  for(const item of scenarios){
   if(!METHOD_ORDER.includes(item.correctMethod)||!['recognise','apply'].includes(item.level)||
     !item.reason?.trim()||!item.contrast?.trim()){
    throw new Error('Incomplete or invalid Which Method? question '+item.id);
   }
-  evidenceParts(item);
+  const evidence=evidenceParts(item);
+  if(evidence.quote.length<15||evidence.quote.length>=item.prompt.length)
+   throw new Error('Non-discriminating evidence quotation: '+item.id);
   for(const method of METHOD_ORDER){
    if(method===item.correctMethod)continue;
    if(!CHOICE_CONTRASTS[item.correctMethod]?.[method]?.trim()){
@@ -106,8 +108,9 @@ export function validateIdentifyBank(scenarios){
    }
   }
  }
- if(METHOD_ORDER.some(id=>scenarios.filter(x=>x.correctMethod===id).length<4)){
-  throw new Error('Every method requires four scenario examples');
+ if(METHOD_ORDER.some(id=>scenarios.filter(x=>x.correctMethod===id).length!==10||
+   scenarios.filter(x=>x.correctMethod===id&&x.level==='apply').length<6)){
+  throw new Error('Every method needs ten scenarios, with at least six contextual application cases');
  }
  if(Object.keys(SCENARIO_EVIDENCE).some(id=>!scenarios.some(x=>x.id===id))){
   throw new Error('Unused evidence quotation');

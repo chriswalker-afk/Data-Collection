@@ -14,7 +14,7 @@ import {
   CLOZE_LEVELS, SPEED_MODES, SPEED_DURATIONS, gradeCloze, gradeTerm,
   speedDeck, formatClock, validateTermBank
 } from './recall.js';
-import {EXAM_LEVELS,procedureRound,checkProcedure,moveStep,makeErrorDeck,gradeErrorDiagnosis,validateErrorBank,makeReasoningDeck} from './exam.js';
+import {EXAM_LEVELS,ERROR_ROUND_LENGTHS,REASON_ROUND_LENGTHS,procedureRound,checkProcedure,moveStep,makeErrorDeck,gradeErrorDiagnosis,validateErrorBank,makeReasoningDeck} from './exam.js';
 import {createReasonRound,validateReasonBank} from './reasoning.js';
 import {createReasoningUI} from './reasoning-ui.js';
 import {emptyExamStore,loadExamStore,saveExamStore,clearExamStore} from './exam-sim.js';
@@ -50,6 +50,8 @@ let speedMode = 'untimed';
 let speedDuration = 60;
 let buildMethodId='simple-random';
 let examLevel='foundation';
+let errorRoundLength=5;
+let reasonRoundLength=3;
 let clockHandle = null;
 let matchSettleTimer = null;
 let progressJumpPending = false;
@@ -1106,6 +1108,12 @@ function examLevelPicker() {
  const select=element('select',{id:'exam-level',className:'game-select','data-control':'exam-level'});
  for(const level of EXAM_LEVELS)select.append(element('option',{value:level,selected:level===examLevel},({foundation:'Foundation skills',develop:'Developing explanations',extend:'Stretch and critique'})[level]));
  wrap.append(element('label',{for:'exam-level',className:'game-settings-label'},'Challenge level'),select);
+ const sizes=mode==='error'?ERROR_ROUND_LENGTHS:REASON_ROUND_LENGTHS;
+ const selected=mode==='error'?errorRoundLength:reasonRoundLength;
+ const sizeSelect=element('select',{id:'case-length',className:'game-select','data-control':'case-length'});
+ for(const amount of sizes)sizeSelect.append(element('option',{value:amount,selected:amount===selected},
+   amount===sizes[0]?amount+' · Focused round':amount===sizes[sizes.length-1]?amount+' · All investigations':amount+' · Extended practice'));
+ wrap.append(element('label',{for:'case-length',className:'game-settings-label'},'Investigations per round'),sizeSelect);
  return wrap;
 }
 function buildPicker() {
@@ -1306,9 +1314,9 @@ function restartGame(){
     const order=[buildMethodId,...data.methods.map(m=>m.id).filter(id=>id!==buildMethodId)];
     session={methods:order.map(id=>({...procedureRound(data.methods,id),checked:false,correct:false})),index:0,correct:0,complete:false};
   } else if(mode==='error') {
-    session={items:makeErrorDeck(data.errors,examLevel),index:0,correct:0,complete:false,answered:false,selectedLine:null,selectedRepair:null,selectedImpact:null,reviewMode:false,missed:[],errorStats:{located:0,repaired:0,explained:0}};
+    session={items:makeErrorDeck(data.errors,examLevel,Math.random,errorRoundLength),index:0,correct:0,complete:false,answered:false,selectedLine:null,selectedRepair:null,selectedImpact:null,reviewMode:false,missed:[],errorStats:{located:0,repaired:0,explained:0}};
   } else if(mode==='reason') {
-    session=createReasonRound(makeReasoningDeck(data.reasoning,examLevel));
+    session=createReasonRound(makeReasoningDeck(data.reasoning,examLevel,Math.random,reasonRoundLength));
   } else if(mode==='exam'){
     session={ready:true,complete:false};
   } else session = null;
@@ -1828,6 +1836,12 @@ mount.addEventListener('change', event => {
     if(!data.methods.some(m=>m.id===control.value))return;buildMethodId=control.value;
   } else if(control.dataset.control==='exam-level'&&(mode==='error'||mode==='reason')){
     if(!EXAM_LEVELS.includes(control.value))return;examLevel=control.value;
+  } else if(control.dataset.control==='case-length'&&(mode==='error'||mode==='reason')){
+    const count=Number(control.value);
+    const allowed=mode==='error'?ERROR_ROUND_LENGTHS:REASON_ROUND_LENGTHS;
+    if(!allowed.includes(count))return;
+    if(mode==='error')errorRoundLength=count;
+    else reasonRoundLength=count;
   } else if (control.dataset.control === 'sort-round' && mode === 'sort') {
     if (!data.sortPairs.some(r => r.id === control.value)) return;
     sortRoundId = control.value;

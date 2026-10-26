@@ -37,7 +37,7 @@ test('questions are real shuffled method steps and respect all method IDs',()=>{
  }
 });
 test('error bank has progressive levels, unambiguous keyed line and correction',()=>{
- assert.equal(errors.length,15);
+ assert.equal(errors.length,30);
  for(const q of errors){
   assert.ok(q.lines.length>=3);
   assert.ok(q.errorLine>=0&&q.errorLine<q.lines.length);
@@ -51,7 +51,7 @@ test('error bank has progressive levels, unambiguous keyed line and correction',
  assert.equal(makeErrorDeck(errors,'extend').length,5);
 });
 test('reasoning checklist checks meaningful dimensions; no scoring of prose',()=>{
- assert.equal(reasoning.length,9);
+ assert.equal(reasoning.length,30);
  for(const q of reasoning){
   assert.ok(q.model&&q.tradeoff&&q.priority);
   for(const key of ['method','reason','limitation','improvement'])assert.ok(

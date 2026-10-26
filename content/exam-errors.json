@@ -705,6 +705,711 @@
         "answer": "a",
         "explanation": "Recording responses accurately does not correct a convenience-based sampling frame. Other times, sites or probability methods could broaden coverage."
       }
+    },
+    {
+      "id": "er-16",
+      "level": "foundation",
+      "methodId": "systematic",
+      "context": "A club has 120 numbered members and needs a systematic sample of 20.",
+      "lines": [
+        "Use the complete list of 120 numbered members.",
+        "Calculate the fixed selection interval as 120 ÷ 20 = 5.",
+        "Choose a random start within the first interval, then continue using that interval."
+      ],
+      "errorLine": 1,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Use interval 6 because 120 ÷ 20 = 6, then randomly choose a start from positions 1–6."
+        },
+        {
+          "id": "fix-1",
+          "text": "Use interval 20, since that is the number of members needed."
+        },
+        {
+          "id": "fix-2",
+          "text": "Avoid the random start and simply choose the first member."
+        }
+      ],
+      "repair": "fix-0",
+      "explanation": "For an exact integer interval, k = N/n = 120/20 = 6. An interval of five would produce too many selections if the list were traversed fully.",
+      "impact": {
+        "question": "What happens if the chosen interval stays at five?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The first 20 members are always chosen, regardless of the starting point."
+          },
+          {
+            "id": "b",
+            "text": "Selecting every fifth member across 120 positions would give 24 members, not the required 20."
+          },
+          {
+            "id": "c",
+            "text": "The selection automatically becomes quota sampling because the interval is too small."
+          }
+        ],
+        "answer": "b",
+        "explanation": "The interval determines how many positions are visited; the random start alone cannot correct the wrong ratio."
+      }
+    },
+    {
+      "id": "er-17",
+      "level": "foundation",
+      "methodId": "stratified",
+      "context": "A college has 180 Year 12 pupils and 60 Year 13 pupils and wants a proportional random sample of 40.",
+      "lines": [
+        "Divide the pupils into their separate year-group registers.",
+        "Allocate 20 selections to each year group because there are two groups.",
+        "Randomly choose the allocated number of distinct pupils within each register."
+      ],
+      "errorLine": 1,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Allocate all 40 places to Year 12 because it is the larger group."
+        },
+        {
+          "id": "fix-1",
+          "text": "Allocate 30 pupils to Year 12 and 10 to Year 13, matching the 180:60 population ratio."
+        },
+        {
+          "id": "fix-2",
+          "text": "Keep equal allocations and describe the result as a proportional design."
+        }
+      ],
+      "repair": "fix-1",
+      "explanation": "Proportional stratification requires 40×180/240=30 from Year 12 and 40×60/240=10 from Year 13, not equal numbers.",
+      "impact": {
+        "question": "What is the consequence of keeping 20 from each group?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The sample would necessarily contain more than 40 pupils."
+          },
+          {
+            "id": "b",
+            "text": "Every possible group of 40 pupils would still be equally likely."
+          },
+          {
+            "id": "c",
+            "text": "Year 13 would form 50% of the sample despite being only 25% of the population."
+          }
+        ],
+        "answer": "c",
+        "explanation": "Equal subgroup counts are not proportional when the population groups have different sizes."
+      }
+    },
+    {
+      "id": "er-18",
+      "level": "foundation",
+      "methodId": "quota",
+      "context": "A sports centre wants 12 adult and 8 teenage volunteers for a survey using quota sampling.",
+      "lines": [
+        "Set an adult target of 12 and a teenage target of 8.",
+        "Approach willing eligible visitors and record the group for each response.",
+        "Keep recruiting adults even after 12 adult responses have been obtained, provided the total is below 20."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Draw every name randomly from a complete membership register instead."
+        },
+        {
+          "id": "fix-1",
+          "text": "Remove the two subgroup targets and take any 20 available visitors."
+        },
+        {
+          "id": "fix-2",
+          "text": "Stop recruiting from a group as soon as its target is reached; continue only with unfilled groups."
+        }
+      ],
+      "repair": "fix-2",
+      "explanation": "Quota sampling uses fixed subgroup counts. Taking extra adults when their quota is full prevents the intended 12:8 allocation.",
+      "impact": {
+        "question": "What could the incorrect stopping rule do?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The sample could exceed the adult quota and fail to contain eight teenagers."
+          },
+          {
+            "id": "b",
+            "text": "It makes the procedure a census of all visitors."
+          },
+          {
+            "id": "c",
+            "text": "It guarantees random selection within each age group."
+          }
+        ],
+        "answer": "a",
+        "explanation": "A correct total of 20 is insufficient when the stated quotas must also be met."
+      }
+    },
+    {
+      "id": "er-19",
+      "level": "foundation",
+      "methodId": "opportunity",
+      "context": "A library volunteer surveys 25 pupils who are available in the library at lunchtime.",
+      "lines": [
+        "Approach pupils who happen to be in the library at lunchtime.",
+        "Record each willing pupil's response until 25 have taken part.",
+        "Tell the headteacher that every pupil in the school had an equal chance of selection."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Describe it as an opportunity sample and explain that pupils absent from the library were not available."
+        },
+        {
+          "id": "fix-1",
+          "text": "Call the sample stratified because pupils may belong to different year groups."
+        },
+        {
+          "id": "fix-2",
+          "text": "Treat 25 responses as a census of the whole school."
+        }
+      ],
+      "repair": "fix-0",
+      "explanation": "A convenient, location-based sample has unequal inclusion opportunities: pupils who do not attend the library at that time cannot be selected.",
+      "impact": {
+        "question": "What is the main risk in generalising the responses?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Every pupil was selected with a known probability of 25 divided by the school size."
+          },
+          {
+            "id": "b",
+            "text": "Library users could have different habits from pupils who do not visit at lunchtime."
+          },
+          {
+            "id": "c",
+            "text": "The data necessarily contain no measurement or recording errors."
+          }
+        ],
+        "answer": "b",
+        "explanation": "Convenience sampling may introduce coverage and selection bias, even when responses are accurately recorded."
+      }
+    },
+    {
+      "id": "er-20",
+      "level": "foundation",
+      "methodId": "opportunity",
+      "context": "A student seeks quick opinions about a canteen change by asking whoever is near the entrance after lunch.",
+      "lines": [
+        "Approach eligible volunteers encountered at the canteen entrance.",
+        "Stop after the planned 20 responses without setting subgroup targets.",
+        "Label the method simple random sampling because the student did not choose the order of people arriving."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Label it stratified because some respondents are different ages."
+        },
+        {
+          "id": "fix-1",
+          "text": "Label the method opportunity sampling because recruitment depends on who is available, not an impartial random draw."
+        },
+        {
+          "id": "fix-2",
+          "text": "Keep the simple random label because any order of arrival is automatically random."
+        }
+      ],
+      "repair": "fix-1",
+      "explanation": "An unplanned arrival order does not make every sample of 20 equally likely. No chance-based selection procedure has been used.",
+      "impact": {
+        "question": "Why might the resulting sample be unrepresentative?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A sample size of 20 guarantees the same preferences as the population."
+          },
+          {
+            "id": "b",
+            "text": "Arrival order ensures every possible group of 20 pupils is equally probable."
+          },
+          {
+            "id": "c",
+            "text": "Pupils absent from the canteen or passing at a different time have little or no chance of inclusion."
+          }
+        ],
+        "answer": "c",
+        "explanation": "Convenient access is the selection rule; the absence of deliberate choice is not equivalent to simple random sampling."
+      }
+    },
+    {
+      "id": "er-21",
+      "level": "develop",
+      "methodId": "systematic",
+      "context": "An inspection list repeats a cycle of three machine types, and a researcher wants every third record.",
+      "lines": [
+        "Keep the production-order list, which repeats types A, B and C.",
+        "Choose a random starting record among the first three.",
+        "Assume the random start guarantees all three machine types will be represented in the sample."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Drop the random start but keep every third record because that removes bias."
+        },
+        {
+          "id": "fix-1",
+          "text": "Increase the number selected without examining the repeating pattern."
+        },
+        {
+          "id": "fix-2",
+          "text": "Check the ordering first: every third record may sample only one machine type; change the frame/order or design if coverage matters."
+        }
+      ],
+      "repair": "fix-2",
+      "explanation": "A period-three ordering combined with an interval of three locks each sample into one of the repeating categories, whatever the random start.",
+      "impact": {
+        "question": "What might an entire sample contain?",
+        "options": [
+          {
+            "id": "a",
+            "text": "All selected records might belong to one machine type, misleading an investigation about all types."
+          },
+          {
+            "id": "b",
+            "text": "Each machine type must appear exactly one-third of the time."
+          },
+          {
+            "id": "c",
+            "text": "Random starts remove the effect of all periodic patterns in the ordered list."
+          }
+        ],
+        "answer": "a",
+        "explanation": "A random starting position does not eliminate periodicity when the interval matches the list's cycle."
+      }
+    },
+    {
+      "id": "er-22",
+      "level": "develop",
+      "methodId": "stratified",
+      "context": "An employer wants a proportionate random sample from two distinct department registers.",
+      "lines": [
+        "Calculate the sample allocation for each department from its population share.",
+        "Take the first available employees in each department until those totals are met.",
+        "Combine the resulting responses and call them a stratified random sample."
+      ],
+      "errorLine": 1,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Randomly select the required distinct employee IDs within each department rather than taking those first available."
+        },
+        {
+          "id": "fix-1",
+          "text": "Keep the convenient selection because proportions alone make the sample random."
+        },
+        {
+          "id": "fix-2",
+          "text": "Replace departmental allocation with a fixed gap through one undivided employee list."
+        }
+      ],
+      "repair": "fix-0",
+      "explanation": "The stated allocation is proportional, but selecting employees for convenience within departments is not stratified random sampling.",
+      "impact": {
+        "question": "Which problem arises from recruiting the first available workers?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The procedure guarantees every employee equal inclusion probability."
+          },
+          {
+            "id": "b",
+            "text": "Availability within departments may be associated with shifts or roles, creating selection bias."
+          },
+          {
+            "id": "c",
+            "text": "Departments cannot be included if a random selection is used."
+          }
+        ],
+        "answer": "b",
+        "explanation": "Random selection must occur separately within each stratum, not just in how many places each receives."
+      }
+    },
+    {
+      "id": "er-23",
+      "level": "develop",
+      "methodId": "quota",
+      "context": "Surveyors must recruit 20 commuters by bus and 20 by car outside a station.",
+      "lines": [
+        "Use separate targets of 20 bus commuters and 20 car commuters.",
+        "Approach available, willing commuters in each category until both totals are filled.",
+        "State that setting equal quotas has removed all possible selection and nonresponse bias."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Treat the sample as a census because it includes both commuter groups."
+        },
+        {
+          "id": "fix-1",
+          "text": "Explain that convenience recruitment and refusals can still bias the sample even if the quotas are filled."
+        },
+        {
+          "id": "fix-2",
+          "text": "Assume everyone approached has the same likelihood of response."
+        }
+      ],
+      "repair": "fix-1",
+      "explanation": "Quota controls the specified category totals, not the characteristics or response propensity of people recruited within them.",
+      "impact": {
+        "question": "What may remain hidden despite the 20:20 totals?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Two quotas ensure that all journeys are recorded."
+          },
+          {
+            "id": "b",
+            "text": "A numerical target implies that every individual in both groups was selected randomly."
+          },
+          {
+            "id": "c",
+            "text": "Unwilling or absent commuters may systematically differ from willing respondents inside each category."
+          }
+        ],
+        "answer": "c",
+        "explanation": "Representing two selected category counts does not establish unbiased selection or response."
+      }
+    },
+    {
+      "id": "er-24",
+      "level": "develop",
+      "methodId": "opportunity",
+      "context": "A survey claims to describe all students but interviews those waiting outside a gym after school.",
+      "lines": [
+        "Recruit the first 30 willing pupils outside the gym after clubs end.",
+        "Record the pupils' answers accurately.",
+        "Use the resulting percentages as exact estimates of the entire school's views without qualification."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Claim accurate data entry proves the gym sample is random."
+        },
+        {
+          "id": "fix-1",
+          "text": "Count 30 responses as a census if everyone near the gym responded."
+        },
+        {
+          "id": "fix-2",
+          "text": "Explain that this convenient time and place may favour club members and report the coverage limitation."
+        }
+      ],
+      "repair": "fix-2",
+      "explanation": "The sample may omit students who do not attend clubs or wait near the gym, so unrestricted population claims are unjustified.",
+      "impact": {
+        "question": "Who may be systematically underrepresented?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Pupils who leave immediately or do not attend after-school activities."
+          },
+          {
+            "id": "b",
+            "text": "All school pupils have the same probability of being outside the gym."
+          },
+          {
+            "id": "c",
+            "text": "The selection mechanism cannot influence survey results if responses are recorded carefully."
+          }
+        ],
+        "answer": "a",
+        "explanation": "An accurate response from a biased selection is still not an unbiased sample of the school."
+      }
+    },
+    {
+      "id": "er-25",
+      "level": "develop",
+      "methodId": "opportunity",
+      "context": "A town survey uses volunteers visiting a public market on a weekday morning.",
+      "lines": [
+        "Interview available eligible market visitors during the morning.",
+        "Record how many people decline to participate.",
+        "Assume the results apply equally to people who work weekday mornings and never visit the market."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Qualify conclusions to the accessible group and sample at additional times/locations or use a resident frame."
+        },
+        {
+          "id": "fix-1",
+          "text": "Ignore refusals because the willing volunteers supply enough answers."
+        },
+        {
+          "id": "fix-2",
+          "text": "Call it systematic sampling because interviews happen in sequence."
+        }
+      ],
+      "repair": "fix-0",
+      "explanation": "The sampling location and time exclude many residents, and willingness to respond may further distort results.",
+      "impact": {
+        "question": "What might the timing do to the estimate?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A market automatically contains every subgroup in the town."
+          },
+          {
+            "id": "b",
+            "text": "Residents working at that time may be missed, leaving an overrepresentation of available visitors."
+          },
+          {
+            "id": "c",
+            "text": "Recording refusals makes unavailable residents part of the sampled frame."
+          }
+        ],
+        "answer": "b",
+        "explanation": "Monitoring nonresponse is useful, but it cannot fix residents who never had a chance to be approached."
+      }
+    },
+    {
+      "id": "er-26",
+      "level": "extend",
+      "methodId": "simple-random",
+      "context": "An online university has 1,000 eligible students, but an extract lists only 870 with current email addresses.",
+      "lines": [
+        "Use the 870-address extract as the only list of selectable students.",
+        "Generate distinct random numbers from 1 to 870 to invite 80 students.",
+        "Claim that every possible group of 80 from all 1,000 students has the same selection probability."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Keep the claim because 80 random numbers eliminate every source of bias."
+        },
+        {
+          "id": "fix-1",
+          "text": "Acknowledge incomplete coverage and seek a complete eligible-student frame before claiming a simple random sample of all 1,000."
+        },
+        {
+          "id": "fix-2",
+          "text": "Relabel the extract a census so the missing 130 do not matter."
+        }
+      ],
+      "repair": "fix-1",
+      "explanation": "Random selection from an incomplete frame cannot give omitted students a positive inclusion probability.",
+      "impact": {
+        "question": "What is the probability that one of the 130 omitted students is selected?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Exactly 80/1,000, because that is the target sample fraction."
+          },
+          {
+            "id": "b",
+            "text": "The same as every student with a recorded email address."
+          },
+          {
+            "id": "c",
+            "text": "Zero, even though they belong to the defined population of 1,000."
+          }
+        ],
+        "answer": "c",
+        "explanation": "A fair generator only selects from labels it can produce; missing units are excluded before the draw."
+      }
+    },
+    {
+      "id": "er-27",
+      "level": "extend",
+      "methodId": "systematic",
+      "context": "An analyst needs 40 of 197 sequential records and plans an interval of five.",
+      "lines": [
+        "Choose a random start anywhere from positions 1 to 5.",
+        "Select that record and every fifth record until exactly 40 have been chosen.",
+        "Use only positions that lie between 1 and 197."
+      ],
+      "errorLine": 0,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Allow starts 1–5 and discard any selected positions above 197; exactly 40 are still guaranteed."
+        },
+        {
+          "id": "fix-1",
+          "text": "Always start at position 5, since 197 divided by 40 is almost 5."
+        },
+        {
+          "id": "fix-2",
+          "text": "For this interval and size, restrict the random start to 1 or 2 so the 40th position stays at most 197."
+        }
+      ],
+      "repair": "fix-2",
+      "explanation": "The 40th selected position is start+39×5=start+195. It is at most 197 only for start≤2; starts 3,4,5 would leave the frame.",
+      "impact": {
+        "question": "What happens with a random start of five?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The 40th position is 200, outside the 197-record frame, so the proposed procedure cannot give 40 valid positions."
+          },
+          {
+            "id": "b",
+            "text": "The 40th position is 195 and always remains within the frame."
+          },
+          {
+            "id": "c",
+            "text": "Every possible group of 40 records becomes equally likely after rounding."
+          }
+        ],
+        "answer": "a",
+        "explanation": "A non-integer N/n calls for a defensible interval/start rule; it has no universal mandatory rounding procedure."
+      }
+    },
+    {
+      "id": "er-28",
+      "level": "extend",
+      "methodId": "stratified",
+      "context": "A researcher randomly selects proportional numbers from two student-year registers, but some selected pupils do not reply.",
+      "lines": [
+        "Randomly draw the prescribed distinct pupils from each stratum.",
+        "For each pupil who refuses, substitute a willing friend from the same year group.",
+        "Report the final responses as a fully random stratified sample with no nonresponse concern."
+      ],
+      "errorLine": 1,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Follow up selected nonrespondents where appropriate, record stratum-specific response rates, and explain any remaining nonresponse risk."
+        },
+        {
+          "id": "fix-1",
+          "text": "Replace each nonrespondent with the nearest available pupil and omit the replacement rule."
+        },
+        {
+          "id": "fix-2",
+          "text": "Claim that a matching year-group label restores the original random selection."
+        }
+      ],
+      "repair": "fix-0",
+      "explanation": "Substituting convenience-based friends changes the selection probabilities and risks introducing bias, despite preserving nominal year totals.",
+      "impact": {
+        "question": "What can replacing nonrespondents with friends distort?",
+        "options": [
+          {
+            "id": "a",
+            "text": "It guarantees every original sampled pupil's response has been recorded."
+          },
+          {
+            "id": "b",
+            "text": "Respondents' friendship networks and willingness to participate may affect the final sample within each stratum."
+          },
+          {
+            "id": "c",
+            "text": "Group proportions alone ensure all individual selection probabilities remain unaffected."
+          }
+        ],
+        "answer": "b",
+        "explanation": "The realised responding sample is not automatically random just because its planned allocation was proportional."
+      }
+    },
+    {
+      "id": "er-29",
+      "level": "extend",
+      "methodId": "quota",
+      "context": "A town study fills 60 urban and 40 rural survey places through available volunteers.",
+      "lines": [
+        "Set the 60:40 urban/rural quotas from the population proportions.",
+        "Recruit willing respondents until both specified totals are met.",
+        "Claim that matching one population characteristic proves the final results are representative of every demographic and outcome."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Call the design stratified random because it uses correct population proportions."
+        },
+        {
+          "id": "fix-1",
+          "text": "State that quota controls only the chosen grouping and that within-group convenience selection can still create bias."
+        },
+        {
+          "id": "fix-2",
+          "text": "Treat the collected sample as a census of urban and rural residents."
+        }
+      ],
+      "repair": "fix-1",
+      "explanation": "Population-matching quotas do not automatically balance age, income, participation or the outcome being investigated.",
+      "impact": {
+        "question": "Which limitation survives matching the urban/rural quotas?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Every eligible resident had equal probability of selection."
+          },
+          {
+            "id": "b",
+            "text": "Matching one margin forces all other sample characteristics to match the population."
+          },
+          {
+            "id": "c",
+            "text": "Differences between volunteers and non-volunteers within each area can distort estimates."
+          }
+        ],
+        "answer": "c",
+        "explanation": "Quota sampling controls chosen targets but does not provide random within-quota selection."
+      }
+    },
+    {
+      "id": "er-30",
+      "level": "extend",
+      "methodId": "quota",
+      "context": "A health survey recruits volunteers aged 18–30 and 30–45 using quotas of 25 in each age bracket.",
+      "lines": [
+        "Define one bracket as 18–30 inclusive and the other as 30–45 inclusive.",
+        "Keep a running count against the two 25-person targets.",
+        "Ask available eligible volunteers until both counters show 25."
+      ],
+      "errorLine": 0,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Count 30-year-olds twice to satisfy both quotas more efficiently."
+        },
+        {
+          "id": "fix-1",
+          "text": "Remove all age-group counts so the study becomes a proportional quota sample."
+        },
+        {
+          "id": "fix-2",
+          "text": "Define non-overlapping age categories, for example 18–29 and 30–45 for whole ages, before recruitment."
+        }
+      ],
+      "repair": "fix-2",
+      "explanation": "Age 30 belongs to both stated brackets, so the categories are not mutually exclusive and the quota membership is ambiguous.",
+      "impact": {
+        "question": "What could happen if 30-year-olds are counted in both categories?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A single respondent could fill two nominal places, preventing the intended two-group composition."
+          },
+          {
+            "id": "b",
+            "text": "Double counting creates a simple random sample."
+          },
+          {
+            "id": "c",
+            "text": "Overlapping brackets ensure exactly 50 distinct respondents have been recruited."
+          }
+        ],
+        "answer": "a",
+        "explanation": "Quotas require clear, non-overlapping classification rules when separate group totals are intended."
+      }
     }
   ]
 }
