@@ -148,6 +148,7 @@ test('mobile Menu button supports keyboard, nested Activities and Escape without
 test('mobile My Progress closes navigation while keeping the current topic',async({page})=>{
  await page.setViewportSize({width:320,height:780});
  await page.goto('/#/cloze/data');
+ await expect(page.locator('[data-progress-nav]')).toHaveAttribute('href','#/home/data');
  await page.locator('#mobile-menu-toggle').click();
  await page.locator('[data-progress-nav]').click();
  await expect(page).toHaveURL(/#\/home\/data$/);
