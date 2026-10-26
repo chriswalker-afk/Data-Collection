@@ -10,12 +10,12 @@ import {assessReasoning} from '../src/exam.js';
 const bank=JSON.parse(readFileSync(new URL('../content/exam-reasoning.json',import.meta.url),'utf8')).reasoning;
 const keys=REASON_DIMENSIONS.map(x=>x.key);
 
-test('every level and method has authored pedagogical feedback, with 72 misconception explanations',()=>{
+test('every level and method has two investigations and authored pedagogical feedback, with 240 misconception explanations',()=>{
  assert.equal(validateReasonBank(bank),true);
  assert.deepEqual(new Set(bank.map(q=>q.level)),new Set(['foundation','develop','extend']));
  assert.deepEqual(new Set(bank.map(q=>q.answers.method)),
   new Set(['simple-random','systematic','stratified','quota','opportunity']));
- assert.equal(bank.reduce((n,q)=>n+Object.values(q.misconceptions).reduce((m,part)=>m+Object.keys(part).length,0),0),72);
+ assert.equal(bank.reduce((n,q)=>n+Object.values(q.misconceptions).reduce((m,part)=>m+Object.keys(part).length,0),0),240);
 });
 test('shuffling preserves keyed answers and does not rely on index zero',()=>{
  for(const q of bank){
