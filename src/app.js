@@ -14,7 +14,7 @@ import {
   CLOZE_LEVELS, SPEED_MODES, SPEED_DURATIONS, gradeCloze, gradeTerm,
   speedDeck, formatClock, validateTermBank
 } from './recall.js';
-import {EXAM_LEVELS,procedureRound,checkProcedure,moveStep,makeErrorDeck,gradeError,gradeErrorDiagnosis,validateErrorBank,makeReasoningDeck,assessReasoning} from './exam.js';
+import {EXAM_LEVELS,procedureRound,checkProcedure,moveStep,makeErrorDeck,gradeErrorDiagnosis,validateErrorBank,makeReasoningDeck} from './exam.js';
 import {createReasonRound,validateReasonBank} from './reasoning.js';
 import {createReasoningUI} from './reasoning-ui.js';
 import {emptyExamStore,loadExamStore,saveExamStore,clearExamStore} from './exam-sim.js';
@@ -1181,7 +1181,7 @@ function restartGame(){
     session={items:makeErrorDeck(data.errors,examLevel),index:0,correct:0,complete:false,answered:false,selectedLine:null,selectedRepair:null,selectedImpact:null,reviewMode:false,missed:[],errorStats:{located:0,repaired:0,explained:0}};
   } else if(mode==='reason') {
     session=createReasonRound(makeReasoningDeck(data.reasoning,examLevel));
-  } } else if(mode==='exam'){
+  } else if(mode==='exam'){
     session={ready:true,complete:false};
   } else session = null;
 }
