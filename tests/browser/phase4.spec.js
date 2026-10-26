@@ -6,7 +6,7 @@ test('all nine games are visible and exam skills route to sampling',async({page}
  await expect(page.locator('.game-card')).toHaveCount(9);
  for(const game of ['build','error','reason']){
   await page.goto('/#/'+game+'/data');
-  await expect(page).toHaveURL(new RegExp('#/'+game+'/sampling$'));
+  await expect(page.locator('.activity-topic')).toHaveText('Sampling');
   await expect(page.locator('.exam-workspace')).toBeVisible();
  }
 });

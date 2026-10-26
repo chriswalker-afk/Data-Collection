@@ -502,3 +502,8 @@ progress::-moz-progress-bar { border-radius: 30px; background: #198775; }
  .exam-buttons .btn{width:100%}.exam-choice{padding:12px 10px}
 }
 @media print{.exam-arrow,.exam-buttons,.exam-fieldset input,#reason-written{display:none!important}}
+
+/* Keep all nine navigation links inside the header at intermediate widths. */
+.header-inner{min-width:0}
+.site-nav{min-width:0;max-width:100%;overflow-x:auto;scrollbar-width:thin;overscroll-behavior-x:contain}
+.site-nav a{flex-shrink:0}
