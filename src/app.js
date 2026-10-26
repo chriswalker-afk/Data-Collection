@@ -171,6 +171,29 @@ function activityStagesView(){
   }
   return stages;
 }
+function arcadePathsView(){
+  const section=element('section',{className:'arcade-paths','aria-labelledby':'arcade-path-title'});
+  section.append(div('arcade-paths-head',
+    div('',span('arcade-paths-kicker','YOUR ARCADE · YOUR WAY'),
+      heading(2,'arcade-paths-title','Choose how you want to play',{id:'arcade-path-title'})),
+    paragraph('arcade-paths-note','Independent study or a live class challenge. Your revision is always your choice.')));
+  const cards=div('arcade-path-grid');
+  const solo=action('Browse solo games','browse-solo',{},'arcade-path-card is-solo');
+  solo.replaceChildren(icon('▤','arcade-path-icon'),span('arcade-path-spark','01 / SOLO'),
+    span('arcade-path-name','Solo Arcade'),span('arcade-path-desc','Ten focused activities, your own pace and progress saved in this browser.'),
+    span('arcade-path-foot','Browse all 10 games ↘'));
+  const multi=link('', './multiplayer.html','arcade-path-card is-multi');
+  multi.append(icon('⇄','arcade-path-icon'),span('arcade-path-spark','02 / LIVE'),
+    span('arcade-path-name','Multiplayer Arena'),span('arcade-path-desc','Join a teacher-led sampling showdown with a six-digit room code.'),
+    span('arcade-path-foot','Create or join a room ↗'));
+  const awards=link('','./awards.html','arcade-path-card is-awards');
+  awards.append(icon('✦','arcade-path-icon'),span('arcade-path-spark','03 / NEXT'),
+    span('arcade-path-name','My Awards'),span('arcade-path-desc','Preview the collectible mathematical awards arriving in the next development pass.'),
+    span('arcade-path-foot','Take a sneak peek ↗'));
+  cards.append(solo,multi,awards);section.append(cards);
+  return section;
+}
+
 function homeView() {
   const root = div('page page-home');
   const hero = element('section', { className: 'hero' });
@@ -196,7 +219,7 @@ function homeView() {
     div('floating-card art-front', span('art-label', 'KEY IDEA 01'), span('art-word', 'Population'), span('art-rule', ''), span('art-sentence', 'The entire set of interest.'))
   );
   hero.append(copy, art);
-  root.append(hero);
+  root.append(hero,arcadePathsView());
   const topicSection = element('section', { className: 'section section-topic', 'aria-labelledby': 'topic-title' });
   topicSection.append(
     div('section-top', div('', span('eyebrow', 'MAKE IT YOURS'), heading(2, 'section-title', 'What are you revising?', { id: 'topic-title' })),
@@ -206,7 +229,7 @@ function homeView() {
   root.append(topicSection,experience.journeyView());
   const gameSection = element('section', { className: 'section games-section', 'aria-labelledby': 'games-title' });
   gameSection.append(
-    div('section-top', div('', span('eyebrow', 'TEN WAYS TO LEARN'), heading(2, 'section-title', 'Choose a challenge', { id: 'games-title' })),
+    div('section-top', div('', span('eyebrow', 'TEN WAYS TO LEARN'), heading(2, 'section-title', 'Choose a challenge', { id: 'games-title', tabindex: '-1' })),
       paragraph('section-note', 'Build from accurate recall to full exam-style reasoning.')),
     activityStagesView()
   );
@@ -1364,6 +1387,12 @@ function onAction(button) {
   if(command.startsWith('sim-')){examSimulator.handle(command,button);return;}
   if(['build-move','build-check','build-reveal','build-next','error-check','error-next'].includes(command)){examAction(command,button);return;}
   if(command==='open-feedback'){experience.openFeedback();return;}
+  if(command==='browse-solo'){
+    const target=mount.querySelector('#games-title');
+    target?.scrollIntoView({block:'start',behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+    target?.focus({preventScroll:true});
+    return;
+  }
   if (command === 'topic') {
     window.location.hash = hashFor(mode, button.dataset.topic);
     return;
