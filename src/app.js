@@ -1255,7 +1255,8 @@ async function loadData() {
     }
     examStore=loadExamStore(data.examQuestions,data.methods);
     setRoute();
-  } catch {
+  } catch (error) {
+    console.error('Sampling Arcade initialisation failed:', error);
     data = null;
     mount.replaceChildren(div('error-panel',
       heading(1, 'panel-title', 'We couldn’t load the questions.'),
