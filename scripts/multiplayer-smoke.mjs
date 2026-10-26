@@ -77,6 +77,18 @@ assert.equal(after.reveal.correctMethod,source.correctMethod);
 assert.ok(after.players[0].score>=1000);
 const cross=await request('GET','/rooms/'+host.code+'/state');
 assert.equal(cross.status,401);
+// Original Which Method? room also supports the ceremony without breaking old rooms.
+expectStatus(await request('POST','/rooms/'+host.code+'/command',{type:'close'},host.token),200,'close original');
+expectStatus(await request('POST','/rooms/'+host.code+'/command',{type:'ceremony-start'},host.token),200,'start Which ceremony');
+let classic=expectStatus(await request('GET','/rooms/'+host.code+'/state',undefined,guest.token),200,'Which welcome');
+assert.equal(classic.ceremony.slide.kind,'welcome');
+assert.equal(classic.myMultiplayerAwards,null);
+expectStatus(await request('POST','/rooms/'+host.code+'/command',{type:'ceremony-next'},host.token),200,'Which podium');
+classic=expectStatus(await request('GET','/rooms/'+host.code+'/state',undefined,guest.token),200,'Which podium');
+assert.equal(classic.ceremony.slide.kind,'podium');
+assert.equal(classic.ceremony.slide.standings[0].name,'Staging Otter');
+expectStatus(await request('POST','/rooms/'+host.code+'/command',{type:'ceremony-finale'},host.token),200,'Which finale');
+expectStatus(await request('POST','/rooms/'+host.code+'/command',{type:'ceremony-end'},host.token),200,'Which ceremony complete');
 h.ws.close(1000,'Smoke test done');
 console.log('PASS: Cloudflare staging WebSocket, join lock/unlock/removal, question privacy, scoring and host permissions.');
 
@@ -132,6 +144,31 @@ for(const game of ['speed','match','sort']){
   if(game==='sort')assert.equal(review.reveal.solutions.length,playing.question.statements.length);
   if(game==='speed')assert.ok(review.reveal.correctTerm);
   expectStatus(await request('POST',basePath+'/command',{type:'close'},room.token),200,'close '+game);
+  assert.equal((await request('POST',basePath+'/command',{type:'ceremony-start',awards:['precision-penguin']},student.token)).status,400);
+  expectStatus(await request('POST',basePath+'/command',{type:'ceremony-start'},room.token),200,'start ceremony '+game);
+  let ceremonyState=expectStatus(await request('GET',basePath+'/state',undefined,student.token),200,'welcome '+game);
+  assert.equal(ceremonyState.ceremony.slide.kind,'welcome');
+  assert.equal(ceremonyState.myMultiplayerAwards,null);
+  assert.ok(!JSON.stringify(ceremonyState.ceremony).includes('match-mongoose'));
+  assert.equal((await request('POST',basePath+'/command',{type:'ceremony-next'},student.token)).status,400);
+  expectStatus(await request('POST',basePath+'/command',{type:'ceremony-next'},room.token),200,'podium '+game);
+  ceremonyState=expectStatus(await request('GET',basePath+'/state',undefined,student.token),200,'podium '+game);
+  assert.equal(ceremonyState.ceremony.slide.kind,'podium');
+  assert.equal(ceremonyState.ceremony.slide.standings[0].score,review.players[0].score);
+  expectStatus(await request('POST',basePath+'/command',{type:'ceremony-prev'},room.token),200,'back to welcome');
+  expectStatus(await request('POST',basePath+'/command',{type:'ceremony-finale'},room.token),200,'skip to finale '+game);
+  ceremonyState=expectStatus(await request('GET',basePath+'/state',undefined,student.token),200,'finale '+game);
+  assert.equal(ceremonyState.ceremony.slide.kind,'finale');
+  assert.equal(ceremonyState.myMultiplayerAwards.completed,true);
+  if(game==='match')assert.ok(ceremonyState.myMultiplayerAwards.awarded.includes('match-mongoose'));
+  if(game==='sort')assert.ok(ceremonyState.myMultiplayerAwards.awarded.includes('sorting-salamander'));
+  if(game==='speed')assert.deepEqual(ceremonyState.myMultiplayerAwards.awarded,[]);
+  expectStatus(await request('POST',basePath+'/command',{type:'ceremony-end'},room.token),200,'end ceremony '+game);
+  const complete=expectStatus(await request('GET',basePath+'/state',undefined,student.token),200,'completed '+game);
+  assert.equal(complete.status,'finished');
+  assert.equal(complete.finished.ceremonyCompleted,true);
+  expectStatus(await request('POST',basePath+'/command',{type:'ceremony-start'},room.token),200,'replay '+game);
+  assert.equal(expectStatus(await request('GET',basePath+'/state',undefined,student.token),200,'replayed '+game).ceremony.step,0);
 }
-console.log('PASS: Cloudflare Pass 4 Speed Recall, Match Up and Sort It! staging scoring, privacy and authorisation.');
+console.log('PASS: Cloudflare Pass 5 ceremony in all four games, permissions, podium, replay and user-specific keepsakes.');
 
