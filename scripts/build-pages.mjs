@@ -15,6 +15,10 @@ for(const name of ['src','styles','content']){
 }
 mkdirSync(join(output,'multiplayer'),{recursive:true});
 copyFileSync(join(root,'multiplayer/client.js'),join(output,'multiplayer/client.js'));
+copyFileSync(join(root,'multiplayer/mode-ui.js'),join(output,'multiplayer/mode-ui.js'));
+if(!readFileSync(join(output,'multiplayer/client.js'),'utf8').includes("from './mode-ui.js'")){
+  throw new Error('Published multiplayer client must import its Game UI module');
+}
 // Keep Pages publishing independent of the backend; never publish Worker internals.
 
 // Validate navigation and local assets against the actual publish artifact.
@@ -36,7 +40,7 @@ for(const page of ['index.html','multiplayer.html','awards.html']){
     }
   }
 }
-for(const name of ['multiplayer/worker.js','multiplayer/rules.js','multiplayer/scenarios.js']){
+for(const name of ['multiplayer/worker.js','multiplayer/rules.js','multiplayer/scenarios.js','multiplayer/modes.js','multiplayer/game-bank.js']){
   if(existsSync(join(output,name)))throw new Error('Worker backend must not be deployed to Pages: '+name);
 }
 console.log('Pages publish artifact verified: all three modes, styles, scripts and content exist.');
