@@ -35,6 +35,7 @@ for(const q of errors){
  assert(['foundation','develop','extend'].includes(q.level)&&methodsById.has(q.methodId),'Invalid error level or method: '+q.id);
  assert(q.lines.length>=3&&Number.isInteger(q.errorLine)&&q.errorLine>=0&&q.errorLine<q.lines.length,'Invalid error line: '+q.id);
  assert(q.repairs.length===3&&q.repairs.some(x=>x.id===q.repair)&&q.explanation,'Invalid repair: '+q.id);
+ assert(q.impact?.options?.length===3&&q.impact.options.some(o=>o.id===q.impact.answer)&&q.impact.explanation,'Invalid consequence: '+q.id);
 }
 for(const q of reasoning){
  assert(['foundation','develop','extend'].includes(q.level)&&q.scenario&&q.priority&&q.model&&q.tradeoff,'Invalid scenario: '+q.id);
