@@ -12,7 +12,7 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 
 ## Student features
 - Choose **Sampling**, **Types of data** or **Mixed revision**.
-- **Flashcards** support term→definition and definition→term recall, examples and common misconceptions.
+- **Flashcards** support term→definition and definition→term recall, plus separate advantage and disadvantage cards for each of five sampling methods, census and sample. Browse every card with search and filters or start a full, unscored review. Model points use the same audited evaluation bank as Sort It!.
 - **Match Up** offers tactile term–definition tiles with selected-state guidance, short success/retry animations, visible pair progress and accessible keyboard or touch interaction.
 - **Missing Words** now has three levels: **Recognise** (the original four choices), **Recall** (type a word with an optional first-letter hint) and **Independent** (type without choices or hints).
 - **Sort It!** gives two sampling methods and mixed advantage/disadvantage statements. Place each statement in the correct method-and-category column; only the first complete check counts towards progress.
