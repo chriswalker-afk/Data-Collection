@@ -23,7 +23,7 @@ jobs:
           mkdir -p dist/src dist/content
           cp index.html styles.css favicon.svg dist/
           cp src/*.js dist/src/
-          cp content/concepts.json content/cloze.json content/evaluations.json content/sort-rounds.json content/scenarios.json content/methods.json dist/content/
+          cp content/concepts.json content/cloze.json content/evaluations.json content/sort-rounds.json content/scenarios.json content/methods.json content/accepted-terms.json dist/content/
           touch dist/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

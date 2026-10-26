@@ -9,7 +9,11 @@ import {
 import {
   METHOD_ORDER, METHOD_LABELS, SORT_LABELS, ROUND_LENGTHS,
   categoryLabel, conceptIdForSubject, makeSortRound, makeScenarioRound
-} from './phase2.js';
+ } from './phase2.js';
+import {
+  CLOZE_LEVELS, SPEED_MODES, SPEED_DURATIONS, gradeCloze, gradeTerm,
+  speedDeck, formatClock, validateTermBank
+} from './recall.js';
 
 const mount = document.getElementById('app');
 const announcer = document.getElementById('announcer');
@@ -21,6 +25,10 @@ let mode = 'home';
 let session = null;
 let sortRoundId = 'sort-srs';
 let scenarioLength = 10;
+let clozeLevel = 'choices';
+let speedMode = 'untimed';
+let speedDuration = 60;
+let clockHandle = null;
 
 function element(tag, attributes = {}, ...children) {
   const node = document.createElement(tag);
@@ -90,7 +98,7 @@ function metaBar() {
   );
 }
 function gameCard(game) {
-  const symbol = { flashcards: '▧', match: '⇄', cloze: '✎', sort: '↕', identify: '?' }[game.id];
+  const symbol = { flashcards: '▧', match: '⇄', cloze: '✎', sort: '↕', identify: '?', speed: '⌨' }[game.id];
   const card = link('', hashFor(game.id, topic), 'game-card');
   card.append(
     div('game-card-top', span('game-number', game.number + ' / REVISE'), icon(symbol, 'game-icon')),
@@ -128,13 +136,13 @@ function homeView() {
   const topicSection = element('section', { className: 'section section-topic', 'aria-labelledby': 'topic-title' });
   topicSection.append(
     div('section-top', div('', span('eyebrow', 'MAKE IT YOURS'), heading(2, 'section-title', 'What are you revising?', { id: 'topic-title' })),
-      paragraph('section-note', 'The first three games cover both topics. The new games focus on sampling.')),
+      paragraph('section-note', 'All games except Sort It! and Which Method? support both topics.')),
     topicPicker()
   );
   root.append(topicSection);
   const gameSection = element('section', { className: 'section games-section', 'aria-labelledby': 'games-title' });
   gameSection.append(
-    div('section-top', div('', span('eyebrow', 'FIVE WAYS TO LEARN'), heading(2, 'section-title', 'Choose a challenge', { id: 'games-title' })),
+    div('section-top', div('', span('eyebrow', 'SIX WAYS TO LEARN'), heading(2, 'section-title', 'Choose a challenge', { id: 'games-title' })),
       paragraph('section-note', 'A different way to practise the same mathematics.')),
     div('games-grid', GAMES.map(gameCard))
   );
@@ -192,7 +200,11 @@ function roundProgress(current, total, label) {
 }
 function showCompletion(game) {
   const gameTitle = GAMES.find(g => g.id === game).title;
-  const scoreLine = game === 'flashcards' ? session.correct + ' confident recalls out of ' + session.items.length + ' cards'
+  const scoreLine = game === 'speed'
+    ? session.correct + ' correct of ' + session.attempted + ' submitted · ' +
+      (session.speedMode === 'timed' ? speedDuration + '-second challenge' : 'untimed practice') +
+      (session.finishedReason === 'time' ? ' · Time is up' : '')
+    : game === 'flashcards' ? session.correct + ' confident recalls out of ' + session.items.length + ' cards'
     : game === 'match' ? 'All ' + session.terms.length + ' pairs matched · ' + session.mistakes + ' incorrect attempts'
     : game === 'sort' ? session.correct + ' of ' + session.items.length + ' statements sorted correctly'
     : game === 'identify' ? session.correct + ' of ' + session.items.length + ' scenarios identified correctly'
@@ -202,6 +214,8 @@ function showCompletion(game) {
     heading(2, 'completion-title', 'Nicely done. Keep it going.', { tabindex: '-1' }),
     paragraph('completion-description', gameTitle + ' · ' + topicLabel(topic)),
     paragraph('completion-score', scoreLine),
+    ...(game === 'cloze' && clozeLevel !== 'independent'
+      ? [action('Try the next level →', 'cloze-step-up', {}, 'btn btn-quiet')] : []),
     metaBar(),
     div('complete-actions',
       action('Play another round ↻', 'restart', {}, 'btn btn-primary'),
@@ -289,45 +303,281 @@ function matchView() {
   if (session.feedback) root.append(div('inline-feedback' + (session.feedbackGood ? ' correct' : ' incorrect'), icon(session.feedbackGood ? '✓' : '!'), paragraph('', session.feedback)));
   return root;
 }
+function clozeModePicker() {
+  const wrap = div('game-settings recall-settings');
+  const label = element('label', {for:'cloze-level',className:'game-settings-label'}, 'Choose your level');
+  const select = element('select', {id:'cloze-level',className:'game-select','data-control':'cloze-level'});
+  for (const level of CLOZE_LEVELS) {
+    select.append(element('option',{value:level.id,selected:level.id===clozeLevel},level.label));
+  }
+  wrap.append(label,select,paragraph('settings-hint', CLOZE_LEVELS.find(l=>l.id===clozeLevel).description));
+  return wrap;
+}
+function typedForm(kind, labelText, value) {
+  const fieldId=kind==='cloze'?'cloze-answer':'speed-answer';
+  const form=element('form',{'data-form':kind,'className':'typed-form'});
+  const input=element('input',{
+    type:'text', id:fieldId, name:'answer',
+    className:'typed-input', value:value||'',
+    placeholder:kind==='cloze'?'Enter the missing word':'Enter the mathematical term',
+    autocomplete:'off',autocapitalize:'off',spellcheck:'false',maxlength:'100',required:true
+  });
+  form.append(
+    element('label',{for:fieldId,className:'typed-label'},labelText),
+    div('typed-input-row',input,element('button',{type:'submit',className:'btn btn-primary'},'Check answer'))
+  );
+  return form;
+}
 function clozeView() {
   const root = div('page activity-page');
-  root.append(activityTop('cloze'));
+  root.append(activityTop('cloze'),clozeModePicker());
   if (session.complete) { root.append(showCompletion('cloze')); return root; }
-  const current = session.items[session.index];
-  const parts = splitCloze(current.prompt);
-  const number = session.index + 1;
-  root.append(div('round-controls', roundProgress(number, session.items.length, 'Question ' + number + ' of ' + session.items.length),
-    span('quiet-tag', session.correct + ' correct')));
-  const question = element('section', { className: 'cloze-panel', 'data-question-id': current.id, 'aria-labelledby': 'cloze-title' });
-  question.append(
-    span('eyebrow', 'COMPLETE THE DEFINITION'),
-    heading(2, 'cloze-title', 'Which word belongs in the gap?', { id: 'cloze-title' }),
-    div('cloze-sentence', parts[0], span('cloze-blank', session.answered ? current.answer : '________'), parts[1]),
-    paragraph('choose-note', 'Choose one answer.')
+  const current=session.items[session.index];
+  const parts=splitCloze(current.prompt);
+  const number=session.index+1;
+  const typed=clozeLevel!=='choices';
+  root.append(
+    div('round-controls',
+      roundProgress(number,session.items.length,'Question '+number+' of '+session.items.length),
+      span('quiet-tag',session.correct+' correct without help')
+    )
   );
-  const options = div('cloze-options');
-  const choices = session.options[current.id];
-  for (const choice of choices) {
-    const selected = session.choice === choice;
-    const correct = clozeCorrect(current, choice);
-    const stateClass = session.answered && correct ? ' is-correct' : session.answered && selected ? ' is-incorrect' : '';
-    options.append(action(choice, 'cloze-option', { 'data-choice': choice, disabled: session.answered ? true : false },
-      'option-button' + stateClass));
-  }
-  question.append(options);
-  if (session.answered) {
-    const correct = clozeCorrect(current, session.choice);
+  const question=element('section',{
+    className:'cloze-panel',
+    'data-question-id':current.id,
+    'aria-labelledby':'cloze-title'
+  });
+  question.append(
+    span('eyebrow',typed?'RECALL THE MISSING WORD':'COMPLETE THE DEFINITION'),
+    heading(2,'cloze-title',typed?'Type the word that belongs in the gap.':'Which word belongs in the gap?',{id:'cloze-title'}),
+    div('cloze-sentence',parts[0],
+      span('cloze-blank',session.answered?current.answer:'________'),parts[1])
+  );
+  if (!typed) {
+    question.append(paragraph('choose-note','Choose one answer.'));
+    const options=div('cloze-options');
+    for (const choice of session.options[current.id]) {
+      const selected=session.choice===choice;
+      const correct=clozeCorrect(current,choice);
+      const stateClass=session.answered&&correct?' is-correct':session.answered&&selected?' is-incorrect':'';
+      options.append(action(choice,'cloze-option',{
+        'data-choice':choice,disabled:session.answered
+      },'option-button'+stateClass));
+    }
+    question.append(options);
+  } else if (!session.answered) {
     question.append(
-      div('inline-feedback' + (correct ? ' correct' : ' incorrect'), icon(correct ? '✓' : '!'),
-        div('', heading(3, 'feedback-heading', correct ? 'Exactly right.' : 'Not quite — ' + current.answer + ' is correct.'),
-          paragraph('', current.explanation))
-      ),
-      div('next-row', action(number === session.items.length ? 'Finish round →' : 'Next question →', 'cloze-next', {}, 'btn btn-primary'))
+      paragraph('choose-note',clozeLevel==='guided'?'Recall the exact word. You can reveal its first letter if needed.':'No word bank or hints: try to retrieve the exact mathematical word.'),
+      typedForm('cloze','Your missing word',session.draft)
     );
+    if (clozeLevel==='guided') {
+      const assistance=div('hint-area',
+        action(session.hintUsed?'Hint revealed':'Show first-letter hint','cloze-hint',
+          {disabled:session.hintUsed},'btn btn-quiet btn-small')
+      );
+      if (session.hintUsed) assistance.append(span('hint-text','First letter: '+current.answer.charAt(0).toUpperCase()+' · A hinted answer is practice, not mastery.'));
+      question.append(assistance);
+    }
+    question.append(div('typed-tools',action('Show answer and move on','cloze-reveal',{},'text-button')));
+    if (session.typoRetry) {
+      question.append(paragraph('typed-near-miss','Almost — check your spelling, then submit once more. No answer has been recorded yet.'));
+    }
+  }
+  if (session.answered) {
+    let title;
+    if (!typed) {
+      const correct=clozeCorrect(current,session.choice);
+      title=correct?'Exactly right.':'Not quite — '+current.answer+' is correct.';
+    } else {
+      title=session.status==='correct'?'Exactly right.'
+        :session.status==='assisted'?'Correct with help — try again without a hint to build mastery.'
+        :session.status==='skipped'?'Here is the model word: '+current.answer
+        :'Not quite — '+current.answer+' is correct.';
+    }
+    const positive=session.status==='correct' || (!typed&&clozeCorrect(current,session.choice));
+    question.append(
+      div('inline-feedback typed-feedback'+(positive?' correct':' incorrect'))
+    );
+    const feedback=question.lastElementChild;
+    feedback.setAttribute('tabindex','-1');
+    feedback.append(
+      icon(positive?'✓':'!'),
+      div('',heading(3,'feedback-heading',title),paragraph('',current.explanation))
+    );
+    question.append(div('next-row',
+      action(number===session.items.length?'Finish round →':'Next question →',
+        'cloze-next',{},'btn btn-primary')));
   }
   root.append(question);
   return root;
 }
+
+
+function speedModePicker() {
+  const wrap=div('game-settings speed-settings');
+  const modeLabel=element('label',{for:'speed-mode',className:'game-settings-label'},'Practice mode');
+  const modeSelect=element('select',{id:'speed-mode',className:'game-select','data-control':'speed-mode'});
+  modeSelect.append(
+    element('option',{value:'untimed',selected:speedMode==='untimed'},'Untimed · 10 terms'),
+    element('option',{value:'timed',selected:speedMode==='timed'},'Timed · beat the clock')
+  );
+  const modeGroup=div('setting-group',modeLabel,modeSelect);
+  wrap.append(modeGroup);
+  if (speedMode==='timed') {
+    const durationLabel=element('label',{for:'speed-duration',className:'game-settings-label'},'Time limit');
+    const durationSelect=element('select',{id:'speed-duration',className:'game-select','data-control':'speed-duration'});
+    for (const duration of SPEED_DURATIONS) {
+      durationSelect.append(element('option',{value:duration,selected:duration===speedDuration},duration+' seconds'));
+    }
+    wrap.append(div('setting-group',durationLabel,durationSelect));
+  }
+  return wrap;
+}
+function clockBadge() {
+  const container=div('clock-badge',
+    span('clock-caption','Time remaining'),
+    element('span',{'className':'clock-value','data-clock':'','role':'timer',
+      'aria-live':'off','aria-label':'Time remaining'},formatClock(session.remainingMs)));
+  return container;
+}
+function speedView() {
+  const root=div('page activity-page');
+  root.append(activityTop('speed'),speedModePicker());
+  if (session.complete) {root.append(showCompletion('speed'));return root;}
+  if (!session.started) {
+    root.append(div('speed-ready',
+      span('eyebrow','TIMED ACTIVE RECALL'),
+      heading(2,'speed-ready-title','Ready to put your memory to work?'),
+      paragraph('speed-ready-copy','You will have '+speedDuration+
+        ' seconds to type the mathematical terms. The timer runs while you answer and pauses while you read feedback. Switching tabs also pauses it.'),
+      action('Start '+speedDuration+'-second round →','speed-start',{},'btn btn-primary')
+    ));
+    return root;
+  }
+  const current=session.items[session.index];
+  const count=session.attempted+1;
+  const total=session.speedMode==='untimed'?session.items.length:null;
+  root.append(
+    div('round-controls',
+      session.speedMode==='untimed'
+        ? roundProgress(session.index+1,total,'Term '+(session.index+1)+' of '+total)
+        : div('round-head timed-score',
+            span('round-caption','Terms attempted: '+session.attempted),
+            span('round-caption','Correct: '+session.correct)),
+      session.speedMode==='timed'?clockBadge():span('quiet-tag',session.correct+' correct')
+    )
+  );
+  const panel=element('section',{
+    className:'recall-panel','aria-labelledby':'recall-title','data-concept-id':current.id
+  });
+  panel.append(
+    span('eyebrow','DEFINITION → TERM'),
+    heading(2,'recall-title','Which mathematical term is described?',{id:'recall-title'}),
+    div('recall-definition',current.definition)
+  );
+  if (!session.answered) {
+    panel.append(
+      paragraph('recall-instruction','Type the correct term, then press Enter or select Check answer.'),
+      typedForm('speed','Mathematical term',session.draft),
+      div('typed-tools',action('Skip and reveal','speed-skip',{},'text-button'))
+    );
+    if (session.typoRetry) panel.append(paragraph('typed-near-miss',
+      'Very close — check the spelling and submit once more. No mark has been recorded yet.'));
+  } else {
+    const correct=session.status==='correct';
+    const title=correct?'Correct — '+current.label
+      :session.status==='skipped'?'Skipped — '+current.label
+      :'The correct term is '+current.label;
+    const feedback=div('inline-feedback typed-feedback'+(correct?' correct':' incorrect'),
+      icon(correct?'✓':'!'),
+      div('',
+        heading(3,'feedback-heading',title),
+        ...(correct&&session.aliasUsed?[paragraph('alias-note','Accepted equivalent terminology.')]:[]),
+        paragraph('',current.example),
+        paragraph('feedback-contrast',current.misconception)
+      )
+    );
+    feedback.setAttribute('tabindex','-1');
+    panel.append(feedback,
+      div('next-row',action(session.speedMode==='untimed'&&session.index===session.items.length-1
+        ?'Finish round →':'Next definition →','speed-next',{},'btn btn-primary')));
+  }
+  root.append(panel);
+  return root;
+}
+function stopClock() {
+  if (clockHandle!==null) window.clearInterval(clockHandle);
+  clockHandle=null;
+}
+function ensureClock() {
+  if (mode!=='speed'||!session||session.complete||session.speedMode!=='timed'||!session.started) {
+    stopClock();return;
+  }
+  if (clockHandle===null) clockHandle=window.setInterval(syncClock,200);
+}
+function syncClock() {
+  if (mode!=='speed'||!session||session.complete||session.speedMode!=='timed'||!session.started) return;
+  if (document.hidden||session.answered) { session.lastTick=null;return; }
+  const now=performance.now();
+  if (session.lastTick!==null) {
+    session.remainingMs=Math.max(0,session.remainingMs-(now-session.lastTick));
+  }
+  session.lastTick=now;
+  const timer=mount.querySelector('[data-clock]');
+  if (timer) timer.textContent=formatClock(session.remainingMs);
+  if (session.remainingMs<=0) {
+    session.finishedReason='time';
+    finishRound();
+    announce('Time is up. The round has ended.');
+  }
+}
+function speedForward() {
+  if (!session.answered||session.complete) return;
+  session.answered=false;
+  session.draft='';
+  session.typoRetry=false;
+  session.status=null;
+  session.aliasUsed=false;
+  if (session.index===session.items.length-1) {
+    if (session.speedMode==='untimed') {
+      session.finishedReason='complete';finishRound();return;
+    }
+    session.items=speedDeck(data.concepts,topic,Math.random,Number.POSITIVE_INFINITY);
+    session.index=0;
+  } else session.index++;
+  session.lastTick=performance.now();
+  render('#speed-answer');
+  announce('Next definition.');
+}
+function resolveSpeed(value, skipped=false) {
+  if(mode!=='speed'||!session?.started||session.complete||session.answered) return;
+  syncClock();
+  if(session.complete) return;
+  const current=session.items[session.index];
+  const result=skipped?{status:'wrong'}:gradeTerm(value,current,data.acceptedTerms,data.concepts);
+  if(result.status==='empty') return;
+  if(result.status==='typo'&&!session.typoRetry&&!skipped) {
+    session.typoRetry=true;
+    session.draft=value;
+    render('#speed-answer');
+    announce('Almost. Check the spelling and try once more. Nothing has been marked.');
+    return;
+  }
+  const correct=result.status==='correct'&&!skipped;
+  session.answered=true;
+  session.draft=value;
+  session.status=skipped?'skipped':correct?'correct':'wrong';
+  session.aliasUsed=correct&&result.alias===true;
+  session.attempted++;
+  if(correct) session.correct++;
+  if(skipped) session.skipped++;
+  session.lastTick=null; // Reading explanatory feedback is not against the clock.
+  remember(current.id,correct);
+  render('.recall-panel .typed-feedback');
+  announce(correct?'Correct. '+current.label:(skipped?'Skipped. ':'Not quite. ')+
+    'The term is '+current.label+'.');
+}
+
 
 function sortSetPicker() {
   const wrap = div('game-settings');
@@ -478,9 +728,10 @@ function render(focusTarget) {
   if (!data) return;
   navSync();
   const views = { home: homeView, flashcards: flashcardView, match: matchView, cloze: clozeView,
-    sort: sortView, identify: identifyView };
+    sort: sortView, identify: identifyView, speed: speedView };
   const view = (views[mode] || homeView)();
   mount.replaceChildren(view);
+  ensureClock();
   if (focusTarget) {
     requestAnimationFrame(() => {
       const target = mount.querySelector(focusTarget) || mount.querySelector('#view-heading');
@@ -499,7 +750,8 @@ function restartGame() {
   } else if (mode === 'cloze') {
     const items = shuffled(clozeInTopic(data.cloze, data.concepts, topic));
     const options = Object.fromEntries(items.map(q => [q.id, shuffled(q.choices)]));
-    session = { items, options, index: 0, choice: null, answered: false, correct: 0, complete: false };
+    session = { items, options, index: 0, choice: null, answered: false, correct: 0,
+      complete: false, draft: '', status: null, hintUsed: false, typoRetry: false };
   } else if (mode === 'sort') {
     const round = makeSortRound(data.rounds, data.evaluations, sortRoundId);
     session = { ...round, items: round.items, index: 0, choice: null, answered: false,
@@ -507,6 +759,13 @@ function restartGame() {
   } else if (mode === 'identify') {
     session = { items: makeScenarioRound(data.scenarios, scenarioLength), index: 0,
       choice: null, answered: false, correct: 0, complete: false };
+  } else if (mode === 'speed') {
+    const pool = speedDeck(data.concepts, topic, Math.random,
+      speedMode === 'timed' ? Number.POSITIVE_INFINITY : 10);
+    session = { items: pool, index: 0, speedMode, started: speedMode === 'untimed',
+      answered: false, draft: '', status: null, typoRetry: false,
+      remainingMs: speedDuration * 1000, lastTick: null, attempted: 0,
+      correct: 0, skipped: 0, complete: false, finishedReason: null };
   } else session = null;
 }
 function setRoute() {
@@ -514,7 +773,7 @@ function setRoute() {
   const changed = route.mode !== mode || route.topic !== topic || !session && route.mode !== 'home';
   mode = route.mode;
   topic = route.topic;
-  if (changed) restartGame();
+  if (changed) { stopClock(); restartGame(); }
   render(changed && mode !== 'home' ? '#view-heading' : null);
 }
 function remember(conceptId, correct) {
@@ -524,6 +783,7 @@ function remember(conceptId, correct) {
 function finishRound() {
   if (session.complete) return;
   session.complete = true;
+  if (mode === 'speed') stopClock();
   progress = recordSession(progress);
   if (!saveProgress(progress)) persistenceAvailable = false;
   render('.completion-title');
@@ -566,6 +826,32 @@ function selectMatch(side, id) {
     render(side === 'term' ? '[data-action="match-def"]' : '[data-action="match-term"]');
   }
 }
+
+function resolveCloze(value, skipped=false) {
+  if(mode!=='cloze'||clozeLevel==='choices'||session.complete||session.answered) return;
+  const current=session.items[session.index];
+  const result=skipped?{status:'wrong'}:gradeCloze(value,current);
+  if(result.status==='empty') return;
+  if(result.status==='typo'&&!session.typoRetry&&!skipped) {
+    session.typoRetry=true;
+    session.draft=value;
+    render('#cloze-answer');
+    announce('Very close. Check the spelling and submit again. Nothing has been marked yet.');
+    return;
+  }
+  const correct=!skipped&&result.status==='correct';
+  session.answered=true;
+  session.draft=value;
+  session.status=skipped?'skipped':correct?(session.hintUsed?'assisted':'correct'):'wrong';
+  session.choice=value;
+  // Helped recall teaches the answer but must not count as independent mastery.
+  if(session.status==='correct') session.correct++;
+  remember(current.conceptId,session.status==='correct');
+  render('.cloze-panel .typed-feedback');
+  announce(session.status==='correct'?'Correct. ':session.status==='assisted'?'Correct with a hint. ':
+    'The missing word is '+current.answer+'.');
+}
+
 function onAction(button) {
   const command = button.dataset.action;
   if (command === 'topic') {
@@ -582,7 +868,7 @@ function onAction(button) {
     return;
   }
   if (command === 'restart') {
-    restartGame(); render('#view-heading');
+    stopClock(); restartGame(); render('#view-heading');
     announce('New round started.');
     return;
   }
@@ -625,6 +911,38 @@ function onAction(button) {
     nextClassification();
     return;
   }
+  if (command === 'cloze-step-up' && mode === 'cloze') {
+    const index=CLOZE_LEVELS.findIndex(level=>level.id===clozeLevel);
+    if(index>=0&&index<CLOZE_LEVELS.length-1) clozeLevel=CLOZE_LEVELS[index+1].id;
+    restartGame();render('#cloze-level');
+    announce('Next level: '+CLOZE_LEVELS.find(level=>level.id===clozeLevel).label+'.');
+    return;
+  }
+  if (command === 'cloze-hint' && mode === 'cloze' && clozeLevel === 'guided' && !session.answered) {
+    session.hintUsed=true;
+    render('#cloze-answer');
+    announce('The first letter is '+session.items[session.index].answer.charAt(0)+'. This will be recorded as practice, not mastery.');
+    return;
+  }
+  if (command === 'cloze-reveal') {
+    resolveCloze('',true);
+    return;
+  }
+  if (command === 'speed-start' && mode === 'speed' && !session.started) {
+    session.started=true;
+    session.lastTick=performance.now();
+    render('#speed-answer');
+    announce('Timed challenge started.');
+    return;
+  }
+  if (command === 'speed-skip') {
+    resolveSpeed('',true);
+    return;
+  }
+  if (command === 'speed-next') {
+    speedForward();
+    return;
+  }
   if (command === 'cloze-option') {
     if (session.answered) return;
     const current = session.items[session.index];
@@ -643,7 +961,11 @@ function onAction(button) {
       session.index += 1;
       session.answered = false;
       session.choice = null;
-      render('[data-action="cloze-option"]');
+      session.draft = '';
+      session.status = null;
+      session.hintUsed = false;
+      session.typoRetry = false;
+      render(clozeLevel==='choices'?'[data-action="cloze-option"]':'#cloze-answer');
       announce('Next question.');
     }
     return;
@@ -658,6 +980,15 @@ mount.addEventListener('click', event => {
   const button = event.target.closest('button[data-action]');
   if (button && !button.disabled) onAction(button);
 });
+mount.addEventListener('submit', event => {
+  const form=event.target.closest('form[data-form]');
+  if (!form) return;
+  event.preventDefault();
+  const input=form.querySelector('input[name="answer"]');
+  if(!input || !input.value.trim()) return;
+  if(form.dataset.form==='cloze') resolveCloze(input.value);
+  else if(form.dataset.form==='speed') resolveSpeed(input.value);
+});
 mount.addEventListener('change', event => {
   const control = event.target;
   if (!control.matches('select[data-control]')) return;
@@ -668,25 +999,49 @@ mount.addEventListener('change', event => {
     const length = Number(control.value);
     if (!ROUND_LENGTHS.includes(length)) return;
     scenarioLength = length;
+  } else if (control.dataset.control === 'cloze-level' && mode === 'cloze') {
+    if(!CLOZE_LEVELS.some(level=>level.id===control.value)) return;
+    clozeLevel=control.value;
+  } else if (control.dataset.control === 'speed-mode' && mode === 'speed') {
+    if(!SPEED_MODES.includes(control.value)) return;
+    speedMode=control.value;
+  } else if (control.dataset.control === 'speed-duration' && mode === 'speed') {
+    const duration=Number(control.value);
+    if(!SPEED_DURATIONS.includes(duration)) return;
+    speedDuration=duration;
   } else return;
+  stopClock();
   restartGame();
-  render('select[data-control]');
+  render('select[data-control="'+control.dataset.control+'"]');
   announce('A new round is ready.');
 });
 window.addEventListener('hashchange', () => { if (data) setRoute(); });
+document.addEventListener('visibilitychange', () => {
+  if(mode==='speed' && session?.speedMode==='timed') {
+    session.lastTick=null; // Return to the same remaining time after switching tabs.
+  }
+});
 async function loadData() {
   mount.replaceChildren(div('loading', 'Loading your revision activities…'));
   try {
     const sources = [
       ['concepts', 'concepts'], ['cloze', 'cloze'], ['evaluations', 'evaluations'],
-      ['sort-rounds', 'rounds'], ['scenarios', 'scenarios'], ['methods', 'methods']
+      ['sort-rounds', 'rounds'], ['scenarios', 'scenarios'], ['methods', 'methods'],
+      ['accepted-terms', 'terms']
     ];
     const responses = await Promise.all(sources.map(([name]) =>
       fetch(new URL('./content/' + name + '.json', document.baseURI))));
     if (responses.some(response => !response.ok)) throw new Error('The revision content could not be loaded.');
     const payloads = await Promise.all(responses.map(response => response.json()));
     data = Object.fromEntries(sources.map((source, i) => [source[1], payloads[i][source[1]]]));
-    if (Object.values(data).some(items => !Array.isArray(items))) throw new Error('Unexpected content format.');
+    if (Object.entries(data).some(([key,items]) => key!=='terms' && !Array.isArray(items))) {
+      throw new Error('Unexpected content format.');
+    }
+    if(!data.terms||typeof data.terms!=='object'||Array.isArray(data.terms)) {
+      throw new Error('Invalid accepted terminology.');
+    }
+    data.acceptedTerms=data.terms;
+    validateTermBank(data.concepts,data.acceptedTerms);
     if (data.rounds.length < 9 || data.scenarios.length < 20 || data.methods.length !== 5) {
       throw new Error('Incomplete sampling content.');
     }
