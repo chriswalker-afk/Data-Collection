@@ -1,5 +1,5 @@
 import {
-  TOPICS, GAMES, topicLabel, conceptsInTopic, clozeInTopic,
+  TOPICS, GAMES, ACTIVITY_STAGES, topicLabel, conceptsInTopic, clozeInTopic,
   makeMatchRound, shuffled, splitCloze, clozeCorrect, routeFromHash, hashFor, isSamplingOnlyGame
 } from './core.js';
 import {
@@ -37,6 +37,21 @@ let speedDuration = 60;
 let buildMethodId='simple-random';
 let examLevel='foundation';
 let clockHandle = null;
+let progressJumpPending = false;
+const headerNav=document.getElementById('main-nav');
+const mobileMenuToggle=document.getElementById('mobile-menu-toggle');
+const activitiesMenu=document.getElementById('activities-menu');
+function closeHeaderMenus(){
+  activitiesMenu.open=false;
+  headerNav.classList.remove('is-open');
+  mobileMenuToggle.setAttribute('aria-expanded','false');
+}
+function focusProgressPanel(){
+  const target=mount.querySelector('#progress-title');
+  if(!target)return;
+  target.scrollIntoView({block:'start',behavior:'auto'});
+  target.focus({preventScroll:true});
+}
 
 function element(tag, attributes = {}, ...children) {
   const node = document.createElement(tag);
@@ -72,6 +87,9 @@ function navSync() {
     if (destination === mode) anchor.setAttribute('aria-current', 'page');
     else anchor.removeAttribute('aria-current');
   }
+  const progressLink=document.querySelector('[data-progress-nav]');
+  if(progressLink)progressLink.href=hashFor('home',topic);
+  activitiesMenu.classList.toggle('is-current',mode!=='home'&&mode!=='exam');
   document.title = (mode === 'home' ? 'Sampling Arcade' : GAMES.find(g => g.id === mode).title + ' · Sampling Arcade') + ' · A Level Maths';
 }
 function topicPicker() {
@@ -108,9 +126,10 @@ function metaBar() {
 function gameCard(game) {
   const symbol = { flashcards: '▧', match: '⇄', cloze: '✎', sort: '↕', identify: '?', speed: '⌨', build: '≡', error: '!', reason: '◇', exam: '✦' }[game.id];
   const card = link('', hashFor(game.id, topic), 'game-card');
+  card.dataset.gameId=game.id;
   card.append(
     div('game-card-top', span('game-number', game.number + ' / REVISE'), icon(symbol, 'game-icon')),
-    heading(3, 'game-card-title', game.title),
+    heading(4, 'game-card-title', game.title),
     paragraph('game-card-description', game.description),
     div('game-card-foot', span('', (isSamplingOnlyGame(game.id) ? 'Sampling only · ' : '') + game.subtitle), icon('↗'))
   );
@@ -119,6 +138,26 @@ function gameCard(game) {
 const experience=createExperienceUI({element,div,span,paragraph,heading,action,link,announce,render,
   getState:()=>({progress,data,topic,examStore,mode})
 });
+function activityStagesView(){
+  const stages=div('activity-stages');
+  for(const stage of ACTIVITY_STAGES){
+    const items=stage.games.map(id=>GAMES.find(g=>g.id===id));
+    const section=element('section',{
+      className:'activity-stage activity-stage-'+stage.id,
+      'aria-labelledby':'stage-'+stage.id+'-title'
+    });
+    const details=div('activity-stage-label',
+      span('stage-number','STAGE '+stage.number),
+      heading(3,'stage-title',stage.title,{id:'stage-'+stage.id+'-title'}),
+      paragraph('stage-description',stage.subtitle));
+    const scope=span('stage-scope',stage.id==='recall'?'Sampling & types of data':
+      'Sampling methods'+(topic==='data'||topic==='all'?' · switches to Sampling':''));
+    section.append(div('activity-stage-heading',details,scope),
+      div('games-grid',items.map(gameCard)));
+    stages.append(section);
+  }
+  return stages;
+}
 function homeView() {
   const root = div('page page-home');
   const hero = element('section', { className: 'hero' });
@@ -126,10 +165,10 @@ function homeView() {
     span('kicker', 'YEAR 12 / STATISTICS / EDEXCEL 9MA0'),
     heading(1, 'hero-title', 'Learn the language.'),
     heading(2, 'hero-subtitle', 'Understand the method.'),
-    paragraph('hero-description', 'Little revision games, carefully worded definitions, and useful feedback. Build recall before you tackle exam questions.'),
+    paragraph('hero-description', 'Short, focused revision for sampling and types of data. Start with recall, then choose, explain and tackle exam questions.'),
     div('hero-actions',
       link('Start flashcards ' + '↗', hashFor('flashcards', topic), 'btn btn-primary hero-button'),
-      link('Try Match Up', hashFor('match', topic), 'btn btn-quiet hero-button')
+      link('Go to Exam Lab', hashFor('exam', topic), 'btn btn-quiet hero-button')
     )
   );
   const art = div('hero-art');
@@ -155,7 +194,7 @@ function homeView() {
   gameSection.append(
     div('section-top', div('', span('eyebrow', 'TEN WAYS TO LEARN'), heading(2, 'section-title', 'Choose a challenge', { id: 'games-title' })),
       paragraph('section-note', 'Build from accurate recall to full exam-style reasoning.')),
-    div('games-grid', GAMES.map(gameCard))
+    activityStagesView()
   );
   root.append(gameSection);
   const bottom = div('bottom-grid');
@@ -163,7 +202,7 @@ function homeView() {
   const progressCard = element('section', { className: 'panel progress-panel', 'aria-labelledby': 'progress-title' });
   progressCard.append(
     span('eyebrow', 'YOUR REVISION'),
-    heading(2, 'panel-title', 'Progress at a glance', { id: 'progress-title' }),
+    heading(2, 'panel-title', 'Progress at a glance', { id: 'progress-title', tabindex: '-1' }),
     metaBar(),
     paragraph('mastery-explainer', 'In tracked activities, mastery means two correct answers in a row. Written self-reviews are not automatically graded.'),
     div('summary-numbers',
@@ -966,7 +1005,13 @@ function setRoute() {
   mode = route.mode;
   topic = route.topic;
   if (changed) { stopClock(); restartGame(); }
-  render(experience.isFeedbackOpen()&&mode==='home'?'#classroom-feedback-summary':changed&&mode!=='home'?'#view-heading':null);
+  closeHeaderMenus();
+  const showProgress=mode==='home'&&progressJumpPending;
+  if(showProgress)progressJumpPending=false;
+  render(showProgress?'#progress-title':
+    experience.isFeedbackOpen()&&mode==='home'?'#classroom-feedback-summary':
+    changed&&mode!=='home'?'#view-heading':null);
+  if(showProgress)requestAnimationFrame(focusProgressPanel);
 }
 function remember(conceptId, correct) {
   progress = recordAnswer(progress, conceptId, correct);
@@ -1171,6 +1216,37 @@ function onAction(button) {
   }
   if (command === 'retry') loadData();
 }
+mobileMenuToggle.addEventListener('click',()=>{
+  const expanded=headerNav.classList.toggle('is-open');
+  mobileMenuToggle.setAttribute('aria-expanded',String(expanded));
+  if(!expanded)activitiesMenu.open=false;
+});
+headerNav.addEventListener('click',event=>{
+  const anchor=event.target.closest('a[href]');
+  if(!anchor)return;
+  if(anchor.matches('[data-progress-nav]')){
+    event.preventDefault();
+    progressJumpPending=true;
+    const destination=hashFor('home',topic);
+    closeHeaderMenus();
+    if(window.location.hash===destination){
+      progressJumpPending=false;
+      focusProgressPanel();
+    }else window.location.hash=destination;
+    return;
+  }
+  closeHeaderMenus();
+});
+document.addEventListener('pointerdown',event=>{
+  if(!document.querySelector('.site-header').contains(event.target))closeHeaderMenus();
+});
+document.addEventListener('keydown',event=>{
+  if(event.key!=='Escape'||(!activitiesMenu.open&&!headerNav.classList.contains('is-open')))return;
+  event.preventDefault();
+  const onMobile=headerNav.classList.contains('is-open');
+  closeHeaderMenus();
+  (onMobile?mobileMenuToggle:activitiesMenu.querySelector('summary')).focus();
+});
 document.querySelector('.skip-link').addEventListener('click', event => {
   event.preventDefault();
   document.getElementById('main').focus();
