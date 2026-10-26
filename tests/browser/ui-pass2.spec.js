@@ -40,9 +40,9 @@ test('selecting help level changes instructions without changing saved progress'
  await expect(page.locator('.practice-guide')).toContainText('without a word bank');
  expect(await page.evaluate(()=>localStorage.getItem('sampling-arcade-progress-v1'))).toBeNull();
  await page.goto('/#/flashcards/data');
- await expect(page.locator('.practice-guide')).toContainText('full answer before revealing');
+ await expect(page.locator('.practice-guide')).toContainText('flip the card to check');
  await page.getByRole('button',{name:/Term → definition/}).click();
- await expect(page.locator('.practice-guide')).toContainText('Name the mathematical term');
+ await expect(page.locator('.practice-guide')).toContainText('Read the definition, recall the term');
 });
 
 test('checked answer feedback shares status, useful explanation and visible focus',async({page})=>{
