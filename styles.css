@@ -211,10 +211,7 @@ progress::-moz-progress-bar { border-radius: 30px; background: #198775; }
   .site-nav a { padding-inline: 10px; }
 }
 @media (max-width: 800px) {
-  .header-inner { flex-direction: column; align-items: stretch; gap: 7px; padding-block: 13px 8px; }
-  .brand { align-self: flex-start; }
-  .site-nav { overflow-x: auto; width: 100%; gap: 3px; }
-  .site-nav a { flex-shrink: 0; }
+  /* Retired Pass 1's horizontal-scroll navigation; the grouped header owns this layout. */
   .hero { grid-template-columns: 1fr; }
   .hero-art { display: none; }
   .hero-description { max-width: 680px; }
@@ -227,7 +224,6 @@ progress::-moz-progress-bar { border-radius: 30px; background: #198775; }
   .brand-symbol { width: 37px; height: 37px; border-radius: 12px; }
   .brand-copy strong { font-size: .96rem; }
   .brand-copy small { letter-spacing: .045em; font-size: .53rem; }
-  .site-nav a { font-size: .76rem; padding-inline: 12px; }
   .hero { min-height: 0; padding: 36px 26px; border-radius: 21px; }
   .hero-title { margin-top: 17px; }
   .hero-description { margin-top: 17px; font-size: .9rem; }

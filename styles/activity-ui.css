@@ -181,3 +181,67 @@
   }
   .ui-feedback { box-shadow:none; border-color:#888!important; background:#fff!important; color:#111!important; }
 }
+
+
+/* UI Pass 3 — accessibility and viewport safeguards.
+   Widths, focus and touch targets apply across all ten activities and reports. */
+#main { scroll-margin-top:94px; }
+#home-heading,#view-heading,#sim-question-heading,#exam-heading,
+.cloze-title,.classification-title,.recall-title,.completed-screen .completion-title {
+  scroll-margin-top:110px;
+}
+.nav-group > a { min-height:44px; display:flex; align-items:center; }
+.nav-group-description { color:#526c61; }
+.site-nav > .nav-primary-link,.activities-trigger,.mobile-menu-toggle { min-height:44px; }
+.activity-page :is(button,.btn,a,select,input,textarea):focus-visible,
+.page-home :is(button,.btn,a,select,input,textarea):focus-visible,
+.site-header :is(button,summary,a):focus-visible,
+.skip-link:focus-visible {
+  outline:3px solid #b47719;
+  outline-offset:3px;
+}
+.activity-page :is(.sim-revision-link,.text-button,.back-link) { min-height:44px; }
+.activity-page .exam-arrow { min-width:44px; min-height:44px; }
+.classroom-feedback-choice,.sim-check-row,.sim-level-choice,.exam-choice { min-height:44px; }
+.activity-page :is(.exam-workspace,.sim-question,.sim-report-row,.sim-model-text,.sim-preserved-text,
+.sim-context,.classification-statement,.cloze-sentence,.recall-definition,.exam-scenario,
+.match-tile,.exam-choice,.sim-worked-row,.sim-draft-compare,.game-settings,
+.typed-form,.sim-number-row) {
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+.activity-page .sim-model-text,.activity-page .sim-preserved-text { white-space:pre-wrap; }
+.activity-page .sim-form-actions,.activity-page .next-row,
+.activity-page .exam-buttons,.activity-page .sim-inline-actions { min-width:0; flex-wrap:wrap; }
+.activity-page input:where([type="text"],[type="number"]),
+.activity-page textarea,.activity-page select { max-width:100%; }
+.activity-page .sim-number-input[aria-invalid="true"] {
+  border-color:#a7472b; background:#fff7f2;
+  box-shadow:0 0 0 1px #a7472b;
+}
+.activity-page .ui-feedback:focus { outline:3px solid #b47719; outline-offset:3px; }
+@media(max-width:760px){
+  #main,#home-heading,#view-heading,#sim-question-heading,#exam-heading,
+  .cloze-title,.classification-title,.recall-title { scroll-margin-top:22px; }
+}
+@media(max-width:580px){
+  .activity-page .sim-report-row,.activity-page .sim-draft-compare { padding:16px 14px; }
+  .activity-page .sim-report-row-head { align-items:flex-start; }
+  .activity-page .sim-form-actions > .btn,
+  .activity-page .next-row > .btn { min-height:46px; }
+  .activity-page .flash-front,.activity-page .exam-step-copy { overflow-wrap:anywhere; }
+  .activity-page .flash-detail-item { min-width:0; }
+}
+@media(prefers-reduced-motion:reduce){
+  html { scroll-behavior:auto; }
+  .activities-trigger .nav-chevron,.game-card,.hero .btn,
+  .activity-page .btn,.activity-page .match-tile,.activity-page .option-button,
+  .activity-page .flashcard { transition:none!important; transform:none!important; }
+}
+@media print {
+  .site-header,.site-footer,.skip-link,.activity-page .text-button,
+  .activity-page .btn,.activity-page .exam-step-actions { display:none!important; }
+  .ui-feedback { background:#fff!important; box-shadow:none!important; color:#111!important; }
+  .ui-feedback-badge { color:#111!important; }
+  .activity-page :is(.exam-workspace,.sim-question,.sim-report-row) { break-inside:avoid; }
+}
