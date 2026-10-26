@@ -22,7 +22,7 @@ import {createExamSimulationUI} from './exam-sim-ui.js';
 import {createExperienceUI} from './experience-ui.js';
 import {nextAfterRound} from './journey.js';
 import {guideForActivity} from './activity-guidance.js';
-import {completionHeading} from './quality.js';
+import {completionHeading,completionCreditNote} from './quality.js';
 import {makeFlashSession,rateFlashSession,skipFlashSession,makeFlashReviewSession,flashCardLabel} from './flashcards.js';
 import {chooseMatch,matchNextStep,matchStatus,matchAttemptCredit,MATCH_MOTION_MS} from './match-up.js';
 import {clozePresentation} from './cloze-ui.js';
@@ -321,6 +321,7 @@ function showCompletion(game) {
     heading(2, 'completion-title', completionHeading(game, session), { tabindex: '-1' }),
     paragraph('completion-description', gameTitle + ' · ' + topicLabel(topic)),
     paragraph('completion-score', scoreLine),
+    paragraph('completion-credit-note',completionCreditNote(game,session)),
     ...(game==='speed'?[speedCompletionPanel()]:[]),
     ...(game==='reason'?[reasoningUI.summaryView()]:[]),
     ...(game==='error'?[div('error-summary',...[['Located',session.errorStats.located],['Repaired',session.errorStats.repaired],['Explained',session.errorStats.explained]].map(([label,n])=>div('error-metric',span('error-metric-value',String(n)),span('',label)))),
