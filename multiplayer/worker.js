@@ -303,7 +303,7 @@ export default {
       if(!validLength(game,roundLength))return fail(request,'Choose a valid game and round length');
       const key=await fingerprint(request);
       const limiter=env.ROOMS.getByName('limiter:rooms:'+key);
-      if(!await limiter.allowRate('create',18,5*60_000))return fail(request,'Room creation limit reached; try again later',429);
+      if(!await limiter.allowRate('create',24,5*60_000))return fail(request,'Room creation limit reached; try again later',429);
       const global=env.ROOMS.getByName('limiter:global');
       if(!await global.allowRate('create',120,60_000))return fail(request,'Classroom service is busy',429);
       for(let attempt=0;attempt<10;attempt++){
