@@ -47,6 +47,8 @@ function closeHeaderMenus(){
   headerNav.classList.remove('is-open');
   mobileMenuToggle.setAttribute('aria-expanded','false');
 }
+const desktopMenuQuery=window.matchMedia('(max-width: 760px)');
+desktopMenuQuery.addEventListener('change',closeHeaderMenus);
 function focusProgressPanel(){
   const target=mount.querySelector('#progress-title');
   if(!target)return;
@@ -164,7 +166,7 @@ function homeView() {
   const hero = element('section', { className: 'hero' });
   const copy = div('hero-content',
     span('kicker', 'YEAR 12 / STATISTICS / EDEXCEL 9MA0'),
-    heading(1, 'hero-title', 'Learn the language.'),
+    heading(1, 'hero-title', 'Learn the language.', {id:'home-heading',tabindex:'-1'}),
     heading(2, 'hero-subtitle', 'Understand the method.'),
     paragraph('hero-description', 'Short, focused revision for sampling and types of data. Start with recall, then choose, explain and tackle exam questions.'),
     div('hero-actions',
@@ -247,6 +249,8 @@ function feedbackBanner(status,title,body=[],extraClass=''){
       heading(3,'feedback-heading',title),
       ...body));
   feedback.setAttribute('tabindex','-1');
+  feedback.setAttribute('role','group');
+  feedback.setAttribute('aria-label',badge);
   return feedback;
 }
 function activityTop(game) {
@@ -814,7 +818,7 @@ function buildView(){
  if(session.complete){root.append(showCompletion('build'));return root;}
  const current=session.methods[session.index],method=current.method;
  root.append(roundProgress(session.index+1,session.methods.length,'Method '+(session.index+1)+' of '+session.methods.length),practiceGuide('build'));
- const panel=element('section',{className:'exam-workspace','data-method-id':method.id});
+ const panel=element('section',{className:'exam-workspace','data-method-id':method.id,'aria-labelledby':'exam-heading'});
  panel.append(span('eyebrow','QUESTION · ORDER THE STEPS'),heading(2,'exam-heading',METHOD_LABELS[method.id],{id:'exam-heading',tabindex:'-1'}),
   paragraph('exam-help','Move steps with the arrow buttons, using touch or keyboard. Equivalent valid orderings are accepted.'));
  const list=element('ol',{className:'exam-step-list'});
@@ -850,7 +854,7 @@ function errorView(){
  const root=div('page activity-page');root.append(activityTop('error'),examLevelPicker());
  if(session.complete){root.append(showCompletion('error'));return root;}
  const q=session.items[session.index];root.append(roundProgress(session.index+1,session.items.length,'Case '+(session.index+1)+' of '+session.items.length),practiceGuide('error'));
- const panel=element('section',{className:'exam-workspace','data-error-id':q.id});
+ const panel=element('section',{className:'exam-workspace','data-error-id':q.id,'aria-labelledby':'exam-heading'});
  panel.append(span('eyebrow','QUESTION · DIAGNOSE AND REPAIR'),heading(2,'exam-heading','Find the flawed line',{id:'exam-heading',tabindex:'-1'}),
   paragraph('exam-scenario',q.context));
  const lines=element('fieldset',{className:'exam-fieldset'});lines.append(element('legend',{},'1. Which line is flawed?'));
@@ -874,7 +878,7 @@ function reasoningView(){
  const root=div('page activity-page');root.append(activityTop('reason'),examLevelPicker());
  if(session.complete){root.append(showCompletion('reason'));return root;}
  const q=session.items[session.index];root.append(roundProgress(session.index+1,session.items.length,'Investigation '+(session.index+1)+' of '+session.items.length),practiceGuide('reason'));
- const panel=element('section',{className:'exam-workspace','data-reason-id':q.id});
+ const panel=element('section',{className:'exam-workspace','data-reason-id':q.id,'aria-labelledby':'exam-heading'});
  panel.append(span('eyebrow','QUESTION · EXAM REASONING'),heading(2,'exam-heading','Build a justified answer',{id:'exam-heading',tabindex:'-1'}),
  paragraph('exam-scenario',q.scenario),paragraph('exam-help','Priority: '+q.priority),
  paragraph('exam-help','Compare your choices with one defensible model. Alternative well-justified methods may also be valid.'));
@@ -968,7 +972,15 @@ function render(focusTarget) {
   if (focusTarget) {
     requestAnimationFrame(() => {
       const target = mount.querySelector(focusTarget) || mount.querySelector('#view-heading');
-      target?.focus({ preventScroll: true });
+      if(!target)return;
+      target.focus({preventScroll:true});
+      // Keyboard focus must remain visible, including after long mathematical answers.
+      const rect=target.getBoundingClientRect();
+      const header=document.querySelector('.site-header');
+      const sticky=header&&getComputedStyle(header).position==='sticky';
+      const visibleTop=sticky?header.getBoundingClientRect().bottom+12:12;
+      if(rect.top<visibleTop||rect.bottom>window.innerHeight-16)
+        target.scrollIntoView({block:'nearest',behavior:'auto'});
     });
   }
 }
@@ -1019,7 +1031,7 @@ function setRoute() {
   if(showProgress)progressJumpPending=false;
   render(showProgress?'#progress-title':
     experience.isFeedbackOpen()&&mode==='home'?'#classroom-feedback-summary':
-    changed&&mode!=='home'?'#view-heading':null);
+    changed?(mode==='home'?'#home-heading':'#view-heading'):null);
   if(showProgress)requestAnimationFrame(focusProgressPanel);
 }
 function remember(conceptId, correct) {
@@ -1249,6 +1261,10 @@ headerNav.addEventListener('click',event=>{
 document.addEventListener('pointerdown',event=>{
   if(!document.querySelector('.site-header').contains(event.target))closeHeaderMenus();
 });
+document.addEventListener('focusin',event=>{
+  // An expanded nav should not remain open when a keyboard user tabs away.
+  if(!document.querySelector('.site-header').contains(event.target))closeHeaderMenus();
+});
 document.addEventListener('keydown',event=>{
   if(event.key!=='Escape'||(!activitiesMenu.open&&!headerNav.classList.contains('is-open')))return;
   event.preventDefault();
@@ -1258,7 +1274,9 @@ document.addEventListener('keydown',event=>{
 });
 document.querySelector('.skip-link').addEventListener('click', event => {
   event.preventDefault();
-  document.getElementById('main').focus();
+  const main=document.getElementById('main');
+  main.scrollIntoView({block:'start',behavior:'auto'});
+  main.focus({preventScroll:true});
 });
 mount.addEventListener('click', event => {
   const button = event.target.closest('button[data-action]');

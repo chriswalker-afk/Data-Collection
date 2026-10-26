@@ -120,7 +120,7 @@ export function createExamSimulationUI(deps){
     input);
    rows.append(group);
   }
-  form.append(rows,hintsView(question,entry),element('div',{className:'sim-validation','aria-live':'polite'}));
+  form.append(rows,hintsView(question,entry),element('div',{id:'sim-validation',className:'sim-validation','aria-live':'polite'}));
   form.append(div('sim-form-actions',
     element('button',{type:'submit',className:'btn btn-primary'},'Check calculations'),
     action('Reveal worked solution','sim-reveal',{},'btn btn-quiet')));
@@ -202,7 +202,8 @@ export function createExamSimulationUI(deps){
     'Question '+(session.index+1)+' of '+session.questionIds.length),
     span('quiet-tag',numberTask(q)?'Numerical · auto-checked':'Written · self-reviewed')),
     practiceGuide('exam',{questionType:q.type}));
-  const workspace=element('section',{className:'sim-question','data-sim-question':q.id});
+  const workspace=element('section',{className:'sim-question','data-sim-question':q.id,
+   'aria-labelledby':'sim-question-heading'});
   workspace.append(span('eyebrow','QUESTION · '+(q.type==='allocation'?'STRATIFIED ALLOCATION':
      q.type==='systematic'?'SYSTEMATIC SAMPLING':q.type==='procedure'?'EXPLAIN THE METHOD':'EVALUATE THE METHOD')+
      ' / '+q.level.toUpperCase()),
@@ -299,7 +300,13 @@ export function createExamSimulationUI(deps){
    const input=form.querySelector('[data-sim-num="'+missing.id+'"]');
    const error=form.querySelector('.sim-validation');
    error.textContent='Enter a nonnegative whole number for '+missing.label+'.';
-   error.setAttribute('role','alert');input?.focus();return;
+   error.setAttribute('role','alert');
+   if(input){
+    input.setAttribute('aria-invalid','true');
+    input.setAttribute('aria-describedby',input.id+'-help sim-validation');
+    input.focus();
+   }
+   return;
   }
   entry.stage='feedback';
   const independent=result.correct&&entry.hintsUsed===0;
@@ -387,7 +394,13 @@ export function createExamSimulationUI(deps){
   const q=currentQuestion(),entry=ensureEntry();
   if(entry.stage!=='answer')return;
   if(input.id==='sim-draft'&&!numberTask(q))entry.draft=input.value.slice(0,2400);
-  else if(input.matches('input[data-sim-num]')&&numberTask(q))entry.values[input.dataset.simNum]=input.value.slice(0,30);
+  else if(input.matches('input[data-sim-num]')&&numberTask(q)){
+   entry.values[input.dataset.simNum]=input.value.slice(0,30);
+   input.removeAttribute('aria-invalid');
+   input.setAttribute('aria-describedby',input.id+'-help');
+   const error=document.getElementById('sim-validation');
+   if(error)error.textContent='';
+  }
   else return;
   persist();
  }
