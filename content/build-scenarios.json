@@ -1,0 +1,489 @@
+{
+  "version": 1,
+  "notes": "Contextualised sequencing using the same audited step dependency graph; round levels range from foundation to extend. These are original teaching scenarios, not past-paper questions.",
+  "scenarios": [
+    {
+      "id": "build-library-books",
+      "methodId": "simple-random",
+      "level": "foundation",
+      "title": "Library repair check",
+      "context": "A school library has 240 eligible books in its repair register. The librarian wants to inspect 24 distinct books without choosing favourites.",
+      "task": "Construct a simple random sample of 24 books from the 240 eligible books.",
+      "steps": [
+        {
+          "id": "frame",
+          "text": "Create a complete register of the 240 eligible library books."
+        },
+        {
+          "id": "number",
+          "text": "Assign each of the 240 books a different label from 1 to 240."
+        },
+        {
+          "id": "generate",
+          "text": "Generate unbiased random integers in the inclusive range 1 to 240."
+        },
+        {
+          "id": "repeats",
+          "text": "Discard repeated book labels until there are exactly 24 different numbers."
+        },
+        {
+          "id": "select",
+          "text": "Inspect the 24 books corresponding to the accepted random labels."
+        }
+      ],
+      "workedExample": "The random number generator supplies integers from 1 to 240. If label 68 appears twice, ignore its second appearance; draw until 24 different labels identify 24 books.",
+      "caution": "An incomplete register would leave eligible books with no selection chance. A correctly bounded generator produces no out-of-range values.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "build-solar-modules",
+      "methodId": "simple-random",
+      "level": "develop",
+      "title": "Solar-panel inspection",
+      "context": "A technician maintains 1,200 solar modules on a large site. Exactly 75 different modules must undergo an inspection, with no preference for the nearest modules.",
+      "task": "Design a fair chance-based draw for 75 of the 1,200 modules.",
+      "steps": [
+        {
+          "id": "frame",
+          "text": "Prepare a complete list of all 1,200 modules eligible for inspection."
+        },
+        {
+          "id": "number",
+          "text": "Number each module uniquely from 1 to 1,200 on the inspection list."
+        },
+        {
+          "id": "generate",
+          "text": "Use a uniform integer generator that returns labels between 1 and 1,200."
+        },
+        {
+          "id": "repeats",
+          "text": "Ignore any repeated module number until 75 distinct labels have been drawn."
+        },
+        {
+          "id": "select",
+          "text": "Visit and inspect the 75 modules matching the accepted number labels."
+        }
+      ],
+      "workedExample": "Use a generator bounded by 1 and 1,200; if number 901 is drawn twice, only its first occurrence counts towards the 75 different modules.",
+      "caution": "Random selection is impartial, but inaccessible or missing modules can cause nonresponse or incomplete coverage; do not replace them by convenience.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "build-park-trees",
+      "methodId": "simple-random",
+      "level": "extend",
+      "title": "Tree disease survey",
+      "context": "A park has 840 eligible trees mapped by identifier. Researchers want to assess disease prevalence using 70 different trees selected by chance.",
+      "task": "Set out a defensible simple random sample of 70 mapped trees.",
+      "steps": [
+        {
+          "id": "frame",
+          "text": "Check the register contains all 840 eligible trees in the target park."
+        },
+        {
+          "id": "number",
+          "text": "Give the 840 eligible trees unique identifiers numbered 1 to 840."
+        },
+        {
+          "id": "generate",
+          "text": "Draw uniformly random whole-number labels between 1 and 840 inclusive."
+        },
+        {
+          "id": "repeats",
+          "text": "Reject repeated tree identifiers until 70 different labels have been drawn."
+        },
+        {
+          "id": "select",
+          "text": "Measure the 70 trees whose labels were retained from the random draw."
+        }
+      ],
+      "workedExample": "A selection could begin 12, 407, 12, 799: the second 12 is ignored, leaving three distinct trees so far; continue until there are 70.",
+      "caution": "Check recently planted trees are included in the frame. Equal chances for samples drawn from an incomplete frame do not fix undercoverage.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "build-bottle-batch",
+      "methodId": "systematic",
+      "level": "foundation",
+      "title": "Bottling-line quality check",
+      "context": "A quality-control officer has 480 bottles in a single production sequence and needs to inspect 40 at regular positions. Each bottle has a position in the ordered list.",
+      "task": "Construct a systematic sample of exactly 40 bottles.",
+      "steps": [
+        {
+          "id": "frame",
+          "text": "Number all 480 eligible bottles in the production order."
+        },
+        {
+          "id": "interval",
+          "text": "Calculate the fixed interval k = 480 / 40 = 12 bottles."
+        },
+        {
+          "id": "start",
+          "text": "Randomly choose the first bottle position from 1 to 12."
+        },
+        {
+          "id": "select",
+          "text": "Inspect that bottle and then every twelfth position until 40 are selected."
+        }
+      ],
+      "workedExample": "If the random start is 7, inspect positions 7, 19, 31, ... , 475, giving 40 different positions.",
+      "caution": "A repeating 12-bottle production pattern could distort the result. Consider whether ordered positions have relevant periodicity.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "build-bus-tickets",
+      "methodId": "systematic",
+      "level": "develop",
+      "title": "Bus ticket records",
+      "context": "A transport office has 900 bus ticket records ordered by transaction time and requires 60 records for a systematic audit.",
+      "task": "Build a random-start systematic sample of 60 of the 900 records.",
+      "steps": [
+        {
+          "id": "frame",
+          "text": "Put all 900 eligible ticket records in a numbered time-ordered list."
+        },
+        {
+          "id": "interval",
+          "text": "Calculate the interval k = 900 / 60 = 15 records."
+        },
+        {
+          "id": "start",
+          "text": "Choose one random starting record from positions 1 to 15."
+        },
+        {
+          "id": "select",
+          "text": "Take the starting record, then every fifteenth one until 60 records are chosen."
+        }
+      ],
+      "workedExample": "With random start 9, the audit records are 9, 24, 39, ... , 894, exactly 60 positions.",
+      "caution": "Patterns linked to shifts or departures might repeat in the ordered records. Do not substitute 'start at 1' for a random start.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "build-factory-shifts",
+      "methodId": "systematic",
+      "level": "extend",
+      "title": "Factory shift cycle",
+      "context": "A factory orders 720 production entries by time and plans to inspect 60 systematically. The entries may repeat the same type of workstation every 12 positions.",
+      "task": "Explain the systematic-selection sequence while remaining alert to periodic bias.",
+      "steps": [
+        {
+          "id": "frame",
+          "text": "Make an ordered numbered frame containing all 720 eligible production entries."
+        },
+        {
+          "id": "interval",
+          "text": "Calculate the exact interval k = 720 / 60 = 12 positions."
+        },
+        {
+          "id": "start",
+          "text": "Randomly select one starting entry between positions 1 and 12."
+        },
+        {
+          "id": "select",
+          "text": "Follow the start with entries 12 positions apart until 60 are included."
+        }
+      ],
+      "workedExample": "Starting at position 4 gives positions 4, 16, 28, ... , 712, which is a valid 60-position systematic selection.",
+      "caution": "Although mathematically systematic, this plan risks sampling the same workstation category repeatedly if the list has a 12-position cycle.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "build-year-groups",
+      "methodId": "stratified",
+      "level": "foundation",
+      "title": "Two-year-group survey",
+      "context": "A school has 240 Year 12 and 160 Year 13 students. Researchers need a proportional sample of 40 that gives both groups their planned share.",
+      "task": "Build proportional stratified random sampling for 40 of the 400 students.",
+      "steps": [
+        {
+          "id": "strata",
+          "text": "Separate the 400 eligible students into disjoint Year 12 and Year 13 registers."
+        },
+        {
+          "id": "allocate",
+          "text": "Allocate (240 / 400) × 40 = 24 Year 12 places and (160 / 400) × 40 = 16 Year 13 places."
+        },
+        {
+          "id": "random",
+          "text": "Randomly draw 24 distinct Year 12 students and 16 distinct Year 13 students from their own registers."
+        },
+        {
+          "id": "combine",
+          "text": "Combine both random draws into one 40-student sample."
+        }
+      ],
+      "workedExample": "Year 12 contributes 24 and Year 13 contributes 16: both counts are fixed before random selection inside the groups.",
+      "caution": "Matching year-group proportions does not by itself guarantee a representative sample for unrelated characteristics such as travel habits.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "build-travel-groups",
+      "methodId": "stratified",
+      "level": "develop",
+      "title": "Journey-to-school survey",
+      "context": "A school records each pupil's main travel mode: 180 bus users, 120 walkers and 100 car users. It wants a proportional random sample of 80.",
+      "task": "Work out and sequence the group-specific random sampling needed.",
+      "steps": [
+        {
+          "id": "strata",
+          "text": "Divide all 400 students into non-overlapping bus, walking and car groups using their main travel mode."
+        },
+        {
+          "id": "allocate",
+          "text": "Allocate (180 / 400) × 80 = 36 bus, (120 / 400) × 80 = 24 walk and (100 / 400) × 80 = 20 car places."
+        },
+        {
+          "id": "random",
+          "text": "Randomly select 36 different bus users, 24 walkers and 20 car users from separate group lists."
+        },
+        {
+          "id": "combine",
+          "text": "Merge the three selected groups to form a sample of exactly 80 pupils."
+        }
+      ],
+      "workedExample": "The planned stratum counts are 36, 24 and 20, summing to 80; each group needs its own impartial random draw.",
+      "caution": "Specify one primary travel mode per student to avoid overlapping strata. Quotas alone, without random draws, would be a different method.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "build-habitat-plots",
+      "methodId": "stratified",
+      "level": "extend",
+      "title": "Habitat biodiversity survey",
+      "context": "Environmental researchers classify 700 eligible plots: 330 coastal, 220 woodland and 150 wetland. They need a proportional sample of 60 whole plots.",
+      "task": "Plan an accurate proportional allocation and random draw within every habitat.",
+      "steps": [
+        {
+          "id": "strata",
+          "text": "Partition the 700 plots into mutually exclusive coastal, woodland and wetland lists."
+        },
+        {
+          "id": "allocate",
+          "text": "Compute shares 330/700×60≈28.29, 220/700×60≈18.86 and 150/700×60≈12.86, allocating 28, 19 and 13 plots."
+        },
+        {
+          "id": "random",
+          "text": "Independently randomise and select 28 distinct coastal, 19 woodland and 13 wetland plots."
+        },
+        {
+          "id": "combine",
+          "text": "Combine the three random plot sets into one 60-plot sample."
+        }
+      ],
+      "workedExample": "The whole-number allocations 28, 19 and 13 sum to 60 and closely match the original proportions. Random selection within each stratum is compulsory.",
+      "caution": "Rounding must still leave exactly 60 plots. Do not choose accessible plots instead of random ones within each habitat.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "build-festival-attendees",
+      "methodId": "quota",
+      "level": "foundation",
+      "title": "Science festival feedback",
+      "context": "A science festival wants feedback from 50 eligible attendees: 30 pupils and 20 adults. Interviewers will recruit willing people until those group targets are reached.",
+      "task": "Arrange a quota sampling procedure for the 50 responses.",
+      "steps": [
+        {
+          "id": "groups",
+          "text": "Define two non-overlapping eligible attendee groups: pupils and adults."
+        },
+        {
+          "id": "targets",
+          "text": "Set the desired response quotas at 30 pupils and 20 adults."
+        },
+        {
+          "id": "recruit",
+          "text": "Approach willing festival visitors without a random draw and register each response in the right group."
+        },
+        {
+          "id": "stop",
+          "text": "Stop recruiting each group at its quota; finish with 30 pupil and 20 adult responses."
+        }
+      ],
+      "workedExample": "The interviewer may speak to the next willing visitors, provided the completed 50 responses meet the two targets. No random list is used.",
+      "caution": "Group counts alone do not make this stratified random sampling. Willing visitors can differ from people who refuse.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "build-gym-members",
+      "methodId": "quota",
+      "level": "develop",
+      "title": "Gym membership opinions",
+      "context": "A gym would like 40 volunteer responses: 24 from monthly members and 16 from annual members, recruited at its reception.",
+      "task": "Complete the quota approach while maintaining the agreed 24:16 split.",
+      "steps": [
+        {
+          "id": "groups",
+          "text": "Create clear monthly and annual membership groups without overlapping categories."
+        },
+        {
+          "id": "targets",
+          "text": "Set targets of 24 monthly-member and 16 annual-member completed responses."
+        },
+        {
+          "id": "recruit",
+          "text": "Ask available consenting eligible members at reception without randomly selecting names."
+        },
+        {
+          "id": "stop",
+          "text": "Close each membership quota when full and stop after all 40 responses are obtained."
+        }
+      ],
+      "workedExample": "A receptionist can recruit members as they arrive; recruitment is non-random but the agreed group totals are controlled.",
+      "caution": "People who visit at different times may not be represented and the interviewer may overlook refusals.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "build-city-travel",
+      "methodId": "quota",
+      "level": "extend",
+      "title": "City transport priorities",
+      "context": "A city team wants 80 travel opinions by primary journey purpose: 35 school, 25 work and 20 leisure. Interviewers recruit available willing travellers.",
+      "task": "Plan a non-random quota procedure with three distinct group targets.",
+      "steps": [
+        {
+          "id": "groups",
+          "text": "Classify eligible travellers by one primary journey purpose: school, work or leisure."
+        },
+        {
+          "id": "targets",
+          "text": "Set separate completed-response quotas of 35 school, 25 work and 20 leisure journeys."
+        },
+        {
+          "id": "recruit",
+          "text": "Recruit available eligible travellers non-randomly, recording each under exactly one journey-purpose category."
+        },
+        {
+          "id": "stop",
+          "text": "Stop each category at its set target and end the survey at 80 complete responses."
+        }
+      ],
+      "workedExample": "Collect 35+25+20=80 responses from accessible travellers. No random selection occurs within the three categories.",
+      "caution": "Because recruitment is non-random, matching the chosen purpose proportions does not establish population-wide representativeness.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "build-gym-arrivals",
+      "methodId": "opportunity",
+      "level": "foundation",
+      "title": "Gym entrance survey",
+      "context": "An investigator stands near a gym entrance at 5 pm and wants responses from 20 available members. No population register or subgroup quota is prepared.",
+      "task": "Put the eligible-volunteer opportunity sampling steps in a workable order.",
+      "steps": [
+        {
+          "id": "criteria",
+          "text": "Specify that respondents must be current gym members able to consent."
+        },
+        {
+          "id": "available",
+          "text": "Approach gym members who happen to be available at the entrance at 5 pm."
+        },
+        {
+          "id": "recruit",
+          "text": "Collect responses from 20 willing eligible members and stop when the target is met."
+        }
+      ],
+      "workedExample": "The first 20 willing eligible members available at the chosen entrance can be surveyed directly.",
+      "caution": "The resulting group may differ from morning members and people who do not attend the gym that day.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "build-canteen-tablets",
+      "methodId": "opportunity",
+      "level": "develop",
+      "title": "School tablet-use opinions",
+      "context": "A student researcher wants opinions from 35 Year 12 pupils found in the school canteen during lunch. There is no group target or random draw.",
+      "task": "Sequence an opportunity sample of eligible lunch-time volunteers.",
+      "steps": [
+        {
+          "id": "criteria",
+          "text": "Define eligibility as pupils currently in Year 12 at the school."
+        },
+        {
+          "id": "available",
+          "text": "Approach Year 12 pupils conveniently available in the canteen at lunchtime."
+        },
+        {
+          "id": "recruit",
+          "text": "Ask willing eligible pupils about tablet use until 35 responses are collected."
+        }
+      ],
+      "workedExample": "The survey is quick because the researcher uses nearby eligible students, not a randomly selected school register.",
+      "caution": "Year 12 pupils absent from the canteen cannot enter this sample and might have different tablet-use habits.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "build-marina-litter",
+      "methodId": "opportunity",
+      "level": "extend",
+      "title": "Waterfront litter survey",
+      "context": "At a waterfront event on Saturday morning, a researcher seeks 24 opinions about local litter by approaching available adult volunteers.",
+      "task": "Construct the practical opportunity-selection sequence without implying it is representative.",
+      "steps": [
+        {
+          "id": "criteria",
+          "text": "Check respondents are adults eligible to give opinions on local waterfront litter."
+        },
+        {
+          "id": "available",
+          "text": "Approach adult volunteers conveniently present at the Saturday waterfront event."
+        },
+        {
+          "id": "recruit",
+          "text": "Record replies from 24 willing eligible adults, without random draws or quotas."
+        }
+      ],
+      "workedExample": "This recruitment strategy gives 24 convenient adult opinions but cannot be assumed to estimate views of all residents accurately.",
+      "caution": "People absent on Saturday morning and those not attending the event have little or no chance to respond.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    }
+  ]
+}
