@@ -31,3 +31,19 @@ export function matchStatus(count,total,mistakes){
     mistakes:mistakes+' incorrect '+(mistakes===1?'attempt':'attempts')
   };
 }
+
+// A successful pairing is independently recalled only if neither tile was
+// previously tested in an incorrect pair in this round. The learner may still
+// complete the puzzle; corrections are valuable but do not award first-try credit.
+export function matchAttemptCredit(previouslyExposed,termId,definitionId) {
+  if(typeof termId!=='string'||!termId||typeof definitionId!=='string'||!definitionId)
+    throw new Error('Matching requires two concept identifiers');
+  const exposed=new Set(previouslyExposed||[]);
+  const matched=termId===definitionId;
+  const independent=matched&&!exposed.has(termId);
+  if(!matched){
+    exposed.add(termId);
+    exposed.add(definitionId);
+  }
+  return {matched,independent,exposed};
+}
