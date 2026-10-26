@@ -63,7 +63,7 @@ function publicState(room,participant,now,connections){
   const question=room.status==='playing'?room.deck[room.index]:null;
   const revealed=room.status==='reveal'?room.deck[room.index]:null;
   return {
-    code:room.code,status:room.status,roundLength:room.roundLength,
+    code:room.code,status:room.status,roundLength:room.roundLength,locked:Boolean(room.locked),
     players:room.players.map(p=>({
       id:p.id,name:p.name,score:p.score,online:connections.has(p.id),
       answered:room.answers.some(a=>a.id===p.id)
@@ -99,7 +99,7 @@ export class GameRoom extends DurableObject{
   async create(code,roundLength){
     if(this.room()||this.ctx.storage.kv.get('room'))return {error:'Room code already in use'};
     if(!ROUND_LENGTHS.includes(roundLength))return {error:'Invalid round length'};
-    const room={code,status:'lobby',created:Date.now(),roundLength,
+    const room={code,status:'lobby',created:Date.now(),roundLength,locked:false,
       hostToken:crypto.randomUUID(),players:[],deck:[],index:0,deadline:0,answers:[]};
     this.save(room);
     await this.ctx.storage.setAlarm(room.created+ROOM_TTL_MS);
@@ -128,6 +128,7 @@ export class GameRoom extends DurableObject{
     // one another's participants from an earlier room snapshot.
     const room=this.room();
     if(!room||room.status!=='lobby')return {error:'This classroom is unavailable'};
+    if(room.locked)return {error:'This classroom is locked. Ask the teacher to reopen joining'};
     const nickname=cleanNickname(name);
     if(!nickname)return {error:'Choose a nickname of 2–20 letters or numbers'};
     if(room.players.length>=MAX_PLAYERS)return {error:'This classroom is full'};
@@ -149,7 +150,26 @@ export class GameRoom extends DurableObject{
     const room=this.room(),person=this.authenticate(token,room);
     if(!person)return {error:'Session not found',status:401};
     if(!command||typeof command.type!=='string')return {error:'Invalid action'};
-    if(command.type==='start'&&person.host&&room.status==='lobby'){
+    if(command.type==='lock'&&person.host&&room.status==='lobby'){
+      room.locked=true;
+    }else if(command.type==='unlock'&&person.host&&room.status==='lobby'){
+      room.locked=false;
+    }else if(command.type==='remove'&&person.host&&room.status!=='finished'){
+      if(typeof command.targetId!=='string'||!UUID.test(command.targetId))return {error:'Invalid participant'};
+      const index=room.players.findIndex(p=>p.id===command.targetId);
+      if(index<0)return {error:'Participant not found'};
+      room.players.splice(index,1);
+      room.answers=room.answers.filter(a=>a.id!==command.targetId);
+      for(const ws of this.ctx.getWebSockets()){
+        if(ws.deserializeAttachment()?.id===command.targetId){try{ws.close(4003,'Removed by host');}catch{}}
+      }
+    }else if(command.type==='leave'&&!person.host){
+      room.players=room.players.filter(p=>p.id!==person.id);
+      room.answers=room.answers.filter(a=>a.id!==person.id);
+      for(const ws of this.ctx.getWebSockets()){
+        if(ws.deserializeAttachment()?.id===person.id){try{ws.close(4000,'Left classroom');}catch{}}
+      }
+    }else if(command.type==='start'&&person.host&&room.status==='lobby'){
       if(room.players.length===0)return {error:'At least one student must join'};
       room.deck=balancedRound(SCENARIOS,room.roundLength);room.index=0;room.answers=[];
       room.status='playing';room.deadline=Date.now()+QUESTION_MS;
