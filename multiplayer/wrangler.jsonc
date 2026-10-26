@@ -1,7 +1,7 @@
 {
   "name": "sampling-arcade-multiplayer",
   "main": "worker.js",
-  "compatibility_date": "2026-10-26",
+  "compatibility_date": "2026-05-01",
   "durable_objects": {
     "bindings": [
       {
