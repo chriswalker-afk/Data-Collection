@@ -1,5 +1,6 @@
 import {ARENA_MODES,createModeUI} from './mode-ui.js';
 import {createCeremonyUI} from './ceremony-ui.js';
+import {createTeamUI} from './team-ui.js';
 import {saveKeepsake} from './keepsakes.js';
 // Multiplayer networking is independent of the solo practice/progress store.
 // Requests that change scores are authenticated HTTPS actions; room updates
@@ -204,6 +205,7 @@ const modeUI=createModeUI({
   refreshStage:()=>render()
 });
 const ceremonyUI=createCeremonyUI({make,button,actionRow,command,stageKicker});
+const teamUI=createTeamUI({make,button,command,stageKicker});
 function render(){
   const active=Boolean(roomCode&&room);
   $('entry').hidden=active;
@@ -225,6 +227,7 @@ function render(){
   $('room-lock').classList.toggle('is-locked',closed);
   $('room-meta').textContent=modeName(room.game)+' · '+room.roundLength+' '+(ARENA_MODES[room.game||'which']?.unit||'questions');
   $('player-count').textContent=room.players.length+' / 45';
+  teamUI.sidebar(room,$('class-pulse'));
   $('players-heading').textContent=room.status==='lobby'?'Classroom roster':'Live leaderboard';
   $('roster-help').textContent=isHost?(room.status==='lobby'?
     'You control who joins. You can remove a nickname before starting.':
@@ -241,6 +244,10 @@ function render(){
       player.answered?'Answer submitted':player.online?'Connected':'Not currently connected',
       'player-presence'+(player.answered?' is-answered':player.online?' is-online':''));
     details.append(name,state);
+    if(room.teamCount&&player.teamId){
+      const team=room.teams?.find(x=>x.id===player.teamId);
+      if(team)details.append(make('span',team.icon+' '+team.name,'player-team-label'));
+    }
     item.append(details,make('span',player.score+' points','player-score'));
     if(isHost&&room.status==='lobby'){
       const remove=button('Remove',()=>{
@@ -255,6 +262,8 @@ function render(){
   const focused=document.activeElement?.dataset?.method;
   const activeInput=document.activeElement?.id==='arena-speed-answer';
   const cursor=activeInput?document.activeElement.selectionStart:null;
+  const activeFeedback=document.activeElement?.id==='teacher-feedback-text';
+  const feedbackCursor=activeFeedback?document.activeElement.selectionStart:null;
   const stage=$('stage');stage.replaceChildren();
   if(room.status==='lobby'){
     stage.append(stageKicker(isHost?'HOST CONTROL CENTRE':'YOU ARE READY'));
@@ -275,7 +284,7 @@ function render(){
           'New students can join using the six-digit code. Lock joining when the class is ready.'));
       const actions=actionRow();
       const start=button('Start challenge',()=>command('start'));
-      start.disabled=room.players.length<1;
+      start.disabled=room.players.length<1||(room.teamCount>room.players.length);
       const lock=button(room.locked?'Unlock joining':'Lock joining',
         ()=>command(room.locked?'unlock':'lock'),'btn btn-quiet');
       lock.id='lock-toggle';lock.setAttribute('aria-pressed',String(Boolean(room.locked)));
@@ -287,6 +296,7 @@ function render(){
       stage.append(supportBox('Waiting for your teacher',
         'Your nickname appears in the roster. The teacher will start the selected challenge; read each instruction carefully.'));
     }
+    teamUI.setup(room,isHost,stage);
   }else if(room.status==='playing'&&room.question&&room.game!=='which'){
     modeUI.renderQuestion(room,isHost,pendingAnswer,stage);
   }else if(room.status==='playing'&&room.question){
@@ -371,7 +381,13 @@ function render(){
       stage.append(actions);
     }
   }
+  teamUI.review(room,isHost,stage);
+  teamUI.finished(room,stage);
   if(focused)stage.querySelector('[data-method="'+focused+'"]')?.focus({preventScroll:true});
+  if(activeFeedback){
+    const input=stage.querySelector('#teacher-feedback-text');
+    if(input){input.focus({preventScroll:true});input.setSelectionRange(feedbackCursor,feedbackCursor);}
+  }
   if(activeInput){const input=stage.querySelector('#arena-speed-answer');if(input&&!input.disabled){input.focus({preventScroll:true});input.setSelectionRange(cursor,cursor);}}
   if(!clockTimer)clockTimer=setInterval(updateClock,250);
 }
