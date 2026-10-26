@@ -170,6 +170,18 @@ function appendCheckedFeedback(root,method){
  const block=elem('details','build-worked-example');
  block.append(elem('summary','build-worked-summary','See a contextual worked example'),
   elem('p','build-worked-text',method.workedExample));
+ // The source condition already begins "If" or "When". Present it as a
+ // genuine conditional instruction, never a blanket rule for every sample.
+ for(const note of root.querySelectorAll('.exam-help')){
+  const text=note.textContent.trim();
+  if(/^Only if if /i.test(text)){
+   note.textContent='If '+text.slice('Only if if '.length);
+   note.classList.add('build-conditional-note');
+  }else if(/^Only if when /i.test(text)){
+   note.textContent='When '+text.slice('Only if when '.length);
+   note.classList.add('build-conditional-note');
+  }
+ }
  const caution=root.querySelector('.exam-warning');
  if(caution)caution.before(block);
  else model?.after(block);
