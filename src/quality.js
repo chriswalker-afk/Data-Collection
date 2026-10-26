@@ -33,3 +33,21 @@ export function completionHeading(game, session={}) {
       return 'Round complete.';
   }
 }
+
+export function completionCreditNote(game,session={}) {
+  if(session.reviewMode&&(game==='reason'||game==='error'))
+    return 'This revisit was unscored: no new answers, rounds or mastery were recorded.';
+  const notes={
+    flashcards:'“Know it” is a self-rating, not an independently marked answer. Revisit cards to consolidate recall.',
+    match:'Only pairs connected before any mistaken pairing earn independent credit. Corrections still help you learn.',
+    cloze:'Hinted answers and revealed words are practice, not independent mastery.',
+    sort:'Only your first full-board check counts towards progress. Corrections are unscored.',
+    identify:'Your first selection for each scenario is recorded; explanations appear afterwards.',
+    speed:'Only submitted typed responses count. Correct independent answers in targeted review can also earn credit.',
+    build:'Only the first unaided procedure check counts; revealing a model or correcting an order cannot earn credit.',
+    error:'Only the first complete three-part diagnosis counts. Missed-case reviews are unscored.',
+    reason:'Guided model choices and written self-review are practice, not independently graded mathematical answers.',
+    exam:'Numerical answers are checked; written responses are model-assisted self-review, not official marks.'
+  };
+  return notes[game]||'Your activity results reflect practice, not a predicted examination grade.';
+}
