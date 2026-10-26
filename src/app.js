@@ -991,7 +991,10 @@ function speedForward() {
     if (session.speedMode==='untimed') {
       session.finishedReason='complete';finishRound();return;
     }
-    session.items=speedDeck(data.concepts,topic,Math.random,Number.POSITIVE_INFINITY);
+    const selected=makeVariedSpeedDeck(data.concepts,data.recallClues,topic,
+      Math.random,Number.POSITIVE_INFINITY,previousRecallClues);
+    previousRecallClues=selected.lastClues;
+    session.items=selected.items;
     session.index=0;
   } else session.index++;
   session.lastTick=performance.now();
@@ -1318,11 +1321,19 @@ function restartGame(){
     session=makeFlashSession(shuffled(makeFlashDeck(data.concepts,data.evaluations,topic)));
     flashBrowseOpen=false;
   } else if (mode === 'match') {
-    const round = makeMatchRound(data.concepts, topic);
+    const sizes=matchLengthsForTopic(data.concepts,topic);
+    if(!sizes.includes(matchLength))matchLength=sizes[sizes.length-1];
+    const {lastClues,...round}=makeVariedMatchRound(data.concepts,data.recallClues,topic,
+      Math.random,matchLength,previousMatchIds.get(topic)||[],previousRecallClues);
+    previousRecallClues=lastClues;
+    previousMatchIds.set(topic,round.terms.map(c=>c.id));
     session = { ...round, matched: new Set(), selectedTerm: null, selectedDefinition: null,
       mistakes: 0, independentPairs: 0, exposedIds: new Set(), feedback: '', feedbackGood: false, complete: false, resolving: null };
   } else if (mode === 'cloze') {
-    const items = shuffled(clozeInTopic(data.cloze, data.concepts, topic));
+    if(!clozeLengthsForTopic(data.cloze,data.concepts,topic).includes(clozeLength))clozeLength='all';
+    const items=makeClozeRound(data.cloze,data.concepts,topic,clozeLength,
+      Math.random,previousClozeIds.get(topic)||[]);
+    previousClozeIds.set(topic,items.map(q=>q.id));
     const options = Object.fromEntries(items.map(q => [q.id, shuffled(q.choices)]));
     session = { items, options, index: 0, choice: null, answered: false, correct: 0,
       complete: false, draft: '', status: null, hintUsed: false, typoRetry: false };
@@ -1334,9 +1345,10 @@ function restartGame(){
     session = { items: makeScenarioRound(data.scenarios, scenarioLength), index: 0,
       choice: null, answered: false, correct: 0, complete: false };
   } else if (mode === 'speed') {
-    const pool = speedDeck(data.concepts, topic, Math.random,
-      speedMode === 'timed' ? Number.POSITIVE_INFINITY : 10);
-    session = { items: pool, index: 0, speedMode, started: speedMode === 'untimed',
+    const selected=makeVariedSpeedDeck(data.concepts,data.recallClues,topic,Math.random,
+      speedMode === 'timed' ? Number.POSITIVE_INFINITY : 10,previousRecallClues);
+    previousRecallClues=selected.lastClues;
+    session = { items: selected.items, index: 0, speedMode, started: speedMode === 'untimed',
       answered: false, draft: '', status: null, typoRetry: false,
       remainingMs: speedDuration * 1000, lastTick: null, attempted: 0,
       correct: 0, skipped: 0, complete: false, finishedReason: null,
@@ -1704,7 +1716,10 @@ function onAction(button) {
     return;
   }
   if(command==='speed-review'&&mode==='speed'&&session.complete&&session.reviewIds?.size){
-    const items=speedReviewDeck(data.concepts,session.reviewIds);
+    const chosen=speedReviewDeck(data.concepts,session.reviewIds);
+    const varied=addRecallClues(chosen,data.recallClues,Math.random,previousRecallClues);
+    previousRecallClues=varied.lastClues;
+    const items=varied.items;
     session={items,index:0,speedMode:'untimed',started:true,answered:false,
       draft:'',status:null,typoRetry:false,aliasUsed:false,
       remainingMs:0,lastTick:null,attempted:0,correct:0,skipped:0,
@@ -1876,6 +1891,15 @@ mount.addEventListener('change', event => {
   } else if (control.dataset.control === 'sort-round' && mode === 'sort') {
     if (!data.sortPairs.some(r => r.id === control.value)) return;
     sortRoundId = control.value;
+  } else if (control.dataset.control === 'match-length' && mode === 'match') {
+    const count=Number(control.value);
+    if(!matchLengthsForTopic(data.concepts,topic).includes(count))return;
+    matchLength=count;
+  } else if (control.dataset.control === 'cloze-length' && mode === 'cloze') {
+    const count=control.value==='all'?'all':Number(control.value);
+    if(!CLOZE_ROUND_LENGTHS.includes(count)||
+      !clozeLengthsForTopic(data.cloze,data.concepts,topic).includes(count))return;
+    clozeLength=count;
   } else if (control.dataset.control === 'scenario-length' && mode === 'identify') {
     const length = Number(control.value);
     if (!ROUND_LENGTHS.includes(length)) return;
@@ -1906,7 +1930,8 @@ async function loadData() {
   mount.replaceChildren(div('loading', 'Loading your revision activities…'));
   try {
     const sources = [
-      ['concepts', 'concepts'], ['cloze', 'cloze'], ['evaluations', 'evaluations'],
+      ['concepts', 'concepts'], ['cloze', 'cloze'], ['recall-clues','recallClues'],
+      ['evaluations', 'evaluations'],
       ['sort-rounds', 'rounds'], ['sort-pairs', 'pairs'], ['scenarios', 'scenarios'], ['methods', 'methods'],
       ['accepted-terms', 'terms'], ['exam-errors', 'errors'], ['exam-reasoning','reasoning'], ['exam-practice','questions']
     ];
@@ -1927,6 +1952,8 @@ async function loadData() {
     }
     data.acceptedTerms=data.terms;
     validateTermBank(data.concepts,data.acceptedTerms);
+    validateClozeCoverage(data.cloze,data.concepts);
+    validateRecallClues(data.concepts,data.recallClues);
     validatePairBank(data.sortPairs,data.evaluations);
     if (data.rounds.length < 9 || data.scenarios.length < 20 || data.methods.length !== 5 || data.errors.length < 15 || data.reasoning.length < 9 || data.examQuestions.length < 32) {
       throw new Error('Incomplete sampling content.');
