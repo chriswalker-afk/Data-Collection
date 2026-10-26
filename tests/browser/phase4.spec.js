@@ -15,16 +15,19 @@ test('Build the Method supports keyboard movement, feedback and untouched progre
  const methods=await bank(page,'methods','methods');
  const first=methods[0];
  await expect(page.locator('[data-method-id="simple-random"]')).toBeVisible();
- let actual=await page.locator('[data-step-id]').evaluateAll(nodes=>nodes.map(n=>n.dataset.stepId));
- for(let i=0;i<first.procedure.length;i++){
-  const id=first.procedure[i].id;
-  let at=actual.indexOf(id);
+ const ids=first.procedure.map(step=>step.id);
+ const readOrder=()=>page.locator('[data-step-id]').evaluateAll(nodes=>nodes.map(n=>n.dataset.stepId));
+ for(let i=0;i<ids.length;i++){
+  const id=ids[i];
+  let at=(await readOrder()).indexOf(id);
   while(at>i){
    await page.locator('[data-step-id="'+id+'"] [data-dir="-1"]').focus();
    await page.keyboard.press('Enter');
-   [actual[at-1],actual[at]]=[actual[at],actual[at-1]];at--;
+   await expect.poll(async()=>(await readOrder()).indexOf(id)).toBe(at-1);
+   at--;
   }
  }
+ await expect.poll(readOrder).toEqual(ids);
  await page.getByRole('button',{name:'Check procedure'}).click();
  await expect(page.locator('.typed-feedback')).toContainText('Valid procedure');
  const p=await store(page);expect(p.version).toBe(1);expect(p.concepts[first.conceptId].correct).toBe(1);
