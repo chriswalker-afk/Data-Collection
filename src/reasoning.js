@@ -60,7 +60,12 @@ export function shouldReviewReason(item,track,selections,selfChecks={},flag=fals
   return checked.length>0&&REASON_DIMENSIONS.some(x=>!selfChecks[x.key]);
 }
 export function validateReasonBank(items){
-  if(!Array.isArray(items)||items.length<9)throw Error('Too few reasoning investigations');
+  if(!Array.isArray(items)||items.length<30)throw Error('Too few reasoning investigations');
+  const methods=['simple-random','systematic','stratified','quota','opportunity'];
+  for(const level of ['foundation','develop','extend'])for(const method of methods){
+    if(items.filter(q=>q.level===level&&q.answers?.method===method).length!==2)
+      throw Error('Unbalanced reasoning bank: '+level+'/'+method);
+  }
   const ids=new Set();
   for(const q of items){
     if(ids.has(q.id)||!q.id)throw Error('Duplicate or missing reasoning case ID');
