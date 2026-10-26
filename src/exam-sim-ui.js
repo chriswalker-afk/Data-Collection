@@ -202,7 +202,8 @@ export function createExamSimulationUI(deps){
     'Question '+(session.index+1)+' of '+session.questionIds.length),
     span('quiet-tag',numberTask(q)?'Numerical · auto-checked':'Written · self-reviewed')),
     practiceGuide('exam',{questionType:q.type}));
-  const workspace=element('section',{className:'sim-question','data-sim-question':q.id});
+  const workspace=element('section',{className:'sim-question','data-sim-question':q.id,
+   'aria-labelledby':'sim-question-heading'});
   workspace.append(span('eyebrow','QUESTION · '+(q.type==='allocation'?'STRATIFIED ALLOCATION':
      q.type==='systematic'?'SYSTEMATIC SAMPLING':q.type==='procedure'?'EXPLAIN THE METHOD':'EVALUATE THE METHOD')+
      ' / '+q.level.toUpperCase()),
