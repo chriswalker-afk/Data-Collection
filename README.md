@@ -23,6 +23,14 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 - The optional **Classroom feedback** section downloads a plain-text response for students to share if they choose. There are no names, logins, analytics or automatic submissions. Do not enter personally identifying information.
 - Local progress tracks formative practice. Mastery is a revision indicator requiring two consecutive credited checks; a flashcard “Know it” is self-rated, not externally marked. Ungraded written self-review counts as practice without cancelling an existing mastery streak. Corrected Match Up pairs cannot earn first-try credit. Use Reset my progress to clear this browser's saved information.
 
+## Classroom multiplayer (Pass 1)
+
+The original solo revision arcade and its locally saved progress remain unchanged. The first classroom multiplayer mode lives at [Multiplayer](./multiplayer.html), using temporary six-digit room codes and nicknames without student sign-in. Teachers can create 5-, 10- or 20-question **Which Method?** challenges, reveal reviewed mathematical explanations, and see a live leaderboard. The host and students can use separate devices, including mobile phones.
+
+Cloudflare Workers and SQLite-backed Durable Objects handle rooms and **hibernatable WebSocket** updates. The server validates answer keys, grading, timing and teacher-only actions; temporary rooms expire after three hours. The system avoids continuous polling while WebSockets are working. This first pass does **not** include collectible awards or the awards ceremony; those are scheduled for later passes.
+
+See [the multiplayer setup and quality guide](./multiplayer/README.md) for testing, deployment, security and classroom trial instructions.
+
 ## Run locally
 Start a static server (do not open the file directly in the browser because JSON is fetched):
 

@@ -23,7 +23,8 @@ test('compact desktop header exposes primary routes and every game through three
  await page.goto('/#/home/sampling');
  await expect(page.locator('.site-nav')).toBeVisible();
  await expect(page.locator('.mobile-menu-toggle')).toBeHidden();
- await expect(page.locator('.site-nav > a')).toHaveCount(3);
+ await expect(page.locator('.site-nav > a')).toHaveCount(4);
+ await expect(page.locator('.nav-multiplayer-link')).toHaveAttribute('href','./multiplayer.html');
  await expect(page.locator('#activities-menu > summary')).toContainText('Activities');
  await expect(page.locator('#activities-menu')).not.toHaveAttribute('open','');
  await page.locator('#activities-menu > summary').click();
@@ -147,6 +148,7 @@ test('mobile Menu button supports keyboard, nested Activities and Escape without
 test('mobile My Progress closes navigation while keeping the current topic',async({page})=>{
  await page.setViewportSize({width:320,height:780});
  await page.goto('/#/cloze/data');
+ await expect(page.locator('[data-progress-nav]')).toHaveAttribute('href','#/home/data');
  await page.locator('#mobile-menu-toggle').click();
  await page.locator('[data-progress-nav]').click();
  await expect(page).toHaveURL(/#\/home\/data$/);

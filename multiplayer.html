@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Join a live Edexcel A level sampling challenge with a room code. No accounts required."><title>Multiplayer · Sampling Arcade</title><link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./styles/multiplayer.css"></head>
+<body><a class="skip-link" href="#main">Skip to main content</a>
+<header class="site-header"><div class="shell header-inner"><a class="brand" href="./index.html#/home/sampling"><span class="brand-symbol" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span class="brand-copy"><strong>Sampling Arcade</strong><small>MULTIPLAYER · A LEVEL MATHEMATICS</small></span></a><a class="btn btn-quiet" href="./index.html#/home/sampling">← Back to arcade</a></div></header>
+<main id="main" class="shell main-shell">
+<section class="multiplayer-hero"><span class="kicker">SAMPLING SHOWDOWN</span><h1>Learn together. Compete thoughtfully.</h1><p>Choose a nickname, enter a classroom code and identify sampling methods. No login needed.</p></section>
+<div id="notice" role="status" aria-live="polite"></div>
+<section id="entry" class="multiplayer-entry">
+<div class="panel multiplayer-panel"><span class="eyebrow">TEACHER</span><h2>Host a classroom</h2><p>Set the challenge length and share a six-digit code with your students.</p><label for="length">Questions</label><select id="length"><option value="5">5 · Quick starter</option><option selected value="10">10 · Class challenge</option><option value="20">20 · Extended revision</option></select><button class="btn btn-primary" id="create">Create room</button></div>
+<div class="panel multiplayer-panel"><span class="eyebrow">STUDENTS</span><h2>Join a room</h2><label for="room-code">Six-digit room code</label><input id="room-code" aria-required="true" autocomplete="off" inputmode="numeric" maxlength="7" placeholder="123456"><label for="nickname">Choose a nickname</label><input id="nickname" aria-required="true" autocomplete="off" maxlength="20" placeholder="Maths Explorer"><button class="btn btn-primary" id="join">Join game</button></div>
+</section>
+<section id="room" class="multiplayer-room" hidden>
+<div class="multiplayer-room-top panel"><div><span class="eyebrow" id="room-title">Classroom</span><h2 id="room-id"></h2><button class="btn btn-quiet" id="copy-code" type="button">Copy code</button><p id="room-status" role="status"></p><p id="connection" role="status" class="connection-status"></p></div><button class="btn btn-quiet" id="leave">Leave room</button></div>
+<div class="multiplayer-layout"><section class="panel multiplayer-stage" id="stage"></section><aside class="panel multiplayer-players"><h2>Leaderboard</h2><ol id="players"></ol><p>Accuracy comes first. Each correct answer earns 1,000 points plus a small speed bonus.</p></aside></div>
+</section>
+</main><script type="module" src="./multiplayer/client.js"></script></body></html>
