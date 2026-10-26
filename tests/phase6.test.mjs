@@ -93,7 +93,7 @@ test('teacher CSV is privacy-first and protects against spreadsheet formula inje
  const malicious='=HYPERLINK("https://example.invalid","Open")\nline two';
  paper.entries[q.id]={stage:'done',draft:malicious,values:{},flag:true,hintsUsed:2,included:['point-1']};
  const defaultCsv=reportCsv(paper,questions,methods);
- assert.match(defaultCsv,/Numerical correct/);
+ assert.match(defaultCsv,/Numeric correct/);
  assert.match(defaultCsv,/student self-review/);
  assert.doesNotMatch(defaultCsv,/HYPERLINK/);
  assert.doesNotMatch(defaultCsv,/Written draft/);
