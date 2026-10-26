@@ -658,7 +658,8 @@ function speedModePicker() {
   const modeLabel=element('label',{for:'speed-mode',className:'game-settings-label'},'Practice mode');
   const modeSelect=element('select',{id:'speed-mode',className:'game-select','data-control':'speed-mode'});
   modeSelect.append(
-    element('option',{value:'untimed',selected:speedMode==='untimed'},'Untimed · 10 terms'),
+    element('option',{value:'untimed',selected:speedMode==='untimed'},'Untimed · '+
+      Math.min(10,conceptsInTopic(data.concepts,topic).length)+' terms'),
     element('option',{value:'timed',selected:speedMode==='timed'},'Timed · beat the clock')
   );
   wrap.append(div('setting-group',modeLabel,modeSelect));
@@ -678,7 +679,7 @@ function speedModePicker() {
 function clockBadge(){
   const value=element('span',{
     className:'clock-value','data-clock':'',role:'timer','aria-live':'off',
-    'aria-label':'Time remaining'
+    'aria-label':'Time remaining '+formatClock(session.remainingMs)
   },formatClock(session.remainingMs));
   const remaining=span('speed-clock-fill');
   remaining.style.width=speedClockPercent(session.remainingMs,speedDuration)+'%';
@@ -698,7 +699,10 @@ function paintSpeedClock(){
   const el=mount.querySelector('.speed-clock');
   if(!el)return;
   const clock=el.querySelector('[data-clock]');
-  if(clock)clock.textContent=formatClock(session.remainingMs);
+  if(clock){
+    clock.textContent=formatClock(session.remainingMs);
+    clock.setAttribute('aria-label','Time remaining '+formatClock(session.remainingMs));
+  }
   const fill=el.querySelector('.speed-clock-fill');
   if(fill)fill.style.width=speedClockPercent(session.remainingMs,speedDuration)+'%';
   el.classList.toggle('is-low',session.remainingMs<=SPEED_CAUTION_MS);
