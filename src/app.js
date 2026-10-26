@@ -178,7 +178,8 @@ function homeView() {
     paragraph('hero-description', 'Short, focused revision for sampling and types of data. Start with recall, then choose, explain and tackle exam questions.'),
     div('hero-actions',
       link('Start flashcards ' + '↗', hashFor('flashcards', topic), 'btn btn-primary hero-button'),
-      link('Go to Exam Lab', hashFor('exam', topic), 'btn btn-quiet hero-button'),\n      link('Play multiplayer', './multiplayer.html', 'btn btn-quiet hero-button')
+      link('Go to Exam Lab', hashFor('exam', topic), 'btn btn-quiet hero-button'),
+      link('Play multiplayer', './multiplayer.html', 'btn btn-quiet hero-button')
     )
   );
   const art = div('hero-art');
