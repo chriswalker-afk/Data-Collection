@@ -28,8 +28,10 @@ test('flashcards reveal answers, toggle direction and save progress', async ({ p
   await expect(page.getByRole('button',{name:/Definition → term/})).toBeVisible();
   await page.locator('.flashcard').focus();
   await page.keyboard.press('Enter');
-  await expect(page.getByText('MODEL ANSWER')).toBeVisible();
-  await expect(page.getByText('Example', {exact:true})).toBeVisible();
+  await expect(page.locator('.flash-model-label')).toHaveText(/MODEL (ANSWER|POINTS)/);
+  if(await page.locator('.flash-evaluation-points').count())
+    await expect(page.locator('.flash-evaluation-claim').first()).toBeVisible();
+  else await expect(page.getByText('Example', {exact:true})).toBeVisible();
   await page.getByRole('button',{name:/Know it/}).click();
   await expect(page.locator('.flash-front')).not.toHaveText(front);
   const recorded = await page.evaluate(()=>JSON.parse(localStorage.getItem('sampling-arcade-progress-v1')));

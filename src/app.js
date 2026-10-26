@@ -23,7 +23,7 @@ import {createExperienceUI} from './experience-ui.js';
 import {nextAfterRound} from './journey.js';
 import {guideForActivity} from './activity-guidance.js';
 import {completionHeading,completionCreditNote} from './quality.js';
-import {makeFlashSession,rateFlashSession,skipFlashSession,makeFlashReviewSession,flashCardLabel} from './flashcards.js';
+import {makeFlashDeck,flashFaces,makeFlashSession,rateFlashSession,skipFlashSession,makeFlashReviewSession,flashCardLabel} from './flashcards.js';
 import {chooseMatch,matchNextStep,matchStatus,matchAttemptCredit,MATCH_MOTION_MS} from './match-up.js';
 import {clozePresentation} from './cloze-ui.js';
 import {makePairSortRound,validatePairBank} from './sort-it.js';
@@ -42,6 +42,7 @@ let persistenceAvailable = true;
 let topic = 'sampling';
 let mode = 'home';
 let session = null;
+let flashBrowseOpen = false;
 let sortRoundId = 'pair-srs-stratified';
 let scenarioLength = 10;
 let clozeLevel = 'choices';
@@ -372,24 +373,113 @@ function showCompletion(game) {
       ...(game === 'flashcards'&&session.revisitIds?.length
         ? [action('Review '+session.revisitIds.length+' tricky card'+(session.revisitIds.length===1?'':'s')+' ↻',
           'flash-review',{},'btn btn-primary')] : []),
+      ...(game==='flashcards'?[
+        action('Review all '+makeFlashDeck(data.concepts,data.evaluations,topic).length+' cards ↻',
+          'flash-review-all',{},'btn btn-quiet'),
+        action('Browse all cards','flash-browse',{},'btn btn-quiet')
+      ]:[]),
       action('Play another round ↻', 'restart', {}, 'btn '+(game==='flashcards'&&session.revisitIds?.length?'btn-quiet':'btn-primary')),
       link('Back to arcade', hashFor('home', topic), 'btn btn-quiet'),
       action('Share short feedback', 'open-feedback', {}, 'text-button')
     )
   );
 }
+
+function flashEvaluationList(card){
+  return span('flash-evaluation-points',...card.points.map((point,i)=>
+    span('flash-evaluation-point',
+      span('flash-evaluation-number',String(i+1).padStart(2,'0')),
+      span('flash-evaluation-content',
+        span('flash-evaluation-claim',point.claim),
+        span('flash-evaluation-reason',point.explanation)))));
+}
+function flashBrowserView(){
+  const cards=makeFlashDeck(data.concepts,data.evaluations,topic);
+  const categories=[
+    {id:'term',label:'Key terms',description:'Definitions and precise mathematical language.'},
+    {id:'advantage',label:'Advantages',description:'Strengths of each sampling approach.'},
+    {id:'disadvantage',label:'Disadvantages',description:'Limitations to consider in an investigation.'}
+  ];
+  const groups=div('flash-browser-grid');
+  for(const category of categories){
+    const matching=cards.filter(card=>(card.kind==='evaluation'?card.polarity:'term')===category.id);
+    if(!matching.length)continue;
+    const tiles=div('flash-browser-items');
+    for(const card of matching){
+      const kind=card.kind==='evaluation'?card.polarity:'term';
+      const searchable=[card.label,card.definition,...(card.points||[]).map(p=>p.explanation)].join(' ').toLocaleLowerCase('en-GB');
+      const answer=card.kind==='evaluation'?flashEvaluationList(card):div('flash-library-definition',
+        paragraph('flash-library-answer',card.definition),
+        div('flash-library-notes',
+          paragraph('', 'Example: '+card.example),
+          paragraph('', 'Watch out: '+card.misconception)));
+      tiles.append(element('details',{className:'flash-library-card',
+          'data-flash-type':kind,'data-flash-search':searchable},
+        element('summary',{className:'flash-library-summary'},
+          span('flash-library-title',card.label),
+          span('flash-library-toggle','Show answer')),
+        div('flash-library-body',answer)));
+    }
+    groups.append(element('section',{className:'flash-browser-group'},
+      heading(3,'flash-browser-group-title',category.label),
+      paragraph('flash-browser-group-detail',category.description),tiles));
+  }
+  const filter=element('select',{id:'flash-library-filter',
+      'data-control':'flash-library-filter','aria-label':'Filter flashcards by type'},
+    ...[{id:'all',label:'All card types'},...categories.map(({id,label})=>({id,label}))].map(o=>
+      element('option',{value:o.id},o.label)));
+  const search=element('input',{id:'flash-library-search',type:'search',
+    placeholder:'Search terms, methods or points','aria-label':'Search all flashcards'});
+  return div('flash-browser',
+    div('flash-browser-intro',
+      span('eyebrow','YOUR COMPLETE CARD LIBRARY'),
+      heading(2,'flash-browser-title','Browse all '+cards.length+' cards',{id:'flash-browser-title',tabindex:'-1'}),
+      paragraph('flash-browser-description','Open any card to see its answer. Browse in your own order without changing saved mastery or completing a round.'),
+      div('flash-browser-actions',
+        action(session.complete?'Back to results':'Back to my round','flash-browse',{},'btn btn-quiet'),
+        action('Review all '+cards.length+' cards ↻','flash-review-all',{},'btn btn-primary'))),
+    div('flash-browser-tools',
+      element('label',{for:'flash-library-search'},'Find a card'),search,
+      element('label',{for:'flash-library-filter'},'Card type'),filter,
+      action('Reveal all answers','flash-library-reveal',{},'btn btn-quiet')),
+    paragraph('flash-browser-count',cards.length+' of '+cards.length+' cards showing'),
+    paragraph('flash-browser-empty','No cards match that search.'),
+    groups);
+}
+function updateFlashLibrary(){
+  if(mode!=='flashcards'||!flashBrowseOpen)return;
+  const term=(mount.querySelector('#flash-library-search')?.value||'').trim().toLocaleLowerCase('en-GB');
+  const filter=mount.querySelector('#flash-library-filter')?.value||'all';
+  const items=[...mount.querySelectorAll('.flash-library-card')];
+  let shown=0;
+  for(const item of items){
+    const matches=(filter==='all'||item.dataset.flashType===filter)&&
+      (!term||item.dataset.flashSearch.includes(term));
+    item.hidden=!matches;
+    if(matches)shown++;
+  }
+  for(const group of mount.querySelectorAll('.flash-browser-group')){
+    group.hidden=![...group.querySelectorAll('.flash-library-card')].some(card=>!card.hidden);
+  }
+  const count=mount.querySelector('.flash-browser-count');
+  if(count)count.textContent=shown+' of '+items.length+' cards showing';
+  const empty=mount.querySelector('.flash-browser-empty');
+  if(empty)empty.hidden=shown!==0;
+}
+
 function flashcardView() {
   const root = div('page activity-page flash-page');
   root.append(activityTop('flashcards'));
+  if(flashBrowseOpen){root.append(flashBrowserView());return root;}
   if(session.complete){root.append(showCompletion('flashcards'));return root;}
   const current=session.items[session.index];
-  const prompt=session.reversed?current.definition:current.label;
-  const answer=session.reversed?current.label:current.definition;
+  const {prompt,answer}=flashFaces(session,current);
   const counter=session.index+1;
   const controls=div('round-controls flash-toolbar',
     roundProgress(counter,session.items.length,'Card '+counter+' of '+session.items.length),
     action(session.reversed?'Definition → term':'Term → definition','reverse',
-      {'aria-pressed':session.reversed,'title':'Changing direction restarts the shuffled deck'},'btn btn-quiet btn-small'));
+      {'aria-pressed':session.reversed,'title':'Changing direction restarts the shuffled deck; evaluation cards always ask for points'},'btn btn-quiet btn-small'),
+    action('Browse all '+makeFlashDeck(data.concepts,data.evaluations,topic).length+' cards','flash-browse',{},'btn btn-quiet btn-small'));
   root.append(controls,practiceGuide('flashcards',{reversed:session.reversed}));
 
   // Both sides occupy one stable-height grid. DOM remains in place on flip so
@@ -406,27 +496,33 @@ function flashcardView() {
     span('flash-side-top',
       span('flash-side-type','FRONT · QUESTION'),
       span('flash-turn-symbol','↻')),
-    span('flash-front',prompt),
-    span('flash-face-footer',span('','Think of the full answer'),span('','Tap or press Enter to flip ↗'))
+    span('flash-front'+(current.kind==='evaluation'?' flash-front-evaluation':''),prompt),
+    span('flash-face-footer',span('',current.kind==='evaluation'?'Recall specific points':'Think of the full answer'),span('','Tap or press Enter to flip ↗'))
   );
   const back=element('span',{
     className:'flash-side flash-face-back flash-answer','aria-hidden':String(!session.revealed)
   },
     span('flash-side-top',
       span('flash-side-type','BACK · ANSWER'),span('flash-turn-symbol','↻')),
-    span('eyebrow flash-model-label','MODEL ANSWER'),
-    span('answer-main',answer),
-    ...(!session.reversed&&current.keyPhrases?.length?[
-      span('flash-key-section',
-        span('flash-mini-label','KEY IDEAS'),
-        span('flash-chips',...current.keyPhrases.map(phrase=>span('phrase-chip',phrase))))
-    ]:[]),
-    span('flash-detail',
-      span('flash-detail-item',
-        span('detail-label','Example'),span('flash-detail-copy',current.example)),
-      span('flash-detail-item',
-        span('detail-label','Watch out'),span('flash-detail-copy',current.misconception))
-    ),
+    ...(current.kind==='evaluation'?[
+      span('eyebrow flash-model-label','MODEL POINTS'),
+      flashEvaluationList(current),
+      paragraph('flash-evaluation-tip','Each point includes why it matters. Aim to recall the ideas in your own words.')
+    ]:[
+      span('eyebrow flash-model-label','MODEL ANSWER'),
+      span('answer-main',answer),
+      ...(!session.reversed&&current.keyPhrases?.length?[
+        span('flash-key-section',
+          span('flash-mini-label','KEY IDEAS'),
+          span('flash-chips',...current.keyPhrases.map(phrase=>span('phrase-chip',phrase))))
+      ]:[]),
+      span('flash-detail',
+        span('flash-detail-item',
+          span('detail-label','Example'),span('flash-detail-copy',current.example)),
+        span('flash-detail-item',
+          span('detail-label','Watch out'),span('flash-detail-copy',current.misconception))
+      )
+    ]),
     span('flash-face-footer',span('','Now rate your recall below'),span('','Tap to see the prompt ↶'))
   );
   faceButton.append(element('span',{className:'flash-flip-inner'},front,back));
@@ -445,7 +541,7 @@ function flashcardView() {
   stage.append(gradeWrap);
   const status=div('flash-deck-footer',
     div('flash-pace',
-      span('flash-deck-label',session.isReview?'REVIEW DECK':'SHUFFLED DECK'),
+      span('flash-deck-label',session.reviewType==='all'?'ALL-CARD REVIEW':session.isReview?'REVIEW DECK':'SHUFFLED DECK'),
       span('flash-pace-value',session.ratings.know+' confident · '+session.revisitIds.length+' to revisit')),
     action('Skip for now →','skip',{},'text-button flash-skip'));
   root.append(stage,status);
@@ -1188,7 +1284,8 @@ function restartGame(){
   if(matchSettleTimer!==null){clearTimeout(matchSettleTimer);matchSettleTimer=null;}
   sortUI.clearDrag();
   if (mode === 'flashcards') {
-    session=makeFlashSession(shuffled(conceptsInTopic(data.concepts,topic)));
+    session=makeFlashSession(shuffled(makeFlashDeck(data.concepts,data.evaluations,topic)));
+    flashBrowseOpen=false;
   } else if (mode === 'match') {
     const round = makeMatchRound(data.concepts, topic);
     session = { ...round, matched: new Set(), selectedTerm: null, selectedDefinition: null,
@@ -1305,7 +1402,9 @@ function finishRound() {
   progress = recordSession(progress);
   if (!saveProgress(progress)) persistenceAvailable = false;
   render('.completion-title');
-  announce('Round complete. Your revision progress has been updated.');
+  announce(mode==='flashcards'&&session.isReview?
+    'All selected cards reviewed. Your mastery has not changed.':
+    'Round complete. Your revision progress has been updated.');
 }
 function flipCurrentFlashcard(){
   if(mode!=='flashcards'||!session||session.complete)return;
@@ -1321,7 +1420,7 @@ function flipCurrentFlashcard(){
   button.querySelector('.flash-face-back')?.setAttribute('aria-hidden',String(!session.revealed));
   const gradePanel=mount.querySelector('.flash-grade-panel');
   if(gradePanel)gradePanel.hidden=!session.revealed;
-  announce(session.revealed?'Answer: '+(session.reversed?current.label:current.definition)+
+  announce(session.revealed?'Answer: '+flashFaces(session,current).answer+
     '. Rate Again, Nearly or Know it.':'Prompt shown.');
 }
 
@@ -1479,6 +1578,29 @@ function onAction(button) {
     announce('New round started.');
     return;
   }
+  if(command==='flash-browse'&&mode==='flashcards'){
+    flashBrowseOpen=!flashBrowseOpen;
+    render(flashBrowseOpen?'#flash-browser-title':'#view-heading');
+    if(flashBrowseOpen)updateFlashLibrary();
+    announce(flashBrowseOpen?'Browsing the full card library without changing progress.':'Returned to flashcards.');
+    return;
+  }
+  if(command==='flash-library-reveal'&&mode==='flashcards'&&flashBrowseOpen){
+    const cards=[...mount.querySelectorAll('.flash-library-card:not([hidden])')];
+    const revealing=cards.some(card=>!card.open);
+    for(const card of cards)card.open=revealing;
+    button.textContent=revealing?'Hide all answers':'Reveal all answers';
+    announce((revealing?'Revealed ':'Hidden ')+cards.length+' answers.');
+    return;
+  }
+  if(command==='flash-review-all'&&mode==='flashcards'){
+    flashBrowseOpen=false;
+    session=makeFlashSession(makeFlashDeck(data.concepts,data.evaluations,topic),
+      {reversed:session.reversed,isReview:true,reviewType:'all'});
+    render('[data-action="flip"]');
+    announce('Reviewing all '+session.items.length+' cards in order. This review does not change mastery.');
+    return;
+  }
   if(command==='flip'){flipCurrentFlashcard();return;}
   if (command === 'reverse') {
     const reversed = !session.reversed;
@@ -1493,7 +1615,7 @@ function onAction(button) {
     const grade=button.dataset.grade;
     const concept=session.items[session.index];
     session=rateFlashSession(session,grade);
-    remember(concept.id,grade==='know');
+    if(!session.isReview)remember(concept.id,grade==='know');
     advanceFlash();
     announce('Recall rated '+grade+'.');
     return;
@@ -1677,6 +1799,8 @@ mount.addEventListener('change',event=>{
 mount.addEventListener('input',event=>{
   if(mode==='exam')examSimulator.onInput(event.target);
   if(mode==='reason')reasoningUI.onInput(event.target);
+  if(mode==='flashcards'&&flashBrowseOpen&&event.target.id==='flash-library-search')
+    updateFlashLibrary();
   if(mode==='cloze'&&!session?.answered&&event.target.id==='cloze-answer'){
     session.draft=event.target.value;
     const blank=mount.querySelector('.cloze-blank');
@@ -1705,6 +1829,9 @@ mount.addEventListener('submit', event => {
 mount.addEventListener('change', event => {
   const control = event.target;
   if (!control.matches('select[data-control]')) return;
+  if(control.dataset.control==='flash-library-filter'&&mode==='flashcards'&&flashBrowseOpen){
+    updateFlashLibrary();return;
+  }
   if(control.dataset.control==='build-method'&&mode==='build'){
     if(!data.methods.some(m=>m.id===control.value))return;buildMethodId=control.value;
   } else if(control.dataset.control==='exam-level'&&(mode==='error'||mode==='reason')){
