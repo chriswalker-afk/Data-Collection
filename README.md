@@ -30,7 +30,7 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 
 The ten Solo Arcade games and their saved progress remain unchanged. [Multiplayer Arena](./multiplayer.html) now has four classroom modes: **Which Method?**, **Speed Recall**, **Match Up** and **Sort It!**. The teacher chooses a game and length, shares a temporary six-digit code, and controls the start, locking/removal, mathematical answer reveal and subsequent questions. Student devices join by nickname without sign-in. Typed recall, matched pairs and sorting boards are all marked server-side.
 
-Cloudflare Workers and SQLite-backed Durable Objects handle rooms and **hibernatable WebSocket** updates. The server validates answer keys, grading, timing and teacher-only actions; temporary rooms expire after three hours. The system avoids continuous polling while WebSockets are working. **Solo awards are available now**, but multiplayer achievements and the synchronised awards ceremony are reserved for later multiplayer passes.
+Cloudflare Workers and SQLite-backed Durable Objects handle rooms and **hibernatable WebSocket** updates. The server validates answer keys, grading, timing and teacher-only actions; temporary rooms expire after three hours. The system avoids continuous polling while WebSockets are working. **Solo trophies and Multiplayer keepsakes are available now.** Multiplayer awards are based on server-graded responses and celebrated together with a teacher-controlled podium and synchronised character reveals. Student devices save nickname-free local keepsakes separately from Solo mastery.
 
 See [the multiplayer setup and quality guide](./multiplayer/README.md) for testing, deployment, security and classroom trial instructions.
 
@@ -56,6 +56,7 @@ npm run test:e2e
 GitHub Actions runs unit/content validation, desktop/mobile Chromium browser tests and Cloudflare staging multiplayer smoke tests. The published site is available at the URL above through the successful `.github/workflows/deploy-pages.yml` workflow. `node scripts/build-pages.mjs` validates the static publish artifact and keeps Cloudflare Worker backend files out of GitHub Pages.
 
 ## Source & project notes
+- [Pass 5 Grand Multiplayer Awards Ceremony: verified character awards, podium, synchronized reveals and privacy](docs/PASS_5_GRAND_AWARDS_CEREMONY.md)
 - [Pass 4 Multiplayer: Speed Recall, Match Up, Sort It!, scoring and classroom reliability](docs/PASS_4_MULTIPLAYER_GAMES.md)
 - [Pass 3 Trophy Cabinet: 16 awards, fairness rules, offline storage and backup/restore](docs/PASS_3_TROPHY_CABINET.md)
 - [Pass 2 Unified Arcade: shared navigation, classroom hosting and release checks](docs/PASS_2_UNIFIED_ARCADE.md)
@@ -78,4 +79,4 @@ GitHub Actions runs unit/content validation, desktop/mobile Chromium browser tes
 
 All content is independently worded for teaching, rather than copied verbatim from textbooks. This site is not affiliated with or endorsed by Pearson.
 
-**Next multiplayer roadmap:** Pass 5 adds the Grand Awards Ceremony with server-verified multiplayer achievements, a podium and synchronised reveals; Pass 6 develops team challenges, collaborative class goals and classroom-scale resilience. The earlier Solo Arcade Pass 7 classroom-trial recommendations remain documented in `docs/PASS_7_CLASSROOM_TRIAL.md`.
+**Next multiplayer roadmap:** Pass 6 introduces optional team challenges, collaborative goals, teacher feedback and 30–45 student classroom stress testing. Pass 5's Grand Awards Ceremony and 11 server-derived Multiplayer awards are available now. The earlier Solo Arcade Pass 7 classroom-trial recommendations remain documented in `docs/PASS_7_CLASSROOM_TRIAL.md`.

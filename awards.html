@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f6f8f5">
-  <meta name="description" content="Your Sampling Arcade Trophy Cabinet: meaningful mathematical awards earned through Solo revision.">
+  <meta name="description" content="Your Sampling Arcade Trophy Cabinet: Solo achievements and Multiplayer Awards Ceremony keepsakes.">
   <title>My Awards · Sampling Arcade</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./styles.css">
@@ -32,8 +32,8 @@
       <div class="cabinet-hero-text">
         <span class="arcade-hero-kicker">YOUR COLLECTIBLE MATHEMATICS CABINET</span>
         <h1 id="awards-heading">Good thinking deserves a little glory.</h1>
-        <p>Meet a curious cast of mathematical creatures. Build confidence, practise thoughtfully, and earn awards through real achievements in the ten Solo Arcade games.</p>
-        <div class="arcade-hero-facts"><span>16 collectible awards</span><span>No accounts</span><span>Saved on this browser</span></div>
+        <p>Collect Solo achievements through practice, then bring home a special keepsake from a server-verified Multiplayer Awards Ceremony.</p>
+        <div class="arcade-hero-facts"><span>16 Solo trophies</span><span>11 Multiplayer characters</span><span>No accounts</span></div>
       </div>
       <div class="cabinet-hero-art" aria-hidden="true">
         <div class="cabinet-hero-orbit"></div><div class="cabinet-hero-medal">🦊</div>
@@ -43,7 +43,7 @@
     <section class="cabinet-summary" aria-label="Collection progress">
       <div>
         <span class="cabinet-summary-kicker">MY COLLECTION</span>
-        <h2>The Trophy Cabinet</h2>
+        <h2>Solo Trophy Cabinet</h2>
         <p id="cabinet-remaining">Your awards will appear as you practise.</p>
         <progress id="cabinet-progress" class="cabinet-meter" value="0" max="16" aria-label="0 of 16 awards collected"></progress>
       </div>
@@ -56,18 +56,37 @@
         <button type="button" data-filter="locked" data-label="Locked" aria-pressed="false">Locked (16)</button>
       </div>
       <div class="cabinet-transfer">
-        <button type="button" id="cabinet-export">Export awards</button>
-        <button type="button" id="cabinet-import-button">Restore awards</button>
-        <button type="button" id="cabinet-clear" class="cabinet-reset">Reset cabinet</button>
+        <button type="button" id="cabinet-export">Export Solo awards</button>
+        <button type="button" id="cabinet-import-button">Restore Solo awards</button>
+        <button type="button" id="cabinet-clear" class="cabinet-reset">Reset Solo cabinet</button>
         <input id="cabinet-import" class="sr-only" type="file" accept=".json,application/json" aria-label="Select an awards backup JSON file">
       </div>
     </div>
     <p class="cabinet-notice" id="cabinet-notice" role="status" aria-live="polite" aria-atomic="true"></p>
     <div id="cabinet-grid"></div>
     <p id="cabinet-empty" class="cabinet-empty" hidden></p>
+    <section id="multiplayer-keepsakes" class="multiplayer-keepsakes-section" aria-labelledby="keepsakes-heading">
+      <div class="keepsakes-heading">
+        <div>
+          <span class="cabinet-summary-kicker">YOUR CLASSROOM CELEBRATIONS</span>
+          <h2 id="keepsakes-heading">Multiplayer keepsakes</h2>
+          <p>Mathematical character awards earned in live, server-graded classroom games. Stored separately from Solo progress and trophies.</p>
+        </div>
+        <div class="keepsake-tally">
+          <strong id="keepsake-count">0 / 11</strong>
+          <span>characters discovered</span>
+        </div>
+      </div>
+      <div id="keepsake-grid" class="keepsake-grid" aria-live="off"></div>
+      <p id="keepsake-empty" class="keepsake-empty">Your first keepsake will appear here after you reach the finale of a Multiplayer Awards Ceremony.</p>
+      <div class="keepsake-footer">
+        <p>Multiplayer awards are calculated by Cloudflare from checked classroom answers. This device saves a small, nickname-free memento once the ceremony reaches its finale. Local records are not cryptographically verifiable after the room expires, and do not count towards Solo mastery or Solo trophies.</p>
+        <button type="button" id="keepsake-reset">Clear Multiplayer keepsakes</button>
+      </div>
+    </section>
     <section class="cabinet-fineprint" aria-labelledby="cabinet-how">
       <h2 id="cabinet-how">How these awards work</h2>
-      <p>Checked awards use first-attempt or unassisted answers from Solo games. Hints, revealed models, corrections and ungraded written work never count as verified accuracy. Confidence ratings and substantial independent writing have their own clearly labelled practice awards. Progress and trophies stay on this device unless you export them. A restored local backup is not independently authenticated, and there is no cross-device account. Multiplayer prizes and an awards ceremony arrive in later passes. Resetting or restoring your cabinet does not change saved Solo progress or exam writing.</p>
+      <p>Checked awards use first-attempt or unassisted answers from Solo games. Hints, revealed models, corrections and ungraded written work never count as verified accuracy. Confidence ratings and substantial independent writing have their own clearly labelled practice awards. Solo progress and trophies stay on this device unless you export them. A restored Solo backup is not independently authenticated, and there is no cross-device account. Multiplayer keepsakes are recorded separately from live, server-graded results when the ceremony reaches its finale. Resetting or restoring your Solo cabinet does not change Multiplayer keepsakes, saved Solo progress or exam writing.</p>
     </section>
     <div class="arcade-cta-row">
       <a href="./index.html#/home/sampling">Earn awards in Solo Arcade</a>
