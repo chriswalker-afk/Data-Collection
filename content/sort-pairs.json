@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "pairs": [
+    {
+      "id": "pair-srs-stratified",
+      "label": "Simple random vs stratified",
+      "methods": [
+        "simple-random",
+        "stratified"
+      ],
+      "evaluationIds": [
+        "srs-objective",
+        "srs-equal",
+        "srs-small",
+        "srs-frame",
+        "srs-large",
+        "srs-subgroups",
+        "strata-proportions",
+        "strata-comparison",
+        "strata-classify",
+        "strata-random"
+      ],
+      "claimOverrides": {
+        "srs-objective": "Choosing individuals from one numbered population list using random numbers avoids deliberate interviewer preference.",
+        "srs-frame": "Drawing individuals randomly from the full population requires a complete numbered list."
+      }
+    },
+    {
+      "id": "pair-systematic-quota",
+      "label": "Systematic vs quota",
+      "methods": [
+        "systematic",
+        "quota"
+      ],
+      "evaluationIds": [
+        "sys-speed",
+        "sys-scale",
+        "sys-frame",
+        "sys-periodic",
+        "quota-proportions",
+        "quota-no-frame",
+        "quota-comparison",
+        "quota-selection",
+        "quota-classify",
+        "quota-nonresponse"
+      ]
+    },
+    {
+      "id": "pair-stratified-quota",
+      "label": "Stratified vs quota",
+      "methods": [
+        "stratified",
+        "quota"
+      ],
+      "evaluationIds": [
+        "strata-proportions",
+        "strata-comparison",
+        "strata-classify",
+        "strata-random",
+        "quota-proportions",
+        "quota-no-frame",
+        "quota-comparison",
+        "quota-selection",
+        "quota-classify",
+        "quota-nonresponse"
+      ],
+      "claimOverrides": {
+        "strata-proportions": "After randomly selecting individuals within each stratum, the planned sample proportions are maintained.",
+        "strata-comparison": "Random draws within each stratum provide planned coverage of important groups.",
+        "quota-proportions": "Non-random recruitment to fixed interviewer targets can reflect specified population group proportions.",
+        "quota-no-frame": "Filling predefined group targets by approaching available people does not require a complete population register.",
+        "quota-comparison": "Interviewers can recruit to stated group targets to include the chosen groups for comparison."
+      }
+    },
+    {
+      "id": "pair-srs-opportunity",
+      "label": "Simple random vs opportunity",
+      "methods": [
+        "simple-random",
+        "opportunity"
+      ],
+      "evaluationIds": [
+        "srs-objective",
+        "srs-equal",
+        "srs-small",
+        "srs-frame",
+        "srs-large",
+        "srs-subgroups",
+        "opp-easy",
+        "opp-cost",
+        "opp-unrepresentative",
+        "opp-researcher"
+      ]
+    },
+    {
+      "id": "pair-quota-opportunity",
+      "label": "Quota vs opportunity",
+      "methods": [
+        "quota",
+        "opportunity"
+      ],
+      "evaluationIds": [
+        "quota-proportions",
+        "quota-no-frame",
+        "quota-comparison",
+        "quota-selection",
+        "quota-classify",
+        "quota-nonresponse",
+        "opp-easy",
+        "opp-cost",
+        "opp-unrepresentative",
+        "opp-researcher"
+      ],
+      "claimOverrides": {
+        "quota-no-frame": "Filling specified subgroup targets avoids needing a register of every eligible person."
+      }
+    },
+    {
+      "id": "pair-systematic-opportunity",
+      "label": "Systematic vs opportunity",
+      "methods": [
+        "systematic",
+        "opportunity"
+      ],
+      "evaluationIds": [
+        "sys-speed",
+        "sys-scale",
+        "sys-frame",
+        "sys-periodic",
+        "opp-easy",
+        "opp-cost",
+        "opp-unrepresentative",
+        "opp-researcher"
+      ]
+    }
+  ]
+}
