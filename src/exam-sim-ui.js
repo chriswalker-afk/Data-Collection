@@ -254,6 +254,12 @@ export function createExamSimulationUI(deps){
    section.append(card);
   }
   page.append(section);
+  page.append(div('sim-report-coaching',
+    heading(3,'sim-panel-heading','What should you do next?'),
+    paragraph('sim-help',examState.reviewIds.length
+      ? 'You have '+examState.reviewIds.length+' saved question'+(examState.reviewIds.length===1?'':'s')+
+        ' to revisit. Try them again independently, without revealing hints or the model first.'
+      : 'Your current paper has no saved practice targets. Try a longer paper or the next challenge level, and explain each result in full sentences.')));
   const exportSettings=div('sim-export-settings',
    heading(3,'sim-panel-heading','Share a summary with your teacher'),
    paragraph('sim-help','Download a CSV report to share yourself. No student name or cloud upload. Written drafts are excluded unless you opt in; self-reviews are not examination marks.'),
@@ -264,6 +270,7 @@ export function createExamSimulationUI(deps){
     action('Print this report','sim-print',{},'btn btn-primary'),
     action('Export CSV report','sim-export',{},'btn btn-quiet'),
     action('Back to paper choices','sim-menu',{},'btn btn-quiet'),
+    action('Share short feedback','sim-experience-feedback',{},'text-button'),
     ...(examState.reviewIds.length?[action('Practise saved targets','sim-review',{},'btn btn-quiet')]:[])));
   return page;
  }
@@ -303,6 +310,9 @@ export function createExamSimulationUI(deps){
   deps.announce(result.correct?(independent?'Calculations correct.':'Correct with hints; practise independently next.'):'Worked solutions are available.');
  }
  function handle(command,button){
+  if(command==='sim-experience-feedback'){
+    deps.openFeedback?.();return;
+  }
   if(command==='sim-start'){begin(button.dataset.variant);return;}
   if(command==='sim-review'){begin('review');return;}
   if(command==='sim-resume'){
