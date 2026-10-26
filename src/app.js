@@ -430,9 +430,9 @@ function matchView(){
     'aria-labelledby':'match-question-title',
     'aria-busy':String(Boolean(session.resolving))
   });
-  const info=div('match-board-intro',
+  const info=div('match-board-intro question-preamble',
     div('match-board-copy',
-      span('match-board-kicker','MATCH THE PAIRS'),
+      span('match-board-kicker','QUESTION · MATCH THE PAIRS'),
       heading(2,'match-board-title','Make the connection',{id:'match-question-title'})),
     div('match-progress-markers',
       ...session.terms.map((_,i)=>span('match-progress-pip'+(i<done?' is-complete':''),i<done?'✓':String(i+1)))
