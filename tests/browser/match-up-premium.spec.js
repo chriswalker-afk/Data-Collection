@@ -97,13 +97,30 @@ test('navigating away during an animation never awards a stale answer to another
  await page.locator('[data-action="match-term"][data-id="'+id+'"]').click();
  await page.locator('[data-action="match-def"][data-id="'+id+'"]').click();
  await expect(page.locator('.match-board')).toHaveAttribute('aria-busy','true');
- await page.goto('/#/flashcards/data');
+ await page.evaluate(()=>{
+  window.__matchNavSentinel=true;
+  window.location.hash='#/flashcards/data';
+ });
  await expect(page.locator('.flashcard')).toBeVisible();
+ expect(await page.evaluate(()=>window.__matchNavSentinel)).toBe(true,'navigation stays in the same document');
  await page.waitForTimeout(550);
  const progress=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)),key);
  expect(progress?.answers??0).toBe(0); // No record exists until a scored response.
  await page.goto('/#/match/data');
  await expect(page.locator('.match-progress-pip.is-complete')).toHaveCount(0);
+});
+
+test('rapid repeated taps during confirmation cannot score the same matched pair twice',async({page})=>{
+ await start(page,'sampling');
+ const id=await page.locator('[data-action="match-term"]').first().getAttribute('data-id');
+ await page.locator('[data-action="match-term"][data-id="'+id+'"]').click();
+ await page.locator('[data-action="match-def"][data-id="'+id+'"]').click();
+ await expect(page.locator('.match-board')).toHaveAttribute('aria-busy','true');
+ await page.locator('.is-match-success').first().evaluate(el=>{el.click();el.click();el.click();});
+ await expect(page.locator('.match-progress-pip.is-complete')).toHaveCount(1);
+ const progress=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)),key);
+ expect(progress.answers).toBe(1);
+ expect(progress.concepts[id].correct).toBe(1);
 });
 
 test('reduced-motion users get instant completion with no forced animation',async({page})=>{
