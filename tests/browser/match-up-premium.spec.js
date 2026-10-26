@@ -101,7 +101,7 @@ test('navigating away during an animation never awards a stale answer to another
  await expect(page.locator('.flashcard')).toBeVisible();
  await page.waitForTimeout(550);
  const progress=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)),key);
- expect(progress.answers).toBe(0);
+ expect(progress?.answers??0).toBe(0); // No record exists until a scored response.
  await page.goto('/#/match/data');
  await expect(page.locator('.match-progress-pip.is-complete')).toHaveCount(0);
 });

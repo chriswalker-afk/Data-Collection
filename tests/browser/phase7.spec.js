@@ -72,6 +72,8 @@ test('completed round provides next lesson and opt-in classroom feedback entry',
   const id=await page.locator('[data-action="match-term"]').first().getAttribute('data-id');
   await page.locator('[data-action="match-term"][data-id="'+id+'"]').click();
   await page.locator('[data-action="match-def"][data-id="'+id+'"]').click();
+   // Let the success animation settle before selecting the next pair.
+   await expect(page.locator('[data-action="match-term"][data-id="'+id+'"]')).toHaveCount(0);
  }
  await expect(page.getByText('Round complete',{exact:true})).toBeVisible();
  await expect(page.locator('.completion-next')).toContainText('Recall the missing words');
