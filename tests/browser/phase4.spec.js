@@ -34,13 +34,14 @@ test('Build the Method supports keyboard movement, feedback and untouched progre
  await expect(page.locator('.exam-model-list')).toBeVisible();
  expect((await store(page)).answers).toBe(2);
 });
-test('Spot the Error checks selected line and repair exactly once',async({page})=>{
+test('Spot the Error diagnoses step, correction and consequence exactly once',async({page})=>{
  await page.goto('/#/error/sampling');const questions=await bank(page,'exam-errors','errors');
  const id=await page.locator('[data-error-id]').getAttribute('data-error-id'),q=questions.find(x=>x.id===id);
  await page.locator('input[name="error-line"][value="'+q.errorLine+'"]').check();
  await page.locator('input[name="error-repair"][value="'+q.repair+'"]').check();
- await page.getByRole('button',{name:'Check my diagnosis'}).click();
- await expect(page.locator('.typed-feedback')).toContainText('Both choices correct');
+ await page.locator('input[name="error-impact"][value="'+q.impact.answer+'"]').check();
+ await page.getByRole('button',{name:'Check all three decisions'}).click();
+ await expect(page.locator('.error-analysis')).toContainText('All three decisions correct');
  expect((await store(page)).answers).toBe(1);
  await page.getByRole('button',{name:'Next case →'}).click();
  expect((await store(page)).answers).toBe(1);
