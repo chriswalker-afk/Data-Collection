@@ -2,6 +2,8 @@ import {
   AWARDS,AWARDS_KEY,AWARD_GROUPS,awardStatus,earnedAwards,
   loadAwards,saveAwards,clearAwards,exportAwardBackup,restoreAwardBackup
 } from './awards.js';
+import {ARENA_AWARDS} from '../multiplayer/award-catalogue.js';
+import {MULTIPLAYER_KEEPSAKES_KEY,keepsakeSummary,loadKeepsakes} from '../multiplayer/keepsakes.js';
 
 const root=document.getElementById('cabinet-grid');
 const filters=document.getElementById('cabinet-filters');
@@ -50,7 +52,30 @@ function card(award){
   article.append(head,title,description,stamp,footer);
   return article;
 }
+function renderKeepsakes(){
+  const summary=keepsakeSummary(loadKeepsakes());
+  const count=document.getElementById('keepsake-count');
+  count.textContent=summary.length+' / '+ARENA_AWARDS.length;
+  const root=document.getElementById('keepsake-grid'),empty=document.getElementById('keepsake-empty');
+  const content=document.createDocumentFragment();
+  for(const award of summary){
+    const tile=node('article','keepsake-tile');
+    tile.dataset.keepsakeId=award.id;
+    const portrait=node('span','keepsake-portrait',award.emoji);
+    portrait.setAttribute('aria-hidden','true');
+    const details=node('div','keepsake-details');
+    details.append(node('span','keepsake-state','✦ FROM MULTIPLAYER'),
+      node('h3','keepsake-name',award.name),
+      node('p','keepsake-reason',award.detail),
+      node('p','keepsake-when','Collected '+award.earnedCount+
+        (award.earnedCount===1?' time':' times')+' · Most recent '+new Date(award.mostRecent)
+          .toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})));
+    tile.append(portrait,details);content.append(tile);
+  }
+  root.replaceChildren(content);empty.hidden=summary.length>0;
+}
 function render(){
+  renderKeepsakes();
   cabinet=loadAwards();
   const achieved=earnedAwards(cabinet).length;
   count.textContent=achieved+' / '+AWARDS.length;
@@ -117,5 +142,14 @@ document.getElementById('cabinet-clear').addEventListener('click',()=>{
   if(!clearAwards()){say('Local storage could not be cleared.');return;}
   render();say('This browser’s Trophy Cabinet is now empty. Other Solo progress remains saved.');
 });
-window.addEventListener('storage',event=>{if(event.key===AWARDS_KEY)render();});
+document.getElementById('keepsake-reset').addEventListener('click',()=>{
+  if(!confirm('Clear the Multiplayer keepsakes on this browser? This cannot be undone. Solo awards, progress and exam writing will stay unchanged.'))return;
+  try{localStorage.removeItem(MULTIPLAYER_KEEPSAKES_KEY);renderKeepsakes();
+    say('Multiplayer keepsakes cleared. Solo trophies and progress were not changed.');
+  }catch{say('Unable to clear Multiplayer keepsakes on this device.');}
+});
+window.addEventListener('storage',event=>{
+  if(event.key===AWARDS_KEY)render();
+  if(event.key===MULTIPLAYER_KEEPSAKES_KEY)renderKeepsakes();
+});
 render();
