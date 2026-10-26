@@ -3,6 +3,10 @@ import {SCENARIOS} from './scenarios.js';
 import {ROUND_LENGTHS,cleanNickname,secureIndex} from './rules.js';
 import {GAME_MODES,validLength,questionTimeMs,makeGameDeck,safeGameQuestion,revealGameAnswer,gradeGameAnswer} from './modes.js';
 import {makeCeremony,ceremonySnapshot,collectableReceipt} from './ceremony-rules.js';
+import {
+  TEAM_DEFINITIONS,TEAM_COUNTS,CLASS_TARGETS,balanceTeams,nextTeamId,
+  teamStandings,classQuestSnapshot,classroomFeedbackSnapshot,cleanTeacherFeedback,questionPulse
+} from './team-rules.js';
 
 // A separate, short-lived classroom service; no student identities or logins.
 const LIVE_ORIGIN='https://chriswalker-afk.github.io';
@@ -67,9 +71,12 @@ function publicState(room,participant,now,connections){
   const revealed=room.status==='reveal'?room.deck[room.index]:null;
   return {
     code:room.code,status:room.status,game,roundLength:room.roundLength,
+    teamCount:room.teamCount||0,goalTarget:room.goalTarget||0,
+    teams:teamStandings(room),classQuest:classQuestSnapshot(room),
+    teacherFeedback:classroomFeedbackSnapshot(room),questionPulse:questionPulse(room),
     questionSeconds:questionTimeMs(game)/1000,locked:Boolean(room.locked),
     players:room.players.map(p=>({
-      id:p.id,name:p.name,score:p.score,online:connections.has(p.id),
+      id:p.id,name:p.name,score:p.score,teamId:p.teamId||null,online:connections.has(p.id),
       answered:room.answers.some(a=>a.id===p.id)
     })),
     me:{id:participant.id,name:participant.name,host:participant.host===true},
@@ -110,7 +117,7 @@ export class GameRoom extends DurableObject{
     if(this.room()||this.ctx.storage.kv.get('room'))return {error:'Room code already in use'};
     if(!validLength(game,roundLength))return {error:'Invalid game or round length'};
     const room={code,status:'lobby',created:Date.now(),game,roundLength,locked:false,
-      hostToken:crypto.randomUUID(),ceremonyId:crypto.randomUUID(),players:[],deck:[],index:0,deadline:0,answers:[],results:[],ceremony:null};
+      hostToken:crypto.randomUUID(),ceremonyId:crypto.randomUUID(),players:[],deck:[],index:0,deadline:0,answers:[],results:[],ceremony:null,teamCount:0,goalTarget:0,feedback:null,feedbackUpdates:0};
     this.save(room);
     await this.ctx.storage.setAlarm(room.created+ROOM_TTL_MS);
     return {code,token:room.hostToken};
@@ -144,7 +151,8 @@ export class GameRoom extends DurableObject{
     if(room.players.length>=MAX_PLAYERS)return {error:'This classroom is full'};
     if(room.players.some(p=>p.name.toLocaleLowerCase('en-GB')===nickname.toLocaleLowerCase('en-GB')))
       return {error:'Nickname already in use'};
-    const person={id:crypto.randomUUID(),token:crypto.randomUUID(),name:nickname,score:0};
+    const person={id:crypto.randomUUID(),token:crypto.randomUUID(),name:nickname,score:0,
+      teamId:nextTeamId(room.players,room.teamCount||0)};
     room.players.push(person);this.save(room);this.broadcast();
     return {code:room.code,token:person.token};
   }
@@ -171,6 +179,8 @@ export class GameRoom extends DurableObject{
       room.players.splice(index,1);
       room.answers=room.answers.filter(a=>a.id!==command.targetId);
       room.results=(room.results||[]).filter(a=>a.playerId!==command.targetId);
+      if(room.status==='lobby'&&(room.teamCount||0))
+        room.players=balanceTeams(room.players,room.teamCount);
       for(const ws of this.ctx.getWebSockets()){
         if(ws.deserializeAttachment()?.id===command.targetId){try{ws.close(4003,'Removed by host');}catch{}}
       }
@@ -178,13 +188,34 @@ export class GameRoom extends DurableObject{
       room.players=room.players.filter(p=>p.id!==person.id);
       room.answers=room.answers.filter(a=>a.id!==person.id);
       room.results=(room.results||[]).filter(a=>a.playerId!==person.id);
+      if(room.status==='lobby'&&(room.teamCount||0))
+        room.players=balanceTeams(room.players,room.teamCount);
       for(const ws of this.ctx.getWebSockets()){
         if(ws.deserializeAttachment()?.id===person.id){try{ws.close(4000,'Left classroom');}catch{}}
       }
+    }else if(command.type==='teams-set'&&person.host&&room.status==='lobby'){
+      if(!Number.isInteger(command.count)||!TEAM_COUNTS.includes(command.count))
+        return {error:'Choose Solo or 2–4 teams'};
+      room.teamCount=command.count;
+      room.players=balanceTeams(room.players,room.teamCount);
+    }else if(command.type==='teams-shuffle'&&person.host&&room.status==='lobby'&&(room.teamCount||0)){
+      const shuffled=[...room.players];
+      for(let i=shuffled.length-1;i>0;i--){
+        const j=secureIndex(i+1);
+        [shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]];
+      }
+      const assignment=new Map(balanceTeams(shuffled,room.teamCount).map(p=>[p.id,p.teamId]));
+      room.players=room.players.map(p=>({...p,teamId:assignment.get(p.id)}));
+    }else if(command.type==='goal-set'&&person.host&&room.status==='lobby'){
+      if(!Number.isInteger(command.target)||!CLASS_TARGETS.includes(command.target))
+        return {error:'Choose no class goal or 70%, 80%, 90%'};
+      room.goalTarget=command.target;
     }else if(command.type==='start'&&person.host&&room.status==='lobby'){
       if(room.players.length===0)return {error:'At least one student must join'};
+      if((room.teamCount||0)>room.players.length)
+        return {error:'Each team needs at least one student before starting'};
       room.deck=makeGameDeck(room.game||'which',room.roundLength,SCENARIOS);room.index=0;room.answers=[];
-      room.results=[];room.ceremony=null;
+      room.results=[];room.ceremony=null;room.feedback=null;room.feedbackUpdates=0;
       room.status='playing';room.deadline=Date.now()+questionTimeMs(room.game||'which');
     }else if(command.type==='answer'&&!person.host&&room.status==='playing'){
       if(Date.now()>=room.deadline)return {error:'Time is up'};
@@ -209,11 +240,17 @@ export class GameRoom extends DurableObject{
     }else if(command.type==='reveal'&&person.host&&room.status==='playing'){
       if(Date.now()<room.deadline&&room.answers.length<room.players.length)
         return {error:'Wait until everyone has answered or the timer finishes'};
-      room.status='reveal';
+      room.status='reveal';room.feedback=null;room.feedbackUpdates=0;
     }else if(command.type==='next'&&person.host&&room.status==='reveal'){
-      room.index+=1;room.answers=[];
+      room.index+=1;room.answers=[];room.feedback=null;room.feedbackUpdates=0;
       room.status=room.index>=room.deck.length?'finished':'playing';
       room.deadline=room.status==='playing'?Date.now()+questionTimeMs(room.game||'which'):0;
+    }else if(command.type==='feedback-post'&&person.host&&room.status==='reveal'){
+      if(room.feedbackUpdates>=3)return {error:'Three feedback updates is the maximum for this question'};
+      const text=cleanTeacherFeedback(command.text);
+      if(!text)return {error:'Feedback must be 3–160 readable characters'};
+      room.feedback={index:room.index,text};
+      room.feedbackUpdates++;
     }else if(command.type==='ceremony-start'&&person.host&&room.status==='finished'){
       if(!room.players.length)return {error:'No participants to celebrate'};
       const prepared=room.ceremony||makeCeremony(room);
@@ -296,7 +333,7 @@ export default {
     }
     const url=new URL(request.url);
     if(url.pathname==='/health'&&request.method==='GET')
-      return json(request,{ok:true,service:'sampling-arcade-multiplayer',version:5,transport:'websocket',games:Object.keys(GAME_MODES)});
+      return json(request,{ok:true,service:'sampling-arcade-multiplayer',version:6,transport:'websocket',features:['teams','class-goals','teacher-feedback','ceremony'],games:Object.keys(GAME_MODES)});
     if(url.pathname==='/rooms'&&request.method==='POST'){
       let body;try{body=await smallJSON(request);}catch(e){return fail(request,e.message==='Request too large'?e.message:'Invalid JSON',e.message==='Request too large'?413:400);}
       const roundLength=Number(body.roundLength),game=body.game===undefined?'which':body.game;
