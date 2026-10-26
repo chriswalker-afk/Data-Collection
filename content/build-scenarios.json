@@ -36,7 +36,11 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "teacher-screenshots"
-      ]
+      ],
+      "quantities": {
+        "N": 240,
+        "n": 24
+      }
     },
     {
       "id": "build-solar-modules",
@@ -72,7 +76,11 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "teacher-screenshots"
-      ]
+      ],
+      "quantities": {
+        "N": 1200,
+        "n": 75
+      }
     },
     {
       "id": "build-park-trees",
@@ -108,7 +116,11 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "teacher-screenshots"
-      ]
+      ],
+      "quantities": {
+        "N": 840,
+        "n": 70
+      }
     },
     {
       "id": "build-bottle-batch",
@@ -141,7 +153,13 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance",
         "teacher-screenshots"
-      ]
+      ],
+      "quantities": {
+        "N": 480,
+        "n": 40,
+        "k": 12,
+        "start": 7
+      }
     },
     {
       "id": "build-bus-tickets",
@@ -174,7 +192,13 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance",
         "teacher-screenshots"
-      ]
+      ],
+      "quantities": {
+        "N": 900,
+        "n": 60,
+        "k": 15,
+        "start": 9
+      }
     },
     {
       "id": "build-factory-shifts",
@@ -207,7 +231,13 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance",
         "teacher-screenshots"
-      ]
+      ],
+      "quantities": {
+        "N": 720,
+        "n": 60,
+        "k": 12,
+        "start": 4
+      }
     },
     {
       "id": "build-year-groups",
@@ -239,7 +269,23 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "teacher-screenshots"
-      ]
+      ],
+      "quantities": {
+        "N": 400,
+        "n": 40,
+        "strata": [
+          {
+            "name": "Year 12",
+            "size": 240,
+            "allocation": 24
+          },
+          {
+            "name": "Year 13",
+            "size": 160,
+            "allocation": 16
+          }
+        ]
+      }
     },
     {
       "id": "build-travel-groups",
@@ -271,7 +317,28 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "teacher-screenshots"
-      ]
+      ],
+      "quantities": {
+        "N": 400,
+        "n": 80,
+        "strata": [
+          {
+            "name": "Bus",
+            "size": 180,
+            "allocation": 36
+          },
+          {
+            "name": "Walk",
+            "size": 120,
+            "allocation": 24
+          },
+          {
+            "name": "Car",
+            "size": 100,
+            "allocation": 20
+          }
+        ]
+      }
     },
     {
       "id": "build-habitat-plots",
@@ -303,7 +370,28 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "teacher-screenshots"
-      ]
+      ],
+      "quantities": {
+        "N": 700,
+        "n": 60,
+        "strata": [
+          {
+            "name": "Coastal",
+            "size": 330,
+            "allocation": 28
+          },
+          {
+            "name": "Woodland",
+            "size": 220,
+            "allocation": 19
+          },
+          {
+            "name": "Wetland",
+            "size": 150,
+            "allocation": 13
+          }
+        ]
+      }
     },
     {
       "id": "build-festival-attendees",
@@ -335,7 +423,20 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "teacher-screenshots"
-      ]
+      ],
+      "quantities": {
+        "n": 50,
+        "quotas": [
+          {
+            "name": "Pupils",
+            "target": 30
+          },
+          {
+            "name": "Adults",
+            "target": 20
+          }
+        ]
+      }
     },
     {
       "id": "build-gym-members",
@@ -367,7 +468,20 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "teacher-screenshots"
-      ]
+      ],
+      "quantities": {
+        "n": 40,
+        "quotas": [
+          {
+            "name": "Monthly",
+            "target": 24
+          },
+          {
+            "name": "Annual",
+            "target": 16
+          }
+        ]
+      }
     },
     {
       "id": "build-city-travel",
@@ -399,7 +513,24 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "teacher-screenshots"
-      ]
+      ],
+      "quantities": {
+        "n": 80,
+        "quotas": [
+          {
+            "name": "School",
+            "target": 35
+          },
+          {
+            "name": "Work",
+            "target": 25
+          },
+          {
+            "name": "Leisure",
+            "target": 20
+          }
+        ]
+      }
     },
     {
       "id": "build-gym-arrivals",
@@ -427,7 +558,10 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "teacher-screenshots"
-      ]
+      ],
+      "quantities": {
+        "n": 20
+      }
     },
     {
       "id": "build-canteen-tablets",
@@ -455,7 +589,10 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "teacher-screenshots"
-      ]
+      ],
+      "quantities": {
+        "n": 35
+      }
     },
     {
       "id": "build-marina-litter",
@@ -483,7 +620,10 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "teacher-screenshots"
-      ]
+      ],
+      "quantities": {
+        "n": 24
+      }
     }
   ]
 }
