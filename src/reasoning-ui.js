@@ -199,7 +199,7 @@ export function createReasoningUI({
    div('reason-summary-grid',
     div('reason-summary-stat',span('reason-summary-number',n(s.guidedCases)),span('','Guided cases')),
     div('reason-summary-stat',span('reason-summary-number',n(s.writtenCases)),span('','Independent responses')),
-    div('reason-summary-stat',span('reason-summary-number',s.guidedCases?n(s.matchedPoints)+' / '+n(s.guidedCases*4):'—',span('','Model choices aligned'))),
+    div('reason-summary-stat',span('reason-summary-number',s.guidedCases?n(s.matchedPoints)+' / '+n(s.guidedCases*4):'—'),span('','Model choices aligned'))),
    paragraph('reason-summary-explainer','Multiple-choice alignment is not an exam grade. Your written reasoning remains unmarked, and model review does not award mastery.'),
    ...(s.reviewMode?[paragraph('reason-summary-explainer','This revisit was unscored; your original progress has not changed.')]:[]),
    ...(!s.reviewMode&&s.reviewTargets.length?[action('Review '+s.reviewTargets.length+' flagged investigation'+(s.reviewTargets.length===1?'':'s')+' →','reason-review',{},'btn btn-quiet')]:[]));
