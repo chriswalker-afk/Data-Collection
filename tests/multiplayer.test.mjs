@@ -27,3 +27,14 @@ test('accuracy dominates speed and no points on wrong answers',()=>{
 test('questions retain reviewed reasons and contrasts',()=>{
  for(const s of SCENARIOS){assert.ok(s.prompt&&s.reason&&s.contrast);assert.ok(s.correctMethod);}
 });
+
+import {readFileSync} from 'node:fs';
+test('multiplayer source stays in exact sync with the reviewed sampling bank',()=>{
+ const source=JSON.parse(readFileSync(new URL('../content/scenarios.json',import.meta.url),'utf8')).scenarios;
+ assert.deepEqual(SCENARIOS.map(x=>[x.id,x.prompt,x.correctMethod,x.reason,x.contrast]),
+   source.map(x=>[x.id,x.prompt,x.correctMethod,x.reason,x.contrast]));
+});
+test('no duplicate room codes or answer keys in the scenario deck',()=>{
+ assert.equal(new Set(SCENARIOS.map(x=>x.id)).size,SCENARIOS.length);
+ for(const s of SCENARIOS)assert.ok(['simple-random','systematic','stratified','quota','opportunity'].includes(s.correctMethod));
+});
