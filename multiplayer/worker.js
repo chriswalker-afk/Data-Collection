@@ -83,12 +83,17 @@ export class GameRoom extends DurableObject{
   save(room){this.ctx.storage.kv.put('room',room);}
   // The same DO class is also used for tiny per-origin rate-limiter instances.
   // Per-IP names are hashed, with no raw IP written to storage.
-  allowRate(name,max,windowMs){
+  async allowRate(name,max,windowMs){
     const now=Date.now();const key='rate:'+name;
     const previous=this.ctx.storage.kv.get(key);
-    const next=previous&&now<previous.until?{until:previous.until,count:previous.count+1}:{until:now+windowMs,count:1};
+    const newWindow=!previous||now>=previous.until;
+    const next=newWindow?{until:now+windowMs,count:1}:{until:previous.until,count:previous.count+1};
     if(next.count>max)return false;
     this.ctx.storage.kv.put(key,next);
+    // Limiter-only objects clean up their hashed network keys after the window.
+    // Room objects keep their independent three-hour room-expiry alarm.
+    if(newWindow&&!this.ctx.storage.kv.get('room'))
+      await this.ctx.storage.setAlarm(next.until+2000);
     return true;
   }
   async create(code,roundLength){
@@ -117,10 +122,10 @@ export class GameRoom extends DurableObject{
     const room=this.room(),person=this.authenticate(token,room);
     return !person?{error:'Session not found'}:publicState(room,person,Date.now(),this.currentConnections());
   }
-  join(name,clientKey){
+  async join(name,clientKey){
     const room=this.room();
     if(!room||room.status!=='lobby')return {error:'This classroom is unavailable'};
-    if(!this.allowRate('join:'+String(clientKey).slice(0,24),75,60_000))return {error:'Too many join attempts; try again shortly',status:429};
+    if(!await this.allowRate('join:'+String(clientKey).slice(0,24),75,60_000))return {error:'Too many join attempts; try again shortly',status:429};
     const nickname=cleanNickname(name);
     if(!nickname)return {error:'Choose a nickname of 2–20 letters or numbers'};
     if(room.players.length>=MAX_PLAYERS)return {error:'This classroom is full'};
@@ -130,10 +135,10 @@ export class GameRoom extends DurableObject{
     room.players.push(person);this.save(room);this.broadcast();
     return {code:room.code,token:person.token};
   }
-  socketTicket(token){
+  async socketTicket(token){
     const room=this.room(),person=this.authenticate(token,room);
     if(!person)return {error:'Session not found',status:401};
-    if(!this.allowRate('ticket:'+person.id,18,60_000))return {error:'Reconnect limit reached; try again shortly',status:429};
+    if(!await this.allowRate('ticket:'+person.id,18,60_000))return {error:'Reconnect limit reached; try again shortly',status:429};
     const ticket=crypto.randomUUID();
     this.ctx.storage.kv.put('ticket:'+person.id,{ticket,expires:Date.now()+TICKET_LIFETIME_MS});
     return {participantId:person.id,ticket,expiresInSeconds:30};
