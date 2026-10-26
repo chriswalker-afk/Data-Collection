@@ -194,8 +194,8 @@ export class GameRoom extends DurableObject{
       if(attached.id===id)try{old.close(4001,'Session reconnected');}catch{}
     }
     const pair=new WebSocketPair(),client=pair[0],server=pair[1];
-    server.serializeAttachment({id});
     this.ctx.acceptWebSocket(server);
+    server.serializeAttachment({id});
     const snapshot=publicState(room,person,Date.now(),this.currentConnections());
     server.send(JSON.stringify({type:'state',data:snapshot}));
     this.broadcast();
