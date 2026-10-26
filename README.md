@@ -12,7 +12,7 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 
 ## Student features
 - Choose **Sampling**, **Types of data** or **Mixed revision**.
-- **Flashcards** support term→definition and definition→term recall, examples and common misconceptions.
+- **Flashcards** support term→definition and definition→term recall, plus separate advantage and disadvantage cards for each of five sampling methods, census and sample. Browse every card with search and filters or start a full, unscored review. Model points use the same audited evaluation bank as Sort It!.
 - **Match Up** offers tactile term–definition tiles with selected-state guidance, short success/retry animations, visible pair progress and accessible keyboard or touch interaction.
 - **Missing Words** now has three levels: **Recognise** (the original four choices), **Recall** (type a word with an optional first-letter hint) and **Independent** (type without choices or hints).
 - **Sort It!** gives two sampling methods and mixed advantage/disadvantage statements. Place each statement in the correct method-and-category column; only the first complete check counts towards progress.
@@ -80,4 +80,4 @@ GitHub Actions runs unit/content validation, desktop/mobile Chromium browser tes
 
 All content is independently worded for teaching, rather than copied verbatim from textbooks. This site is not affiliated with or endorsed by Pearson.
 
-**Next multiplayer roadmap:** Pass 7 is a supervised classroom pilot and evidence-led refinement: 15–45 real student devices, teacher observations, network latency/reconnect measurement, team fairness and clarity improvements. Synthetic Pass 6 stress tests do not replace a live classroom trial. The earlier Solo Arcade trial plan remains in `docs/PASS_7_CLASSROOM_TRIAL.md`.
+**Next multiplayer roadmap:** Pass 6 introduces optional team challenges, collaborative goals, teacher feedback and 30–45 student classroom stress testing. Pass 5's Grand Awards Ceremony and 11 server-derived Multiplayer awards are available now. The earlier Solo Arcade Pass 7 classroom-trial recommendations remain documented in `docs/PASS_7_CLASSROOM_TRIAL.md`.

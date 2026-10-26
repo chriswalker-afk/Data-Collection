@@ -4,7 +4,7 @@ export const TOPICS = Object.freeze([
   { id: 'all', label: 'Mixed revision', description: 'Bring the two topics together.' }
 ]);
 export const GAMES = Object.freeze([
-  { id: 'flashcards', title: 'Flashcards', subtitle: 'Recall the language', description: 'Reveal each definition, then grade your recall.', number: '01' },
+  { id: 'flashcards', title: 'Flashcards', subtitle: 'Recall & evaluate', description: 'Flip cards for definitions, advantages and disadvantages; browse the full collection.', number: '01' },
   { id: 'match', title: 'Match Up', subtitle: 'Connect the pairs', description: 'Match terms to their definitions, one pair at a time.', number: '02' },
   { id: 'cloze', title: 'Missing Words', subtitle: 'Fill the gaps', description: 'Identify the essential word in an Edexcel-aligned sentence.', number: '03' },
   { id: 'sort', title: 'Sort It!', subtitle: 'Compare two methods', description: 'Drag mixed advantages and disadvantages into the correct column for each of two sampling methods.', number: '04' },

@@ -29,8 +29,10 @@ test('the same physical card rotates to its back without re-rendering or reveali
  await expect(page.locator('.flash-face-front')).toHaveAttribute('aria-hidden','true');
  await expect(page.locator('.flash-face-back')).toHaveAttribute('aria-hidden','false');
  await expect(page.locator('.flash-grade-panel')).toBeVisible();
- await expect(page.getByText('MODEL ANSWER')).toBeVisible();
- await expect(page.getByText('Watch out',{exact:true})).toBeVisible();
+ await expect(page.locator('.flash-model-label')).toHaveText(/MODEL (ANSWER|POINTS)/);
+ const isEvaluation=await page.locator('.flash-evaluation-points').count()>0;
+ if(isEvaluation)await expect(page.locator('.flash-evaluation-point').first()).toBeVisible();
+ else await expect(page.getByText('Watch out',{exact:true})).toBeVisible();
  await expect.poll(async()=>card.locator('.flash-flip-inner').evaluate(
    el=>getComputedStyle(el).transform)).toMatch(/^matrix3d\(-1(?:,|\b)/);
  await card.click();
@@ -92,13 +94,18 @@ test('reversing the card swaps the prompt and answer while keeping a true two-si
  await page.getByRole('button',{name:/Term → definition/}).click();
  await expect(page.getByRole('button',{name:/Definition → term/})).toHaveAttribute('aria-pressed','true');
  await expect(page.locator('.practice-guide')).toContainText('recall the term, flip the card');
- const definition=await page.locator('.flash-front').innerText();
- expect(definition.length).toBeGreaterThan(18);
+ const prompt=await page.locator('.flash-front').innerText();
+ expect(prompt.length).toBeGreaterThan(18);
  await page.locator('.flashcard').click();
  await expect(page.locator('.flash-face-back')).toHaveAttribute('aria-hidden','false');
- await expect(page.locator('.answer-main')).toBeVisible();
- const term=await page.locator('.answer-main').innerText();
- expect(term.length).toBeLessThan(definition.length);
+ if(await page.locator('.flash-evaluation-points').count()){
+   await expect(page.locator('.flash-evaluation-point').first()).toBeVisible();
+   expect(prompt).toMatch(/Advantages|Disadvantages/);
+ }else{
+   await expect(page.locator('.answer-main')).toBeVisible();
+   const term=await page.locator('.answer-main').innerText();
+   expect(term.length).toBeLessThan(prompt.length);
+ }
 });
 
 test('no early grading and the card remains accessible to screen readers',async({page})=>{
@@ -126,13 +133,17 @@ for(const width of [320,390,768,1280]){
   await noHorizontalOverflow(page,'front '+width);
   const size1=await card.evaluate(el=>el.offsetHeight);
   await card.click();
-  await expect(page.locator('.flash-detail-copy')).toHaveCount(2);
+  if(await page.locator('.flash-evaluation-points').count()){
+   await expect(page.locator('.flash-evaluation-point').first()).toBeVisible();
+  }else await expect(page.locator('.flash-detail-copy')).toHaveCount(2);
   await expect(page.locator('.flash-face-back')).toHaveAttribute('aria-hidden','false');
   await expect(page.locator('.flash-grade-panel')).toBeVisible();
   await noHorizontalOverflow(page,'back '+width);
   const size2=await card.evaluate(el=>el.offsetHeight);
   expect(Math.abs(size1-size2),'both faces must occupy the same layout height').toBeLessThanOrEqual(1);
-  await expect(page.locator('.flash-detail-copy').first()).not.toBeEmpty();
+  if(await page.locator('.flash-evaluation-points').count())
+   await expect(page.locator('.flash-evaluation-claim').first()).not.toBeEmpty();
+  else await expect(page.locator('.flash-detail-copy').first()).not.toBeEmpty();
  });
 }
 

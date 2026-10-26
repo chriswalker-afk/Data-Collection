@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {
-  makeFlashSession,rateFlashSession,skipFlashSession,
+  makeFlashDeck,flashFaces,makeFlashSession,rateFlashSession,skipFlashSession,
   makeFlashReviewSession,flashCardLabel
 } from '../src/flashcards.js';
 
@@ -77,4 +78,48 @@ test('a flashcard names the visible side without exposing its answer before flip
  const reversed=makeFlashSession(cards,{reversed:true});
  assert.match(flashCardLabel(reversed,cards[0]),/Prompt: List of potential participants/);
  assert.match(flashCardLabel({...reversed,revealed:true},cards[0]),/Answer: Sampling frame/);
+});
+
+test('evaluation cards cover every sampling method, census and sample in both polarities',()=>{
+ const concepts=JSON.parse(readFileSync(new URL('../content/concepts.json',import.meta.url),'utf8')).concepts;
+ const evaluations=JSON.parse(readFileSync(new URL('../content/evaluations.json',import.meta.url),'utf8')).evaluations;
+ const sampling=makeFlashDeck(concepts,evaluations,'sampling');
+ const mixed=makeFlashDeck(concepts,evaluations,'all');
+ const data=makeFlashDeck(concepts,evaluations,'data');
+ const evaluationCards=sampling.filter(card=>card.kind==='evaluation');
+ assert.equal(evaluationCards.length,14);
+ assert.equal(sampling.length,32);
+ assert.equal(data.length,8);
+ assert.equal(mixed.length,40);
+ assert.equal(new Set(mixed.map(item=>item.id)).size,40);
+ for(const subject of ['simple-random','systematic','stratified','quota','opportunity','census','sample']){
+   for(const polarity of ['advantage','disadvantage']){
+     const card=evaluationCards.find(item=>item.subject===subject&&item.polarity===polarity);
+     assert.ok(card,subject+' '+polarity);
+     const expected=evaluations.filter(e=>e.subject===subject&&e.polarity===polarity);
+     assert.deepEqual(card.points,expected.map(({claim,explanation})=>({claim,explanation})));
+     assert.ok(card.points.every(point=>point.claim&&point.explanation));
+   }
+ }
+ assert.ok(mixed.filter(c=>c.kind==='term').every(c=>c.example&&c.misconception));
+ assert.throws(()=>makeFlashDeck(concepts,[], 'sampling'),/Missing evaluation points/);
+});
+test('reverse mode leaves advantage/disadvantage prompts unchanged and accessible',()=>{
+ const evaluations=JSON.parse(readFileSync(new URL('../content/evaluations.json',import.meta.url),'utf8')).evaluations;
+ const card=makeFlashDeck(cards,evaluations,'sampling').find(x=>x.id==='flash-eval-simple-random-disadvantage');
+ const normal=makeFlashSession([card]);
+ const reversed=makeFlashSession([card],{reversed:true});
+ assert.deepEqual(flashFaces(normal,card),flashFaces(reversed,card));
+ assert.match(flashCardLabel(reversed,card),/Prompt: Disadvantages of simple random sampling/);
+ reversed.revealed=true;
+ assert.match(flashCardLabel(reversed,card),/Small subgroups may be underrepresented/);
+ assert.match(flashCardLabel(reversed,card),/No fixed subgroup proportions/);
+ assert.equal(flashFaces(makeFlashSession(cards,{reversed:true}),cards[0]).prompt,cards[0].definition);
+});
+test('all-card review session preserves source order and review intention',()=>{
+ const session=makeFlashSession(cards,{isReview:true,reviewType:'all',reversed:true});
+ assert.deepEqual(session.items.map(item=>item.id),cards.map(item=>item.id));
+ assert.equal(session.reviewType,'all');
+ assert.equal(session.isReview,true);
+ assert.equal(session.reversed,true);
 });

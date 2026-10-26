@@ -35,3 +35,15 @@ Browser coverage in `tests/browser/flashcards-premium.spec.js` checks actual 3D 
 ## Next after this pass
 
 Audit Match Up as the next individual function. Prioritise tactile matching, clear paired selections, responsive alignment, immediate but not overwhelming feedback, and accessible keyboard flow. Keep existing questions and progress semantics.
+
+## Evaluation extension — Sampling strengths and limitations
+
+- The original 26 definition cards remain intact; the flashcard view combines them with **14 evaluation cards**, generated from the existing, audited `content/evaluations.json` statements. There is one advantages and one disadvantages card for each of simple random, systematic, stratified, quota and opportunity sampling, plus census and sample.
+- Sampling has 32 cards, Types of Data has eight, and Mixed Revision has 40. These evaluation entries **do not enter** `content/concepts.json`: Match Up, Missing Words, Speed Recall and their accepted term banks remain definition-only.
+- Evaluation card fronts explicitly ask for a method's advantages or disadvantages. The back groups each audited claim with its contextual explanation, so students learn why a point matters rather than memorising an isolated phrase. Term-only reverse mode does not reverse these evaluation prompts.
+- **Browse all cards** is available during the game or on completion. Students can search all card text, filter for terminology/advantages/disadvantages, expand individual answers or reveal all. Browsing leaves the active session and local mastery entirely unchanged.
+- **Review all cards** is available from the browser and completion screen. It cycles through the whole topic in stable order, using the same accessible flip-card controls. This is explicitly unscored: self-ratings during a review do not add mastery answers or collectible self-rated awards.
+- The original short review of Again/Nearly/Skipped cards remains, and is also unscored. A complete standard session still records per-card self-rated recall and awards exactly as before.
+- All entries are generated from one audited source rather than copied into a separate answer bank. Search/filter widgets, responsive card panels and display-only controls introduce no new saved storage schema.
+
+Tests: `tests/flashcards.test.mjs` checks method/polarity coverage and source equality; `tests/browser/flashcards-library.spec.js` covers library search, filter, reveal, unscored review, topic counts and 320/390/1280px layouts. The premium flip-card browser regression covers both evaluation and term faces.
