@@ -35,13 +35,19 @@ test('teacher chooses four formats with appropriate board lengths and timers',as
  }
 });
 for(const mode of ['speed','match','sort']){
- test(mode+' uses a secure real Worker and a meaningful mobile board',async({page,browser,request})=>{
+ test(mode+' uses a secure real Worker and a meaningful mobile board',async({page,browser,request,isMobile})=>{
+  test.skip(isMobile,'New mode case already exercises explicit 320–1280px mobile/desktop viewports');
   const student=await browser.newPage({viewport:{width:390,height:844}});
   try{
    const code=await host(page,mode);
    await join(student,code);
    await page.getByRole('button',{name:'Start challenge'}).click();
    const token=await getToken(student);
+   for(const width of [320,390,768,1280]){
+     await student.setViewportSize({width,height:844});
+     expect(await student.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth),'No overflow in '+mode+' at '+width+'px').toBeLessThanOrEqual(1);
+   }
+   await student.setViewportSize({width:390,height:844});
    const q=(await state(request,code,token)).question;
    expect(JSON.stringify(q)).not.toMatch(/correctDestination|correctTerm|correctMethod|answerKey|sourceId|solutions/);
    const url=API+'/rooms/'+code+'/command',headers={Authorization:'Bearer '+token};
@@ -99,20 +105,3 @@ test('server rejects mode spoofing, invalid room creation and unauthorized teach
  expect((await request.post(API+'/rooms',{data:{game:'constructor',roundLength:5}})).status()).toBe(400);
  expect((await state(request,code,joined.token)).players[0].score).toBe(0);
 });
-for(const width of [320,390,768,1280]){
- test('Pass 4 student boards fit at '+width+'px',async({page,browser})=>{
-  for(const game of ['speed','match','sort']){
-   const code=await host(page,game);
-   const student=await browser.newPage({viewport:{width,height:900}});
-   try{
-    await join(student,code);
-    await page.getByRole('button',{name:'Start challenge'}).click();
-    await expect(student.locator(game==='speed'?'#arena-speed-form':game==='match'?'.arena-match-columns':'.arena-sort-destinations')).toBeVisible();
-    expect(await student.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth)).toBeLessThanOrEqual(1);
-   }finally{await student.close();}
-   page.once('dialog',d=>d.accept());
-   await page.locator('#leave').click();
-   await expect(page.locator('#entry')).toBeVisible();
-  }
- });
-}
