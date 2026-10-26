@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "errors": [
     {
       "id": "er-01",
@@ -27,7 +27,26 @@
         }
       ],
       "repair": "fix-0",
-      "explanation": "Repeated numbers would select the same sampling unit more than once. For a simple random sample without replacement, discard repeats and continue until 20 different pupils have been chosen."
+      "explanation": "Repeated numbers would select the same sampling unit more than once. For a simple random sample without replacement, discard repeats and continue until 20 different pupils have been chosen.",
+      "impact": {
+        "question": "What is the mathematical consequence of this mistake?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Keeping repeats guarantees 20 distinct pupils because there were 20 draws."
+          },
+          {
+            "id": "b",
+            "text": "Twenty draws may refer to fewer than 20 different pupils."
+          },
+          {
+            "id": "c",
+            "text": "A repeated number makes every previously selected pupil ineligible for the study."
+          }
+        ],
+        "answer": "b",
+        "explanation": "For sampling without replacement, count distinct valid labels, not generator outputs. Repeated labels must be ignored until 20 different pupils are selected."
+      }
     },
     {
       "id": "er-02",
@@ -55,7 +74,26 @@
         }
       ],
       "repair": "fix-1",
-      "explanation": "Systematic sampling needs a random starting position within the first interval (for this exact integer interval). Always starting at 1 makes the choice of start non-random."
+      "explanation": "Systematic sampling needs a random starting position within the first interval (for this exact integer interval). Always starting at 1 makes the choice of start non-random.",
+      "impact": {
+        "question": "What is the mathematical consequence of this mistake?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Using an interval of ten will always select fewer than 20 items from 200."
+          },
+          {
+            "id": "b",
+            "text": "Choosing an interval of ten guarantees that each individual item is sampled."
+          },
+          {
+            "id": "c",
+            "text": "Only one of the ten possible starting positions is used, so many items cannot be selected."
+          }
+        ],
+        "answer": "c",
+        "explanation": "With k = 10, randomly choose the start from 1 to 10. Fixing it at 1 makes the selection pattern predetermined."
+      }
     },
     {
       "id": "er-03",
@@ -83,7 +121,26 @@
         }
       ],
       "repair": "fix-1",
-      "explanation": "Proportional group numbers alone do not make a sample stratified random: the units within each stratum must be chosen randomly."
+      "explanation": "Proportional group numbers alone do not make a sample stratified random: the units within each stratum must be chosen randomly.",
+      "impact": {
+        "question": "What is the mathematical consequence of this mistake?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Within each year group, surname order determines who is chosen rather than random selection."
+          },
+          {
+            "id": "b",
+            "text": "The calculation of the number required from each year group becomes impossible."
+          },
+          {
+            "id": "c",
+            "text": "Alphabetical selection gives all eligible pupils equal probability within each year group."
+          }
+        ],
+        "answer": "a",
+        "explanation": "Correct proportional group numbers do not fix non-random selection within each stratum."
+      }
     },
     {
       "id": "er-04",
@@ -111,7 +168,26 @@
         }
       ],
       "repair": "fix-0",
-      "explanation": "A quota sets targets but typically fills them by approaching available respondents. Proportional quotas are not the same as random selection within strata."
+      "explanation": "A quota sets targets but typically fills them by approaching available respondents. Proportional quotas are not the same as random selection within strata.",
+      "impact": {
+        "question": "What is the mathematical consequence of this mistake?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Meeting a quota is sufficient to make every individual equally likely to be chosen."
+          },
+          {
+            "id": "b",
+            "text": "The quotas fix group totals but do not make the choice of individuals random."
+          },
+          {
+            "id": "c",
+            "text": "The two quotas must be equal for this method to count as quota sampling."
+          }
+        ],
+        "answer": "b",
+        "explanation": "Quota sampling fills preset categories by non-random recruitment; it is not automatically stratified random sampling."
+      }
     },
     {
       "id": "er-05",
@@ -139,7 +215,26 @@
         }
       ],
       "repair": "fix-2",
-      "explanation": "A generator constrained to 1–150 cannot produce out-of-range numbers. Ignore repeats; exclude invalid numbers only when the random source can actually produce them."
+      "explanation": "A generator constrained to 1–150 cannot produce out-of-range numbers. Ignore repeats; exclude invalid numbers only when the random source can actually produce them.",
+      "impact": {
+        "question": "What is the mathematical consequence of this mistake?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Restricting the random integers to 1–150 makes repeated values impossible."
+          },
+          {
+            "id": "b",
+            "text": "The valid range makes it unnecessary to give each eligible person a unique label."
+          },
+          {
+            "id": "c",
+            "text": "The claimed out-of-range values cannot occur with this restricted generator."
+          }
+        ],
+        "answer": "c",
+        "explanation": "Range restrictions prevent out-of-range outputs, not repeated outputs. Repeats still need to be ignored when selecting distinct units."
+      }
     },
     {
       "id": "er-06",
@@ -167,7 +262,26 @@
         }
       ],
       "repair": "fix-0",
-      "explanation": "Random selection from an incomplete frame cannot include units that are missing from it. A complete eligible-population frame is essential."
+      "explanation": "Random selection from an incomplete frame cannot include units that are missing from it. A complete eligible-population frame is essential.",
+      "impact": {
+        "question": "What is the mathematical consequence of this mistake?",
+        "options": [
+          {
+            "id": "a",
+            "text": "New club members have zero chance of selection because they are missing from the frame."
+          },
+          {
+            "id": "b",
+            "text": "Using random numbers makes every new member equally likely to be chosen anyway."
+          },
+          {
+            "id": "c",
+            "text": "An older list makes the random numbers themselves non-uniform."
+          }
+        ],
+        "answer": "a",
+        "explanation": "Uniform selection within a frame cannot repair omissions from the frame; coverage of the target population is incomplete."
+      }
     },
     {
       "id": "er-07",
@@ -195,7 +309,26 @@
         }
       ],
       "repair": "fix-1",
-      "explanation": "Proportional allocation is 50×300/500=30 and 50×200/500=20. Equal allocation is not proportional when the group sizes differ."
+      "explanation": "Proportional allocation is 50×300/500=30 and 50×200/500=20. Equal allocation is not proportional when the group sizes differ.",
+      "impact": {
+        "question": "What is the mathematical consequence of this mistake?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Year 12 is overrepresented: its share in the sample is larger than 60%."
+          },
+          {
+            "id": "b",
+            "text": "Year 13 is overrepresented: its sample share is 50%, but its population share is 40%."
+          },
+          {
+            "id": "c",
+            "text": "Equal numbers from each year group are proportional because there are two groups."
+          }
+        ],
+        "answer": "b",
+        "explanation": "The sample should contain 30 Year 12 and 20 Year 13 pupils, reflecting the 60%/40% population split."
+      }
     },
     {
       "id": "er-08",
@@ -223,7 +356,26 @@
         }
       ],
       "repair": "fix-2",
-      "explanation": "Random selection can produce an unbalanced sample by chance, and nonresponse can introduce bias. Representativeness is not guaranteed."
+      "explanation": "Random selection can produce an unbalanced sample by chance, and nonresponse can introduce bias. Representativeness is not guaranteed.",
+      "impact": {
+        "question": "What is the mathematical consequence of this mistake?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Random selection forces every subgroup to be included in its exact population proportion."
+          },
+          {
+            "id": "b",
+            "text": "An unbalanced result proves that the original random-number generator was unfair."
+          },
+          {
+            "id": "c",
+            "text": "A valid random sample may still underrepresent some subgroups by chance."
+          }
+        ],
+        "answer": "c",
+        "explanation": "Random sampling gives an appropriate probability mechanism, not a guarantee about the composition of the realised sample."
+      }
     },
     {
       "id": "er-09",
@@ -251,7 +403,26 @@
         }
       ],
       "repair": "fix-0",
-      "explanation": "When the sampling interval matches a periodic pattern, one start may select only one phase of the pattern. Check for periodic ordering."
+      "explanation": "When the sampling interval matches a periodic pattern, one start may select only one phase of the pattern. Check for periodic ordering.",
+      "impact": {
+        "question": "What is the mathematical consequence of this mistake?",
+        "options": [
+          {
+            "id": "a",
+            "text": "All selected items may belong to the same phase of the repeating ten-item sequence."
+          },
+          {
+            "id": "b",
+            "text": "A random start always includes a balanced selection of every phase of the sequence."
+          },
+          {
+            "id": "c",
+            "text": "Selecting every tenth item prevents any of the listed colours from being sampled."
+          }
+        ],
+        "answer": "a",
+        "explanation": "A random start alone cannot remove the periodicity risk when a sampling interval matches a repeated list pattern."
+      }
     },
     {
       "id": "er-10",
@@ -279,7 +450,26 @@
         }
       ],
       "repair": "fix-1",
-      "explanation": "Having groups is insufficient to make a design stratified random. Without random selection within the groups, this is quota sampling."
+      "explanation": "Having groups is insufficient to make a design stratified random. Without random selection within the groups, this is quota sampling.",
+      "impact": {
+        "question": "What is the mathematical consequence of this mistake?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Any use of two groups makes the selection random within each group."
+          },
+          {
+            "id": "b",
+            "text": "The chosen individuals are recruited non-randomly, even though the quotas are filled."
+          },
+          {
+            "id": "c",
+            "text": "Using volunteers means group totals cannot be specified in advance."
+          }
+        ],
+        "answer": "b",
+        "explanation": "Group targets are not the distinguishing feature of stratified random sampling; random selection within groups is."
+      }
     },
     {
       "id": "er-11",
@@ -288,7 +478,7 @@
       "context": "A researcher needs 40 from an ordered register of 197.",
       "lines": [
         "The planned ratio N/n is 197/40 = 4.925.",
-        "Round the ratio to 5 and use every fifth entry after a random start.",
+        "Choose a random start of 1 from the first five positions, then take every fifth entry; this particular start gives 40 entries.",
         "Claim that rounding N/n to the nearest integer is the universal systematic rule and always returns the requested n."
       ],
       "errorLine": 2,
@@ -307,7 +497,26 @@
         }
       ],
       "repair": "fix-1",
-      "explanation": "For non-integer N/n there is no single automatic rounding rule. The design must identify a workable pattern and verify the required sample size."
+      "explanation": "Starting at 1 gives 40 entries, but other possible starts can give only 39. Rounding the interval is not a universal rule for a non-integer N/n; check how the proposed scheme achieves the required number.",
+      "impact": {
+        "question": "What is the mathematical consequence of this mistake?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Every start from 1 to 5 gives exactly 40 selected positions from 197."
+          },
+          {
+            "id": "b",
+            "text": "A non-integer population-to-sample ratio prevents any systematic sample being taken."
+          },
+          {
+            "id": "c",
+            "text": "With every fifth entry, some starting positions select only 39, not the requested 40."
+          }
+        ],
+        "answer": "c",
+        "explanation": "For 197 entries and every fifth selection, starts 1 or 2 give 40; starts 3, 4 or 5 give 39. The method must specify and check how to obtain 40."
+      }
     },
     {
       "id": "er-12",
@@ -335,7 +544,26 @@
         }
       ],
       "repair": "fix-0",
-      "explanation": "Being available at a particular place and time may correlate with the behaviour being studied and exclude groups. Ease is not representativeness."
+      "explanation": "Being available at a particular place and time may correlate with the behaviour being studied and exclude groups. Ease is not representativeness.",
+      "impact": {
+        "question": "What is the mathematical consequence of this mistake?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Students absent from the canteen at that time have no opportunity to be selected."
+          },
+          {
+            "id": "b",
+            "text": "Everyone in the school has an equal chance because the canteen is on campus."
+          },
+          {
+            "id": "c",
+            "text": "An opportunity sample is a census as long as the interviewer asks everyone nearby."
+          }
+        ],
+        "answer": "a",
+        "explanation": "Selection is restricted to one place and time. Students elsewhere may differ from canteen users, creating possible coverage bias."
+      }
     },
     {
       "id": "er-13",
@@ -344,8 +572,8 @@
       "context": "A survey aims for 55 out of 550, with strata sizes 205, 190 and 155.",
       "lines": [
         "Allocate approximately 20.5, 19 and 15.5 places to the three strata.",
-        "Round each allocation up, to 21, 19 and 16.",
-        "Proceed as if this is the requested sample of 55 people."
+        "Allocate 21, 19 and 15 whole-number places, totalling 55.",
+        "Randomly take 21, 19 and 16 people from the strata and report a sample size of 55."
       ],
       "errorLine": 2,
       "repairs": [
@@ -359,11 +587,30 @@
         },
         {
           "id": "fix-2",
-          "text": "Resolve whole-number allocations so that they sum to 55, then randomly select within each stratum."
+          "text": "Draw the allocated 21, 19 and 15 people randomly within the respective strata, totalling 55."
         }
       ],
       "repair": "fix-2",
-      "explanation": "21+19+16=56, not 55. Proportional allocations must be whole numbers that add to the required total; justified rounding is needed."
+      "explanation": "Although the intended allocation 21 + 19 + 15 = 55 is defensible, the proposed draw 21 + 19 + 16 = 56. The final draw must match whole-number allocations summing to 55.",
+      "impact": {
+        "question": "What is the mathematical consequence of this mistake?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The specified selection totals only 54, so the sample is too small."
+          },
+          {
+            "id": "b",
+            "text": "The specified selection totals 56, exceeding the intended sample size of 55."
+          },
+          {
+            "id": "c",
+            "text": "Proportional stratified samples must have equal numbers drawn from every stratum."
+          }
+        ],
+        "answer": "b",
+        "explanation": "21 + 19 + 16 = 56. A defensible whole-number allocation such as 21, 19, 15 totals 55; the actual draw must use those totals."
+      }
     },
     {
       "id": "er-14",
@@ -391,7 +638,26 @@
         }
       ],
       "repair": "fix-1",
-      "explanation": "Unlike a constrained 1–180 generator, a random-digit table can produce invalid values. Reject out-of-range values and repeats."
+      "explanation": "Unlike a constrained 1–180 generator, a random-digit table can produce invalid values. Reject out-of-range values and repeats.",
+      "impact": {
+        "question": "What is the mathematical consequence of this mistake?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Three-digit random tables are incapable of producing 000."
+          },
+          {
+            "id": "b",
+            "text": "A random table makes repeated labels acceptable in a sample without replacement."
+          },
+          {
+            "id": "c",
+            "text": "000 and 924 do not identify anybody in the numbered population 001–180."
+          }
+        ],
+        "answer": "c",
+        "explanation": "Reject groups outside 001–180 as well as repeats when reading unrestricted random digits, and keep sampling until enough distinct valid labels appear."
+      }
     },
     {
       "id": "er-15",
@@ -419,7 +685,26 @@
         }
       ],
       "repair": "fix-1",
-      "explanation": "The recruited people are only those available and willing at one place and time, not a random cross-section of all town residents."
+      "explanation": "The recruited people are only those available and willing at one place and time, not a random cross-section of all town residents.",
+      "impact": {
+        "question": "What is the mathematical consequence of this mistake?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Residents who do not shop there at that time may be excluded, making representation uncertain."
+          },
+          {
+            "id": "b",
+            "text": "Recording accurate responses guarantees that the selection of shoppers was random."
+          },
+          {
+            "id": "c",
+            "text": "A sample of 30 guarantees that the town's demographic groups are represented."
+          }
+        ],
+        "answer": "a",
+        "explanation": "Recording responses accurately does not correct a convenience-based sampling frame. Other times, sites or probability methods could broaden coverage."
+      }
     }
   ]
 }
