@@ -8,7 +8,8 @@ export const GAMES = Object.freeze([
   { id: 'match', title: 'Match Up', subtitle: 'Connect the pairs', description: 'Match terms to their definitions, one pair at a time.', number: '02' },
   { id: 'cloze', title: 'Missing Words', subtitle: 'Fill the gaps', description: 'Identify the essential word in an Edexcel-aligned sentence.', number: '03' },
   { id: 'sort', title: 'Sort It!', subtitle: 'Weigh up the methods', description: 'Sort advantages, disadvantages and important method distinctions.', number: '04' },
-  { id: 'identify', title: 'Which Method?', subtitle: 'Apply the definitions', description: 'Identify the method used in realistic sampling scenarios.', number: '05' }
+  { id: 'identify', title: 'Which Method?', subtitle: 'Apply the definitions', description: 'Identify the method used in realistic sampling scenarios.', number: '05' },
+  { id: 'speed', title: 'Speed Recall', subtitle: 'Type from memory', description: 'Type the mathematical term from its definition, with or without a timer.', number: '06' }
 ]);
 export function topicLabel(id) { return TOPICS.find(t => t.id === id)?.label || TOPICS[0].label; }
 export function isTopic(id) { return TOPICS.some(t => t.id === id); }

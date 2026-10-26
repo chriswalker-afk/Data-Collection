@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "policy": "Only mathematically equivalent terms are accepted. Qualifiers such as (plural) in the source bank are explanatory and must not be treated as interchangeable answers. Minor spelling errors produce a retry prompt, never automatic credit.",
+  "terms": {
+    "simple-random-sampling": [
+      "simple random sample",
+      "simple random"
+    ],
+    "systematic-sampling": [
+      "systematic sample",
+      "systematic"
+    ],
+    "stratified-sampling": [
+      "stratified sample",
+      "stratified"
+    ],
+    "quota-sampling": [
+      "quota sample",
+      "quota"
+    ],
+    "opportunity-sampling": [
+      "convenience sampling",
+      "opportunity",
+      "convenience sample"
+    ],
+    "representativeness": [
+      "representative"
+    ],
+    "sampling-variation": [
+      "sampling variability"
+    ],
+    "qualitative-data": [
+      "categorical data",
+      "qualitative",
+      "categorical"
+    ],
+    "quantitative-data": [
+      "quantitative"
+    ],
+    "discrete-variable": [
+      "discrete"
+    ],
+    "continuous-variable": [
+      "continuous"
+    ],
+    "grouped-frequency-table": [
+      "grouped frequency distribution"
+    ],
+    "class-midpoint": [
+      "midpoint",
+      "class mark"
+    ],
+    "class-width": [
+      "width of a class"
+    ]
+  }
+}
