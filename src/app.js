@@ -701,7 +701,7 @@ function classificationCard(kind) {
     'aria-labelledby': 'classification-title'
   });
   root.append(
-    span('eyebrow', kind === 'identify' ? 'READ THE SCENARIO' : comparison ? 'COMPARE THE METHODS' : 'EVALUATE THE METHOD'),
+    span('eyebrow', 'QUESTION · '+(kind === 'identify' ? 'READ THE SCENARIO' : comparison ? 'COMPARE THE METHODS' : 'EVALUATE THE METHOD')),
     heading(2, 'classification-title', titleText, { id: 'classification-title' }),
     div('classification-statement', item.prompt),
     paragraph('choose-note', kind === 'identify'
@@ -723,15 +723,11 @@ function classificationCard(kind) {
   root.append(choices);
   if (session.answered) {
     const right = session.choice === correctAnswer;
-    const feedback = div('inline-feedback classification-feedback' + (right ? ' correct' : ' incorrect'),
-      icon(right ? '✓' : '!'),
-      div('',
-        heading(3, 'feedback-heading', (right ? 'Correct — ' : 'Not quite — ') + categoryLabel(correctAnswer) + '.', { tabindex: '-1' }),
-        paragraph('', kind === 'identify' ? item.reason : item.explanation),
-        ...(kind === 'identify' ? [paragraph('feedback-contrast', item.contrast)] : [])
-      )
-    );
-    feedback.setAttribute('tabindex', '-1');
+    const feedback=feedbackBanner(right?'correct':'incorrect',
+      (right?'Correct — ':'Not quite — ')+categoryLabel(correctAnswer)+'.',[
+        paragraph('',kind==='identify'?item.reason:item.explanation),
+        ...(kind==='identify'?[paragraph('feedback-contrast',item.contrast)]:[])
+      ],'classification-feedback');
     root.append(
       feedback,
       div('next-row',
@@ -751,9 +747,7 @@ function sortView() {
       roundProgress(number, session.items.length, 'Statement ' + number + ' of ' + session.items.length),
       span('quiet-tag', session.correct + ' correct')
     ),
-    paragraph('game-instructions', session.round.type === 'comparison'
-      ? 'These contrasts distinguish two similar methods. Select the method described.'
-      : 'Classify each claim for the named method. Some strengths and limitations also apply to other methods.'),
+    practiceGuide('sort',{comparison:session.round.type==='comparison'}),
     classificationCard('sort')
   );
   return root;
@@ -768,7 +762,7 @@ function identifyView() {
       roundProgress(number, session.items.length, 'Scenario ' + number + ' of ' + session.items.length),
       span('quiet-tag', session.correct + ' correct')
     ),
-    paragraph('game-instructions', 'Each round includes all five sampling methods. Read how the participants or items were chosen.'),
+    practiceGuide('identify'),
     classificationCard('identify')
   );
   return root;
@@ -819,9 +813,9 @@ function buildView(){
  const root=div('page activity-page');root.append(activityTop('build'),buildPicker());
  if(session.complete){root.append(showCompletion('build'));return root;}
  const current=session.methods[session.index],method=current.method;
- root.append(roundProgress(session.index+1,session.methods.length,'Method '+(session.index+1)+' of '+session.methods.length));
+ root.append(roundProgress(session.index+1,session.methods.length,'Method '+(session.index+1)+' of '+session.methods.length),practiceGuide('build'));
  const panel=element('section',{className:'exam-workspace','data-method-id':method.id});
- panel.append(span('eyebrow','ORDER THE STEPS'),heading(2,'exam-heading',METHOD_LABELS[method.id],{id:'exam-heading',tabindex:'-1'}),
+ panel.append(span('eyebrow','QUESTION · ORDER THE STEPS'),heading(2,'exam-heading',METHOD_LABELS[method.id],{id:'exam-heading',tabindex:'-1'}),
   paragraph('exam-help','Move steps with the arrow buttons, using touch or keyboard. Equivalent valid orderings are accepted.'));
  const list=element('ol',{className:'exam-step-list'});
  current.steps.forEach((step,i)=>{
@@ -834,10 +828,10 @@ function buildView(){
  });panel.append(list);
  if(!current.checked)panel.append(div('exam-buttons',action('Check procedure','build-check'),action('Reveal model','build-reveal',{},'btn btn-quiet')));
  else {
-   const feedback=div('inline-feedback typed-feedback'+(current.correct?' correct':' incorrect'),
-     icon(current.correct?'✓':'!'),div('',heading(3,'feedback-heading',current.correct?'Valid procedure.':'Study this model procedure.'),
-     paragraph('',current.correct?'This order satisfies the compulsory dependencies.':'Some compulsory steps were in the wrong order, or you chose to reveal the answer.')));
-   feedback.setAttribute('tabindex','-1');
+   const feedback=feedbackBanner(current.correct?'correct':'incorrect',
+     current.correct?'Valid procedure.':'Study this model procedure.',[
+       paragraph('',current.correct?'This order satisfies the compulsory dependencies.':'Some compulsory steps were in the wrong order, or you chose to reveal the answer.')
+     ]);
    const model=element('ol',{className:'exam-model-list'});
    method.procedure.forEach(step=>model.append(element('li',{},step.text)));
    panel.append(feedback,heading(3,'exam-model-heading','Model method'),model,
