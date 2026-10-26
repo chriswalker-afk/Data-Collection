@@ -14,10 +14,18 @@ export default defineConfig({
     { name: 'desktop-chromium', use: { ...devices['Desktop Chrome'] } },
     { name: 'mobile-chromium', use: { ...devices['iPhone 13'], defaultBrowserType: 'chromium' } }
   ],
-  webServer: {
-    command: 'python3 -m http.server 4173 --bind 127.0.0.1',
-    url: 'http://127.0.0.1:4173',
-    reuseExistingServer: !process.env.CI,
-    timeout: 20000
-  }
+  webServer: [
+    {
+      command: 'python3 -m http.server 4173 --bind 127.0.0.1',
+      url: 'http://127.0.0.1:4173',
+      reuseExistingServer: !process.env.CI,
+      timeout: 20000
+    },
+    {
+      command: 'npx wrangler dev --config multiplayer/wrangler.jsonc --ip 127.0.0.1 --port 8787',
+      url: 'http://127.0.0.1:8787/health',
+      reuseExistingServer: !process.env.CI,
+      timeout: 60000
+    }
+  ]
 });
