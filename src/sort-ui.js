@@ -6,7 +6,6 @@ import {evaluateSortBoard,changeSortPlacement,sortDestination,sortDestinationLab
 export function createSortItUI(deps){
  const {mount,element,div,span,paragraph,heading,action,activityTop,roundProgress,practiceGuide,feedbackBanner}=deps;
  const get=()=>deps.getState();
- let nativeDragId=null;
  let pointerDrag=null;
  let dragGhost=null;
  let lastDropTarget=null;
@@ -40,7 +39,7 @@ export function createSortItUI(deps){
   const status=checked?(correct?'correct':'incorrect'):'';
   const text=item.prompt;
   const card=action(text,'sort-select',{
-    'data-sort-card':item.id,draggable:s.revealed?'false':'true',disabled:s.revealed,'aria-pressed':selected,
+    'data-sort-card':item.id,draggable:'false',disabled:s.revealed,'aria-pressed':selected,
     'aria-label':text+(placed?' — currently in '+sortDestinationLabel(placed):' — unplaced')+
       (selected?' — selected':'')+(status?' — '+(correct?'correct':'needs review'):'')
   },'sort-card'+(selected?' is-selected':'')+(status?' is-'+status:''));
@@ -268,7 +267,7 @@ export function createSortItUI(deps){
   return zone.dataset.sortDrop==='tray'?null:zone.dataset.sortDrop;
  }
  function clearDrag(){
-  dragGhost?.remove();dragGhost=null;pointerDrag=null;nativeDragId=null;clearNativeHighlight();
+  dragGhost?.remove();dragGhost=null;pointerDrag=null;clearNativeHighlight();
  }
  function setDragGhost(point,id){
   const tile=state().items.find(x=>x.id===id);
@@ -283,41 +282,35 @@ export function createSortItUI(deps){
   dragGhost.style.left=(event.clientX+12)+'px';
   dragGhost.style.top=(event.clientY+16)+'px';
  }
- // Native HTML drag-and-drop for mouse / laptop trackpad, with pointer-based touch handle.
- mount.addEventListener('dragstart',event=>{
-  if(!isSort())return;
-  const card=event.target.closest('[data-sort-card]');
-  if(!card||state().revealed)return;
-  nativeDragId=card.dataset.sortCard;
-  event.dataTransfer?.setData('text/plain',nativeDragId);
-  if(event.dataTransfer)event.dataTransfer.effectAllowed='move';
-  card.classList.add('is-dragging');
- });
- mount.addEventListener('dragover',event=>{
-  if(!isSort()||!nativeDragId)return;
-  const target=markNativeTarget(event.target);
-  if(!target)return;
-  event.preventDefault();
-  if(event.dataTransfer)event.dataTransfer.dropEffect='move';
- });
- mount.addEventListener('drop',event=>{
-  if(!isSort()||!nativeDragId)return;
-  const value=destinationFor(event.target);
-  const id=nativeDragId;
-  clearDrag();
-  if(value===undefined)return;
-  event.preventDefault();place(id,value);
- });
- mount.addEventListener('dragend',()=>clearDrag());
+ // Pointer dragging is consistent across mouse, trackpad, pen and touch. A grab
+ // handle on touch leaves the rest of each card available for normal scrolling.
+ // Native HTML5 drag is deliberately not used: its drop events are unreliable
+ // when the tray scrolls independently of the four destination zones.
+ function findDropDestination(x,y){
+  const hovered=document.elementFromPoint(x,y);
+  const direct=destinationFor(hovered);
+  if(direct!==undefined)return direct;
+  // A small sticky instruction strip can overlay a zone during auto-scrolling.
+  // Use only zones actually containing the release point; never guess a target.
+  for(const zone of mount.querySelectorAll('[data-sort-drop]')){
+    const bounds=zone.getBoundingClientRect();
+    if(x>=bounds.left&&x<=bounds.right&&y>=bounds.top&&y<=bounds.bottom){
+      return destinationFor(zone);
+    }
+  }
+  return undefined;
+ }
  mount.addEventListener('pointerdown',event=>{
-  if(!isSort()||event.pointerType==='mouse'||state().revealed)return;
-  const handle=event.target.closest('.sort-grab');
-  const card=handle?.closest('[data-sort-card]');
+  if(!isSort()||state().revealed||event.button!==0)return;
+  const card=event.target.closest('[data-sort-card]');
   if(!card)return;
+  const isTouch=event.pointerType==='touch'||event.pointerType==='pen';
+  const grab=event.target.closest('.sort-grab');
+  if(isTouch&&!grab)return;
   pointerDrag={id:card.dataset.sortCard,
     startX:event.clientX,startY:event.clientY,
     pointerId:event.pointerId,active:false};
-  handle.setPointerCapture?.(event.pointerId);
+  (isTouch?grab:card).setPointerCapture?.(event.pointerId);
  });
  mount.addEventListener('pointermove',event=>{
   const drag=pointerDrag;
@@ -328,6 +321,8 @@ export function createSortItUI(deps){
   }
   event.preventDefault();
   moveGhost(event);
+  // Pointer capture retains the pointer events while the finger travels from
+  // the statement bank to its destination. Hit-test beneath the drag preview.
   markNativeTarget(document.elementFromPoint(event.clientX,event.clientY));
   if(event.clientY>window.innerHeight-64)window.scrollBy(0,22);
   else if(event.clientY<66)window.scrollBy(0,-22);
@@ -336,7 +331,7 @@ export function createSortItUI(deps){
   const drag=pointerDrag;
   if(!drag||drag.pointerId!==event.pointerId)return;
   const wasActive=drag.active;
-  const destination=wasActive?destinationFor(document.elementFromPoint(event.clientX,event.clientY)):undefined;
+  const destination=wasActive?findDropDestination(event.clientX,event.clientY):undefined;
   const id=drag.id;
   clearDrag();
   if(wasActive){
