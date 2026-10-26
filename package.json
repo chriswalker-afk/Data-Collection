@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Accessible, static Edexcel 9MA0 sampling revision games.",
   "scripts": {
-    "check": "node scripts/validate-content.mjs && node --check src/app.js && node --check src/phase2.js && node --check src/recall.js && node --check src/exam.js && node --test tests/*.test.mjs",
+    "check": "node scripts/validate-content.mjs && node --check src/app.js && node --check src/phase2.js && node --check src/recall.js && node --check src/exam.js && node --check src/exam-sim.js && node --check src/exam-sim-ui.js && node --test tests/*.test.mjs",
     "test": "node --test tests/*.test.mjs",
     "test:e2e": "playwright test",
     "preview": "python3 -m http.server 4173"

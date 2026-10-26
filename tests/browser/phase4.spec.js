@@ -3,7 +3,7 @@ const store=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('sampling-ar
 async function bank(page,file,key){return page.evaluate(async({file,key})=>(await(await fetch('./content/'+file+'.json')).json())[key],{file,key});}
 test('all nine games are visible and exam skills route to sampling',async({page})=>{
  await page.goto('/#/home/data');
- await expect(page.locator('.game-card')).toHaveCount(9);
+ await expect(page.locator('.game-card')).toHaveCount(10);
  for(const game of ['build','error','reason']){
   await page.goto('/#/'+game+'/data');
   await expect(page.locator('.activity-topic')).toHaveText('Sampling');

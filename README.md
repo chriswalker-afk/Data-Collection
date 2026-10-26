@@ -2,7 +2,7 @@
 
 A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** revision games covering sampling definitions, procedures and introductory types of data.
 
-**Pass 3:** six playable activities, now including Speed Recall (timed or untimed) and progressively more demanding Missing Words practice. Every game still uses the audited Pass 0 content and the same locally saved progress format. The mathematical question bank was audited in [Pass 0](docs/PASS_0_CONTENT_AUDIT.md).
+**Pass 5:** ten activities, including **Exam Lab** with 34 exam-style questions, automatically checked numerical tasks, self-reviewed writing, targeted revision, and printable reports. All games continue to use the audited Pass 0 terminology and the original v1 concept progress store.
 
 **Website:** https://chriswalker-afk.github.io/Data-Collection/ (published from `main` once Pages is enabled).
 
@@ -15,7 +15,8 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 - **Which Method?** uses balanced 5-, 10- or 20-scenario rounds to identify all five methods with contextual explanations.
 - **Speed Recall** asks for a term from its definition; choose untimed ten-term practice (eight for Types of Data) or 30-, 60- and 90-second timed challenges. The timer pauses during feedback and when the tab is hidden.
 - Typos can prompt one spelling correction, but are **never automatically credited**. Only curated mathematical synonyms are accepted.
-- **Sort It!**, **Which Method?**, **Build the Method**, **Spot the Error** and **Contextual Reasoning** are sampling-only activities. The other four games support Sampling, Types of data and Mixed revision.
+- **Sort It!**, **Which Method?**, **Build the Method**, **Spot the Error**, **Contextual Reasoning** and **Exam Lab** are sampling-only. The four recall games support Sampling, Types of data and Mixed revision.
+- **Exam Lab** offers balanced 4-, 8- or 12-question papers, numerical checking of exact proportional allocations and integer systematic intervals, written explanation self-review, a locally saved resume point, adaptive practice targets and printable reports. Writing is **never automatically marked or credited as mastered**.
 - Local progress tracks practice attempts and mastery across games, requiring two consecutive successful responses per concept. Use Reset my progress to clear this browser's saved information.
 
 ## Run locally
@@ -50,4 +51,4 @@ GitHub Actions runs both unit/content validation and Chromium browser tests for 
 
 All content is independently worded for teaching, rather than copied verbatim from textbooks. This site is not affiliated with or endorsed by Pearson.
 
-**Next: Pass 4 — exam-style Build the Method, spot-the-error questions, and contextual justification.**
+**Next: Pass 6 — an audit of the exam experience, expanded mathematical coverage and optional teacher-friendly reporting (without claiming official automatic essay grading).**

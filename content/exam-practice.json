@@ -641,7 +641,7 @@
       "model": "Using a complete register and a genuine random-number method reduces selection bias, but the realised 30 could be unbalanced by chance. Some pupils may not respond, so I would follow up the chosen pupils and report the limitation.",
       "sourceEvaluationIds": [
         "srs-frame",
-        "srs-representative"
+        "srs-subgroups"
       ],
       "sourceIds": [
         "pearson-textbook-ch1",
@@ -672,8 +672,8 @@
       ],
       "model": "The interviewer fills two quotas but does not randomly select people within each age group. This is quota sampling, not stratified random sampling. The time and place may bias responses, so recruiting at varied venues or using separate random lists would strengthen the design.",
       "sourceEvaluationIds": [
-        "quota-recruit",
-        "stratified-random"
+        "quota-selection",
+        "strata-random"
       ],
       "sourceIds": [
         "pearson-textbook-ch1",
@@ -736,7 +736,7 @@
       ],
       "model": "With k = 10, a sample might repeatedly hit the same phase of the ten-item cycle. A random start does not eliminate this risk. I would inspect the ordering and consider simple random selection from the entire numbered list.",
       "sourceEvaluationIds": [
-        "systematic-period"
+        "sys-periodic"
       ],
       "sourceIds": [
         "pearson-textbook-ch1",
@@ -767,7 +767,7 @@
       ],
       "model": "The sample is convenient but may overrepresent morning bus users. Drivers and people travelling later are unlikely to be included. I would collect responses from different locations and times, or limit the conclusion to the actual group surveyed.",
       "sourceEvaluationIds": [
-        "opportunity-availability"
+        "opp-unrepresentative"
       ],
       "sourceIds": [
         "pearson-textbook-ch1",
@@ -798,7 +798,7 @@
       ],
       "model": "The allocation 25/25 is not proportional: 400/500 × 50 = 40 day pupils, and 100/500 × 50 = 10 boarders. To claim stratified random sampling, the correct numbers must then be chosen at random from separate complete registers.",
       "sourceEvaluationIds": [
-        "stratified-allocation"
+        "strata-proportions"
       ],
       "sourceIds": [
         "pearson-textbook-ch1",
@@ -860,7 +860,7 @@
       ],
       "model": "Because 197/40 = 4.925, simply rounding to 5 is not a universal sampling rule. I would specify a systematic scheme with a random start, check how many different positions it selects, and make any necessary design adjustment transparently.",
       "sourceEvaluationIds": [
-        "systematic-period"
+        "sys-periodic"
       ],
       "sourceIds": [
         "pearson-textbook-ch1",
@@ -891,8 +891,8 @@
       ],
       "model": "Proportional quotas control only the group counts, not how people within those groups are selected. Shopping-centre volunteers may differ from other residents. I would recruit across places and times, or obtain complete age-group frames and randomly draw from each stratum.",
       "sourceEvaluationIds": [
-        "quota-recruit",
-        "stratified-random"
+        "quota-selection",
+        "strata-random"
       ],
       "sourceIds": [
         "pearson-textbook-ch1",

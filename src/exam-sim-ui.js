@@ -92,7 +92,7 @@ export function createExamSimulationUI(deps){
     input);
    rows.append(group);
   }
-  form.append(rows,div('sim-validation',{'aria-live':'polite'}));
+  form.append(rows,element('div',{className:'sim-validation','aria-live':'polite'}));
   form.append(div('sim-form-actions',
     element('button',{type:'submit',className:'btn btn-primary'},'Check calculations'),
     action('Reveal worked solution','sim-reveal',{},'btn btn-quiet')));
