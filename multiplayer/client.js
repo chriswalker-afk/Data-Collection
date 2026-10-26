@@ -16,13 +16,7 @@ function reset(){sessionStorage.removeItem(roomKey);code=null;token=null;host=fa
 async function startRoom(){try{status('Creating classroom…');const result=await request('/rooms',{roundLength:Number($('length').value)});({code,token}=result);host=true;save();connect();}catch(e){status(e.message);}}
 async function joinRoom(){try{status('Joining…');const entered=$('room-code').value.replaceAll(' ','').trim();if(!/^\d{6}$/.test(entered))throw new Error('Enter the six-digit code');const result=await request('/rooms/'+entered+'/join',{name:$('nickname').value});({code,token}=result);host=false;save();connect();}catch(e){status(e.message);}}
 async function command(type,method){try{const result=await request('/rooms/'+code+'/command',{type,...(method?{method}:{})},true);if(result.error)throw new Error(result.error);}catch(e){status(e.message);}}
-function connect(){
- if(socket)socket.close();
- const ws=new WebSocket(API.replace(/^http/,'ws')+'/rooms/'+code+'/ws?transport=websocket');
- // Bearer token cannot be attached to a browser WebSocket handshake.
- // Retrieve state through authenticated HTTPS and send commands over HTTPS instead.
- ws.close();socket=null;poll(); 
-}
+function connect(){poll();}
 let pollHandle=null;
 async function poll(){
  if(!code||!token)return;
