@@ -1417,7 +1417,7 @@ function onAction(button) {
     session.status=correct?'correct':'wrong';
     if (correct) session.correct += 1;
     remember(current.conceptId, correct);
-    render('.cloze-panel .typed-feedback');
+    render('[data-action="cloze-next"]');
     announce(correct ? 'Correct. ' + current.explanation : 'Not quite. Correct word: ' + current.answer + '. ' + current.explanation);
     return;
   }
