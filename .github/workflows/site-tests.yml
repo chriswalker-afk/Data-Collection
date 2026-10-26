@@ -29,7 +29,7 @@ jobs:
           node-version: '22'
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
-      - run: npx playwright test tests/browser/multiplayer.spec.js tests/browser/multiplayer-modes.spec.js tests/browser/arcade-unified.spec.js --project=desktop-chromium
+      - run: npx playwright test tests/browser/multiplayer.spec.js tests/browser/multiplayer-modes.spec.js tests/browser/multiplayer-ceremony.spec.js tests/browser/arcade-unified.spec.js --project=desktop-chromium
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
