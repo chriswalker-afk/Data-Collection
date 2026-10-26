@@ -231,14 +231,22 @@ export function createExamSimulationUI(deps){
       field.label+': '+(field.supplied||'(blank)')+' → '+field.expected+' ('+field.working+')'));
    }
    if(row.draft)card.append(paragraph('sim-preserved-text','Your writing: '+row.draft));
+   if(row.hintsUsed)card.append(paragraph('sim-help','Hints used: try this question independently in a later practice paper.'));
    if(!numberTask(q))card.append(paragraph('sim-help','Written answer was self-reviewed, not automatically assessed.'));
    if(row.needsReview)card.append(link('Targeted revision: '+(q.type==='evaluation'?'Contextual Reasoning':'Build the Method'),
      nextGame(q),'sim-revision-link'));
    section.append(card);
   }
   page.append(section);
-  page.append(div('sim-report-actions',
+  const exportSettings=div('sim-export-settings',
+   heading(3,'sim-panel-heading','Share a summary with your teacher'),
+   paragraph('sim-help','Download a CSV report to share yourself. No student name or cloud upload. Written drafts are excluded unless you opt in; self-reviews are not examination marks.'),
+   element('label',{className:'sim-export-choice'},
+    element('input',{id:'sim-export-drafts',type:'checkbox',checked:exportDrafts}),
+    span('','Include my written draft answers in the CSV (optional)')));
+  page.append(exportSettings,div('sim-report-actions',
     action('Print this report','sim-print',{},'btn btn-primary'),
+    action('Export CSV report','sim-export',{},'btn btn-quiet'),
     action('Back to paper choices','sim-menu',{},'btn btn-quiet'),
     ...(examState.reviewIds.length?[action('Practise saved targets','sim-review',{},'btn btn-quiet')]:[])));
   return page;
@@ -257,7 +265,7 @@ export function createExamSimulationUI(deps){
   }else paper=makePaper(data.examQuestions,variant);
   if(examState.paper&&!examState.paper.complete&&!window.confirm(
     'Replace your unfinished paper? Saved draft writing in that paper will be cleared.'))return;
-  deps.beginPaper(paper);persist();show('#sim-question-heading');deps.announce('Paper started.');
+  exportDrafts=false;deps.beginPaper(paper);persist();show('#sim-question-heading');deps.announce('Paper started.');
  }
  function submit(form){
   const {session,examState}=get(),q=currentQuestion(),entry=ensureEntry();
@@ -293,8 +301,23 @@ export function createExamSimulationUI(deps){
    if(!window.confirm('Clear every saved exam-practice target on this browser?'))return;
    get().examState.reviewIds=[];persist();show('#view-heading');return;
   }
-  if(command==='sim-menu'){deps.beginReady();show('#view-heading');return;}
+  if(command==='sim-menu'){exportDrafts=false;deps.beginReady();show('#view-heading');return;}
   if(command==='sim-print'){if(get().session?.complete)window.print();return;}
+  if(command==='sim-export'&&get().session?.complete){
+   const {session,data}=get();
+   try{
+    const csv='\uFEFF'+reportCsv(session,data.examQuestions,data.methods,{includeDrafts:exportDrafts});
+    const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+    const a=document.createElement('a');a.href=url;a.download='sampling-arcade-exam-report.csv';
+    document.body.append(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+    deps.announce('CSV report downloaded to this device.');
+   }catch(error){
+    console.error('Exam report export failed:',error);
+    deps.announce('Unable to export this report.');
+   }
+   return;
+  }
   const {session,examState}=get();
   if(session?.ready||session?.complete)return;
   const q=currentQuestion(),entry=ensureEntry();
@@ -345,6 +368,9 @@ export function createExamSimulationUI(deps){
  }
  function onChange(control){
   const {session}=get();
+  if(control.matches('#sim-export-drafts')&&session?.complete){
+   exportDrafts=control.checked;return;
+  }
   if(session?.ready||session?.complete||!session?.questionIds)return;
   const q=currentQuestion(),entry=ensureEntry();
   if(numberTask(q)||entry.stage!=='review')return;
