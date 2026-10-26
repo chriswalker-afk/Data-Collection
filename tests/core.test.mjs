@@ -16,7 +16,7 @@ test('all ten games and topic filters are available', () => {
   assert.equal(conceptsInTopic(concepts, 'sampling').length, 18);
   assert.equal(conceptsInTopic(concepts, 'data').length, 8);
   assert.equal(conceptsInTopic(concepts, 'all').length, 26);
-  assert.equal(clozeInTopic(cloze, concepts, 'all').length, 25);
+  assert.equal(clozeInTopic(cloze, concepts, 'all').length, 53);
   assert.ok(clozeInTopic(cloze, concepts, 'sampling').length > 10);
   assert.ok(clozeInTopic(cloze, concepts, 'data').length > 4);
 });
