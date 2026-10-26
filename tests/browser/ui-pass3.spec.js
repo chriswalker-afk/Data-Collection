@@ -181,6 +181,7 @@ test('contrast and touch targets are independently checkable, not dependent on c
 test('reduced motion disables smooth scroll and decorative transitions',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});
  await page.goto('/#/home/sampling');
+ await expect(page.locator('.game-card').first()).toBeVisible();
  const css=await page.evaluate(()=>({
   scroll:getComputedStyle(document.documentElement).scrollBehavior,
   transform:getComputedStyle(document.querySelector('.game-card')).transform,
