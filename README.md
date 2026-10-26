@@ -2,6 +2,8 @@
 
 A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** revision games covering sampling definitions, procedures and introductory types of data.
 
+**Unified Arcade Pass 2:** one connected experience for **Solo**, **Multiplayer** and the forthcoming **My Awards**. New premium classroom lobby, room-code sharing, teacher joining controls, live roster, projector view and clearer mathematical answer review. The Trophy Cabinet page is deliberately labelled a preview until Pass 3; it does not claim to save awards. All ten solo activities and existing browser progress remain untouched. See [Pass 2 specification](docs/PASS_2_UNIFIED_ARCADE.md).
+
 **Pass 7:** a clearer route from vocabulary to exam responses, contextual next-activity guidance, three student-chosen Exam Lab difficulty paths, and an optional offline classroom feedback form. The 46-question bank and all ten games remain in place; no student writing or feedback is sent anywhere automatically.
 
 **UI Pass 2:** all ten activities now use consistent *Practising → What to do → Question* framing, shared controls and panel styling, and clear distinction between checked answers and self-reviewed writing. The mathematics and local student progress stores are unchanged.
