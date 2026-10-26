@@ -37,7 +37,7 @@ Partial, empty, fabricated, duplicate, unauthenticated and out-of-time responses
 
 - Only the teacher's existing room credential can start, advance, reverse, skip, finish or replay the ceremony. Students' HTTP attempts receive an error.
 - Before the teacher starts, the game-complete state discloses no future ceremony award list. During the ceremony, only the *current* slide is sent to students, preventing spoilers.
-- Server results and ceremonies live in the same temporary room; existing three-hour expiry and rate limits are retained. No migration, account, student database, or new Cloudflare resource is required.
+- Server results and ceremonies live in the same temporary room; existing three-hour expiry and rate limits are retained (24 classroom creations per five minutes per shared network, with a global creation limit). No migration, account, student database, or new Cloudflare resource is required.
 - The authenticated student receives only **their own** award receipt on reaching the finale (or upon reconnecting to a completed room), without exposing other students' award collections.
 - The public Pages artifact contains the presentational award catalogue and the ceremony UI; it never includes the server grading/eligibility rules or question answer keys.
 
