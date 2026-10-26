@@ -1,17 +1,132 @@
 <!doctype html>
-<html lang="en-GB"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Join a live Edexcel A level sampling challenge with a room code. No accounts required."><title>Multiplayer · Sampling Arcade</title><link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./styles/multiplayer.css"></head>
-<body><a class="skip-link" href="#main">Skip to main content</a>
-<header class="site-header"><div class="shell header-inner"><a class="brand" href="./index.html#/home/sampling"><span class="brand-symbol" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span class="brand-copy"><strong>Sampling Arcade</strong><small>MULTIPLAYER · A LEVEL MATHEMATICS</small></span></a><a class="btn btn-quiet" href="./index.html#/home/sampling">← Back to arcade</a></div></header>
-<main id="main" class="shell main-shell">
-<section class="multiplayer-hero"><span class="kicker">SAMPLING SHOWDOWN</span><h1>Learn together. Compete thoughtfully.</h1><p>Choose a nickname, enter a classroom code and identify sampling methods. No login needed.</p></section>
-<div id="notice" role="status" aria-live="polite"></div>
-<section id="entry" class="multiplayer-entry">
-<div class="panel multiplayer-panel"><span class="eyebrow">TEACHER</span><h2>Host a classroom</h2><p>Set the challenge length and share a six-digit code with your students.</p><label for="length">Questions</label><select id="length"><option value="5">5 · Quick starter</option><option selected value="10">10 · Class challenge</option><option value="20">20 · Extended revision</option></select><button class="btn btn-primary" id="create">Create room</button></div>
-<div class="panel multiplayer-panel"><span class="eyebrow">STUDENTS</span><h2>Join a room</h2><label for="room-code">Six-digit room code</label><input id="room-code" aria-required="true" autocomplete="off" inputmode="numeric" maxlength="7" placeholder="123456"><label for="nickname">Choose a nickname</label><input id="nickname" aria-required="true" autocomplete="off" maxlength="20" placeholder="Maths Explorer"><button class="btn btn-primary" id="join">Join game</button></div>
-</section>
-<section id="room" class="multiplayer-room" hidden>
-<div class="multiplayer-room-top panel"><div><span class="eyebrow" id="room-title">Classroom</span><h2 id="room-id"></h2><button class="btn btn-quiet" id="copy-code" type="button">Copy code</button><p id="room-status" role="status"></p><p id="connection" role="status" class="connection-status"></p></div><button class="btn btn-quiet" id="leave">Leave room</button></div>
-<div class="multiplayer-layout"><section class="panel multiplayer-stage" id="stage"></section><aside class="panel multiplayer-players"><h2>Leaderboard</h2><ol id="players"></ol><p>Accuracy comes first. Each correct answer earns 1,000 points plus a small speed bonus.</p></aside></div>
-</section>
-</main><script type="module" src="./multiplayer/client.js"></script></body></html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f6f8f5">
+  <meta name="description" content="Live Sampling Arcade: join a teacher-led sampling methods challenge by room code, without sign-in.">
+  <title>Multiplayer Arena · Sampling Arcade</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./styles/arcade-hub.css">
+  <link rel="stylesheet" href="./styles/multiplayer.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="./index.html#/home/sampling" aria-label="Sampling Arcade home">
+        <span class="brand-symbol" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span class="brand-copy"><strong>Sampling Arcade</strong><small>A LEVEL MATHEMATICS · EDEXCEL 9MA0</small></span>
+      </a>
+      <nav class="arcade-external-nav" aria-label="Arcade modes">
+        <a href="./index.html#/home/sampling">Solo</a>
+        <a href="./multiplayer.html" aria-current="page">Multiplayer</a>
+        <a href="./awards.html">My Awards</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="shell main-shell" tabindex="-1">
+    <section class="arcade-page-hero multiplayer-hero" aria-labelledby="arena-heading">
+      <div class="multiplayer-hero-content">
+        <span class="arcade-hero-kicker"><span class="arena-live-dot" aria-hidden="true"></span> THE MULTIPLAYER ARENA</span>
+        <h1 id="arena-heading">One class.<br>Five methods.<br><em>Brilliant thinking.</em></h1>
+        <p>Challenge your sampling knowledge together. Create a classroom game or join one with a six-digit code. Everyone plays on their own device; nobody needs an account.</p>
+        <div class="arcade-hero-facts">
+          <span>Which Method? Live</span><span>Accuracy first</span><span>Cross-device play</span>
+        </div>
+      </div>
+      <div class="multiplayer-hero-preview" aria-hidden="true">
+        <div class="arena-preview-top"><span class="preview-signal"></span> LIVE CLASS CHALLENGE <span>● ● ●</span></div>
+        <div class="arena-preview-label">QUESTION 03 / 10</div>
+        <div class="arena-preview-question">How was the sample selected?</div>
+        <div class="arena-preview-options"><span>Simple random</span><span class="is-choice">Stratified</span><span>Systematic</span><span>Quota</span></div>
+        <div class="arena-preview-footer"><span>THINK FIRST</span><span>THEN CHOOSE</span></div>
+      </div>
+    </section>
+    <div id="notice" role="status" aria-live="polite" aria-atomic="true"></div>
+    <section id="entry" class="multiplayer-entry-section" aria-labelledby="entry-heading">
+      <div class="multiplayer-entry-heading">
+        <div><span class="arcade-paths-kicker">CHOOSE YOUR ROUTE</span><h2 id="entry-heading">Ready to play?</h2></div>
+        <p>The teacher hosts. Students join. Your existing solo revision stays exactly as it is.</p>
+      </div>
+      <div class="multiplayer-entry">
+        <section class="multiplayer-panel host-entry" aria-labelledby="host-heading">
+          <div class="entry-card-heading">
+            <span class="entry-mode-icon" aria-hidden="true">▣</span>
+            <div><span class="entry-mode-tag">01 / TEACHER</span><h3 id="host-heading">Host a classroom</h3></div>
+          </div>
+          <p>Choose a short starter or a full round. You'll control when questions begin, answers appear and the next round starts.</p>
+          <div class="entry-inputs">
+            <label for="length">Challenge length</label>
+            <select id="length">
+              <option value="5">5 questions · Quick starter</option>
+              <option selected value="10">10 questions · Class challenge</option>
+              <option value="20">20 questions · Extended revision</option>
+            </select>
+            <p class="entry-field-tip">All five sampling methods appear in every round. 20 seconds per question.</p>
+          </div>
+          <button class="btn btn-primary entry-submit" type="button" id="create">Create room <span aria-hidden="true">↗</span></button>
+        </section>
+        <section class="multiplayer-panel student-entry" aria-labelledby="join-heading">
+          <div class="entry-card-heading">
+            <span class="entry-mode-icon" aria-hidden="true">↗</span>
+            <div><span class="entry-mode-tag">02 / STUDENT</span><h3 id="join-heading">Join the challenge</h3></div>
+          </div>
+          <p>Ask your teacher for the room code, then choose a nickname. No sign-in, email address or saved profile.</p>
+          <form id="join-form" class="entry-inputs">
+            <label for="room-code">Six-digit room code</label>
+            <input id="room-code" name="room-code" required autocomplete="off" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="123456">
+            <label for="nickname">Your nickname</label>
+            <input id="nickname" name="nickname" required autocomplete="off" maxlength="20" placeholder="Maths Explorer">
+            <p class="entry-field-tip">Use a nickname, not your full name. Your teacher sees the same nickname.</p>
+            <button class="btn btn-primary entry-submit" type="submit" id="join">Join game <span aria-hidden="true">↗</span></button>
+          </form>
+        </section>
+      </div>
+      <p class="entry-footnote">Looking for quiet revision? <a href="./index.html#/home/sampling">Explore the ten Solo Arcade activities</a>.</p>
+    </section>
+    <section id="room" class="multiplayer-room" aria-labelledby="room-title" hidden>
+      <div class="multiplayer-room-top">
+        <div class="room-code-block">
+          <span class="room-kicker" id="room-title">YOUR CLASSROOM</span>
+          <div class="room-code-line"><span class="room-code-prefix">ROOM</span><h2 id="room-id" aria-label="Room code"></h2></div>
+          <p id="room-status" class="room-state" role="status"></p>
+          <div class="room-chip-line">
+            <span id="connection" role="status" class="connection-status">Connecting…</span>
+            <span id="room-lock" class="room-lock-chip">Joining open</span>
+            <span id="room-meta" class="room-meta-chip">Which Method? Live</span>
+          </div>
+        </div>
+        <div class="room-share-actions">
+          <button class="btn room-action" id="copy-code" type="button">Copy code</button>
+          <button class="btn room-action" id="share-link" type="button">Copy join link</button>
+          <button class="btn room-action" id="project" type="button">Present</button>
+          <button class="btn room-action room-leave" id="leave" type="button">Leave room</button>
+        </div>
+      </div>
+      <div class="multiplayer-layout">
+        <section class="multiplayer-stage" id="stage"></section>
+        <div id="game-announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+        <aside class="multiplayer-players" aria-labelledby="players-heading">
+          <div class="roster-heading">
+            <div><span class="arcade-paths-kicker">IN THE ARENA</span><h2 id="players-heading">Classroom roster</h2></div>
+            <span id="player-count" class="player-count">0 / 45</span>
+          </div>
+          <p id="roster-help" class="roster-help">Your classmates appear here as they join.</p>
+          <ol id="players" aria-label="Players and scores"></ol>
+          <div class="roster-explainer">
+            <strong>Accuracy wins.</strong>
+            <p>Correct responses earn 1,000 points plus a small speed bonus. Explanations follow each question.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer shell">
+    <span>Sampling Arcade · Learn, practise, connect.</span>
+    <span>Independent revision resource · Not affiliated with Pearson</span>
+  </footer>
+  <script type="module" src="./multiplayer/client.js"></script>
+</body>
+</html>

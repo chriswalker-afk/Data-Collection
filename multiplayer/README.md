@@ -1,4 +1,4 @@
-# Sampling Arcade — Pass 1: Multiplayer stabilisation
+# Sampling Arcade — Multiplayer Architecture (Passes 1–2)
 
 The original single-player arcade remains available at `index.html`. Multiplayer is an independent classroom experience at `multiplayer.html`, using the same reviewed `content/scenarios.json` question texts and sampling-method answer keys.
 
@@ -54,4 +54,6 @@ Do **not** add Cloudflare credentials to GitHub source files. Deployment through
 
 Before merging, require green content/unit and Chromium browser workflows; then verify a classroom with two real devices and one refresh. Recheck that solo exercises and local progress are unchanged. Unlike the original prototype, there is no duplicate question-answer bank risk left unchecked: `tests/multiplayer.test.mjs` verifies an exact source-to-bundle match.
 
-**Next: Pass 2 — Unified Arcade Experience:** a cohesive Solo / Multiplayer / My Awards navigation, premium lobby and classroom presentation, with the existing ten solo activities preserved.
+**Pass 2 completed:** unified Solo / Multiplayer / My Awards navigation, teacher lobby locking and removal, live leaderboard, accessible room presentation and a truthful upcoming-awards preview. See [the Pass 2 implementation guide](../docs/PASS_2_UNIFIED_ARCADE.md).
+
+**Next: Pass 3 — Trophy Cabinet & Solo Awards.**

@@ -6,7 +6,7 @@ const SCENARIOS=JSON.parse(readFileSync(new URL('../../content/scenarios.json',i
 async function openGame(page){
   await page.addInitScript(url=>{window.__SAMPLING_MULTIPLAYER_API__=url;},BACKEND);
   await page.goto('/multiplayer.html');
-  await expect(page.getByRole('heading',{name:/Learn together/})).toBeVisible();
+  await expect(page.locator('#arena-heading')).toContainText('One class.');
 }
 async function createRoom(page,length=5){
   await openGame(page);
@@ -64,7 +64,7 @@ test('real two-device class plays every round, verifies scores, and restores aft
       await page.getByRole('button',{name:'Next question'}).click();
       await answerQuestion(student,page,true);
     }
-    await page.getByRole('button',{name:'Next question'}).click();
+    await page.getByRole('button',{name:'Finish challenge'}).click();
     await expect(page.locator('#stage h2')).toContainText('Challenge complete',{timeout:12000});
     await expect(student.locator('#stage h2')).toContainText('Challenge complete',{timeout:12000});
     await expect(student.locator('#players li').first()).toContainText('Study Fox');
