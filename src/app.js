@@ -647,6 +647,13 @@ function clozeView() {
 
 
 function speedModePicker() {
+  if(session?.reviewMode){
+    return div('speed-review-context',
+      div('speed-review-context-copy',
+        span('speed-review-kicker','TARGETED RECALL'),
+        paragraph('speed-review-message','Revisit the terms you missed or skipped. A correct typed answer earns recall credit.')),
+      action('Back to standard practice','speed-exit-review',{},'btn btn-quiet btn-small'));
+  }
   const wrap=div('game-settings speed-settings');
   const modeLabel=element('label',{for:'speed-mode',className:'game-settings-label'},'Practice mode');
   const modeSelect=element('select',{id:'speed-mode',className:'game-select','data-control':'speed-mode'});
@@ -654,79 +661,124 @@ function speedModePicker() {
     element('option',{value:'untimed',selected:speedMode==='untimed'},'Untimed · 10 terms'),
     element('option',{value:'timed',selected:speedMode==='timed'},'Timed · beat the clock')
   );
-  const modeGroup=div('setting-group',modeLabel,modeSelect);
-  wrap.append(modeGroup);
-  if (speedMode==='timed') {
+  wrap.append(div('setting-group',modeLabel,modeSelect));
+  if(speedMode==='timed'){
     const durationLabel=element('label',{for:'speed-duration',className:'game-settings-label'},'Time limit');
     const durationSelect=element('select',{id:'speed-duration',className:'game-select','data-control':'speed-duration'});
-    for (const duration of SPEED_DURATIONS) {
+    for(const duration of SPEED_DURATIONS){
       durationSelect.append(element('option',{value:duration,selected:duration===speedDuration},duration+' seconds'));
     }
     wrap.append(div('setting-group',durationLabel,durationSelect));
   }
+  wrap.append(paragraph('speed-settings-note',
+    speedMode==='timed'?'The timer starts when you choose Start. It pauses during feedback and when you switch tabs.':
+    'Recall independently at your own pace. You can revisit missed terms after the round.'));
   return wrap;
 }
-function clockBadge() {
-  const container=div('clock-badge',
-    span('clock-caption','Time remaining'),
-    element('span',{'className':'clock-value','data-clock':'','role':'timer',
-      'aria-live':'off','aria-label':'Time remaining'},formatClock(session.remainingMs)));
+function clockBadge(){
+  const value=element('span',{
+    className:'clock-value','data-clock':'',role:'timer','aria-live':'off',
+    'aria-label':'Time remaining'
+  },formatClock(session.remainingMs));
+  const remaining=span('speed-clock-fill');
+  remaining.style.width=speedClockPercent(session.remainingMs,speedDuration)+'%';
+  const track=div('speed-clock-track',remaining);
+  track.setAttribute('aria-hidden','true');
+  const container=div('clock-badge speed-clock',
+    div('speed-clock-head',
+      div('speed-clock-copy',
+        span('clock-caption','Time remaining'),
+        span('speed-clock-state',session.answered?'Paused for feedback':'Timer running')),
+      value),
+    track);
+  if(session.remainingMs<=SPEED_CAUTION_MS)container.classList.add('is-low');
   return container;
 }
-function speedView() {
-  const root=div('page activity-page');
+function paintSpeedClock(){
+  const el=mount.querySelector('.speed-clock');
+  if(!el)return;
+  const clock=el.querySelector('[data-clock]');
+  if(clock)clock.textContent=formatClock(session.remainingMs);
+  const fill=el.querySelector('.speed-clock-fill');
+  if(fill)fill.style.width=speedClockPercent(session.remainingMs,speedDuration)+'%';
+  el.classList.toggle('is-low',session.remainingMs<=SPEED_CAUTION_MS);
+}
+function speedView(){
+  const root=div('page activity-page speed-page');
   root.append(activityTop('speed'),speedModePicker());
-  if (session.complete) {root.append(showCompletion('speed'));return root;}
-  if (!session.started) {
+  if(session.complete){root.append(showCompletion('speed'));return root;}
+  if(!session.started){
     root.append(div('speed-ready',
-      span('eyebrow','TIMED ACTIVE RECALL'),
-      heading(2,'speed-ready-title','Ready to put your memory to work?'),
-      paragraph('speed-ready-copy','You will have '+speedDuration+
-        ' seconds to type the mathematical terms. The timer runs while you answer and pauses while you read feedback. Switching tabs also pauses it.'),
-      action('Start '+speedDuration+'-second round →','speed-start',{},'btn btn-primary')
+      div('speed-ready-main',
+        div('speed-ready-copygroup',
+          span('speed-ready-kicker','TIMED ACTIVE RECALL'),
+          heading(2,'speed-ready-title','Recall the term. Make it count.'),
+          paragraph('speed-ready-copy','Read each definition, type the mathematical term and check your answer. You have '+
+            speedDuration+' seconds of answering time. The timer pauses during feedback and when you switch tabs.'),
+          action('Start '+speedDuration+'-second round →','speed-start',{},'btn btn-primary')),
+        div('speed-ready-clock',
+          span('speed-ready-clock-number',formatClock(speedDuration*1000)),
+          span('speed-ready-clock-label','Your time to retrieve'))
+      )
     ));
     return root;
   }
   const current=session.items[session.index];
-  const count=session.attempted+1;
-  const total=session.speedMode==='untimed'?session.items.length:null;
+  const reviewing=session.reviewMode===true;
+  const index=session.index+1;
+  const total=session.items.length;
   root.append(
-    div('round-controls',
+    div('round-controls speed-round-controls',
       session.speedMode==='untimed'
-        ? roundProgress(session.index+1,total,'Term '+(session.index+1)+' of '+total)
-        : div('round-head timed-score',
-            span('round-caption','Terms attempted: '+session.attempted),
-            span('round-caption','Correct: '+session.correct)),
-      session.speedMode==='timed'?clockBadge():span('quiet-tag',session.correct+' correct')
+        ?roundProgress(index,total,(reviewing?'Review term ':'Term ')+index+' of '+total)
+        :div('round-head timed-score',
+          span('round-caption',session.attempted+' submitted'),
+          span('round-caption',session.correct+' correct'),
+          span('round-caption',session.skipped+' skipped')),
+      session.speedMode==='timed'?clockBadge():
+        span('quiet-tag',session.correct+' correct'+(reviewing?' in this review':''))
     ),
     practiceGuide('speed',{timed:session.speedMode==='timed'})
   );
   const panel=element('section',{
-    className:'recall-panel','aria-labelledby':'recall-title','data-concept-id':current.id
+    className:'recall-panel speed-recall-panel'+(session.answered?' is-answered':''),
+    'aria-labelledby':'recall-title','data-concept-id':current.id,
+    'data-recall-state':session.answered?session.status:'question'
   });
   panel.append(
-    span('eyebrow','QUESTION · DEFINITION → TERM'),
+    div('speed-question-head',
+      span('eyebrow',reviewing?'REVIEW · DEFINITION → TERM':'QUESTION · DEFINITION → TERM'),
+      span('speed-question-number',session.speedMode==='untimed'?index+' / '+total:
+        'Term '+(session.attempted+1))
+    ),
     heading(2,'recall-title','Which mathematical term is described?',{id:'recall-title'}),
-    div('recall-definition',current.definition)
+    element('div',{className:'recall-definition',id:'speed-definition'},current.definition)
   );
-  if (!session.answered) {
+  if(!session.answered){
     panel.append(
-      paragraph('recall-instruction','Type the correct term, then press Enter or select Check answer.'),
-      typedForm('speed','Mathematical term',session.draft),
-      div('typed-tools',action('Skip and reveal','speed-skip',{},'text-button'))
+      element('p',{className:'recall-instruction',id:'speed-answer-note'},'Type the precise term. Press Enter to check.'),
+      typedForm('speed','Your mathematical term',session.draft),
+      div('typed-tools speed-support-tools',action('Skip and reveal','speed-skip',{},'text-button'))
     );
-    if (session.typoRetry) panel.append(paragraph('typed-near-miss',
-      'Very close — check the spelling and submit once more. No mark has been recorded yet.'));
-  } else {
+    if(session.typoRetry)panel.append(element('p',{
+      className:'typed-near-miss speed-near-miss',id:'speed-typo-note'
+    },'Very close — check your spelling and submit once more. No mark has been recorded yet.'));
+  }else{
     const correct=session.status==='correct';
     const title=correct?'Correct — '+current.label
       :session.status==='skipped'?'Skipped — '+current.label
       :'The correct term is '+current.label;
     const feedback=feedbackBanner(correct?'correct':'incorrect',title,[
       ...(correct&&session.aliasUsed?[paragraph('alias-note','Accepted equivalent terminology.')]:[]),
-      paragraph('',current.example),paragraph('feedback-contrast',current.misconception)
-    ]);
+      ...(session.status==='wrong'&&session.draft.trim()?
+        [paragraph('speed-written-attempt','Your answer: '+session.draft.trim())]:[]),
+      div('speed-model-example',span('speed-model-heading','MATHEMATICAL EXAMPLE'),
+        paragraph('',current.example)),
+      div('speed-model-caution',span('speed-model-heading','IMPORTANT DISTINCTION'),
+        paragraph('feedback-contrast',current.misconception))
+    ],'speed-feedback');
     panel.append(feedback,
+      paragraph('speed-feedback-tip','Press Enter to continue, or use the next button.'),
       div('next-row',action(session.speedMode==='untimed'&&session.index===session.items.length-1
         ?'Finish round →':'Next definition →','speed-next',{},'btn btn-primary')));
   }
