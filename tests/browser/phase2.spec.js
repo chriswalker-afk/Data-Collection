@@ -66,7 +66,7 @@ test('Sort It! records an entire two-method board on the first check, never on m
 
 test('Sort It! offers six curated two-method sets, each with four destinations',async({page})=>{
  await page.goto('/#/sort/sampling');
- await expect(page.locator('#sort-set option')).toHaveCount(6);
+ await expect(page.locator('#sort-set option')).toHaveCount(10);
  const pairs=await loadBank(page,'sort-pairs','pairs');
  for(const pair of pairs){
   await page.locator('#sort-set').selectOption(pair.id);
