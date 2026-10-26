@@ -46,8 +46,6 @@ export function guideForActivity(id,options={}){
         ? 'Type the missing word. You may reveal its first letter; a hinted answer is practice, not mastery.'
         :'Type the exact missing word without a word bank or hints.';
   }
-  if(id==='sort'&&options.comparison===true)
-    result.task='Read the comparison and select the sampling method being described.';
   if(id==='speed'&&options.timed===true)
     result.task='Type the term before the timer runs out. The timer pauses while feedback is shown or the tab is hidden.';
   if(id==='exam'){
