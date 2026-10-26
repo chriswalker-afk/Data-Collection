@@ -77,7 +77,7 @@ test('written reasoning stays visually labelled as self-review even with all fou
  await page.getByRole('button',{name:'Review my reasoning'}).click();
  const feedback=page.locator('.exam-workspace .ui-feedback');
  await expect(feedback).toHaveClass(/review/);
- await expect(feedback).not.toHaveClass(/\\bcorrect\\b/);
+ await expect(feedback).not.toHaveClass(/correct/);
  await expect(feedback.locator('.ui-feedback-badge')).toHaveText('Self-review');
  await expect(feedback).toContainText('not an examination mark');
  await expect(page.locator('.exam-draft')).toContainText('My own contextual explanation.');
