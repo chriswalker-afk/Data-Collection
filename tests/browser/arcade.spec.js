@@ -3,12 +3,16 @@ import { test, expect } from '@playwright/test';
 test('home has clear navigation, game cards, and topic switching', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', {name:'Learn the language.'})).toBeVisible();
+  if(await page.locator('#mobile-menu-toggle').isVisible())
+    await page.locator('#mobile-menu-toggle').click();
   await expect(page.getByRole('navigation', {name:'Main navigation'})).toBeVisible();
   await page.locator('#activities-menu > summary').click();
   await expect(page.getByRole('link', {name:'Flashcards',exact:true})).toBeVisible();
   await page.getByRole('button', { name: /Types of data/ }).click();
   await expect(page).toHaveURL(/#\/home\/data$/);
   await expect(page.getByRole('button', { name: /Types of data/ })).toHaveAttribute('aria-pressed','true');
+  if(await page.locator('#mobile-menu-toggle').isVisible())
+    await page.locator('#mobile-menu-toggle').click();
   await page.locator('#activities-menu > summary').click();
   await page.getByRole('link', {name:'Flashcards', exact:true}).click();
   await expect(page.getByRole('heading', {name:'Flashcards'})).toBeVisible();

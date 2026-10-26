@@ -40,6 +40,7 @@ test('compact desktop header exposes primary routes and every game through three
 });
 
 test('activity dropdown closes on Escape, outside click and route selection; active section remains clear',async({page})=>{
+ await page.setViewportSize({width:1280,height:830});
  await page.goto('/#/home/sampling');
  const menu=page.locator('#activities-menu'),summary=menu.locator('summary');
  await summary.focus();
@@ -64,6 +65,7 @@ test('activity dropdown closes on Escape, outside click and route selection; act
 });
 
 test('homepage has ten distinct, high-contrast cards in four meaningful learning stages',async({page})=>{
+ await page.setViewportSize({width:1280,height:830});
  await page.goto('/#/home/sampling');
  await expect(page.locator('.activity-stage')).toHaveCount(4);
  await expect(page.locator('.game-card')).toHaveCount(10);
@@ -91,6 +93,7 @@ test('homepage has ten distinct, high-contrast cards in four meaningful learning
 });
 
 test('data topic labels the sampling-only stages and every card still opens its existing route',async({page})=>{
+ await page.setViewportSize({width:1280,height:830});
  await page.goto('/#/home/data');
  await expect(page.locator('.activity-stage-recall .game-card')).toHaveCount(4);
  await expect(page.locator('.activity-stage-apply .stage-scope')).toContainText('switches to Sampling');
@@ -103,6 +106,7 @@ test('data topic labels the sampling-only stages and every card still opens its 
 });
 
 test('My Progress jumps from any activity to the existing topic progress panel and focuses it',async({page})=>{
+ await page.setViewportSize({width:1280,height:830});
  await page.goto('/#/cloze/data');
  await expect(page.locator('[data-progress-nav]')).toHaveAttribute('href','#/home/data');
  await page.locator('[data-progress-nav]').click();

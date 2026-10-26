@@ -21,6 +21,8 @@ test('two new games are visible and sampling-only routes stay honest', async ({p
   await expect(page.getByRole('heading',{name:'Sort It!'})).toBeVisible();
   await expect(page.locator('.activity-scope')).toContainText('Sampling methods only');
   await expect(page.locator('.classification-choice')).toHaveCount(2);
+  if(await page.locator('#mobile-menu-toggle').isVisible())
+    await page.locator('#mobile-menu-toggle').click();
   await page.locator('#activities-menu > summary').click();
   await page.getByRole('link',{name:'Which Method?',exact:true}).click();
   await expect(page).toHaveURL(/#\/identify\/sampling$/);
