@@ -1,4 +1,4 @@
-# Sampling Arcade — Multiplayer Architecture (Passes 1–5)
+# Sampling Arcade — Multiplayer Architecture (Passes 1–6)
 
 The original ten Solo Arcade games remain available at `index.html`, with their own local progress and sixteen Solo trophies. Multiplayer at `multiplayer.html` runs separately, without student accounts. Its temporary, nickname-only classrooms are coordinated by a Cloudflare Worker and SQLite-backed Durable Objects.
 
@@ -36,6 +36,8 @@ The reviewed Solo content bank is projected to the private Worker bundle in `gam
 
 See [Pass 4 modes](../docs/PASS_4_MULTIPLAYER_GAMES.md) and [Pass 5 ceremony and award criteria](../docs/PASS_5_GRAND_AWARDS_CEREMONY.md).
 
+**Pass 6 classroom options:** In the teacher lobby you may enable 2, 3 or 4 automatically balanced teams (or leave individual mode unchanged), shuffle assignments before launch, and optionally choose a Class Quest target of 70%, 80% or 90%. Team standings use **average points per member**, while team and class goals require 75% participation and at least five checked mathematical decisions. Current-question accuracy and scores stay hidden until reveal. Teachers may publish up to three short mathematical teaching points per question, after review only. These results are also recognised in team and class celebration slides without changing individual awards. See [Pass 6 team challenges and stress validation](../docs/PASS_6_TEAM_CHALLENGES.md).
+
 ## Network and safeguarding
 
 - Rooms expire automatically after three hours. Maximum of **45 players per room**.
@@ -62,4 +64,4 @@ The Cloudflare staging smoke script tests the **deployed** staging Worker and al
 
 ## Next
 
-**Pass 6 — Team Challenges, Collaborative Goals and Classroom Stress Testing.** Add optional teams with meaningful cooperation, class progress milestones, teacher feedback, and simultaneous 30–45 student reliability/accessibility trials while preserving individual server-verified scores.
+**Pass 7 — Classroom Pilot and Evidence-Led Refinement.** Run a real 15–45 student session on school devices/Wi-Fi, review accuracy and team fairness, measure reconnect and participation, gather teacher feedback and refine any unclear navigation or overly distracting elements. The synthetic 45-WebSocket automated stress test is not a substitute for this supervised trial.
