@@ -2,7 +2,7 @@
 
 A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** revision games covering sampling definitions, procedures and introductory types of data.
 
-**Unified Arcade Pass 2:** one connected experience for **Solo**, **Multiplayer** and the forthcoming **My Awards**. New premium classroom lobby, room-code sharing, teacher joining controls, live roster, projector view and clearer mathematical answer review. The Trophy Cabinet page is deliberately labelled a preview until Pass 3; it does not claim to save awards. All ten solo activities and existing browser progress remain untouched. See [Pass 2 specification](docs/PASS_2_UNIFIED_ARCADE.md).
+**Unified Arcade — Passes 2–3:** Solo, Multiplayer and [My Awards](./awards.html) are now three connected experiences. Pass 2 introduced premium classroom hosting, room-code sharing, teacher controls, the live roster and clearer mathematical review. Pass 3 added a fully working **Trophy Cabinet with 16 collectible Solo awards**, evidence-based unlock rules and local JSON backup/restore. The ten original solo games and their saved mastery remain intact. See [Unified Arcade Pass 2](docs/PASS_2_UNIFIED_ARCADE.md) and [Trophy Cabinet Pass 3](docs/PASS_3_TROPHY_CABINET.md).
 
 **Pass 7:** a clearer route from vocabulary to exam responses, contextual next-activity guidance, three student-chosen Exam Lab difficulty paths, and an optional offline classroom feedback form. The 46-question bank and all ten games remain in place; no student writing or feedback is sent anywhere automatically.
 
@@ -20,16 +20,17 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 - **Speed Recall** asks for a term from its definition; choose untimed ten-term practice (eight for Types of Data) or 30-, 60- and 90-second timed challenges. The timer pauses during feedback and when the tab is hidden.
 - Typos can prompt one spelling correction, but are **never automatically credited**. Only curated mathematical synonyms are accepted.
 - **Sort It!**, **Which Method?**, **Build the Method**, **Spot the Error**, **Contextual Reasoning** and **Exam Lab** are sampling-only. The four recall games support Sampling, Types of data and Mixed revision.
+- **My Awards / Trophy Cabinet** offers 16 quirky collectible mathematical trophies. Checked achievements require appropriate first-attempt, unassisted mathematical evidence; writing effort and flashcard confidence are clearly identified as ungraded practice. Earned awards are stored separately on this browser; use the Cabinet to view progress, filter collectibles, export, merge/restore and reset awards without altering Solo progress or exam-writing drafts.
 - **Exam Lab** offers balanced 4-, 8- or 12-question papers at **Build confidence**, **Mixed progression** or **Stretch** levels. Questions increase in difficulty through each paper. Exact proportional allocations and systematic calculations are checked; written procedures and explanations are self-reviewed using audited models. Hinted numerical answers remain practice, not independent mastery. Reports can be printed or exported locally.
 - The homepage offers **four goal-based routes** and a suggestion based only on the progress saved in this browser. Every completed mini-game recommends an optional next activity; Exam Lab reports explain how to follow up.
 - The optional **Classroom feedback** section downloads a plain-text response for students to share if they choose. There are no names, logins, analytics or automatic submissions. Do not enter personally identifying information.
-- Local progress tracks formative practice. Mastery is a revision indicator requiring two consecutive credited checks; a flashcard “Know it” is self-rated, not externally marked. Ungraded written self-review counts as practice without cancelling an existing mastery streak. Corrected Match Up pairs cannot earn first-try credit. Use Reset my progress to clear this browser's saved information.
+- Local learning progress tracks formative practice. Mastery requires two consecutive credited checks; a flashcard “Know it” is self-rated, not externally marked. Ungraded written review counts as practice without cancelling mastery streaks, and corrected Match Up pairs cannot earn first-try credit. **Reset my progress** clears learning and exam-writing progress, but not the separately saved Trophy Cabinet.
 
-## Classroom multiplayer (Pass 1)
+## Classroom multiplayer (Passes 1–2)
 
 The original solo revision arcade and its locally saved progress remain unchanged. The first classroom multiplayer mode lives at [Multiplayer](./multiplayer.html), using temporary six-digit room codes and nicknames without student sign-in. Teachers can create 5-, 10- or 20-question **Which Method?** challenges, reveal reviewed mathematical explanations, and see a live leaderboard. The host and students can use separate devices, including mobile phones.
 
-Cloudflare Workers and SQLite-backed Durable Objects handle rooms and **hibernatable WebSocket** updates. The server validates answer keys, grading, timing and teacher-only actions; temporary rooms expire after three hours. The system avoids continuous polling while WebSockets are working. This first pass does **not** include collectible awards or the awards ceremony; those are scheduled for later passes.
+Cloudflare Workers and SQLite-backed Durable Objects handle rooms and **hibernatable WebSocket** updates. The server validates answer keys, grading, timing and teacher-only actions; temporary rooms expire after three hours. The system avoids continuous polling while WebSockets are working. **Solo awards are available now**, but multiplayer achievements and the synchronised awards ceremony are reserved for later multiplayer passes.
 
 See [the multiplayer setup and quality guide](./multiplayer/README.md) for testing, deployment, security and classroom trial instructions.
 
@@ -52,9 +53,11 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-GitHub Actions runs both unit/content validation and Chromium browser tests for PRs. **One-time publishing setup:** open Repository Settings → Pages → Build and deployment → Source: **GitHub Actions**. The `.github/workflows/deploy-pages.yml` workflow then publishes the site on the next push to `main` (or a manual workflow dispatch). The site's URL is not active until a deployment succeeds.
+GitHub Actions runs unit/content validation, desktop/mobile Chromium browser tests and Cloudflare staging multiplayer smoke tests. The published site is available at the URL above through the successful `.github/workflows/deploy-pages.yml` workflow. `node scripts/build-pages.mjs` validates the static publish artifact and keeps Cloudflare Worker backend files out of GitHub Pages.
 
 ## Source & project notes
+- [Pass 3 Trophy Cabinet: 16 awards, fairness rules, offline storage and backup/restore](docs/PASS_3_TROPHY_CABINET.md)
+- [Pass 2 Unified Arcade: shared navigation, classroom hosting and release checks](docs/PASS_2_UNIFIED_ARCADE.md)
 - [Premium Match Up: interaction, animations, mobile accessibility and tests](docs/MATCH_UP_PREMIUM.md)
 - [Premium Flashcards: flip animation, accessibility, review and classroom checks](docs/FLASHCARDS_PREMIUM.md)
 - [UI Pass 3 responsive and accessibility audit](docs/UI_PASS_3.md)
@@ -74,4 +77,4 @@ GitHub Actions runs both unit/content validation and Chromium browser tests for 
 
 All content is independently worded for teaching, rather than copied verbatim from textbooks. This site is not affiliated with or endorsed by Pearson.
 
-**Next: Pass 8 — prioritise evidence from a real classroom trial, then refine any weak navigation, unclear feedback or over/under-challenging tasks. Pass 7 provides the trial-ready workflow; it does not claim to have observed real students.**
+**Next multiplayer roadmap:** Pass 4 extends classroom competitions to Speed Recall, Match Up and Sort It!; Pass 5 adds the Grand Awards Ceremony with verified multiplayer awards, a podium and synchronised reveals. The earlier Solo Arcade Pass 7 classroom-trial recommendations remain documented in `docs/PASS_7_CLASSROOM_TRIAL.md`.
