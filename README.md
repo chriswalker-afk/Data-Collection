@@ -26,9 +26,9 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 - The optional **Classroom feedback** section downloads a plain-text response for students to share if they choose. There are no names, logins, analytics or automatic submissions. Do not enter personally identifying information.
 - Local learning progress tracks formative practice. Mastery requires two consecutive credited checks; a flashcard “Know it” is self-rated, not externally marked. Ungraded written review counts as practice without cancelling mastery streaks, and corrected Match Up pairs cannot earn first-try credit. **Reset my progress** clears learning and exam-writing progress, but not the separately saved Trophy Cabinet.
 
-## Classroom multiplayer (Passes 1–2)
+## Classroom multiplayer (Passes 1–4)
 
-The original solo revision arcade and its locally saved progress remain unchanged. The first classroom multiplayer mode lives at [Multiplayer](./multiplayer.html), using temporary six-digit room codes and nicknames without student sign-in. Teachers can create 5-, 10- or 20-question **Which Method?** challenges, reveal reviewed mathematical explanations, and see a live leaderboard. The host and students can use separate devices, including mobile phones.
+The ten Solo Arcade games and their saved progress remain unchanged. [Multiplayer Arena](./multiplayer.html) now has four classroom modes: **Which Method?**, **Speed Recall**, **Match Up** and **Sort It!**. The teacher chooses a game and length, shares a temporary six-digit code, and controls the start, locking/removal, mathematical answer reveal and subsequent questions. Student devices join by nickname without sign-in. Typed recall, matched pairs and sorting boards are all marked server-side.
 
 Cloudflare Workers and SQLite-backed Durable Objects handle rooms and **hibernatable WebSocket** updates. The server validates answer keys, grading, timing and teacher-only actions; temporary rooms expire after three hours. The system avoids continuous polling while WebSockets are working. **Solo awards are available now**, but multiplayer achievements and the synchronised awards ceremony are reserved for later multiplayer passes.
 
@@ -56,6 +56,7 @@ npm run test:e2e
 GitHub Actions runs unit/content validation, desktop/mobile Chromium browser tests and Cloudflare staging multiplayer smoke tests. The published site is available at the URL above through the successful `.github/workflows/deploy-pages.yml` workflow. `node scripts/build-pages.mjs` validates the static publish artifact and keeps Cloudflare Worker backend files out of GitHub Pages.
 
 ## Source & project notes
+- [Pass 4 Multiplayer: Speed Recall, Match Up, Sort It!, scoring and classroom reliability](docs/PASS_4_MULTIPLAYER_GAMES.md)
 - [Pass 3 Trophy Cabinet: 16 awards, fairness rules, offline storage and backup/restore](docs/PASS_3_TROPHY_CABINET.md)
 - [Pass 2 Unified Arcade: shared navigation, classroom hosting and release checks](docs/PASS_2_UNIFIED_ARCADE.md)
 - [Premium Match Up: interaction, animations, mobile accessibility and tests](docs/MATCH_UP_PREMIUM.md)
@@ -77,4 +78,4 @@ GitHub Actions runs unit/content validation, desktop/mobile Chromium browser tes
 
 All content is independently worded for teaching, rather than copied verbatim from textbooks. This site is not affiliated with or endorsed by Pearson.
 
-**Next multiplayer roadmap:** Pass 4 extends classroom competitions to Speed Recall, Match Up and Sort It!; Pass 5 adds the Grand Awards Ceremony with verified multiplayer awards, a podium and synchronised reveals. The earlier Solo Arcade Pass 7 classroom-trial recommendations remain documented in `docs/PASS_7_CLASSROOM_TRIAL.md`.
+**Next multiplayer roadmap:** Pass 5 adds the Grand Awards Ceremony with server-verified multiplayer achievements, a podium and synchronised reveals; Pass 6 develops team challenges, collaborative class goals and classroom-scale resilience. The earlier Solo Arcade Pass 7 classroom-trial recommendations remain documented in `docs/PASS_7_CLASSROOM_TRIAL.md`.

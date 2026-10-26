@@ -79,3 +79,59 @@ const cross=await request('GET','/rooms/'+host.code+'/state');
 assert.equal(cross.status,401);
 h.ws.close(1000,'Smoke test done');
 console.log('PASS: Cloudflare staging WebSocket, join lock/unlock/removal, question privacy, scoring and host permissions.');
+
+const concepts=JSON.parse(readFileSync(new URL('../content/concepts.json',import.meta.url),'utf8')).concepts;
+const evaluations=JSON.parse(readFileSync(new URL('../content/evaluations.json',import.meta.url),'utf8')).evaluations;
+const evaluationIndex=Object.fromEntries(evaluations.map(item=>[item.id,item]));
+for(const game of ['speed','match','sort']){
+  const length=game==='speed'?5:1;
+  const room=expectStatus(await request('POST','/rooms',{roundLength:length,game}),201,'create '+game);
+  const student=expectStatus(await request('POST','/rooms/'+room.code+'/join',{name:'Mode '+game}),201,'join '+game);
+  const basePath='/rooms/'+room.code;
+  const lobby=expectStatus(await request('GET',basePath+'/state',undefined,student.token),200,game+' lobby');
+  assert.equal(lobby.game,game);
+  assert.equal(lobby.questionSeconds,{speed:25,match:75,sort:90}[game]);
+  const forbidden=await request('POST',basePath+'/command',{type:'start'},student.token);
+  assert.equal(forbidden.status,400,'student cannot start');
+  expectStatus(await request('POST',basePath+'/command',{type:'start'},room.token),200,'start '+game);
+  const playing=expectStatus(await request('GET',basePath+'/state',undefined,student.token),200,game+' question');
+  assert.equal(playing.question.total,length);
+  for(const secret of ['correctMethod','correctDestination','correctTerm','answerKey','solutions','sourceId'])
+    assert.ok(!JSON.stringify(playing).includes('"'+secret+'"'),game+' must not leak '+secret);
+  let answer;
+  if(game==='speed'){
+    const source=concepts.find(x=>x.id===playing.question.id);
+    assert.ok(source&&source.definition===playing.question.prompt);
+    answer={response:source.label};
+  }else if(game==='match'){
+    const q=playing.question;
+    assert.equal(q.terms.length,6);
+    answer={pairs:Object.fromEntries(q.terms.map(term=>{
+      const definition=concepts.find(c=>c.id===term.id).definition;
+      const index=q.definitions.find(d=>d.text===definition);
+      assert.ok(index,'audited definition present');
+      return [term.id,index.id];
+    }))};
+    const invalid=await request('POST',basePath+'/command',{type:'answer',pairs:{}},student.token);
+    assert.equal(invalid.status,400);
+  }else{
+    const q=playing.question;
+    assert.equal(q.destinations.length,4);
+    answer={placements:Object.fromEntries(q.statements.map(item=>{
+      const source=evaluationIndex[item.id];assert.ok(source);
+      return [item.id,source.subject+':'+source.polarity];
+    }))};
+  }
+  expectStatus(await request('POST',basePath+'/command',{type:'answer',...answer},student.token),200,'grade '+game);
+  assert.equal((await request('POST',basePath+'/command',{type:'answer',...answer},student.token)).status,400);
+  expectStatus(await request('POST',basePath+'/command',{type:'reveal'},room.token),200,'reveal '+game);
+  const review=expectStatus(await request('GET',basePath+'/state',undefined,student.token),200,'review '+game);
+  assert.equal(review.reveal.answers[0].correctCount,review.reveal.answers[0].total);
+  assert.ok(review.reveal.answers[0].points>=1000);
+  if(game==='match')assert.equal(review.reveal.solutions.length,6);
+  if(game==='sort')assert.equal(review.reveal.solutions.length,playing.question.statements.length);
+  if(game==='speed')assert.ok(review.reveal.correctTerm);
+  expectStatus(await request('POST',basePath+'/command',{type:'close'},room.token),200,'close '+game);
+}
+console.log('PASS: Cloudflare Pass 4 Speed Recall, Match Up and Sort It! staging scoring, privacy and authorisation.');
+

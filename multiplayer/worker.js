@@ -1,6 +1,7 @@
 import {DurableObject} from 'cloudflare:workers';
 import {SCENARIOS} from './scenarios.js';
-import {METHODS,ROUND_LENGTHS,cleanNickname,balancedRound,scoreAnswer,publicQuestion,secureIndex} from './rules.js';
+import {ROUND_LENGTHS,cleanNickname,secureIndex} from './rules.js';
+import {GAME_MODES,validLength,questionTimeMs,makeGameDeck,safeGameQuestion,revealGameAnswer,gradeGameAnswer} from './modes.js';
 
 // A separate, short-lived classroom service; no student identities or logins.
 const LIVE_ORIGIN='https://chriswalker-afk.github.io';
@@ -60,21 +61,26 @@ async function smallJSON(request){
   return parsed;
 }
 function publicState(room,participant,now,connections){
+  const game=room.game||'which'; // Pass 1/2 rooms remain compatible.
   const question=room.status==='playing'?room.deck[room.index]:null;
   const revealed=room.status==='reveal'?room.deck[room.index]:null;
   return {
-    code:room.code,status:room.status,roundLength:room.roundLength,locked:Boolean(room.locked),
+    code:room.code,status:room.status,game,roundLength:room.roundLength,
+    questionSeconds:questionTimeMs(game)/1000,locked:Boolean(room.locked),
     players:room.players.map(p=>({
       id:p.id,name:p.name,score:p.score,online:connections.has(p.id),
       answered:room.answers.some(a=>a.id===p.id)
     })),
     me:{id:participant.id,name:participant.name,host:participant.host===true},
     question:question?{index:room.index+1,total:room.deck.length,
-      ...publicQuestion(question),deadline:room.deadline,serverNow:now}:null,
+      ...safeGameQuestion(game,question),deadline:room.deadline,serverNow:now}:null,
     reveal:revealed?{index:room.index+1,total:room.deck.length,
-      question:publicQuestion(revealed),correctMethod:revealed.correctMethod,
-      reason:revealed.reason,contrast:revealed.contrast,
-      answers:room.answers.map(a=>({id:a.id,method:a.method,points:a.points}))}:null,
+      question:safeGameQuestion(game,revealed),
+      ...revealGameAnswer(game,revealed),
+      answers:room.answers.map(a=>({
+        id:a.id,points:a.points,correctCount:a.correctCount,total:a.total,
+        ...(game==='which'?{method:a.method}:{})
+      }))}:null,
     finished:room.status==='finished'?{total:room.deck.length}:null
   };
 }
@@ -96,10 +102,10 @@ export class GameRoom extends DurableObject{
       await this.ctx.storage.setAlarm(next.until+2000);
     return true;
   }
-  async create(code,roundLength){
+  async create(code,roundLength,game='which'){
     if(this.room()||this.ctx.storage.kv.get('room'))return {error:'Room code already in use'};
-    if(!ROUND_LENGTHS.includes(roundLength))return {error:'Invalid round length'};
-    const room={code,status:'lobby',created:Date.now(),roundLength,locked:false,
+    if(!validLength(game,roundLength))return {error:'Invalid game or round length'};
+    const room={code,status:'lobby',created:Date.now(),game,roundLength,locked:false,
       hostToken:crypto.randomUUID(),players:[],deck:[],index:0,deadline:0,answers:[]};
     this.save(room);
     await this.ctx.storage.setAlarm(room.created+ROOM_TTL_MS);
@@ -171,16 +177,18 @@ export class GameRoom extends DurableObject{
       }
     }else if(command.type==='start'&&person.host&&room.status==='lobby'){
       if(room.players.length===0)return {error:'At least one student must join'};
-      room.deck=balancedRound(SCENARIOS,room.roundLength);room.index=0;room.answers=[];
-      room.status='playing';room.deadline=Date.now()+QUESTION_MS;
+      room.deck=makeGameDeck(room.game||'which',room.roundLength,SCENARIOS);room.index=0;room.answers=[];
+      room.status='playing';room.deadline=Date.now()+questionTimeMs(room.game||'which');
     }else if(command.type==='answer'&&!person.host&&room.status==='playing'){
-      if(!METHODS.includes(command.method))return {error:'Choose one of the five sampling methods'};
       if(Date.now()>=room.deadline)return {error:'Time is up'};
       if(room.answers.some(a=>a.id===person.id))return {error:'Answer already submitted'};
-      const correct=room.deck[room.index].correctMethod===command.method;
-      const points=scoreAnswer(correct,QUESTION_MS-(room.deadline-Date.now()),QUESTION_MS);
-      room.answers.push({id:person.id,method:command.method,points});
-      const player=room.players.find(p=>p.id===person.id);player.score+=points;
+      const game=room.game||'which',duration=questionTimeMs(game);
+      const elapsed=Math.max(0,Math.min(duration,duration-(room.deadline-Date.now())));
+      const graded=gradeGameAnswer(game,room.deck[room.index],command,elapsed,duration);
+      if(graded.error)return {error:graded.error};
+      room.answers.push({id:person.id,...graded});
+      const player=room.players.find(p=>p.id===person.id);
+      player.score+=graded.points;
     }else if(command.type==='reveal'&&person.host&&room.status==='playing'){
       if(Date.now()<room.deadline&&room.answers.length<room.players.length)
         return {error:'Wait until everyone has answered or the timer finishes'};
@@ -188,7 +196,7 @@ export class GameRoom extends DurableObject{
     }else if(command.type==='next'&&person.host&&room.status==='reveal'){
       room.index+=1;room.answers=[];
       room.status=room.index>=room.deck.length?'finished':'playing';
-      room.deadline=room.status==='playing'?Date.now()+QUESTION_MS:0;
+      room.deadline=room.status==='playing'?Date.now()+questionTimeMs(room.game||'which'):0;
     }else if(command.type==='close'&&person.host&&room.status!=='finished'){
       room.status='finished';room.deadline=0;
     }else{return {error:'Action not available'};}
@@ -255,19 +263,19 @@ export default {
     }
     const url=new URL(request.url);
     if(url.pathname==='/health'&&request.method==='GET')
-      return json(request,{ok:true,service:'sampling-arcade-multiplayer',version:2,transport:'websocket'});
+      return json(request,{ok:true,service:'sampling-arcade-multiplayer',version:4,transport:'websocket',games:Object.keys(GAME_MODES)});
     if(url.pathname==='/rooms'&&request.method==='POST'){
       let body;try{body=await smallJSON(request);}catch(e){return fail(request,e.message==='Request too large'?e.message:'Invalid JSON',e.message==='Request too large'?413:400);}
-      const roundLength=Number(body.roundLength);
-      if(!ROUND_LENGTHS.includes(roundLength))return fail(request,'Choose 5, 10 or 20 questions');
+      const roundLength=Number(body.roundLength),game=body.game===undefined?'which':body.game;
+      if(!validLength(game,roundLength))return fail(request,'Choose a valid game and round length');
       const key=await fingerprint(request);
       const limiter=env.ROOMS.getByName('limiter:rooms:'+key);
-      if(!await limiter.allowRate('create',12,5*60_000))return fail(request,'Room creation limit reached; try again later',429);
+      if(!await limiter.allowRate('create',18,5*60_000))return fail(request,'Room creation limit reached; try again later',429);
       const global=env.ROOMS.getByName('limiter:global');
       if(!await global.allowRate('create',120,60_000))return fail(request,'Classroom service is busy',429);
       for(let attempt=0;attempt<10;attempt++){
         const code=pickCode();
-        const result=await env.ROOMS.getByName('room-'+code).create(code,roundLength);
+        const result=await env.ROOMS.getByName('room-'+code).create(code,roundLength,game);
         if(result.code)return json(request,result,201);
       }
       return fail(request,'Could not allocate a room',503);
