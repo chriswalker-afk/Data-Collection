@@ -127,10 +127,13 @@ test('45-student room: concurrent joins, WebSocket fanout, answers, reconnects a
           const ws=new WebSocket('ws://127.0.0.1:8787/rooms/'+code+'/ws?id='+t.participantId+'&ticket='+t.ticket);
           window.__stressSockets[t.participantId]=ws;
           const timeout=setTimeout(()=>reject(new Error('Reconnect timeout')),12000);
+          let settled=false;
           ws.onmessage=ev=>{
             const update=JSON.parse(ev.data);
             if(update.type==='state'){
               window.__stressStates[t.participantId]=update.data;
+              if(settled)return;
+              settled=true;
               clearTimeout(timeout);count++;resolve();
             }
           };
