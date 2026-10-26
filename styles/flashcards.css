@@ -237,3 +237,100 @@
   .flash-page .flashcard.is-flipped .flash-face-back {display:flex; transform:none;}
   .flash-page .flash-grade-panel,.flash-page .flash-deck-footer {display:none!important;}
 }
+
+
+/* Extension: evaluated strengths/limitations, and a complete, unscored card library. */
+.flash-page .flash-front-evaluation{font-size:clamp(1.55rem,3.4vw,2.35rem);}
+.flash-page .flash-evaluation-points{display:grid;gap:10px;width:100%;margin:7px 0 14px;}
+.flash-page .flash-evaluation-point{
+  display:grid;grid-template-columns:29px minmax(0,1fr);align-items:start;gap:10px;
+  padding:10px 12px;border:1px solid #d0e5d9;border-radius:12px;
+  background:rgba(255,255,255,.78);
+}
+.flash-page .flash-evaluation-number{
+  color:#357d63;font-weight:850;font-size:.75rem;letter-spacing:.08em;padding-top:2px;
+}
+.flash-page .flash-evaluation-content{display:grid;gap:4px;min-width:0;}
+.flash-page .flash-evaluation-claim{
+  font-size:clamp(.85rem,1.55vw,1rem);line-height:1.4;font-weight:750;color:#194940;
+}
+.flash-page .flash-evaluation-reason{font-size:.78rem;line-height:1.45;color:#47695e;}
+.flash-page .flash-evaluation-tip{font-size:.76rem;line-height:1.5;color:#446b5e;margin:4px 0 0;}
+.flash-page .flash-toolbar{flex-wrap:wrap;gap:12px;}
+.flash-browser{max-width:1120px;margin:0 auto;padding:16px 0 36px;}
+.flash-browser-intro{
+  border:1px solid #bbd8c8;border-radius:20px;padding:clamp(18px,3vw,29px);
+  background:linear-gradient(115deg,#e8f4eb,#f8fbf6);
+}
+.flash-browser-title{font-size:clamp(1.5rem,2.8vw,2.2rem);margin:7px 0;color:#164b44;}
+.flash-browser-description{max-width:65ch;line-height:1.6;color:#3d6456;margin:0;}
+.flash-browser-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:17px;}
+.flash-browser-tools{
+  display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.85fr) auto;
+  gap:9px 12px;align-items:end;margin:23px 0 13px;
+}
+.flash-browser-tools label{color:#315e50;font-size:.82rem;font-weight:800;}
+.flash-browser-tools label:first-child{grid-column:1;}
+.flash-browser-tools label:nth-of-type(2){grid-column:2;}
+.flash-browser-tools input,.flash-browser-tools select{
+  width:100%;min-width:0;min-height:44px;box-sizing:border-box;
+  border:1px solid #92bbaa;border-radius:11px;background:#fff;
+  color:#1b4841;padding:9px 12px;font:inherit;
+}
+.flash-browser-tools input{grid-column:1;grid-row:2;}
+.flash-browser-tools select{grid-column:2;grid-row:2;}
+.flash-browser-tools button{grid-column:3;grid-row:2;min-height:44px;}
+.flash-browser-tools input:focus-visible,.flash-browser-tools select:focus-visible{
+  outline:3px solid #c18d43;outline-offset:2px;
+}
+.flash-browser-count{color:#436e60;font-size:.86rem;font-weight:750;margin:8px 0 19px;}
+.flash-browser-empty{padding:20px;border:1px dashed #a7c6b9;border-radius:12px;color:#305e51;}
+.flash-browser-group{margin:25px 0 31px;}
+.flash-browser-group[hidden],.flash-library-card[hidden],.flash-browser-empty[hidden]{display:none!important;}
+.flash-browser-group-title{margin:0 0 5px;color:#164c42;font-size:1.26rem;}
+.flash-browser-group-detail{margin:0 0 14px;color:#507669;font-size:.88rem;}
+.flash-browser-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:12px;}
+.flash-library-card{
+  background:#fff;border:1px solid #afcdbf;border-radius:14px;
+  overflow:hidden;box-shadow:0 3px 12px rgba(20,65,50,.045);min-width:0;
+}
+.flash-library-card[open]{border-color:#76b09b;box-shadow:0 5px 20px rgba(20,65,50,.08);}
+.flash-library-summary{
+  display:flex;justify-content:space-between;align-items:center;gap:15px;
+  cursor:pointer;padding:17px 18px;min-height:60px;color:#1c4b42;
+}
+.flash-library-summary:focus-visible{outline:3px solid #c18d43;outline-offset:-4px;border-radius:12px;}
+.flash-library-summary::marker{color:#43876c;}
+.flash-library-title{font-weight:780;line-height:1.38;overflow-wrap:anywhere;}
+.flash-library-toggle{
+  flex:0 0 auto;color:#28745b;font-size:.74rem;font-weight:800;
+  border:1px solid #cce2d5;background:#eaf5ee;border-radius:8px;padding:5px 8px;
+}
+.flash-library-card[open] .flash-library-toggle{font-size:0;}
+.flash-library-card[open] .flash-library-toggle::after{content:'Hide answer';font-size:.74rem;}
+.flash-library-body{padding:14px 17px 18px;background:#f5faf6;border-top:1px solid #d8e9dc;}
+.flash-library-answer{font-weight:720;color:#1d5547;line-height:1.55;margin:0 0 11px;}
+.flash-library-notes{display:grid;gap:6px;}
+.flash-library-notes p{font-size:.79rem;line-height:1.5;color:#416d5b;margin:0;}
+.flash-library-body .flash-evaluation-point{background:#fff;}
+@media(max-width:750px){
+  .flash-browser-items{grid-template-columns:1fr;}
+  .flash-browser-tools{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
+  .flash-browser-tools button{grid-column:1 / -1;grid-row:3;justify-self:start;}
+}
+@media(max-width:500px){
+  .flash-browser-tools{grid-template-columns:minmax(0,1fr);gap:8px;}
+  .flash-browser-tools label:first-child{grid-column:1;grid-row:1;}
+  .flash-browser-tools input{grid-column:1;grid-row:2;}
+  .flash-browser-tools label:nth-of-type(2){grid-column:1;grid-row:3;margin-top:7px;}
+  .flash-browser-tools select{grid-column:1;grid-row:4;}
+  .flash-browser-tools button{grid-column:1;grid-row:5;}
+  .flash-library-summary{padding:13px;min-height:50px;}
+  .flash-library-toggle{font-size:.69rem;}
+  .flash-page .flash-evaluation-point{padding:9px 9px;gap:5px;grid-template-columns:24px minmax(0,1fr);}
+  .flash-page .flash-evaluation-reason{font-size:.74rem;}
+}
+@media print{
+  .flash-browser-tools,.flash-browser-actions{display:none!important;}
+  .flash-library-card{break-inside:avoid;box-shadow:none;}
+}
