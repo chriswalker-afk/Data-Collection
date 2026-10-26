@@ -72,7 +72,7 @@ function element(tag, attributes = {}, ...children) {
   return node;
 }
 function div(cls, ...children) { return element('div', { className: cls }, ...children); }
-function span(cls, text) { return element('span', { className: cls }, text); }
+function span(cls, ...children) { return element('span', { className: cls }, ...children); }
 function paragraph(cls, text) { return element('p', { className: cls }, text); }
 function heading(level, cls, text, attributes = {}) { return element('h' + level, { className: cls, ...attributes }, text); }
 function action(label, actionName, attrs = {}, cls = 'btn btn-primary') {
@@ -1091,7 +1091,8 @@ function flipCurrentFlashcard(){
   button.querySelector('.flash-face-back')?.setAttribute('aria-hidden',String(!session.revealed));
   const gradePanel=mount.querySelector('.flash-grade-panel');
   if(gradePanel)gradePanel.hidden=!session.revealed;
-  announce(session.revealed?'Answer revealed. Rate Again, Nearly or Know it.':'Prompt shown.');
+  announce(session.revealed?'Answer: '+(session.reversed?current.label:current.definition)+
+    '. Rate Again, Nearly or Know it.':'Prompt shown.');
 }
 
 function advanceFlash() {
