@@ -205,6 +205,7 @@ function render(){
   $('room-lock').classList.toggle('is-locked',closed);
   $('room-meta').textContent='Which Method? · '+room.roundLength+' questions';
   $('player-count').textContent=room.players.length+' / 45';
+  $('players-heading').textContent=room.status==='lobby'?'Classroom roster':'Live leaderboard';
   $('roster-help').textContent=isHost?(room.status==='lobby'?
     'You control who joins. You can remove a nickname before starting.':
     'Scores and submissions update live on every connected device.'):
