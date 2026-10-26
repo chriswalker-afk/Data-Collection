@@ -2,7 +2,7 @@ import {test,expect} from '@playwright/test';
 
 const games=['flashcards','match','cloze','sort','identify','speed','build','error','reason','exam'];
 const views={flashcards:'.flashcard',match:'.match-columns',cloze:'.cloze-panel',
-  sort:'.classification-panel',identify:'.classification-panel',speed:'.recall-panel',
+  sort:'.sort-workspace',identify:'.classification-panel',speed:'.recall-panel',
   build:'.exam-workspace',error:'.exam-workspace',reason:'.exam-workspace',exam:'.sim-landing'};
 const checkWidth=async(page,route,width)=>{
  const sizes=await page.evaluate(()=>({document:document.documentElement.scrollWidth,
