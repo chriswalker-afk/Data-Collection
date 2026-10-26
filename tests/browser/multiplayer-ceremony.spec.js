@@ -33,8 +33,9 @@ async function state(request,code,secret){
 async function command(request,code,secret,action,codeExpected=200){
   const res=await request.post(route(code)+'/command',{
     headers:{Authorization:'Bearer '+secret},data:action});
-  expect(res.status(),JSON.stringify(await res.clone().json())).toBe(codeExpected);
-  return res.json();
+  const result=await res.json();
+  expect(res.status(),JSON.stringify(result)).toBe(codeExpected);
+  return result;
 }
 test('teacher leads fully synchronized Match Up ceremony, podium and locally saved keepsakes',async({page,browser,request})=>{
   const student=await browser.newPage({viewport:{width:390,height:844}});
