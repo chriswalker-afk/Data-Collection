@@ -7,8 +7,8 @@ import {
   recordAnswer, recordSession, progressForTopic
 } from './progress.js';
 import {
-  METHOD_ORDER, METHOD_LABELS, SORT_LABELS, ROUND_LENGTHS,
-  categoryLabel, conceptIdForSubject, makeSortRound, makeScenarioRound
+  METHOD_ORDER, METHOD_LABELS, ROUND_LENGTHS,
+  categoryLabel, conceptIdForSubject, makeScenarioRound
  } from './phase2.js';
 import {
   CLOZE_LEVELS, SPEED_MODES, SPEED_DURATIONS, gradeCloze, gradeTerm,
@@ -23,6 +23,8 @@ import {guideForActivity} from './activity-guidance.js';
 import {makeFlashSession,rateFlashSession,skipFlashSession,makeFlashReviewSession,flashCardLabel} from './flashcards.js';
 import {chooseMatch,matchNextStep,matchStatus,MATCH_MOTION_MS} from './match-up.js';
 import {clozePresentation} from './cloze-ui.js';
+import {makePairSortRound,validatePairBank} from './sort-it.js';
+import {createSortItUI} from './sort-ui.js';
 import {speedClockPercent,speedRoundSummary,speedReviewDeck,SPEED_CAUTION_MS} from './speed-ui.js';
 
 const mount = document.getElementById('app');
@@ -34,7 +36,7 @@ let persistenceAvailable = true;
 let topic = 'sampling';
 let mode = 'home';
 let session = null;
-let sortRoundId = 'sort-srs';
+let sortRoundId = 'pair-srs-stratified';
 let scenarioLength = 10;
 let clozeLevel = 'choices';
 let speedMode = 'untimed';
@@ -305,7 +307,7 @@ function showCompletion(game) {
       (session.finishedReason === 'time' ? ' · Time is up' : '')
     : game === 'flashcards' ? session.correct + ' confident recalls out of ' + session.items.length + ' cards'
     : game === 'match' ? 'All ' + session.terms.length + ' pairs matched · ' + session.mistakes + ' incorrect attempts'
-    : game === 'sort' ? session.correct + ' of ' + session.items.length + ' statements sorted correctly'
+    : game === 'sort' ? session.correct + ' of ' + session.items.length + ' statements placed correctly on the first check'
     : game === 'identify' ? session.correct + ' of ' + session.items.length + ' scenarios identified correctly'
     : game === 'build' ? session.correct + ' of ' + session.methods.length + ' procedures correct on first check'
     : game === 'error' ? session.correct + ' of ' + session.items.length + ' errors diagnosed and repaired'
@@ -863,26 +865,6 @@ function resolveSpeed(value, skipped=false) {
 }
 
 
-function sortSetPicker() {
-  const wrap = div('game-settings');
-  const label = element('label', { for: 'sort-set', className: 'game-settings-label' }, 'Choose a sorting set');
-  const select = element('select', { id: 'sort-set', className: 'game-select', 'data-control': 'sort-round' });
-  const groups = [
-    ['Census and sample', data.rounds.filter(r => r.type === 'polarity' && (r.subject === 'census' || r.subject === 'sample'))],
-    ['Sampling methods', data.rounds.filter(r => r.type === 'polarity' && r.subject !== 'census' && r.subject !== 'sample')],
-    ['Compare methods', data.rounds.filter(r => r.type === 'comparison')]
-  ];
-  for (const [labelText, choices] of groups) {
-    const group = element('optgroup', { label: labelText });
-    for (const item of choices) {
-      group.append(element('option', { value: item.id, selected: item.id === sortRoundId },
-        SORT_LABELS[item.id] || item.id));
-    }
-    select.append(group);
-  }
-  wrap.append(label, select);
-  return wrap;
-}
 function scenarioSetPicker() {
   const wrap = div('game-settings');
   const label = element('label', { for: 'scenario-length', className: 'game-settings-label' }, 'Questions per round');
@@ -944,21 +926,7 @@ function classificationCard(kind) {
   }
   return root;
 }
-function sortView() {
-  const root = div('page activity-page');
-  root.append(activityTop('sort'), sortSetPicker());
-  if (session.complete) { root.append(showCompletion('sort')); return root; }
-  const number = session.index + 1;
-  root.append(
-    div('round-controls',
-      roundProgress(number, session.items.length, 'Statement ' + number + ' of ' + session.items.length),
-      span('quiet-tag', session.correct + ' correct')
-    ),
-    practiceGuide('sort',{comparison:session.round.type==='comparison'}),
-    classificationCard('sort')
-  );
-  return root;
-}
+function sortView(){return sortUI.view();}
 function identifyView() {
   const root = div('page activity-page');
   root.append(activityTop('identify'), scenarioSetPicker());
@@ -975,18 +943,17 @@ function identifyView() {
   return root;
 }
 function answerClassification(choice) {
-  if (session.answered || session.complete) return;
+  if(mode!=='identify'||session.answered||session.complete)return;
   const item = session.items[session.index];
-  const answer = mode === 'sort' ? item.correctCategory : item.correctMethod;
-  const concept = conceptIdForSubject(
-    mode === 'sort' ? item.conceptSubject : item.correctMethod, data.methods);
+  const answer = item.correctMethod;
+  const concept = conceptIdForSubject(item.correctMethod,data.methods);
   const right = choice === answer;
   session.choice = choice;
   session.answered = true;
   if (right) session.correct += 1;
   remember(concept, right);
   render('.classification-feedback');
-  const explanation = mode === 'identify' ? item.reason : item.explanation;
+  const explanation = item.reason;
   announce((right ? 'Correct. ' : 'Not quite. The answer is ' + categoryLabel(answer) + '. ') + explanation);
 }
 function nextClassification() {
@@ -1155,6 +1122,13 @@ function examAction(command,button){
  if(command==='reason-next'&&mode==='reason'&&session.answered){examAdvance();return;}
 }
 
+const sortUI=createSortItUI({
+  mount,element,div,span,paragraph,heading,action,activityTop,roundProgress,
+  practiceGuide,feedbackBanner,showCompletion,
+  getState:()=>({data,session,mode}),
+  render,announce,finishRound,
+  remember:(subject,correct)=>remember(conceptIdForSubject(subject,data.methods),correct)
+});
 const examSimulator=createExamSimulationUI({
   element,div,span,paragraph,heading,action,link,icon,activityTop,roundProgress,
   getState:()=>({data,session,examState:examStore}),
@@ -1189,6 +1163,7 @@ function render(focusTarget) {
 }
 function restartGame(){
   if(matchSettleTimer!==null){clearTimeout(matchSettleTimer);matchSettleTimer=null;}
+  sortUI.clearDrag();
   if (mode === 'flashcards') {
     session=makeFlashSession(shuffled(conceptsInTopic(data.concepts,topic)));
   } else if (mode === 'match') {
@@ -1201,9 +1176,9 @@ function restartGame(){
     session = { items, options, index: 0, choice: null, answered: false, correct: 0,
       complete: false, draft: '', status: null, hintUsed: false, typoRetry: false };
   } else if (mode === 'sort') {
-    const round = makeSortRound(data.rounds, data.evaluations, sortRoundId);
-    session = { ...round, items: round.items, index: 0, choice: null, answered: false,
-      correct: 0, complete: false };
+    const round=makePairSortRound(data.sortPairs,data.evaluations,sortRoundId);
+    session={...round,placements:{},selectedSortId:null,checked:false,revealed:false,
+      everChecked:false,firstCorrect:null,lastCorrect:null,correct:0,complete:false};
   } else if (mode === 'identify') {
     session = { items: makeScenarioRound(data.scenarios, scenarioLength), index: 0,
       choice: null, answered: false, correct: 0, complete: false };
@@ -1383,6 +1358,7 @@ function resolveCloze(value, skipped=false) {
 
 function onAction(button) {
   const command = button.dataset.action;
+  if(command.startsWith('sort-')&&mode==='sort'){sortUI.handle(command,button);return;}
   if(command.startsWith('sim-')){examSimulator.handle(command,button);return;}
   if(['build-move','build-check','build-reveal','build-next','error-check','error-next','reason-check','reason-next'].includes(command)){examAction(command,button);return;}
   if(command==='open-feedback'){experience.openFeedback();return;}
@@ -1641,7 +1617,7 @@ mount.addEventListener('change', event => {
   } else if(control.dataset.control==='exam-level'&&(mode==='error'||mode==='reason')){
     if(!EXAM_LEVELS.includes(control.value))return;examLevel=control.value;
   } else if (control.dataset.control === 'sort-round' && mode === 'sort') {
-    if (!data.rounds.some(r => r.id === control.value)) return;
+    if (!data.sortPairs.some(r => r.id === control.value)) return;
     sortRoundId = control.value;
   } else if (control.dataset.control === 'scenario-length' && mode === 'identify') {
     const length = Number(control.value);
@@ -1674,7 +1650,7 @@ async function loadData() {
   try {
     const sources = [
       ['concepts', 'concepts'], ['cloze', 'cloze'], ['evaluations', 'evaluations'],
-      ['sort-rounds', 'rounds'], ['scenarios', 'scenarios'], ['methods', 'methods'],
+      ['sort-rounds', 'rounds'], ['sort-pairs', 'pairs'], ['scenarios', 'scenarios'], ['methods', 'methods'],
       ['accepted-terms', 'terms'], ['exam-errors', 'errors'], ['exam-reasoning','reasoning'], ['exam-practice','questions']
     ];
     const responses = await Promise.all(sources.map(([name]) =>
@@ -1684,6 +1660,8 @@ async function loadData() {
     data = Object.fromEntries(sources.map((source, i) => [source[1], payloads[i][source[1]]]));
     data.examQuestions=data.questions;
     delete data.questions;
+    data.sortPairs=data.pairs;
+    delete data.pairs;
     if (Object.entries(data).some(([key,items]) => key!=='terms' && !Array.isArray(items))) {
       throw new Error('Unexpected content format.');
     }
@@ -1692,6 +1670,7 @@ async function loadData() {
     }
     data.acceptedTerms=data.terms;
     validateTermBank(data.concepts,data.acceptedTerms);
+    validatePairBank(data.sortPairs,data.evaluations);
     if (data.rounds.length < 9 || data.scenarios.length < 20 || data.methods.length !== 5 || data.errors.length < 15 || data.reasoning.length < 9 || data.examQuestions.length < 32) {
       throw new Error('Incomplete sampling content.');
     }

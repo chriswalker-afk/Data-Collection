@@ -11,8 +11,8 @@ export const ACTIVITY_GUIDANCE=Object.freeze({
     practice:'Retrieve the precise mathematical language used in definitions.',
     task:'Complete the missing word in the definition.'}),
   sort:Object.freeze({
-    practice:'Distinguish the strengths, limitations and defining features of sampling methods.',
-    task:'Read each statement and classify it for the method or methods described.'}),
+    practice:'Compare the strengths and limitations of two sampling methods.',
+    task:'Drag each statement to the correct method’s advantages or disadvantages. You can also select a card and choose its destination. Check the full board, then correct any mistakes.'}),
   identify:Object.freeze({
     practice:'Recognise a sampling method from how participants or items are selected.',
     task:'Read the selection procedure, then choose the method that was used.'}),
@@ -46,8 +46,6 @@ export function guideForActivity(id,options={}){
         ? 'Type the missing word. You may reveal its first letter; a hinted answer is practice, not mastery.'
         :'Type the exact missing word without a word bank or hints.';
   }
-  if(id==='sort'&&options.comparison===true)
-    result.task='Read the comparison and select the sampling method being described.';
   if(id==='speed'&&options.timed===true)
     result.task='Type the term before the timer runs out. The timer pauses while feedback is shown or the tab is hidden.';
   if(id==='exam'){
