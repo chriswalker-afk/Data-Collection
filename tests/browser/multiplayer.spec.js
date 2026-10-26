@@ -97,3 +97,21 @@ test('server rejects impersonation, invalid origins and premature reveals',async
   const upgrade=await request.get(base+'/ws?id=host&ticket=123456');
   expect(upgrade.status()).toBe(426);
 });
+
+
+test('30 classmates joining simultaneously all remain in the same room',async({request})=>{
+ const created=await request.post(BACKEND+'/rooms',{data:{roundLength:5}});
+ expect(created.status()).toBe(201);
+ const host=await created.json();
+ const code=host.code;
+ const result=await Promise.all(Array.from({length:30},(_,i)=>
+   request.post(BACKEND+'/rooms/'+code+'/join',{data:{name:'Player '+String(i+1).padStart(2,'0')}})));
+ expect(result.every(response=>response.status()===201)).toBe(true);
+ const state=await request.get(BACKEND+'/rooms/'+code+'/state',{
+   headers:{Authorization:'Bearer '+host.token}
+ });
+ expect(state.status()).toBe(200);
+ const players=(await state.json()).players;
+ expect(players).toHaveLength(30);
+ expect(new Set(players.map(person=>person.name)).size).toBe(30);
+});
