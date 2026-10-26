@@ -95,5 +95,5 @@ test('server rejects impersonation, invalid origins and premature reveals',async
   expect((await request.post(base+'/command',{headers:guest,data:{type:'answer',method:'quota'}})).status()).toBe(400);
   await expect(page.locator('#players li')).toContainText(['Guest Otter']);
   const upgrade=await request.get(base+'/ws?id=host&ticket=123456');
-  expect(upgrade.status()).toBe(401);
+  expect(upgrade.status()).toBe(426);
 });
