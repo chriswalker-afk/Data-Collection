@@ -1,7 +1,7 @@
 {
   "version": 1,
   "notes": "Contextualised sequencing using the same audited step dependency graph; round levels range from foundation to extend. These are original teaching scenarios, not past-paper questions.",
-  "scenarios": [
+  "buildScenarios": [
     {
       "id": "build-library-books",
       "methodId": "simple-random",
