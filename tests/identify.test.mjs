@@ -8,11 +8,16 @@ import {
 } from '../src/identify.js';
 
 const {scenarios}=JSON.parse(readFileSync(new URL('../content/scenarios.json',import.meta.url),'utf8'));
-test('all 20 Edexcel-aligned scenarios have precise quoted evidence without changing the bank',()=>{
+test('all 50 Edexcel-aligned scenarios have precise quoted evidence without changing the bank',()=>{
  const before=JSON.stringify(scenarios);
- assert.equal(scenarios.length,20);
+ assert.equal(scenarios.length,50);
  assert.equal(validateIdentifyBank(scenarios),true);
- assert.equal(Object.keys(SCENARIO_EVIDENCE).length,20);
+ assert.equal(Object.keys(SCENARIO_EVIDENCE).length,20,'Legacy evidence remains supported');
+ assert.equal(scenarios.filter(q=>q.level==='apply').length,35);
+ for(const method of METHOD_ORDER){
+  assert.equal(scenarios.filter(q=>q.correctMethod===method).length,10);
+  assert.equal(scenarios.filter(q=>q.correctMethod===method&&q.level==='apply').length,7);
+ }
  for(const scenario of scenarios){
   const clue=evidenceParts(scenario);
   assert.equal(clue.before+clue.quote+clue.after,scenario.prompt);
