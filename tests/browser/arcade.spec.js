@@ -99,3 +99,43 @@ test('damaged local progress does not stop a new session', async ({page}) => {
   await page.goto('/#/cloze/sampling');
   await expect(page.locator('.option-button')).toHaveCount(4);
 });
+
+
+test('a full Match Up round is recorded and a new round starts cleanly', async ({page}) => {
+  await page.goto('/#/match/data');
+  for (let i = 0; i < 5; i++) {
+    const id = await page.locator('[data-action="match-term"]').first().getAttribute('data-id');
+    await page.locator('[data-action="match-term"][data-id="' + id + '"]').click();
+    await page.locator('[data-action="match-def"][data-id="' + id + '"]').click();
+  }
+  await expect(page.getByText('Round complete', {exact:true})).toBeVisible();
+  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('sampling-arcade-progress-v1')).sessions)).toBe(1);
+  await page.getByRole('button',{name:/Play another round/}).click();
+  await expect(page.locator('[data-action="match-term"]')).toHaveCount(5);
+});
+
+test('a full Missing Words round can be finished from the checked data bank', async ({page}) => {
+  await page.goto('/#/cloze/data');
+  const bank = await page.evaluate(async()=>{
+    const response = await fetch('./content/cloze.json');
+    return (await response.json()).cloze;
+  });
+  const dataQuestions = bank.filter(q => ['qualitative-data','quantitative-data','discrete-variable','continuous-variable','grouped-frequency-table','class-boundaries','class-width','class-midpoint'].includes(q.conceptId));
+  for (let i = 0; i < dataQuestions.length; i++) {
+    const id = await page.locator('[data-question-id]').getAttribute('data-question-id');
+    const item = bank.find(q => q.id === id);
+    await page.getByRole('button',{name:item.answer,exact:true}).click();
+    await page.locator('[data-action="cloze-next"]').click();
+  }
+  await expect(page.getByText('Round complete', {exact:true})).toBeVisible();
+  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('sampling-arcade-progress-v1')).sessions)).toBe(1);
+});
+
+test('skip link focuses content without breaking the current game route', async ({page}) => {
+  await page.goto('/#/flashcards/sampling');
+  await page.locator('.skip-link').focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('main#main')).toBeFocused();
+  await expect(page).toHaveURL(/#\/flashcards\/sampling$/);
+  await expect(page.locator('.flashcard')).toBeVisible();
+});

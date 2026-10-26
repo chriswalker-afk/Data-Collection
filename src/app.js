@@ -22,7 +22,7 @@ function element(tag, attributes = {}, ...children) {
     if (value === null || value === undefined || (value === false && !key.startsWith('aria-'))) continue;
     if (key === 'className') node.className = value;
     else if (key === 'textContent') node.textContent = String(value);
-    else node.setAttribute(key, value === true ? '' : String(value));
+    else node.setAttribute(key, value === true && !key.startsWith('aria-') ? '' : String(value));
   }
   for (const child of children.flat(Infinity)) {
     if (child === null || child === undefined || child === false) continue;
