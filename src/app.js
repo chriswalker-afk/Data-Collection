@@ -20,6 +20,7 @@ import {createExamSimulationUI} from './exam-sim-ui.js';
 import {createExperienceUI} from './experience-ui.js';
 import {nextAfterRound} from './journey.js';
 import {guideForActivity} from './activity-guidance.js';
+import {makeFlashSession,rateFlashSession,skipFlashSession,makeFlashReviewSession,flashCardLabel} from './flashcards.js';
 
 const mount = document.getElementById('app');
 const announcer = document.getElementById('announcer');
@@ -305,64 +306,94 @@ function showCompletion(game) {
 
     ...(game === 'cloze' && clozeLevel !== 'independent'
       ? [action('Try the next level →', 'cloze-step-up', {}, 'btn btn-quiet')] : []),
+    ...(game === 'flashcards' && session.revisitIds?.length
+      ? [paragraph('flash-review-note',session.revisitIds.length+' card'+(session.revisitIds.length===1?' is':'s are')+
+          ' ready for another look. Revisiting them is optional and does not automatically award mastery.')] : []),
     metaBar(),
     div('complete-actions',
-      action('Play another round ↻', 'restart', {}, 'btn btn-primary'),
+      ...(game === 'flashcards'&&session.revisitIds?.length
+        ? [action('Review '+session.revisitIds.length+' tricky card'+(session.revisitIds.length===1?'':'s')+' ↻',
+          'flash-review',{},'btn btn-primary')] : []),
+      action('Play another round ↻', 'restart', {}, 'btn '+(game==='flashcards'&&session.revisitIds?.length?'btn-quiet':'btn-primary')),
       link('Back to arcade', hashFor('home', topic), 'btn btn-quiet'),
       action('Share short feedback', 'open-feedback', {}, 'text-button')
     )
   );
 }
 function flashcardView() {
-  const root = div('page activity-page');
+  const root = div('page activity-page flash-page');
   root.append(activityTop('flashcards'));
-  if (session.complete) { root.append(showCompletion('flashcards')); return root; }
-  const current = session.items[session.index];
-  const face = session.reversed ? current.definition : current.label;
-  const answer = session.reversed ? current.label : current.definition;
-  const counter = session.index + 1;
-  const controls = div('round-controls',
-    roundProgress(counter, session.items.length, 'Card ' + counter + ' of ' + session.items.length),
-    action(session.reversed ? 'Definition → term' : 'Term → definition', 'reverse', { 'aria-pressed': session.reversed }, 'btn btn-quiet btn-small')
-  );
+  if(session.complete){root.append(showCompletion('flashcards'));return root;}
+  const current=session.items[session.index];
+  const prompt=session.reversed?current.definition:current.label;
+  const answer=session.reversed?current.label:current.definition;
+  const counter=session.index+1;
+  const controls=div('round-controls flash-toolbar',
+    roundProgress(counter,session.items.length,'Card '+counter+' of '+session.items.length),
+    action(session.reversed?'Definition → term':'Term → definition','reverse',
+      {'aria-pressed':session.reversed,'title':'Changing direction restarts the shuffled deck'},'btn btn-quiet btn-small'));
   root.append(controls,practiceGuide('flashcards',{reversed:session.reversed}));
-  const card = element('section', { className: 'flash-area', 'aria-label': 'Current flashcard' });
-  const faceButton = action('', 'flip', { 'aria-expanded': session.revealed }, 'flashcard');
-  faceButton.append(
-    span('flash-overline', session.reversed ? 'QUESTION · WHICH TERM MATCHES?' : 'QUESTION · RECALL THIS DEFINITION'),
-    span('flash-front', face),
-    span('flash-reveal-label', session.revealed ? 'Tap to hide answer ↑' : 'Tap to reveal answer ↓')
+
+  // Both sides occupy one stable-height grid. DOM remains in place on flip so
+  // the CSS 3D transition actually runs; the hidden side stays out of the a11y tree.
+  const faceButton=action('','flip',{
+    'aria-expanded':session.revealed,
+    'aria-label':flashCardLabel(session,current),
+    'data-flipped':String(session.revealed),
+    'title':'Flip the card'
+  },'flashcard flash-flip-control'+(session.revealed?' is-flipped':''));
+  const front=element('span',{
+    className:'flash-side flash-face-front','aria-hidden':String(session.revealed)
+  },
+    span('flash-side-top',
+      span('flash-side-type','FRONT · '+(session.reversed?'DEFINITION':'TERM')),
+      span('flash-turn-symbol','↻')),
+    span('flash-front',prompt),
+    span('flash-face-footer',span('','Think of the full answer'),span('','Tap or press Enter to flip ↗'))
   );
-  card.append(faceButton);
-  if (session.revealed) {
-    const body = div('flash-answer',
-      span('eyebrow', 'MODEL ANSWER'),
-      heading(2, 'answer-main', answer),
-      div('flash-detail',
-        div('flash-detail-item', span('detail-label', 'Example'), paragraph('', current.example)),
-        div('flash-detail-item', span('detail-label', 'Watch out'), paragraph('', current.misconception))
-      )
-    );
-    if (!session.reversed) {
-      body.insertBefore(div('phrase-row', span('detail-label', 'Key ideas'), ...current.keyPhrases.map(k => span('phrase-chip', k))), body.querySelector('.flash-detail'));
-    }
-    card.append(body);
-    card.append(
-      div('grade-wrap',
-        paragraph('grade-prompt', 'How well did you remember it? “Know it” counts towards mastery.'),
-        div('grade-options',
-          action('Again', 'grade', { 'data-grade': 'again' }, 'btn btn-grade btn-again'),
-          action('Nearly', 'grade', { 'data-grade': 'nearly' }, 'btn btn-grade btn-nearly'),
-          action('Know it ✓', 'grade', { 'data-grade': 'know' }, 'btn btn-grade btn-know')
-        )
-      )
-    );
-  } else {
-    card.append(div('card-undertext', icon('↳'), paragraph('', 'Try to say the full definition before revealing it.')));
-  }
-  root.append(card, div('activity-bottom', action('Skip this card →', 'skip', {}, 'text-button')));
+  const back=element('span',{
+    className:'flash-side flash-face-back flash-answer','aria-hidden':String(!session.revealed)
+  },
+    span('flash-side-top',
+      span('flash-side-type','BACK · ANSWER'),span('flash-turn-symbol','↻')),
+    span('eyebrow flash-model-label','MODEL ANSWER'),
+    span('answer-main',answer),
+    ...(!session.reversed&&current.keyPhrases?.length?[
+      span('flash-key-section',
+        span('flash-mini-label','KEY IDEAS'),
+        span('flash-chips',...current.keyPhrases.map(phrase=>span('phrase-chip',phrase))))
+    ]:[]),
+    span('flash-detail',
+      span('flash-detail-item',
+        span('detail-label','Example'),span('flash-detail-copy',current.example)),
+      span('flash-detail-item',
+        span('detail-label','Watch out'),span('flash-detail-copy',current.misconception))
+    ),
+    span('flash-face-footer',span('','Now rate your recall below'),span('','Tap to see the prompt ↶'))
+  );
+  faceButton.append(element('span',{className:'flash-flip-inner'},front,back));
+  const scene=div('flash-deck-stage',faceButton);
+  const stage=element('section',{className:'flash-area','aria-label':'Current flashcard'},scene);
+  const gradeWrap=div('grade-wrap flash-grade-panel',
+    paragraph('grade-prompt','How accurately did you recall it? Only “Know it” counts towards mastery.'),
+    div('grade-options',
+      action('Again','grade',{'data-grade':'again','aria-keyshortcuts':'1'},'btn btn-grade btn-again'),
+      action('Nearly','grade',{'data-grade':'nearly','aria-keyshortcuts':'2'},'btn btn-grade btn-nearly'),
+      action('Know it ✓','grade',{'data-grade':'know','aria-keyshortcuts':'3'},'btn btn-grade btn-know')
+    ),
+    paragraph('flash-keyboard-help','Keyboard shortcuts: 1 Again · 2 Nearly · 3 Know it')
+  );
+  gradeWrap.hidden=!session.revealed;
+  stage.append(gradeWrap);
+  const status=div('flash-deck-footer',
+    div('flash-pace',
+      span('flash-deck-label',session.isReview?'REVIEW DECK':'SHUFFLED DECK'),
+      span('flash-pace-value',session.ratings.know+' confident · '+session.revisitIds.length+' to revisit')),
+    action('Skip for now →','skip',{},'text-button flash-skip'));
+  root.append(stage,status);
   return root;
 }
+
 function matchView() {
   const root = div('page activity-page');
   root.append(activityTop('match'));
@@ -986,8 +1017,7 @@ function render(focusTarget) {
 }
 function restartGame() {
   if (mode === 'flashcards') {
-    session = { items: shuffled(conceptsInTopic(data.concepts, topic)), index: 0, revealed: false,
-      reversed: false, correct: 0, complete: false };
+    session=makeFlashSession(shuffled(conceptsInTopic(data.concepts,topic)));
   } else if (mode === 'match') {
     const round = makeMatchRound(data.concepts, topic);
     session = { ...round, matched: new Set(), selectedTerm: null, selectedDefinition: null,
@@ -1047,6 +1077,23 @@ function finishRound() {
   render('.completion-title');
   announce('Round complete. Your revision progress has been updated.');
 }
+function flipCurrentFlashcard(){
+  if(mode!=='flashcards'||!session||session.complete)return;
+  session.revealed=!session.revealed;
+  const current=session.items[session.index];
+  const button=mount.querySelector('[data-action="flip"]');
+  if(!button){render('[data-action="flip"]');return;}
+  button.classList.toggle('is-flipped',session.revealed);
+  button.setAttribute('data-flipped',String(session.revealed));
+  button.setAttribute('aria-expanded',String(session.revealed));
+  button.setAttribute('aria-label',flashCardLabel(session,current));
+  button.querySelector('.flash-face-front')?.setAttribute('aria-hidden',String(session.revealed));
+  button.querySelector('.flash-face-back')?.setAttribute('aria-hidden',String(!session.revealed));
+  const gradePanel=mount.querySelector('.flash-grade-panel');
+  if(gradePanel)gradePanel.hidden=!session.revealed;
+  announce(session.revealed?'Answer revealed. Rate Again, Nearly or Know it.':'Prompt shown.');
+}
+
 function advanceFlash() {
   session.revealed = false;
   if (session.index === session.items.length - 1) finishRound();
@@ -1137,12 +1184,7 @@ function onAction(button) {
     announce('New round started.');
     return;
   }
-  if (command === 'flip') {
-    session.revealed = !session.revealed;
-    render('[data-action="flip"]');
-    announce(session.revealed ? 'Answer revealed.' : 'Answer hidden.');
-    return;
-  }
+  if(command==='flip'){flipCurrentFlashcard();return;}
   if (command === 'reverse') {
     const reversed = !session.reversed;
     restartGame();
@@ -1151,17 +1193,26 @@ function onAction(button) {
     announce(reversed ? 'Now practising definition to term.' : 'Now practising term to definition.');
     return;
   }
-  if (command === 'grade') {
-    const grade = button.dataset.grade;
-    const concept = session.items[session.index];
-    remember(concept.id, grade === 'know');
-    if (grade === 'know') session.correct += 1;
+  if(command==='grade'&&mode==='flashcards'){
+    if(!session.revealed)return;
+    const grade=button.dataset.grade;
+    const concept=session.items[session.index];
+    session=rateFlashSession(session,grade);
+    remember(concept.id,grade==='know');
     advanceFlash();
-    announce('Recall rated ' + grade + '.');
+    announce('Recall rated '+grade+'.');
     return;
   }
-  if (command === 'skip') {
-    advanceFlash(); announce('Card skipped.');
+  if(command==='skip'&&mode==='flashcards'){
+    session=skipFlashSession(session);
+    advanceFlash();
+    announce('Card marked to revisit.');
+    return;
+  }
+  if(command==='flash-review'&&mode==='flashcards'&&session.complete){
+    session=makeFlashReviewSession(session);
+    render('[data-action="flip"]');
+    announce('Reviewing '+session.items.length+' cards. Reveal each answer before rating.');
     return;
   }
   if (command === 'match-term' || command === 'match-def') {
@@ -1277,6 +1328,20 @@ document.querySelector('.skip-link').addEventListener('click', event => {
   const main=document.getElementById('main');
   main.scrollIntoView({block:'start',behavior:'auto'});
   main.focus({preventScroll:true});
+});
+// Shortcuts only work within the live flashcard or its self-rating controls.
+// Avoid intercepting inputs, site navigation or assistive technology modifiers.
+mount.addEventListener('keydown',event=>{
+  if(mode!=='flashcards'||!session?.revealed||session.complete||event.repeat||
+     event.altKey||event.ctrlKey||event.metaKey||event.shiftKey)return;
+  const target=event.target;
+  if(!target.closest('.flashcard,.flash-grade-panel')||target.closest('input,textarea,select,[contenteditable]'))return;
+  const choice={'1':'again','2':'nearly','3':'know'}[event.key];
+  if(!choice)return;
+  const button=mount.querySelector('[data-action="grade"][data-grade="'+choice+'"]');
+  if(!button)return;
+  event.preventDefault();
+  button.click();
 });
 mount.addEventListener('click', event => {
   const button = event.target.closest('button[data-action]');
