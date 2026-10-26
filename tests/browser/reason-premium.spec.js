@@ -90,7 +90,7 @@ test('flagged guided misconception produces unscored review and never duplicates
   else await independent(page,'I choose a method considering frame, sample targets, possible bias, and a practical improvement.');
   await page.getByRole('button',{name:i===2?'Finish round →':'Next investigation →'}).click();
  }
- await expect(page.getByRole('heading',{name:'Round complete'})).toBeVisible();
+ await expect(page.getByText('Round complete',{exact:true})).toBeVisible();
  await expect(page.locator('.reason-summary-stat')).toHaveCount(3);
  const saved=await progress(page);
  expect(saved.answers).toBe(3);expect(saved.sessions).toBe(1);
