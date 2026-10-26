@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   STORAGE_KEY, emptyProgress, sanitizeProgress, loadProgress,
-  saveProgress, clearProgress, recordAnswer, recordSession, progressForTopic
+  saveProgress, clearProgress, recordAnswer, recordPractice, recordSession, progressForTopic
 } from '../src/progress.js';
 const {concepts} = JSON.parse(readFileSync(new URL('../content/concepts.json',import.meta.url),'utf8'));
 const memoryStorage = () => {
@@ -65,4 +65,23 @@ test('progress sanitation discards invalid and unrecognised entries', () => {
   assert.deepEqual(p.concepts.sample,{attempts:0,correct:0,streak:0});
   assert.deepEqual(sanitizeProgress({version:3,concepts:{}}),emptyProgress());
   assert.throws(()=>recordAnswer(emptyProgress(),'BAD KEY!',true));
+});
+
+test('ungraded writing counts exposure without incorrectly cancelling earned mastery',()=>{
+ const one=recordAnswer(emptyProgress(),'population',true);
+ const mastered=recordAnswer(one,'population',true);
+ const practiced=recordPractice(mastered,'population');
+ assert.deepEqual(mastered.concepts.population,{attempts:2,correct:2,streak:2},'input remains immutable');
+ assert.deepEqual(practiced.concepts.population,{attempts:3,correct:2,streak:2});
+ assert.equal(practiced.answers,mastered.answers+1);
+ assert.equal(practiced.sessions,mastered.sessions);
+ assert.equal(progressForTopic(practiced,concepts,'sampling').mastered,1);
+ const newConcept=recordPractice(emptyProgress(),'sample');
+ assert.deepEqual(newConcept.concepts.sample,{attempts:1,correct:0,streak:0});
+ assert.equal(progressForTopic(newConcept,concepts,'sampling').mastered,0);
+ // Genuine wrong answers must still break the independent streak.
+ const wrong=recordAnswer(practiced,'population',false);
+ assert.equal(wrong.concepts.population.streak,0);
+ assert.equal(progressForTopic(wrong,concepts,'sampling').mastered,0);
+ assert.throws(()=>recordPractice(emptyProgress(),'NOT VALID'),/Invalid concept/);
 });
