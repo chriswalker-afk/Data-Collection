@@ -980,7 +980,7 @@ function render(focusTarget) {
       const sticky=header&&getComputedStyle(header).position==='sticky';
       const visibleTop=sticky?header.getBoundingClientRect().bottom+12:12;
       if(rect.top<visibleTop||rect.bottom>window.innerHeight-16)
-        target.scrollIntoView({block:'center',behavior:'auto'});
+        target.scrollIntoView({block:'nearest',behavior:'auto'});
     });
   }
 }
