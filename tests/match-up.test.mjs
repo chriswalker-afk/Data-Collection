@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {chooseMatch,matchNextStep,matchStatus,MATCH_MOTION_MS} from '../src/match-up.js';
+import {chooseMatch,matchNextStep,matchStatus,matchAttemptCredit,MATCH_MOTION_MS} from '../src/match-up.js';
 
 const empty={selectedTerm:null,selectedDefinition:null,resolving:null};
 
@@ -42,4 +42,22 @@ test('Match Up directions and mistakes are communicated without revealing the an
  assert.equal(matchStatus(3,5,1).mistakes,'1 incorrect attempt');
  assert.ok(MATCH_MOTION_MS.correct>=300&&MATCH_MOTION_MS.correct<=550);
  assert.ok(MATCH_MOTION_MS.incorrect>=200&&MATCH_MOTION_MS.incorrect<=420);
+});
+
+test('only genuinely first-try Match Up pairings award independent credit',()=>{
+ const original=new Set();
+ const fresh=matchAttemptCredit(original,'population','population');
+ assert.equal(fresh.matched,true);assert.equal(fresh.independent,true);
+ assert.deepEqual([...original],[], 'pure helper must not change the input');
+
+ const wrong=matchAttemptCredit(original,'population','sample');
+ assert.equal(wrong.matched,false);assert.equal(wrong.independent,false);
+ assert.deepEqual([...wrong.exposed].sort(),['population','sample']);
+ const correction=matchAttemptCredit(wrong.exposed,'population','population');
+ assert.equal(correction.matched,true);assert.equal(correction.independent,false);
+ const other=matchAttemptCredit(correction.exposed,'sample','sample');
+ assert.equal(other.independent,false, 'definition used in an earlier guess cannot count as fresh recall');
+ const unseen=matchAttemptCredit(other.exposed,'census','census');
+ assert.equal(unseen.independent,true,'unexposed pairs still earn credit');
+ assert.throws(()=>matchAttemptCredit(original,'','sample'),/identifiers/);
 });
