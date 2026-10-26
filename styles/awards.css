@@ -1,0 +1,93 @@
+/* Pass 3 Trophy Cabinet — a collectible gallery, not a second quiz UI. */
+.cabinet-hero{
+  background:linear-gradient(127deg,#103d46 0%,#164f55 55%,#315363 100%);
+  display:grid;grid-template-columns:minmax(0,1.25fr) minmax(220px,.75fr);gap:24px;
+  align-items:center;isolation:isolate
+}
+.cabinet-hero-text{position:relative;z-index:1}
+.cabinet-hero-art{position:relative;min-height:205px;display:grid;place-items:center;isolation:isolate}
+.cabinet-hero-orbit{position:absolute;inset:6% 13%;border-radius:50%;border:1px solid #c1e5d54d;box-shadow:0 0 0 24px #ffffff07,0 0 0 56px #ffffff06}
+.cabinet-hero-medal{position:relative;display:grid;place-items:center;border:8px double #fce7b3;width:152px;height:152px;border-radius:50%;
+  background:radial-gradient(circle at 35% 25%,#fffbe9,#f1c780 45%,#c98f51 90%);
+  box-shadow:0 14px 4px #0000001b,0 25px 48px #00000040,inset 0 4px 8px #ffffffc9;
+  font-size:4.1rem;transform:rotate(-9deg)}
+.cabinet-hero-spark{position:absolute;color:#f7de9e;font-size:1.75rem}
+.cabinet-hero-spark.one{top:15%;left:6%}.cabinet-hero-spark.two{right:7%;bottom:14%}
+.cabinet-summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center;
+  margin:22px 0 25px;padding:23px 26px;border:1px solid #c8dfd6;border-radius:19px;background:#fff;box-shadow:0 9px 23px #123b4120}
+.cabinet-summary-kicker{display:block;color:#327462;font-weight:820;letter-spacing:.12em;font-size:.7rem;text-transform:uppercase}
+.cabinet-summary h2{font-size:clamp(1.2rem,2.8vw,1.5rem);letter-spacing:-.04em;margin:4px 0 8px}
+.cabinet-summary p{color:#546c68;margin:0;font-size:.86rem;line-height:1.5}
+.cabinet-count{font-size:clamp(2.1rem,4vw,3rem);font-weight:900;letter-spacing:-.07em;color:#126451;text-align:right;line-height:1.2}
+.cabinet-meter{width:100%;max-width:350px;height:9px;accent-color:#218063;border-radius:5px;margin-top:13px}
+.cabinet-toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:0 1px;margin:22px 0 18px}
+.cabinet-filters{display:flex;align-items:center;gap:6px;padding:5px;background:#e9f3ed;border:1px solid #cddfd3;border-radius:14px;flex-wrap:wrap}
+.cabinet-filters button{background:transparent;border:0;border-radius:10px;min-height:40px;padding:8px 14px;color:#3e6555;font-size:.8rem;font-weight:780}
+.cabinet-filters button[aria-pressed="true"]{background:#fff;color:#135944;box-shadow:0 2px 9px #123d4620}
+.cabinet-transfer{display:flex;flex-wrap:wrap;gap:8px}
+.cabinet-transfer button{border:1px solid #c7dcd0;background:#fff;color:#155546;
+  border-radius:11px;padding:10px 15px;font-weight:780;font-size:.8rem;min-height:43px}
+.cabinet-transfer button:hover{background:#e8f4ec}
+.cabinet-transfer .cabinet-reset{border-color:#e5d8d5;color:#885454}
+.cabinet-notice{min-height:1.5em;color:#325e52;font-size:.85rem;line-height:1.5}
+.trophy-group{margin:25px 0 37px}
+.trophy-group-title{font-size:clamp(1.15rem,2vw,1.42rem);font-weight:850;letter-spacing:-.04em;margin:0 0 14px;color:#244b44}
+.trophy-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.trophy-card{--coin-edge:#dfb574;position:relative;display:flex;flex-direction:column;min-width:0;
+  padding:21px;border:1px solid #d0deda;border-radius:22px;background:linear-gradient(145deg,#fff,#f8fbf9);
+  box-shadow:0 8px 19px #143a3b0c;overflow:hidden}
+.trophy-card::before{content:"";position:absolute;top:-35px;right:-50px;width:150px;height:150px;border-radius:50%;
+  background:radial-gradient(circle,#e2efdd70,#e2efdd00 70%);pointer-events:none}
+.trophy-card.is-earned{background:linear-gradient(150deg,#fffaf0,#fff 43%,#f8fbf8);border-color:#dabc88;
+  box-shadow:0 8px 24px #6c53211a}
+.trophy-head{display:flex;justify-content:space-between;align-items:start;gap:10px;margin-bottom:18px}
+.trophy-portrait{display:grid;place-items:center;width:90px;height:90px;flex-shrink:0;
+  border-radius:26px;font-size:3rem;line-height:1;
+  border:3px solid var(--coin-edge);background:radial-gradient(circle at 33% 23%,#fffef8,#f9eacb 50%,#e8ce9a);
+  box-shadow:0 5px 0 #c3a36d61,0 11px 21px #55402721}
+.trophy-card.is-locked .trophy-portrait{filter:grayscale(.8);opacity:.78;background:#f0f2f0;border-color:#c9d5d0;box-shadow:none}
+.trophy-caption{display:flex;flex-direction:column;align-items:flex-end;gap:9px;text-align:right}
+.trophy-serial{font-size:.67rem;color:#60746b;letter-spacing:.06em;text-transform:uppercase;font-weight:820}
+.trophy-state{border-radius:99px;padding:6px 9px;font-size:.64rem;font-weight:850;letter-spacing:.05em;
+  color:#6c614e;background:#f4eee3}
+.is-earned .trophy-state{color:#1b5d4c;background:#daf0e2}
+.trophy-title{font-size:1.14rem;letter-spacing:-.04em;font-weight:870;margin:0 0 7px;color:#173d39}
+.trophy-description{font-size:.83rem;line-height:1.57;color:#4c625d;margin:0 0 14px}
+.trophy-evidence{font-size:.72rem;font-weight:720;color:#446e66;background:#e9f4ef;align-self:flex-start;border-radius:8px;padding:5px 9px;margin:0 0 18px}
+.trophy-card:has(.trophy-evidence) .trophy-bottom{margin-top:auto}
+.trophy-bottom{border-top:1px solid #e1e8e1;padding-top:13px}
+.trophy-progress-row{display:flex;justify-content:space-between;gap:8px;color:#325c51;font-size:.77rem;margin-bottom:7px}
+.trophy-progress-row strong{font-weight:780}
+.trophy-meter{display:block;width:100%;height:8px;accent-color:#1d8063}
+.trophy-hint{font-size:.74rem;line-height:1.45;color:#61746c;margin:10px 0 0}
+.cabinet-empty{background:#fff;border:1px solid #d8e5dc;border-radius:18px;padding:30px;text-align:center;color:#48645c}
+.cabinet-fineprint{margin-top:32px;padding:22px 24px;background:#f1f6f2;border:1px solid #d6e2d9;border-radius:17px}
+.cabinet-fineprint h2{font-size:1rem;margin:0 0 8px;color:#27584c}
+.cabinet-fineprint p{font-size:.82rem;line-height:1.6;color:#4e6c61;margin:0}
+.award-unlock-toast{position:fixed;z-index:1200;right:20px;bottom:20px;width:min(380px,calc(100vw - 32px));
+  display:flex;align-items:center;gap:14px;padding:18px 38px 18px 15px;
+  border-radius:21px;border:2px solid #d8ac67;background:linear-gradient(135deg,#fffdf6,#f5ebd8);
+  color:#24453b;box-shadow:0 18px 60px #0e2a32a8;animation:award-arrive .38s cubic-bezier(.2,1.25,.3,1) both}
+.award-unlock-portrait{display:grid;place-items:center;width:70px;height:70px;flex:none;border:3px solid #debb78;border-radius:21px;
+  font-size:2.5rem;background:#fff7dd}
+.award-unlock-toast>div{min-width:0;display:flex;flex-direction:column;align-items:flex-start}
+.award-unlock-kicker{font-size:.67rem;letter-spacing:.13em;color:#94713a;font-weight:900}
+.award-unlock-title{font-size:1.1rem;letter-spacing:-.035em}
+.award-unlock-detail{font-size:.72rem;color:#48685d;line-height:1.35;margin-top:4px}
+.award-unlock-toast a{font-size:.78rem;font-weight:850;color:#125d4d;margin-top:8px;text-decoration:underline}
+.award-unlock-close{position:absolute;top:7px;right:8px;border:0;background:transparent;color:#436054;font-size:1.6rem;
+  width:30px;height:30px;border-radius:8px;line-height:1}
+@keyframes award-arrive{from{opacity:0;transform:translateY(16px) scale(.95)}to{opacity:1;transform:none}}
+@media(max-width:900px){.trophy-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){
+ .cabinet-hero{grid-template-columns:minmax(0,1fr)}.cabinet-hero-art{min-height:140px}
+ .cabinet-hero-medal{width:110px;height:110px;font-size:3.2rem}
+ .cabinet-summary{grid-template-columns:1fr;padding:20px}.cabinet-count{text-align:left}
+ .cabinet-filters{width:100%}.cabinet-filters button{flex:1;padding-inline:8px}
+ .cabinet-transfer{width:100%}.cabinet-transfer button{flex:1}
+ .trophy-grid{grid-template-columns:1fr}
+ .trophy-card{padding:20px}.trophy-head{margin-bottom:12px}
+ .award-unlock-toast{right:16px;bottom:16px}
+}
+@media(prefers-reduced-motion:reduce){.award-unlock-toast{animation:none!important}}
+@media print{.cabinet-toolbar,.cabinet-transfer,.award-unlock-toast{display:none!important}.trophy-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}

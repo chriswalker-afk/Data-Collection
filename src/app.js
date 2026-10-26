@@ -29,11 +29,14 @@ import {clozePresentation} from './cloze-ui.js';
 import {makePairSortRound,validatePairBank} from './sort-it.js';
 import {createSortItUI} from './sort-ui.js';
 import {speedClockPercent,speedRoundSummary,speedReviewDeck,SPEED_CAUTION_MS} from './speed-ui.js';
+import {AWARDS,earnedAwards,loadAwards,saveAwards,applyAwardEvent} from './awards.js';
+import {showAwardUnlock} from './award-toast.js';
 
 const mount = document.getElementById('app');
 const announcer = document.getElementById('announcer');
 let data = null;
 let progress = loadProgress();
+let awardLedger = loadAwards();
 let examStore = emptyExamStore();
 let persistenceAvailable = true;
 let topic = 'sampling';
@@ -187,9 +190,9 @@ function arcadePathsView(){
     span('arcade-path-name','Multiplayer Arena'),span('arcade-path-desc','Join a teacher-led sampling showdown with a six-digit room code.'),
     span('arcade-path-foot','Create or join a room ↗'));
   const awards=link('','./awards.html','arcade-path-card is-awards');
-  awards.append(icon('✦','arcade-path-icon'),span('arcade-path-spark','03 / NEXT'),
-    span('arcade-path-name','My Awards'),span('arcade-path-desc','Preview the collectible mathematical awards arriving in the next development pass.'),
-    span('arcade-path-foot','Take a sneak peek ↗'));
+  awards.append(icon('✦','arcade-path-icon'),span('arcade-path-spark','03 / COLLECT'),
+    span('arcade-path-name','My Awards'),span('arcade-path-desc','Collect 16 quirky mathematical achievements across your independent revision.'),
+    span('arcade-path-foot',earnedAwards(awardLedger).length+' / '+AWARDS.length+' collected · Open cabinet ↗'));
   cards.append(solo,multi,awards);section.append(cards);
   return section;
 }
@@ -1137,7 +1140,9 @@ const sortUI=createSortItUI({
   practiceGuide,feedbackBanner,showCompletion,
   getState:()=>({data,session,mode}),
   render,announce,finishRound,
-  remember:(subject,correct)=>remember(conceptIdForSubject(subject,data.methods),correct)
+  remember:(subject,correct)=>remember(conceptIdForSubject(subject,data.methods),correct),
+  awardAnswer:(item,correct)=>{if(correct)awardEvent({kind:'answer',game:'sort',id:item.id,
+    correct:true,verified:true,review:false,assisted:false});}
 });
 const examSimulator=createExamSimulationUI({
   element,div,span,paragraph,heading,action,link,icon,activityTop,roundProgress,
@@ -1225,19 +1230,70 @@ function setRoute() {
     changed?(mode==='home'?'#home-heading':'#view-heading'):null);
   if(showProgress)requestAnimationFrame(focusProgressPanel);
 }
+function awardEvent(event){
+  const outcome=applyAwardEvent(awardLedger,event);
+  awardLedger=outcome.state;
+  if(!saveAwards(awardLedger)){persistenceAvailable=false;return;}
+  for(const award of outcome.newlyUnlocked)showAwardUnlock(award);
+}
 function remember(conceptId, correct) {
   progress = recordAnswer(progress, conceptId, correct);
   if (!saveProgress(progress)) persistenceAvailable = false;
+  if(!correct||!session)return;
+  let id=null,method=null,level=null,selfRated=false,verified=true;
+  if(mode==='flashcards'){
+    if(session.isReview)return;
+    id=session.items[session.index]?.id;selfRated=true;verified=false;
+  }else if(mode==='match'){
+    if(session.resolving!=='correct')return;
+    id=conceptId;
+  }else if(mode==='cloze'){
+    id=session.items[session.index]?.id;level=clozeLevel;
+  }else if(mode==='identify'){
+    const item=session.items[session.index];
+    id=item?.id;method=item?.correctMethod;
+  }else if(mode==='speed'){
+    if(session.reviewMode)return;
+    id=session.items[session.index]?.id;
+  }else if(mode==='build'){
+    id=session.methods[session.index]?.method?.id;
+  }else if(mode==='error'){
+    if(session.reviewMode)return;
+    id=session.items[session.index]?.id;
+  }else if(mode==='exam'){
+    id=session.questionIds?.[session.index];
+  }else return; // Sort It! awards use each statement ID at the first full-board check.
+  if(id)awardEvent({kind:'answer',game:mode,id,method,level,correct:true,
+    verified,selfRated,review:Boolean(session.reviewMode),assisted:false});
 }
 function rememberPractice(conceptId) {
   progress = recordPractice(progress, conceptId);
   if (!saveProgress(progress)) persistenceAvailable = false;
+  if(mode==='reason'&&session?.track==='independent'&&!session.reviewMode&&session.answered){
+    awardEvent({kind:'writing',game:'reason',id:session.items[session.index]?.id,
+      review:false,independent:true,writtenLength:session.draft?.trim().length||0});
+  }
+}
+function roundAwardEvent(){
+  const base={kind:'round',game:mode,verified:true,review:Boolean(session.reviewMode)};
+  if(mode==='match')return {...base,total:session.terms.length,correct:session.independentPairs,
+    attempted:session.independentPairs,mistakes:session.mistakes};
+  if(mode==='sort')return {...base,total:session.items.length,
+    correct:session.firstCorrect,firstCheck:session.everChecked};
+  if(mode==='cloze')return {...base,total:session.items.length,
+    correct:session.correct,level:clozeLevel};
+  if(mode==='build')return {...base,total:session.methods.length,correct:session.correct,firstCheck:true};
+  if(mode==='speed')return {...base,total:session.items.length,correct:session.correct,
+    attempted:session.attempted,speedMode:session.speedMode};
+  return null;
 }
 function finishRound() {
   if (session.complete) return;
   session.complete = true;
   if((mode==='error'||mode==='reason')&&session.reviewMode){render('.completion-title');return;}
   if (mode === 'speed') stopClock();
+  const awardRound=roundAwardEvent();
+  if(awardRound)awardEvent(awardRound);
   progress = recordSession(progress);
   if (!saveProgress(progress)) persistenceAvailable = false;
   render('.completion-title');

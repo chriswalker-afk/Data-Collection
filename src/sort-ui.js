@@ -232,7 +232,9 @@ export function createSortItUI(deps){
     if(!s.everChecked){
       s.everChecked=true;s.firstCorrect=result.correct;s.correct=result.correct;
       for(const item of s.items){
-        deps.remember(item.conceptSubject,result.correctIds.includes(item.id));
+        const correct=result.correctIds.includes(item.id);
+        deps.remember(item.conceptSubject,correct);
+        deps.awardAnswer(item,correct); // First-check verified evidence only.
       }
     }
     s.lastCorrect=result.correct;s.checked=true;s.selectedSortId=null;s.revealed=false;

@@ -4,11 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f6f8f5">
-  <meta name="description" content="Preview the future Sampling Arcade Trophy Cabinet: collect mathematician awards in Solo and Multiplayer.">
+  <meta name="description" content="Your Sampling Arcade Trophy Cabinet: meaningful mathematical awards earned through Solo revision.">
   <title>My Awards · Sampling Arcade</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./styles/arcade-hub.css">
+  <link rel="stylesheet" href="./styles/awards.css">
+  <script type="module" defer src="./src/awards-page.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
@@ -26,47 +28,52 @@
     </div>
   </header>
   <main class="shell main-shell" id="main" tabindex="-1">
-    <section class="arcade-page-hero" aria-labelledby="awards-heading">
-      <span class="arcade-hero-kicker">YOUR FUTURE TROPHY CABINET</span>
-      <h1 id="awards-heading">Every mathematician has a story.</h1>
-      <p>Accuracy matters. So does persistence, reflection and the courage to try again. Soon, the Sampling Arcade will celebrate those moments with an unusual collection of mathematical awards.</p>
-      <div class="arcade-hero-facts"><span>Solo milestones</span><span>Multiplayer achievements</span><span>No student account required</span></div>
-    </section>
-    <section aria-labelledby="preview-heading">
-      <div class="arcade-section-head"><div><span class="arcade-paths-kicker">A SNEAK PEEK</span><h2 id="preview-heading">Meet a few future collectibles</h2></div><p>These are previews, not yet earned or saved.</p></div>
-      <div class="arcade-awards-preview">
-        <article class="arcade-award-card">
-          <span class="arcade-award-coin" aria-hidden="true">✦</span><div>
-            <h3 class="arcade-award-title">The Sampling Fox</h3>
-            <p class="arcade-award-hint">Know every sampling method and explain what sets it apart.</p>
-            <p class="arcade-award-caption">Planned · Solo</p>
-          </div>
-        </article>
-        <article class="arcade-award-card">
-          <span class="arcade-award-coin" aria-hidden="true">◇</span><div>
-            <h3 class="arcade-award-title">Bias Buster</h3>
-            <p class="arcade-award-hint">Spot the flaw in a sampling plan and correct its reasoning.</p>
-            <p class="arcade-award-caption">Planned · Solo</p>
-          </div>
-        </article>
-        <article class="arcade-award-card">
-          <span class="arcade-award-coin" aria-hidden="true">★</span><div>
-            <h3 class="arcade-award-title">Precision Penguin</h3>
-            <p class="arcade-award-hint">Show consistent mathematical accuracy in a classroom challenge.</p>
-            <p class="arcade-award-caption">Planned · Multiplayer</p>
-          </div>
-        </article>
+    <section class="arcade-page-hero cabinet-hero" aria-labelledby="awards-heading">
+      <div class="cabinet-hero-text">
+        <span class="arcade-hero-kicker">YOUR COLLECTIBLE MATHEMATICS CABINET</span>
+        <h1 id="awards-heading">Good thinking deserves a little glory.</h1>
+        <p>Meet a curious cast of mathematical creatures. Build confidence, practise thoughtfully, and earn awards through real achievements in the ten Solo Arcade games.</p>
+        <div class="arcade-hero-facts"><span>16 collectible awards</span><span>No accounts</span><span>Saved on this browser</span></div>
       </div>
-      <div class="arcade-future-note" role="note">
-        <strong>Trophy collecting arrives in Pass 3.</strong>
-        The cabinet is a preview for now. Existing solo progress continues to save exactly as before; multiplayer currently stores only temporary classroom results. No awards have been issued or silently credited.
-      </div>
-      <div class="arcade-cta-row">
-        <a href="./index.html#/home/sampling">Explore Solo Arcade</a>
-        <a href="./multiplayer.html">Join Multiplayer Arena</a>
+      <div class="cabinet-hero-art" aria-hidden="true">
+        <div class="cabinet-hero-orbit"></div><div class="cabinet-hero-medal">🦊</div>
+        <span class="cabinet-hero-spark one">✦</span><span class="cabinet-hero-spark two">✧</span>
       </div>
     </section>
+    <section class="cabinet-summary" aria-label="Collection progress">
+      <div>
+        <span class="cabinet-summary-kicker">MY COLLECTION</span>
+        <h2>The Trophy Cabinet</h2>
+        <p id="cabinet-remaining">Your awards will appear as you practise.</p>
+        <progress id="cabinet-progress" class="cabinet-meter" value="0" max="16" aria-label="0 of 16 awards collected"></progress>
+      </div>
+      <div class="cabinet-count" id="cabinet-count">0 / 16</div>
+    </section>
+    <div class="cabinet-toolbar">
+      <div class="cabinet-filters" id="cabinet-filters" role="group" aria-label="Filter collectible awards">
+        <button type="button" data-filter="all" data-label="All" aria-pressed="true">All (16)</button>
+        <button type="button" data-filter="earned" data-label="Collected" aria-pressed="false">Collected (0)</button>
+        <button type="button" data-filter="locked" data-label="Locked" aria-pressed="false">Locked (16)</button>
+      </div>
+      <div class="cabinet-transfer">
+        <button type="button" id="cabinet-export">Export awards</button>
+        <button type="button" id="cabinet-import-button">Restore awards</button>
+        <button type="button" id="cabinet-clear" class="cabinet-reset">Reset cabinet</button>
+        <input id="cabinet-import" class="sr-only" type="file" accept=".json,application/json" aria-label="Select an awards backup JSON file">
+      </div>
+    </div>
+    <p class="cabinet-notice" id="cabinet-notice" role="status" aria-live="polite" aria-atomic="true"></p>
+    <div id="cabinet-grid"></div>
+    <p id="cabinet-empty" class="cabinet-empty" hidden></p>
+    <section class="cabinet-fineprint" aria-labelledby="cabinet-how">
+      <h2 id="cabinet-how">How these awards work</h2>
+      <p>Checked awards use first-attempt or unassisted answers from Solo games. Hints, revealed models, corrections and ungraded written work never count as verified accuracy. Confidence ratings and substantial independent writing have their own clearly labelled practice awards. Progress and trophies stay on this device unless you export them. A restored local backup is not independently authenticated, and there is no cross-device account. Multiplayer prizes and an awards ceremony arrive in later passes. Resetting or restoring your cabinet does not change saved Solo progress or exam writing.</p>
+    </section>
+    <div class="arcade-cta-row">
+      <a href="./index.html#/home/sampling">Earn awards in Solo Arcade</a>
+      <a href="./multiplayer.html">Explore Multiplayer Arena</a>
+    </div>
   </main>
-  <footer class="site-footer shell"><span>Sampling Arcade · Learn, practise, connect.</span><span>Independent revision resource · Not affiliated with Pearson</span></footer>
+  <footer class="site-footer shell"><span>Sampling Arcade · Think, practise, collect.</span><span>Independent revision resource · Not affiliated with Pearson</span></footer>
 </body>
 </html>
