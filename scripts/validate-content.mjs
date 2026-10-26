@@ -19,6 +19,12 @@ for(const m of methods){assert(conceptsById.has(m.conceptId),'Unknown method con
 for(const e of evaluations){assert(['census','sample',...ids(methods)].includes(e.subject),'Unknown evaluation subject: '+e.id);assert(['advantage','disadvantage'].includes(e.polarity),'Invalid polarity: '+e.id);assert(e.claim&&e.explanation,'Incomplete evaluation: '+e.id);referenceSources(e)}
 for(const m of methods){assert(evaluations.some(e=>e.subject===m.id&&e.polarity==='advantage'),'Missing advantage for '+m.id);assert(evaluations.some(e=>e.subject===m.id&&e.polarity==='disadvantage'),'Missing disadvantage for '+m.id);assert(scenarios.filter(s=>s.correctMethod===m.id).length>=3,'Insufficient scenarios '+m.id)}
 for(const s of scenarios){assert(methodsById.has(s.correctMethod),'Bad scenario method '+s.id);assert(s.prompt&&s.reason&&s.contrast,'Incomplete scenario '+s.id);referenceSources(s)}
+assert(scenarios.length===50,'Pass A requires 50 different method-selection scenarios');
+for(const method of methods){
+ const pool=scenarios.filter(s=>s.correctMethod===method.id);
+ assert(pool.length===10,'Unbalanced method-selection scenarios: '+method.id);
+ assert(pool.filter(s=>s.level==='apply').length>=6,'Insufficient application questions: '+method.id);
+}
 for(const q of cloze){assert(conceptsById.has(q.conceptId),'Unknown cloze concept '+q.id);assert(q.prompt.split('{{blank}}').length===2,'Cloze needs exactly one blank: '+q.id);assert(q.choices.length===4&&new Set(q.choices).size===4&&q.choices.includes(q.answer),'Invalid cloze options: '+q.id);assert(q.explanation,'Missing explanation '+q.id);referenceSources(q)}
 for(const round of rounds){assert(round.categories.length===2,'Sort round must have two categories: '+round.id);if(round.type==='polarity'){assert(round.evaluationIds.length>=4,'Too few sorting cards: '+round.id);const cards=round.evaluationIds.map(id=>{assert(evalById.has(id),'Unknown evaluation '+id);return evalById.get(id)});assert(cards.every(c=>c.subject===round.subject),'Cross-method ambiguous sort '+round.id);assert(cards.some(c=>c.polarity==='advantage')&&cards.some(c=>c.polarity==='disadvantage'),'Both polarities required '+round.id)}else{assert(round.type==='comparison'&&round.cards.length>=4,'Invalid comparison '+round.id);for(const c of round.cards)assert(round.categories.includes(c.answer)&&c.why&&c.prompt,'Bad comparison item '+round.id)}}
 validatePairBank(pairs,evaluations);
@@ -32,6 +38,13 @@ const sy=methods.find(m=>m.id==='systematic');assert(sy.conditionalProcedure.som
 assert(concepts.find(c=>c.id==='simple-random-sampling').definition.includes('every possible group'),'SRS definition must concern whole samples');
 const {errors}=load('exam-errors'),{reasoning}=load('exam-reasoning');
 unique(ids(errors),'exam error');unique(ids(reasoning),'exam reasoning');
+assert(errors.length===30&&reasoning.length===30,'Pass A requires 30 cases per diagnostic mode');
+for(const level of ['foundation','develop','extend'])for(const method of methods){
+ assert(errors.filter(x=>x.level===level&&x.methodId===method.id).length===2,
+   'Error level/method imbalance: '+level+'/'+method.id);
+ assert(reasoning.filter(x=>x.level===level&&x.answers?.method===method.id).length===2,
+   'Reasoning level/method imbalance: '+level+'/'+method.id);
+}
 validateReasonBank(reasoning);
 for(const q of errors){
  assert(['foundation','develop','extend'].includes(q.level)&&methodsById.has(q.methodId),'Invalid error level or method: '+q.id);
@@ -47,7 +60,7 @@ for(const q of reasoning){
     Number.isInteger(q.answers[key])&&q.answers[key]>=0&&q.answers[key]<q.options[key].length,'Invalid key: '+q.id+'/'+key);
  }
 }
-assert(errors.length>=15&&reasoning.length>=9,'Incomplete exam skills bank');
+assert(errors.length>=30&&reasoning.length>=30,'Incomplete Pass A investigation banks');
 
 const {questions:examQuestions}=load('exam-practice');
 unique(ids(examQuestions),'exam practice');
