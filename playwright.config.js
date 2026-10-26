@@ -2,6 +2,10 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests/browser',
   timeout: 30000,
+  // Bound CI diagnostic runs so a browser regression cannot block review indefinitely.
+  globalTimeout: process.env.CI ? 240000 : 0,
+  maxFailures: process.env.CI ? 6 : 0,
+  workers: process.env.CI ? 2 : undefined,
   expect: { timeout: 7000 },
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : 'list',
