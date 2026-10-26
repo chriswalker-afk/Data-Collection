@@ -172,3 +172,58 @@ for(const game of ['speed','match','sort']){
 }
 console.log('PASS: Cloudflare Pass 5 ceremony in all four games, permissions, podium, replay and user-specific keepsakes.');
 
+const teamwork=expectStatus(await request('POST','/rooms',{roundLength:1,game:'sort'}),201,'create classroom teamwork');
+const path='/rooms/'+teamwork.code;
+expectStatus(await request('POST',path+'/command',{type:'teams-set',count:3},teamwork.token),200,'enable 3 teams');
+expectStatus(await request('POST',path+'/command',{type:'goal-set',target:80},teamwork.token),200,'set 80% class goal');
+const teamStudents=await Promise.all(Array.from({length:6},(_,i)=>
+  request('POST',path+'/join',{name:'Team '+String(i+1)},undefined)));
+const sessions=teamStudents.map((r,i)=>expectStatus(r,201,'team join '+i));
+const teamLobby=expectStatus(await request('GET',path+'/state',undefined,teamwork.token),200,'lobby teams');
+assert.equal(teamLobby.players.length,6);
+assert.equal(teamLobby.teamCount,3);
+assert.equal(teamLobby.goalTarget,80);
+assert.ok(teamLobby.teams.every(t=>t.members===2));
+const badTeam=await request('POST',path+'/command',{type:'teams-set',count:4},sessions[0].token);
+assert.equal(badTeam.status,400);
+expectStatus(await request('POST',path+'/command',{type:'teams-shuffle'},teamwork.token),200,'shuffle teams');
+const shuffledTeam=expectStatus(await request('GET',path+'/state',undefined,sessions[0].token),200,'updated team');
+assert.ok(shuffledTeam.players.every(p=>p.teamId));
+expectStatus(await request('POST',path+'/command',{type:'start'},teamwork.token),200,'team game starts');
+const teamQuestion=expectStatus(await request('GET',path+'/state',undefined,sessions[0].token),200,'team question');
+const placements=Object.fromEntries(teamQuestion.question.statements.map(item=>{
+  const source=evaluationIndex[item.id];assert.ok(source,'existing Solo evaluation');
+  return [item.id,source.subject+':'+source.polarity];
+}));
+const teamAnswers=await Promise.all(sessions.map(session=>
+  request('POST',path+'/command',{type:'answer',placements},session.token)));
+teamAnswers.forEach((result,i)=>expectStatus(result,200,'team answer '+i));
+const unrevealedTeam=expectStatus(await request('GET',path+'/state',undefined,sessions[0].token),200,'unrevealed class');
+assert.ok(unrevealedTeam.players.every(p=>p.score===0),'checked results are hidden until teacher reveals');
+assert.equal(unrevealedTeam.classQuest.correct,0);
+assert.ok(unrevealedTeam.teams.every(t=>t.averageScore===0));
+assert.equal((await request('POST',path+'/command',{type:'feedback-post',text:'Spoofed'},sessions[0].token)).status,400);
+expectStatus(await request('POST',path+'/command',{type:'reveal'},teamwork.token),200,'team review');
+expectStatus(await request('POST',path+'/command',{
+  type:'feedback-post',text:'Check the reason each statement belongs in its correct column.'
+},teamwork.token),200,'teacher reasoning');
+const teamReview=expectStatus(await request('GET',path+'/state',undefined,sessions[0].token),200,'team feedback received');
+assert.match(teamReview.teacherFeedback.text,/Check the reason/);
+assert.equal(teamReview.questionPulse.responses,6);
+assert.equal(teamReview.classQuest.accuracy,100);
+assert.ok(teamReview.teams.every(t=>t.accuracy===100));
+assert.equal((await request('POST',path+'/command',{type:'teams-set',count:0},teamwork.token)).status,400);
+expectStatus(await request('POST',path+'/command',{type:'next'},teamwork.token),200,'team game finished');
+const teamEnd=expectStatus(await request('GET',path+'/state',undefined,teamwork.token),200,'class quest final');
+assert.equal(teamEnd.classQuest.achieved,true);
+assert.ok(teamEnd.teams.every(t=>t.questComplete));
+expectStatus(await request('POST',path+'/command',{type:'ceremony-start'},teamwork.token),200,'team ceremony');
+expectStatus(await request('POST',path+'/command',{type:'ceremony-next'},teamwork.token),200,'team podium reveal');
+const teamCeremony=expectStatus(await request('GET',path+'/state',undefined,sessions[1].token),200,'team podium state');
+assert.equal(teamCeremony.ceremony.slide.kind,'team-podium');
+assert.equal(teamCeremony.ceremony.slide.standings.length,3);
+expectStatus(await request('POST',path+'/command',{type:'ceremony-next'},teamwork.token),200,'class quest reveal');
+assert.equal(expectStatus(await request('GET',path+'/state',undefined,sessions[0].token),200,'class goal slide').ceremony.slide.achieved,true);
+console.log('PASS: Pass 6 teacher-only teams, balanced six-player setup, hidden scores, class quest, feedback and ceremony.');
+
+
