@@ -1235,13 +1235,15 @@ async function loadData() {
     const sources = [
       ['concepts', 'concepts'], ['cloze', 'cloze'], ['evaluations', 'evaluations'],
       ['sort-rounds', 'rounds'], ['scenarios', 'scenarios'], ['methods', 'methods'],
-      ['accepted-terms', 'terms'], ['exam-errors', 'errors'], ['exam-reasoning','reasoning'], ['exam-practice','examQuestions']
+      ['accepted-terms', 'terms'], ['exam-errors', 'errors'], ['exam-reasoning','reasoning'], ['exam-practice','questions']
     ];
     const responses = await Promise.all(sources.map(([name]) =>
       fetch(new URL('./content/' + name + '.json', document.baseURI))));
     if (responses.some(response => !response.ok)) throw new Error('The revision content could not be loaded.');
     const payloads = await Promise.all(responses.map(response => response.json()));
     data = Object.fromEntries(sources.map((source, i) => [source[1], payloads[i][source[1]]]));
+    data.examQuestions=data.questions;
+    delete data.questions;
     if (Object.entries(data).some(([key,items]) => key!=='terms' && !Array.isArray(items))) {
       throw new Error('Unexpected content format.');
     }
