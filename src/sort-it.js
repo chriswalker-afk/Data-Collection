@@ -16,10 +16,11 @@ export function sortDestinationLabel(destination){
  return METHOD_LABELS[method]+' — '+(polarity==='advantage'?'advantages':'disadvantages');
 }
 export function validatePairBank(pairs,evaluations){
- if(!Array.isArray(pairs)||!pairs.length)throw new Error('Missing Sort It! pairs');
+ if(!Array.isArray(pairs)||pairs.length!==10)throw new Error('Pass C needs all ten Sort It! comparisons');
  const index=new Map(evaluations.map(e=>[e.id,e]));
  const pairIds=new Set();
  const seenMethods=new Set();
+ const seenCombinations=new Set();
  for(const pair of pairs){
   if(!pair.id||pairIds.has(pair.id)||!pair.label)throw new Error('Invalid or repeated Sort It! pair');
   pairIds.add(pair.id);
@@ -28,6 +29,9 @@ export function validatePairBank(pairs,evaluations){
     throw new Error('Each Sort It! pair requires two distinct sampling methods: '+pair.id);
   }
   pair.methods.forEach(id=>seenMethods.add(id));
+  const combination=pair.methods.slice().sort().join('|');
+  if(seenCombinations.has(combination))throw new Error('Repeated Sort It! method combination: '+combination);
+  seenCombinations.add(combination);
   if(!Array.isArray(pair.evaluationIds)||pair.evaluationIds.length<8||
     new Set(pair.evaluationIds).size!==pair.evaluationIds.length){
     throw new Error('Sort It! needs at least eight unique statements: '+pair.id);
@@ -57,6 +61,11 @@ export function validatePairBank(pairs,evaluations){
   if(new Set(claims).size!==claims.length)throw new Error('Duplicate Sort It! statement: '+pair.id);
  }
  if(METHOD_ORDER.some(id=>!seenMethods.has(id)))throw new Error('A sampling method is missing from Sort It! pairs');
+ for(let i=0;i<METHOD_ORDER.length;i++)for(let j=i+1;j<METHOD_ORDER.length;j++){
+   const combination=[METHOD_ORDER[i],METHOD_ORDER[j]].sort().join('|');
+   if(!seenCombinations.has(combination))
+     throw new Error('Missing Sort It! method combination: '+combination);
+ }
  return true;
 }
 
