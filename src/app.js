@@ -19,6 +19,7 @@ import {emptyExamStore,loadExamStore,saveExamStore,clearExamStore} from './exam-
 import {createExamSimulationUI} from './exam-sim-ui.js';
 import {createExperienceUI} from './experience-ui.js';
 import {nextAfterRound} from './journey.js';
+import {guideForActivity} from './activity-guidance.js';
 
 const mount = document.getElementById('app');
 const announcer = document.getElementById('announcer');
@@ -224,6 +225,30 @@ function homeView() {
   if (!persistenceAvailable) root.append(paragraph('storage-notice', 'Local storage is unavailable. You can still play, but your progress may not remain after closing this page.'));
   return root;
 }
+
+function practiceGuide(id,options={}){
+  const guide=guideForActivity(id,options);
+  return element('section',{className:'practice-guide','aria-label':'Practice instructions'},
+    div('practice-guide-part',
+      span('practice-guide-label','PRACTISING'),
+      paragraph('practice-guide-copy',guide.practice)),
+    div('practice-guide-part',
+      span('practice-guide-label','WHAT TO DO'),
+      paragraph('practice-guide-copy',guide.task)));
+}
+// These states distinguish checked answers from written work requiring human judgement.
+function feedbackBanner(status,title,body=[],extraClass=''){
+  const kind=['correct','incorrect','review'].includes(status)?status:'review';
+  const badge=kind==='correct'?'Checked answer':kind==='incorrect'?'Review answer':'Self-review';
+  const feedback=div('inline-feedback typed-feedback ui-feedback '+kind+(extraClass?' '+extraClass:''),
+    icon(kind==='correct'?'✓':kind==='incorrect'?'!':'i'),
+    div('ui-feedback-body',
+      span('ui-feedback-badge',badge),
+      heading(3,'feedback-heading',title),
+      ...body));
+  feedback.setAttribute('tabindex','-1');
+  return feedback;
+}
 function activityTop(game) {
   const meta = GAMES.find(item => item.id === game);
   const root = div('activity-top',
@@ -296,11 +321,11 @@ function flashcardView() {
     roundProgress(counter, session.items.length, 'Card ' + counter + ' of ' + session.items.length),
     action(session.reversed ? 'Definition → term' : 'Term → definition', 'reverse', { 'aria-pressed': session.reversed }, 'btn btn-quiet btn-small')
   );
-  root.append(controls);
+  root.append(controls,practiceGuide('flashcards',{reversed:session.reversed}));
   const card = element('section', { className: 'flash-area', 'aria-label': 'Current flashcard' });
   const faceButton = action('', 'flip', { 'aria-expanded': session.revealed }, 'flashcard');
   faceButton.append(
-    span('flash-overline', session.reversed ? 'WHICH TERM MATCHES?' : 'RECALL THIS DEFINITION'),
+    span('flash-overline', session.reversed ? 'QUESTION · WHICH TERM MATCHES?' : 'QUESTION · RECALL THIS DEFINITION'),
     span('flash-front', face),
     span('flash-reveal-label', session.revealed ? 'Tap to hide answer ↑' : 'Tap to reveal answer ↓')
   );
@@ -342,7 +367,9 @@ function matchView() {
   root.append(
     div('round-controls', roundProgress(complete, session.terms.length, 'Pairs matched'),
       span('quiet-tag', session.mistakes + ' to revisit')),
-    paragraph('game-instructions', 'Choose a term and the definition that matches it. Correct pairs disappear.')
+    practiceGuide('match'),
+    div('question-preamble',span('question-kicker','QUESTION'),
+      heading(2,'question-preamble-title','Match the pairs'))
   );
   const termCol = div('match-column');
   const defCol = div('match-column');
@@ -361,7 +388,7 @@ function matchView() {
     }, 'match-tile definition-tile' + (chosen ? ' is-selected' : '')));
   }
   root.append(div('match-columns', termCol, defCol));
-  if (session.feedback) root.append(div('inline-feedback' + (session.feedbackGood ? ' correct' : ' incorrect'), icon(session.feedbackGood ? '✓' : '!'), paragraph('', session.feedback)));
+  if (session.feedback) root.append(feedbackBanner(session.feedbackGood?'correct':'incorrect',session.feedback));
   return root;
 }
 function clozeModePicker() {
@@ -401,7 +428,8 @@ function clozeView() {
     div('round-controls',
       roundProgress(number,session.items.length,'Question '+number+' of '+session.items.length),
       span('quiet-tag',session.correct+' correct without help')
-    )
+    ),
+    practiceGuide('cloze',{level:clozeLevel})
   );
   const question=element('section',{
     className:'cloze-panel',
@@ -409,7 +437,7 @@ function clozeView() {
     'aria-labelledby':'cloze-title'
   });
   question.append(
-    span('eyebrow',typed?'RECALL THE MISSING WORD':'COMPLETE THE DEFINITION'),
+    span('eyebrow',typed?'QUESTION · RECALL THE MISSING WORD':'QUESTION · COMPLETE THE DEFINITION'),
     heading(2,'cloze-title',typed?'Type the word that belongs in the gap.':'Which word belongs in the gap?',{id:'cloze-title'}),
     div('cloze-sentence',parts[0],
       span('cloze-blank',session.answered?current.answer:'________'),parts[1])
@@ -456,15 +484,8 @@ function clozeView() {
         :'Not quite — '+current.answer+' is correct.';
     }
     const positive=session.status==='correct' || (!typed&&clozeCorrect(current,session.choice));
-    question.append(
-      div('inline-feedback typed-feedback'+(positive?' correct':' incorrect'))
-    );
-    const feedback=question.lastElementChild;
-    feedback.setAttribute('tabindex','-1');
-    feedback.append(
-      icon(positive?'✓':'!'),
-      div('',heading(3,'feedback-heading',title),paragraph('',current.explanation))
-    );
+    question.append(feedbackBanner(positive?'correct':'incorrect',title,
+      [paragraph('',current.explanation)]));
     question.append(div('next-row',
       action(number===session.items.length?'Finish round →':'Next question →',
         'cloze-next',{},'btn btn-primary')));
@@ -526,13 +547,14 @@ function speedView() {
             span('round-caption','Terms attempted: '+session.attempted),
             span('round-caption','Correct: '+session.correct)),
       session.speedMode==='timed'?clockBadge():span('quiet-tag',session.correct+' correct')
-    )
+    ),
+    practiceGuide('speed',{timed:session.speedMode==='timed'})
   );
   const panel=element('section',{
     className:'recall-panel','aria-labelledby':'recall-title','data-concept-id':current.id
   });
   panel.append(
-    span('eyebrow','DEFINITION → TERM'),
+    span('eyebrow','QUESTION · DEFINITION → TERM'),
     heading(2,'recall-title','Which mathematical term is described?',{id:'recall-title'}),
     div('recall-definition',current.definition)
   );
@@ -549,16 +571,10 @@ function speedView() {
     const title=correct?'Correct — '+current.label
       :session.status==='skipped'?'Skipped — '+current.label
       :'The correct term is '+current.label;
-    const feedback=div('inline-feedback typed-feedback'+(correct?' correct':' incorrect'),
-      icon(correct?'✓':'!'),
-      div('',
-        heading(3,'feedback-heading',title),
-        ...(correct&&session.aliasUsed?[paragraph('alias-note','Accepted equivalent terminology.')]:[]),
-        paragraph('',current.example),
-        paragraph('feedback-contrast',current.misconception)
-      )
-    );
-    feedback.setAttribute('tabindex','-1');
+    const feedback=feedbackBanner(correct?'correct':'incorrect',title,[
+      ...(correct&&session.aliasUsed?[paragraph('alias-note','Accepted equivalent terminology.')]:[]),
+      paragraph('',current.example),paragraph('feedback-contrast',current.misconception)
+    ]);
     panel.append(feedback,
       div('next-row',action(session.speedMode==='untimed'&&session.index===session.items.length-1
         ?'Finish round →':'Next definition →','speed-next',{},'btn btn-primary')));
