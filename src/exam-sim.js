@@ -4,6 +4,14 @@ import {shuffled} from './core.js';
 
 export const PAPER_SIZES=Object.freeze({quick:4,standard:8,full:12});
 export const PAPER_TYPES=Object.freeze(['allocation','systematic','procedure','evaluation']);
+export const PAPER_LEVELS=Object.freeze(['confidence','mixed','stretch']);
+const LEVEL_ORDER=Object.freeze({foundation:0,develop:1,extend:2});
+export function paperQuestionPool(questions,difficulty='mixed'){
+  if(!PAPER_LEVELS.includes(difficulty))throw new Error('Unknown level of challenge');
+  return questions.filter(q=>difficulty==='mixed'||
+    difficulty==='confidence'&&['foundation','develop'].includes(q.level)||
+    difficulty==='stretch'&&['develop','extend'].includes(q.level));
+}
 export const EXAM_STORE_KEY='sampling-arcade-exam-v1';
 export const MAX_TARGETS=40;
 
@@ -75,12 +83,13 @@ export function writtenChecklist(question,methods){
   if(!method)throw new Error('Unknown audited method '+question.methodId);
   return [...procedureModelSteps(question,methods).map(p=>({id:'step-'+p.id,text:p.text})),...(question.extraPoints||[])];
 }
-export function makePaper(questions,variant,random=Math.random){
+export function makePaper(questions,variant,random=Math.random,difficulty='mixed'){
   const size=PAPER_SIZES[variant];
   if(!size)throw new Error('Unknown paper format');
   const count=size/PAPER_TYPES.length;
+  const eligible=paperQuestionPool(questions,difficulty);
   const chosen=PAPER_TYPES.flatMap(type=>{
-    const pool=shuffled(questions.filter(q=>q.type===type),random);
+    const pool=shuffled(eligible.filter(q=>q.type===type),random);
     if(pool.length<count)throw new Error('Insufficient '+type+' questions');
     if(type!=='evaluation'||count<2)return pool.slice(0,count);
     // A standard or full paper deliberately samples both inference/census and method critique.
@@ -90,7 +99,9 @@ export function makePaper(questions,variant,random=Math.random){
     const retained=[inference,methods];
     return retained.concat(pool.filter(q=>!retained.includes(q)).slice(0,count-2));
   });
-  return newPaper(variant,shuffled(chosen,random).map(q=>q.id));
+  // Gradually raise difficulty within a paper while retaining random order within each level.
+  const ordered=shuffled(chosen,random).sort((a,b)=>LEVEL_ORDER[a.level]-LEVEL_ORDER[b.level]);
+  return newPaper(variant,ordered.map(q=>q.id),difficulty);
 }
 export function makeReviewPaper(questions,reviewIds,random=Math.random){
   const byId=new Set(questions.map(q=>q.id));
@@ -98,11 +109,11 @@ export function makeReviewPaper(questions,reviewIds,random=Math.random){
   if(!ids.length)throw new Error('No saved practice targets');
   return newPaper('review',shuffled(ids,random).slice(0,12));
 }
-export function newPaper(variant,questionIds){
-  if(![...Object.keys(PAPER_SIZES),'review'].includes(variant)||!Array.isArray(questionIds)||
+export function newPaper(variant,questionIds,difficulty='mixed'){
+  if(!PAPER_LEVELS.includes(difficulty)||![...Object.keys(PAPER_SIZES),'review'].includes(variant)||!Array.isArray(questionIds)||
      questionIds.length<1||questionIds.length>12||new Set(questionIds).size!==questionIds.length)
     throw new Error('Invalid paper');
-  return {variant,questionIds:[...questionIds],index:0,entries:{},complete:false};
+  return {variant,difficulty,questionIds:[...questionIds],index:0,entries:{},complete:false};
 }
 export function paperEntry(paper,id){
   return paper.entries[id]||{values:{},draft:'',stage:'answer',included:[],flag:false,hintsUsed:0};
@@ -149,7 +160,9 @@ export function sanitizeExamStore(value,questions,methods){
     const source=p.entries&&typeof p.entries==='object'&&!Array.isArray(p.entries)?p.entries[id]:null;
     entries[id]=sanitizeEntry(source,byId.get(id),methods);
   }
-  result.paper={variant:p.variant,questionIds:[...p.questionIds],index:p.index,entries,complete:p.complete===true};
+  // Existing Pass 5/6 papers did not store difficulty: keep them playable as mixed papers.
+  result.paper={variant:p.variant,difficulty:PAPER_LEVELS.includes(p.difficulty)?p.difficulty:'mixed',
+    questionIds:[...p.questionIds],index:p.index,entries,complete:p.complete===true};
   return result;
 }
 export function loadExamStore(questions,methods,storage){
