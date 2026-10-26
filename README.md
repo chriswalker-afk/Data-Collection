@@ -4,6 +4,8 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 
 **Pass 7:** a clearer route from vocabulary to exam responses, contextual next-activity guidance, three student-chosen Exam Lab difficulty paths, and an optional offline classroom feedback form. The 46-question bank and all ten games remain in place; no student writing or feedback is sent anywhere automatically.
 
+**UI Pass 2:** all ten activities now use consistent *Practising → What to do → Question* framing, shared controls and panel styling, and clear distinction between checked answers and self-reviewed writing. The mathematics and local student progress stores are unchanged.
+
 **Website:** https://chriswalker-afk.github.io/Data-Collection/ (published from `main` once Pages is enabled).
 
 ## Student features
@@ -43,6 +45,7 @@ npm run test:e2e
 GitHub Actions runs both unit/content validation and Chromium browser tests for PRs. **One-time publishing setup:** open Repository Settings → Pages → Build and deployment → Source: **GitHub Actions**. The `.github/workflows/deploy-pages.yml` workflow then publishes the site on the next push to `main` (or a manual workflow dispatch). The site's URL is not active until a deployment succeeds.
 
 ## Source & project notes
+- [UI Pass 2 instructional, feedback and design consistency audit](docs/UI_PASS_2.md)
 - [UI Pass 1 navigation, learning-stage grouping and next steps](docs/UI_PASS_1.md)
 - [Pass 7 classroom trial guide and learning-journey audit](docs/PASS_7_CLASSROOM_TRIAL.md)
 - [Pass 6 examiner-scope, mathematical and UX quality audit](docs/PASS_6_AUDIT.md)

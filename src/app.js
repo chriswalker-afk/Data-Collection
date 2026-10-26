@@ -19,6 +19,7 @@ import {emptyExamStore,loadExamStore,saveExamStore,clearExamStore} from './exam-
 import {createExamSimulationUI} from './exam-sim-ui.js';
 import {createExperienceUI} from './experience-ui.js';
 import {nextAfterRound} from './journey.js';
+import {guideForActivity} from './activity-guidance.js';
 
 const mount = document.getElementById('app');
 const announcer = document.getElementById('announcer');
@@ -224,6 +225,30 @@ function homeView() {
   if (!persistenceAvailable) root.append(paragraph('storage-notice', 'Local storage is unavailable. You can still play, but your progress may not remain after closing this page.'));
   return root;
 }
+
+function practiceGuide(id,options={}){
+  const guide=guideForActivity(id,options);
+  return element('section',{className:'practice-guide','aria-label':'Practice instructions'},
+    div('practice-guide-part',
+      span('practice-guide-label','PRACTISING'),
+      paragraph('practice-guide-copy',guide.practice)),
+    div('practice-guide-part',
+      span('practice-guide-label','WHAT TO DO'),
+      paragraph('practice-guide-copy',guide.task)));
+}
+// These states distinguish checked answers from written work requiring human judgement.
+function feedbackBanner(status,title,body=[],extraClass=''){
+  const kind=['correct','incorrect','review'].includes(status)?status:'review';
+  const badge=kind==='correct'?'Checked answer':kind==='incorrect'?'Review answer':'Self-review';
+  const feedback=div('inline-feedback typed-feedback ui-feedback '+kind+(extraClass?' '+extraClass:''),
+    icon(kind==='correct'?'✓':kind==='incorrect'?'!':'i'),
+    div('ui-feedback-body',
+      span('ui-feedback-badge',badge),
+      heading(3,'feedback-heading',title),
+      ...body));
+  feedback.setAttribute('tabindex','-1');
+  return feedback;
+}
 function activityTop(game) {
   const meta = GAMES.find(item => item.id === game);
   const root = div('activity-top',
@@ -296,11 +321,11 @@ function flashcardView() {
     roundProgress(counter, session.items.length, 'Card ' + counter + ' of ' + session.items.length),
     action(session.reversed ? 'Definition → term' : 'Term → definition', 'reverse', { 'aria-pressed': session.reversed }, 'btn btn-quiet btn-small')
   );
-  root.append(controls);
+  root.append(controls,practiceGuide('flashcards',{reversed:session.reversed}));
   const card = element('section', { className: 'flash-area', 'aria-label': 'Current flashcard' });
   const faceButton = action('', 'flip', { 'aria-expanded': session.revealed }, 'flashcard');
   faceButton.append(
-    span('flash-overline', session.reversed ? 'WHICH TERM MATCHES?' : 'RECALL THIS DEFINITION'),
+    span('flash-overline', session.reversed ? 'QUESTION · WHICH TERM MATCHES?' : 'QUESTION · RECALL THIS DEFINITION'),
     span('flash-front', face),
     span('flash-reveal-label', session.revealed ? 'Tap to hide answer ↑' : 'Tap to reveal answer ↓')
   );
@@ -342,7 +367,9 @@ function matchView() {
   root.append(
     div('round-controls', roundProgress(complete, session.terms.length, 'Pairs matched'),
       span('quiet-tag', session.mistakes + ' to revisit')),
-    paragraph('game-instructions', 'Choose a term and the definition that matches it. Correct pairs disappear.')
+    practiceGuide('match'),
+    div('question-preamble',span('question-kicker','QUESTION'),
+      heading(2,'question-preamble-title','Match the pairs'))
   );
   const termCol = div('match-column');
   const defCol = div('match-column');
@@ -361,7 +388,7 @@ function matchView() {
     }, 'match-tile definition-tile' + (chosen ? ' is-selected' : '')));
   }
   root.append(div('match-columns', termCol, defCol));
-  if (session.feedback) root.append(div('inline-feedback' + (session.feedbackGood ? ' correct' : ' incorrect'), icon(session.feedbackGood ? '✓' : '!'), paragraph('', session.feedback)));
+  if (session.feedback) root.append(feedbackBanner(session.feedbackGood?'correct':'incorrect',session.feedback));
   return root;
 }
 function clozeModePicker() {
@@ -401,7 +428,8 @@ function clozeView() {
     div('round-controls',
       roundProgress(number,session.items.length,'Question '+number+' of '+session.items.length),
       span('quiet-tag',session.correct+' correct without help')
-    )
+    ),
+    practiceGuide('cloze',{level:clozeLevel})
   );
   const question=element('section',{
     className:'cloze-panel',
@@ -409,7 +437,7 @@ function clozeView() {
     'aria-labelledby':'cloze-title'
   });
   question.append(
-    span('eyebrow',typed?'RECALL THE MISSING WORD':'COMPLETE THE DEFINITION'),
+    span('eyebrow',typed?'QUESTION · RECALL THE MISSING WORD':'QUESTION · COMPLETE THE DEFINITION'),
     heading(2,'cloze-title',typed?'Type the word that belongs in the gap.':'Which word belongs in the gap?',{id:'cloze-title'}),
     div('cloze-sentence',parts[0],
       span('cloze-blank',session.answered?current.answer:'________'),parts[1])
@@ -456,15 +484,8 @@ function clozeView() {
         :'Not quite — '+current.answer+' is correct.';
     }
     const positive=session.status==='correct' || (!typed&&clozeCorrect(current,session.choice));
-    question.append(
-      div('inline-feedback typed-feedback'+(positive?' correct':' incorrect'))
-    );
-    const feedback=question.lastElementChild;
-    feedback.setAttribute('tabindex','-1');
-    feedback.append(
-      icon(positive?'✓':'!'),
-      div('',heading(3,'feedback-heading',title),paragraph('',current.explanation))
-    );
+    question.append(feedbackBanner(positive?'correct':'incorrect',title,
+      [paragraph('',current.explanation)]));
     question.append(div('next-row',
       action(number===session.items.length?'Finish round →':'Next question →',
         'cloze-next',{},'btn btn-primary')));
@@ -526,13 +547,14 @@ function speedView() {
             span('round-caption','Terms attempted: '+session.attempted),
             span('round-caption','Correct: '+session.correct)),
       session.speedMode==='timed'?clockBadge():span('quiet-tag',session.correct+' correct')
-    )
+    ),
+    practiceGuide('speed',{timed:session.speedMode==='timed'})
   );
   const panel=element('section',{
     className:'recall-panel','aria-labelledby':'recall-title','data-concept-id':current.id
   });
   panel.append(
-    span('eyebrow','DEFINITION → TERM'),
+    span('eyebrow','QUESTION · DEFINITION → TERM'),
     heading(2,'recall-title','Which mathematical term is described?',{id:'recall-title'}),
     div('recall-definition',current.definition)
   );
@@ -549,16 +571,10 @@ function speedView() {
     const title=correct?'Correct — '+current.label
       :session.status==='skipped'?'Skipped — '+current.label
       :'The correct term is '+current.label;
-    const feedback=div('inline-feedback typed-feedback'+(correct?' correct':' incorrect'),
-      icon(correct?'✓':'!'),
-      div('',
-        heading(3,'feedback-heading',title),
-        ...(correct&&session.aliasUsed?[paragraph('alias-note','Accepted equivalent terminology.')]:[]),
-        paragraph('',current.example),
-        paragraph('feedback-contrast',current.misconception)
-      )
-    );
-    feedback.setAttribute('tabindex','-1');
+    const feedback=feedbackBanner(correct?'correct':'incorrect',title,[
+      ...(correct&&session.aliasUsed?[paragraph('alias-note','Accepted equivalent terminology.')]:[]),
+      paragraph('',current.example),paragraph('feedback-contrast',current.misconception)
+    ]);
     panel.append(feedback,
       div('next-row',action(session.speedMode==='untimed'&&session.index===session.items.length-1
         ?'Finish round →':'Next definition →','speed-next',{},'btn btn-primary')));
@@ -685,7 +701,7 @@ function classificationCard(kind) {
     'aria-labelledby': 'classification-title'
   });
   root.append(
-    span('eyebrow', kind === 'identify' ? 'READ THE SCENARIO' : comparison ? 'COMPARE THE METHODS' : 'EVALUATE THE METHOD'),
+    span('eyebrow', 'QUESTION · '+(kind === 'identify' ? 'READ THE SCENARIO' : comparison ? 'COMPARE THE METHODS' : 'EVALUATE THE METHOD')),
     heading(2, 'classification-title', titleText, { id: 'classification-title' }),
     div('classification-statement', item.prompt),
     paragraph('choose-note', kind === 'identify'
@@ -707,15 +723,11 @@ function classificationCard(kind) {
   root.append(choices);
   if (session.answered) {
     const right = session.choice === correctAnswer;
-    const feedback = div('inline-feedback classification-feedback' + (right ? ' correct' : ' incorrect'),
-      icon(right ? '✓' : '!'),
-      div('',
-        heading(3, 'feedback-heading', (right ? 'Correct — ' : 'Not quite — ') + categoryLabel(correctAnswer) + '.', { tabindex: '-1' }),
-        paragraph('', kind === 'identify' ? item.reason : item.explanation),
-        ...(kind === 'identify' ? [paragraph('feedback-contrast', item.contrast)] : [])
-      )
-    );
-    feedback.setAttribute('tabindex', '-1');
+    const feedback=feedbackBanner(right?'correct':'incorrect',
+      (right?'Correct — ':'Not quite — ')+categoryLabel(correctAnswer)+'.',[
+        paragraph('',kind==='identify'?item.reason:item.explanation),
+        ...(kind==='identify'?[paragraph('feedback-contrast',item.contrast)]:[])
+      ],'classification-feedback');
     root.append(
       feedback,
       div('next-row',
@@ -735,9 +747,7 @@ function sortView() {
       roundProgress(number, session.items.length, 'Statement ' + number + ' of ' + session.items.length),
       span('quiet-tag', session.correct + ' correct')
     ),
-    paragraph('game-instructions', session.round.type === 'comparison'
-      ? 'These contrasts distinguish two similar methods. Select the method described.'
-      : 'Classify each claim for the named method. Some strengths and limitations also apply to other methods.'),
+    practiceGuide('sort',{comparison:session.round.type==='comparison'}),
     classificationCard('sort')
   );
   return root;
@@ -752,7 +762,7 @@ function identifyView() {
       roundProgress(number, session.items.length, 'Scenario ' + number + ' of ' + session.items.length),
       span('quiet-tag', session.correct + ' correct')
     ),
-    paragraph('game-instructions', 'Each round includes all five sampling methods. Read how the participants or items were chosen.'),
+    practiceGuide('identify'),
     classificationCard('identify')
   );
   return root;
@@ -803,9 +813,9 @@ function buildView(){
  const root=div('page activity-page');root.append(activityTop('build'),buildPicker());
  if(session.complete){root.append(showCompletion('build'));return root;}
  const current=session.methods[session.index],method=current.method;
- root.append(roundProgress(session.index+1,session.methods.length,'Method '+(session.index+1)+' of '+session.methods.length));
+ root.append(roundProgress(session.index+1,session.methods.length,'Method '+(session.index+1)+' of '+session.methods.length),practiceGuide('build'));
  const panel=element('section',{className:'exam-workspace','data-method-id':method.id});
- panel.append(span('eyebrow','ORDER THE STEPS'),heading(2,'exam-heading',METHOD_LABELS[method.id],{id:'exam-heading',tabindex:'-1'}),
+ panel.append(span('eyebrow','QUESTION · ORDER THE STEPS'),heading(2,'exam-heading',METHOD_LABELS[method.id],{id:'exam-heading',tabindex:'-1'}),
   paragraph('exam-help','Move steps with the arrow buttons, using touch or keyboard. Equivalent valid orderings are accepted.'));
  const list=element('ol',{className:'exam-step-list'});
  current.steps.forEach((step,i)=>{
@@ -818,10 +828,10 @@ function buildView(){
  });panel.append(list);
  if(!current.checked)panel.append(div('exam-buttons',action('Check procedure','build-check'),action('Reveal model','build-reveal',{},'btn btn-quiet')));
  else {
-   const feedback=div('inline-feedback typed-feedback'+(current.correct?' correct':' incorrect'),
-     icon(current.correct?'✓':'!'),div('',heading(3,'feedback-heading',current.correct?'Valid procedure.':'Study this model procedure.'),
-     paragraph('',current.correct?'This order satisfies the compulsory dependencies.':'Some compulsory steps were in the wrong order, or you chose to reveal the answer.')));
-   feedback.setAttribute('tabindex','-1');
+   const feedback=feedbackBanner(current.correct?'correct':'incorrect',
+     current.correct?'Valid procedure.':'Study this model procedure.',[
+       paragraph('',current.correct?'This order satisfies the compulsory dependencies.':'Some compulsory steps were in the wrong order, or you chose to reveal the answer.')
+     ]);
    const model=element('ol',{className:'exam-model-list'});
    method.procedure.forEach(step=>model.append(element('li',{},step.text)));
    panel.append(feedback,heading(3,'exam-model-heading','Model method'),model,
@@ -839,9 +849,9 @@ function examRadio(name,value,text,checked,disabled,attribute) {
 function errorView(){
  const root=div('page activity-page');root.append(activityTop('error'),examLevelPicker());
  if(session.complete){root.append(showCompletion('error'));return root;}
- const q=session.items[session.index];root.append(roundProgress(session.index+1,session.items.length,'Case '+(session.index+1)+' of '+session.items.length));
+ const q=session.items[session.index];root.append(roundProgress(session.index+1,session.items.length,'Case '+(session.index+1)+' of '+session.items.length),practiceGuide('error'));
  const panel=element('section',{className:'exam-workspace','data-error-id':q.id});
- panel.append(span('eyebrow','DIAGNOSE AND REPAIR'),heading(2,'exam-heading','Find the flawed line',{id:'exam-heading',tabindex:'-1'}),
+ panel.append(span('eyebrow','QUESTION · DIAGNOSE AND REPAIR'),heading(2,'exam-heading','Find the flawed line',{id:'exam-heading',tabindex:'-1'}),
   paragraph('exam-scenario',q.context));
  const lines=element('fieldset',{className:'exam-fieldset'});lines.append(element('legend',{},'1. Which line is flawed?'));
  q.lines.forEach((line,i)=>lines.append(examRadio('error-line',String(i),String(i+1)+'. '+line,session.selectedLine===i,session.answered,'data-error-line')));
@@ -851,21 +861,21 @@ function errorView(){
  if(!session.answered)panel.append(div('exam-buttons',action('Check my diagnosis','error-check',{disabled:session.selectedLine===null||!session.selectedRepair})));
  else{
   const result=gradeError(q,session.selectedLine,session.selectedRepair);
-  const feedback=div('inline-feedback typed-feedback'+(result.correct?' correct':' incorrect'),icon(result.correct?'✓':'!'),
-   div('',heading(3,'feedback-heading',result.correct?'Both choices correct.':'Here is the accurate correction.'),
-   paragraph('',(result.lineCorrect?'You identified the faulty line. ':'The flawed line is '+(q.errorLine+1)+'. ')+
-    (result.repairCorrect?'Your repair was correct.':'Correct repair: '+q.repairs.find(x=>x.id===q.repair).text)),
-   paragraph('',q.explanation)));
-  feedback.setAttribute('tabindex','-1');panel.append(feedback,div('next-row',action(session.index===session.items.length-1?'Finish round →':'Next case →','error-next')));
+  const feedback=feedbackBanner(result.correct?'correct':'incorrect',
+     result.correct?'Both choices correct.':'Here is the accurate correction.',[
+       paragraph('',(result.lineCorrect?'You identified the faulty line. ':'The flawed line is '+(q.errorLine+1)+'. ')+
+         (result.repairCorrect?'Your repair was correct.':'Correct repair: '+q.repairs.find(x=>x.id===q.repair).text)),
+       paragraph('',q.explanation)
+     ]);panel.append(feedback,div('next-row',action(session.index===session.items.length-1?'Finish round →':'Next case →','error-next')));
  }
  root.append(panel);return root;
 }
 function reasoningView(){
  const root=div('page activity-page');root.append(activityTop('reason'),examLevelPicker());
  if(session.complete){root.append(showCompletion('reason'));return root;}
- const q=session.items[session.index];root.append(roundProgress(session.index+1,session.items.length,'Investigation '+(session.index+1)+' of '+session.items.length));
+ const q=session.items[session.index];root.append(roundProgress(session.index+1,session.items.length,'Investigation '+(session.index+1)+' of '+session.items.length),practiceGuide('reason'));
  const panel=element('section',{className:'exam-workspace','data-reason-id':q.id});
- panel.append(span('eyebrow','EXAM REASONING'),heading(2,'exam-heading','Build a justified answer',{id:'exam-heading',tabindex:'-1'}),
+ panel.append(span('eyebrow','QUESTION · EXAM REASONING'),heading(2,'exam-heading','Build a justified answer',{id:'exam-heading',tabindex:'-1'}),
  paragraph('exam-scenario',q.scenario),paragraph('exam-help','Priority: '+q.priority),
  paragraph('exam-help','Compare your choices with one defensible model. Alternative well-justified methods may also be valid.'));
  for(const [part,title] of [['method','Method'],['reason','Contextual justification'],['limitation','Limitation'],['improvement','Improvement']]){
@@ -883,10 +893,9 @@ function reasoningView(){
    {disabled:['method','reason','limitation','improvement'].some(k=>session.selections[k]===undefined)})));
  else{
   const result=assessReasoning(q,session.selections);
-  const feedback=div('inline-feedback typed-feedback'+(result.complete?' correct':' incorrect'),
-    icon(result.complete?'✓':'!'),div('',heading(3,'feedback-heading',result.met.length+' of 4 model points matched'),
-      paragraph('','This formative checklist is not an official Edexcel mark scheme or a grade for your written answer.')));
-  feedback.setAttribute('tabindex','-1');
+  const feedback=feedbackBanner('review',result.met.length+' of 4 model points matched',[
+     paragraph('','This formative checklist is not an official Edexcel mark scheme or a grade for your written answer.')
+   ]);
   const list=element('ul',{className:'exam-checklist'});
   for(const [part,title] of [['method','Method'],['reason','Justification'],['limitation','Limitation'],['improvement','Improvement']])
    list.append(element('li',{},(result.met.includes(part)?'✓ ':'○ ')+title+': '+
@@ -946,7 +955,7 @@ const examSimulator=createExamSimulationUI({
   beginReady:()=>{session={ready:true,complete:false};},
   persist:()=>{if(!saveExamStore(examStore,data.examQuestions,data.methods))persistenceAvailable=false;},
   recordNumerical:remember,finish:finishRound,render,announce,
-  openFeedback:experience.openFeedback
+  practiceGuide,feedbackBanner,openFeedback:experience.openFeedback
 });
 function render(focusTarget) {
   if (!data) return;

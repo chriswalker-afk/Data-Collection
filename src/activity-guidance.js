@@ -1,0 +1,60 @@
+// UI Pass 2: student-facing activity guidance only.
+// Keep mathematics, scoring, saved progress and teacher assessment claims elsewhere.
+export const ACTIVITY_GUIDANCE=Object.freeze({
+  flashcards:Object.freeze({
+    practice:'Recall precise mathematical terms and definitions.',
+    task:'Recall the full answer before revealing it, then choose Again, Nearly or Know it.'}),
+  match:Object.freeze({
+    practice:'Connect the correct mathematical term to its definition.',
+    task:'Select a term and then its matching definition. Correct pairs disappear.'}),
+  cloze:Object.freeze({
+    practice:'Retrieve the precise mathematical language used in definitions.',
+    task:'Complete the missing word in the definition.'}),
+  sort:Object.freeze({
+    practice:'Distinguish the strengths, limitations and defining features of sampling methods.',
+    task:'Read each statement and classify it for the method or methods described.'}),
+  identify:Object.freeze({
+    practice:'Recognise a sampling method from how participants or items are selected.',
+    task:'Read the selection procedure, then choose the method that was used.'}),
+  speed:Object.freeze({
+    practice:'Recall the exact mathematical term from its definition.',
+    task:'Type the term that matches the definition, then check your answer.'}),
+  build:Object.freeze({
+    practice:'Sequence a defensible sampling procedure and justify its steps.',
+    task:'Use the up/down arrows to order the steps, then check the procedure. Equivalent valid orders can count.'}),
+  error:Object.freeze({
+    practice:'Identify and repair errors in sampling procedures.',
+    task:'Find the flawed line and select the appropriate repair before checking.'}),
+  reason:Object.freeze({
+    practice:'Justify a method in context, recognise a limitation and suggest an improvement.',
+    task:'Choose the four elements of a defensible explanation. Your optional writing is for reflection, not automatic grading.'}),
+  exam:Object.freeze({
+    practice:'Combine sampling calculations, method descriptions and evaluation.',
+    task:'Answer independently where possible, then use the worked model to review your answer.'})
+});
+export function guideForActivity(id,options={}){
+  const original=ACTIVITY_GUIDANCE[id];
+  if(!original)throw new Error('Unknown activity '+id);
+  const result={...original};
+  if(id==='flashcards'&&options.reversed===true)
+    result.task='Name the mathematical term from its definition, reveal the answer, then rate your recall.';
+  if(id==='cloze'){
+    const level=options.level||'choices';
+    result.task=level==='choices'
+      ? 'Choose the word that completes the definition.'
+      :level==='guided'
+        ? 'Type the missing word. You may reveal its first letter; a hinted answer is practice, not mastery.'
+        :'Type the exact missing word without a word bank or hints.';
+  }
+  if(id==='sort'&&options.comparison===true)
+    result.task='Read the comparison and select the sampling method being described.';
+  if(id==='speed'&&options.timed===true)
+    result.task='Type the term before the timer runs out. The timer pauses while feedback is shown or the tab is hidden.';
+  if(id==='exam'){
+    if(options.questionType==='allocation'||options.questionType==='systematic')
+      result.task='Calculate each requested whole-number answer. Check your calculations and study the worked steps.';
+    if(options.questionType==='procedure'||options.questionType==='evaluation')
+      result.task='Write a contextual response first, then compare with the model and self-review the ideas you included. Your writing is not automatically marked.';
+  }
+  return result;
+}

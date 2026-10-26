@@ -99,8 +99,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .game-card-top, .game-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .game-number { font-size: .68rem; letter-spacing: .1em; color: var(--teal); font-weight: 800; }
 .game-icon { font-family: Georgia, serif; width: 53px; height: 53px; border-radius: 15px; display: grid; place-items: center; background: #eaf6ef; font-size: 2.1rem; font-weight: 600; color: #19796c; }
-.game-card:nth-child(2) .game-icon { color: #855927; background: #fff3e4; }
-.game-card:nth-child(3) .game-icon { color: #5076a2; background: #e9f1fd; }
 .game-card-title { font-size: 1.3rem; letter-spacing: -.04em; margin: 20px 0 6px; }
 .game-card-description { color: var(--subtle); font-size: .85rem; line-height: 1.65; margin: 0 0 20px; }
 .game-card-foot { border-top: 1px solid #eef1ef; margin-top: auto; padding-top: 15px; font-size: .73rem; color: var(--muted); font-weight: 700; }
@@ -283,8 +281,6 @@ progress::-moz-progress-bar { border-radius: 30px; background: #198775; }
 }
 
 /* Pass 2: accessible choice-based classification and scenario games */
-.game-card:nth-child(4) .game-icon { color: #815126; background: #fcf0df; }
-.game-card:nth-child(5) .game-icon { color: #4a658f; background: #eaf0fc; }
 .activity-scope {
   border: 1px solid #d2e8df;
   background: #e9f5ef;
@@ -393,7 +389,6 @@ progress::-moz-progress-bar { border-radius: 30px; background: #198775; }
 
 
 /* Pass 3: typed retrieval, explicit progressive modes and a quiet timer. */
-.game-card:nth-child(6) .game-icon { color: #7245a0; background: #f2eafa; }
 .recall-settings { align-items: center; }
 .recall-settings .settings-hint { flex-basis: 100%; margin: -7px 0 0; color: var(--subtle); font-size: .8rem; line-height: 1.5; }
 .setting-group { display: flex; flex-direction: column; gap: 7px; min-width: min(100%,220px); }
@@ -467,9 +462,6 @@ progress::-moz-progress-bar { border-radius: 30px; background: #198775; }
 
 
 /* Pass 4 — examination skills */
-.game-card:nth-child(7) .game-icon{color:#217d69;background:#e8f7ef}
-.game-card:nth-child(8) .game-icon{color:#975a35;background:#fff1e5}
-.game-card:nth-child(9) .game-icon{color:#4d5d95;background:#eef1fb}
 .exam-workspace{background:#fff;border:1px solid var(--border);border-radius:22px;margin-top:20px;padding:clamp(20px,4vw,42px)}
 .exam-heading{font-size:clamp(1.4rem,3vw,2rem);line-height:1.32;letter-spacing:-.035em;margin:10px 0 18px}
 .exam-help{color:var(--subtle);font-size:.88rem;line-height:1.7}
@@ -503,14 +495,7 @@ progress::-moz-progress-bar { border-radius: 30px; background: #198775; }
 }
 @media print{.exam-arrow,.exam-buttons,.exam-fieldset input,#reason-written{display:none!important}}
 
-/* Keep all nine navigation links inside the header at intermediate widths. */
-.header-inner{min-width:0}
-.site-nav{min-width:0;max-width:100%;overflow-x:auto;scrollbar-width:thin;overscroll-behavior-x:contain}
-.site-nav a{flex-shrink:0}
-
-
 /* Pass 5 — Exam Lab: exam practice without intrusive gamification. */
-.game-card:nth-child(10) .game-icon{color:#215f74;background:#e4f3f6}
 .sim-page{max-width:990px}
 .sim-landing{border:1px solid #d3e6dd;border-radius:24px;background:linear-gradient(140deg,#fff 52%,#eaf6ef);padding:clamp(22px,4.5vw,43px);margin-top:25px}
 .sim-landing-title{font-size:clamp(1.8rem,4vw,2.55rem);letter-spacing:-.045em;margin:10px 0}

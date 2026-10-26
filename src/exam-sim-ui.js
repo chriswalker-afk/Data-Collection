@@ -6,7 +6,7 @@ import {METHOD_LABELS} from './phase2.js';
 export function createExamSimulationUI(deps){
  let exportDrafts=false;
  let paperDifficulty='mixed';
- const {element,div,span,paragraph,heading,action,link,icon,activityTop,roundProgress}=deps;
+ const {element,div,span,paragraph,heading,action,link,icon,activityTop,roundProgress,practiceGuide,feedbackBanner}=deps;
  const get=()=>deps.getState();
  const currentQuestion=()=>{
    const {data,session}=get();
@@ -26,7 +26,7 @@ export function createExamSimulationUI(deps){
 
  function launchView(){
   const {examState}=get(),saved=examState.paper;
-  const page=div('page activity-page sim-page');page.append(activityTop('exam'));
+  const page=div('page activity-page sim-page');page.append(activityTop('exam'),practiceGuide('exam'));
   const hero=div('sim-landing',
    span('eyebrow','EXAM PRACTICE / SAMPLING'),
    heading(2,'sim-landing-title','Put it all together.'),
@@ -129,12 +129,10 @@ export function createExamSimulationUI(deps){
  function numericFeedback(question,entry){
   const marked=gradeNumbers(question,entry.values),wrap=div('sim-feedback');
   const assisted=marked.correct&&entry.hintsUsed>0;
-  const overall=div('inline-feedback typed-feedback'+(marked.correct?' correct':' incorrect'),
-    icon(marked.correct?'✓':'!'),
-    div('',heading(3,'feedback-heading',assisted?'All calculations correct with support.':marked.correct?'All calculations correct.':
-      'Compare each step with the worked solution.'),
-      paragraph('',marked.correctParts+' of '+marked.totalParts+' numerical parts correct.'+(assisted?' You used a hint, so this remains a practice target.':''))));
-  overall.setAttribute('tabindex','-1');wrap.append(overall);
+  const overall=feedbackBanner(assisted?'review':marked.correct?'correct':'incorrect',
+    assisted?'All calculations correct with support.':marked.correct?'All calculations correct.':'Compare each step with the worked solution.',
+    [paragraph('',marked.correctParts+' of '+marked.totalParts+' numerical parts correct.'+
+      (assisted?' You used a hint, so this remains a practice target.':''))]);wrap.append(overall);
   const list=element('ol',{className:'sim-worked-list'});
   for(const row of marked.fields){
    list.append(element('li',{className:'sim-worked-row'},
@@ -160,10 +158,9 @@ export function createExamSimulationUI(deps){
  }
  function writtenReview(q,entry){
   const {data}=get(),wrap=div('sim-written-review');
-  wrap.append(div('inline-feedback typed-feedback',icon('✓'),div('',
-   heading(3,'feedback-heading','Self-review your explanation'),
-   paragraph('','Compare your writing with this model, then tick only points genuinely covered. These ticks are not marks from Pearson or from an automated examiner.'))));
-  wrap.querySelector('.typed-feedback')?.setAttribute('tabindex','-1');
+  wrap.append(feedbackBanner('review','Self-review your explanation',[
+    paragraph('','Compare your writing with this model, then tick only points genuinely covered. These ticks are not marks from Pearson or from an automated examiner.')
+  ]));
   if(q.type==='procedure'){
    const method=data.methods.find(m=>m.id===q.methodId),steps=element('ol',{className:'sim-model-steps'});
    procedureModelSteps(q,data.methods).forEach(s=>steps.append(element('li',{},s.text)));
@@ -203,9 +200,10 @@ export function createExamSimulationUI(deps){
   const page=div('page activity-page sim-page');page.append(activityTop('exam'));
   page.append(div('round-controls',roundProgress(session.index+1,session.questionIds.length,
     'Question '+(session.index+1)+' of '+session.questionIds.length),
-    span('quiet-tag',numberTask(q)?'Numerical · auto-checked':'Written · self-reviewed')));
+    span('quiet-tag',numberTask(q)?'Numerical · auto-checked':'Written · self-reviewed')),
+    practiceGuide('exam',{questionType:q.type}));
   const workspace=element('section',{className:'sim-question','data-sim-question':q.id});
-  workspace.append(span('eyebrow',(q.type==='allocation'?'STRATIFIED ALLOCATION':
+  workspace.append(span('eyebrow','QUESTION · '+(q.type==='allocation'?'STRATIFIED ALLOCATION':
      q.type==='systematic'?'SYSTEMATIC SAMPLING':q.type==='procedure'?'EXPLAIN THE METHOD':'EVALUATE THE METHOD')+
      ' / '+q.level.toUpperCase()),
    heading(2,'sim-question-title',q.title,{id:'sim-question-heading',tabindex:'-1'}),
