@@ -124,14 +124,14 @@ for(const width of [320,390,768,1280]){
   const card=page.locator('.flashcard');
   await expect(card).toBeVisible();
   await noHorizontalOverflow(page,'front '+width);
-  const size1=await card.boundingBox();
+  const size1=await card.evaluate(el=>el.offsetHeight);
   await card.click();
   await expect(page.locator('.flash-detail-copy')).toHaveCount(2);
   await expect(page.locator('.flash-face-back')).toHaveAttribute('aria-hidden','false');
   await expect(page.locator('.flash-grade-panel')).toBeVisible();
   await noHorizontalOverflow(page,'back '+width);
-  const size2=await card.boundingBox();
-  expect(Math.abs(size1.height-size2.height)).toBeLessThanOrEqual(1);
+  const size2=await card.evaluate(el=>el.offsetHeight);
+  expect(Math.abs(size1-size2),'both faces must occupy the same layout height').toBeLessThanOrEqual(1);
   await expect(page.locator('.flash-detail-copy').first()).not.toBeEmpty();
  });
 }

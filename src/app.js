@@ -346,7 +346,7 @@ function flashcardView() {
     className:'flash-side flash-face-front','aria-hidden':String(session.revealed)
   },
     span('flash-side-top',
-      span('flash-side-type','FRONT · '+(session.reversed?'DEFINITION':'TERM')),
+      span('flash-side-type','FRONT · QUESTION'),
       span('flash-turn-symbol','↻')),
     span('flash-front',prompt),
     span('flash-face-footer',span('','Think of the full answer'),span('','Tap or press Enter to flip ↗'))

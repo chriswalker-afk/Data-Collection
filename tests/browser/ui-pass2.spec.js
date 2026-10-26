@@ -13,7 +13,7 @@ async function checkGuide(page,id){
  }else if(id==='match'){
   await expect(page.locator('.question-preamble')).toContainText('QUESTION');
  }else if(id==='flashcards'){
-  await expect(page.locator('.flash-overline')).toContainText('QUESTION');
+  await expect(page.locator('.flash-side-type').first()).toContainText('QUESTION');
  }else{
   const panel=page.locator('.cloze-panel,.classification-panel,.recall-panel,.exam-workspace').first();
   await expect(panel).toBeVisible();
