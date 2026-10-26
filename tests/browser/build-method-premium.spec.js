@@ -42,7 +42,7 @@ test('premium procedure workshop keeps the five-method selector and clear native
  expect(await stored(page)).toBeNull();
 });
 test('mouse dragging really moves a step to the selected row without recording an answer',async({page})=>{
- await page.setViewportSize({width:1440,height:1300});
+ await page.setViewportSize({width:1440,height:1800});
  await open(page);
  const before=await order(page);
  const grip=page.locator('[data-step-id="'+before[0]+'"] .build-grip');
