@@ -28,7 +28,7 @@ Every board has at least two advantages and two disadvantages for **each** metho
 
 ## Interaction design
 
-- **Drag cards** from a compact, scrollable statement tray to one of four visible drop zones. This uses native HTML drag-and-drop on computers, plus a grab-handle pointer implementation for touch devices.
+- **Drag cards** from a compact, scrollable statement tray to one of four visible drop zones. This uses consistent pointer dragging on computers and a touch grab-handle drag interaction on mobile devices.
 - **Tap or keyboard alternative:** select a statement, then select its destination. This is easier than a long drag on a phone, and uses native buttons.
 - Students can move any unmarked card between destinations or return it to the mixed bank.
 - A sticky, compact selected-statement strip retains context during scrolling, with accessible announcements of placements and remaining cards.
