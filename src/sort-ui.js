@@ -148,18 +148,21 @@ export function createSortItUI(deps){
   );
   root.append(div('sort-workspace',tray,board));
   if(s.everChecked){
-    const title=s.checked?
-      (result.correct===result.total?'All placements are correct.':
-        result.correct+' of '+result.total+' in the right place.'):
-      'Changes made — check again when ready.';
-    root.append(feedbackBanner(
-      s.checked&&result.correct===result.total?'correct':'review',title,[
-      paragraph('','Your first-check score is '+s.firstCorrect+' of '+result.total+
-        '. Corrections improve understanding, but do not change that recorded score.'),
-      ...(s.checked&&result.incorrectIds.length?[
-        paragraph('','Review the outlined cards. You can move them, check again, or reveal the explanations.')
-      ]:[])
-    ],'sort-board-feedback'));
+    if(!s.checked){
+      root.append(paragraph('sort-await-check',
+        'Placements have changed. Check again to review the corrections. Your first-check score remains '+
+        s.firstCorrect+' of '+result.total+'.'));
+    }else{
+      const title=result.correct===result.total?'All placements are correct.':
+        result.correct+' of '+result.total+' in the right place.';
+      root.append(feedbackBanner(result.correct===result.total?'correct':'incorrect',title,[
+        paragraph('','Your first-check score is '+s.firstCorrect+' of '+result.total+
+          '. Corrections improve understanding, but never change that recorded score.'),
+        ...(result.incorrectIds.length?[
+          paragraph('','Review the outlined cards. Move them and check again, or show the mathematical explanations.')
+        ]:[])
+      ],'sort-board-feedback'));
+    }
   }
   const actions=div('sort-board-actions',
     action(s.everChecked?'Check corrections':'Check sorting','sort-check',
