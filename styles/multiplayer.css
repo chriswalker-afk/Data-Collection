@@ -143,3 +143,76 @@
 }
 .multiplayer-room:fullscreen .multiplayer-room-top{margin-bottom:18px}
 @media print{.multiplayer-hero,.multiplayer-entry-section,.room-share-actions,.player-remove{display:none!important}.multiplayer-room-top{background:#fff;color:#000;box-shadow:none}.room-code-block *{color:#000!important}}
+
+
+/* Pass 4 — three purposeful classroom boards, with tap and keyboard alternatives. */
+.multiplayer-stage .arena-mode-intro{font-size:.8rem;color:#426b5c;margin:13px 0}
+.multiplayer-stage .arena-instruction{padding:13px 16px;margin:12px 0 16px;background:#f1f7f4;border:1px solid #d4e5d9;border-radius:14px}
+.multiplayer-stage .arena-instruction strong{font-size:.72rem;letter-spacing:.09em;color:#1b6753}
+.multiplayer-stage .arena-instruction p{font-size:.8rem;line-height:1.55;margin:5px 0 0}
+.multiplayer-stage .arena-board-counter{font-size:.81rem;font-weight:850;color:#2b6552;margin:0 0 14px}
+.multiplayer-stage .arena-speed-form{display:grid;gap:12px;max-width:540px;margin-top:15px}
+.multiplayer-stage .arena-speed-label{font-size:.9rem;font-weight:820;color:#244f43}
+.multiplayer-stage #arena-speed-answer{min-height:58px;width:100%;border:2px solid #b4d3c4;border-radius:14px;padding:14px 16px;
+  background:white;color:#203b37;font-size:1.04rem;font-weight:680}
+.multiplayer-stage #arena-speed-answer:focus-visible{outline:3px solid #d19a44;outline-offset:3px;border-color:#2f886e}
+.multiplayer-stage .arena-field-hint{font-size:.77rem;color:#536e64;margin:0}
+.multiplayer-stage .arena-speed-form button{justify-self:start;min-height:49px}
+.multiplayer-stage .arena-speed-form button:disabled{opacity:.55}
+.multiplayer-stage .arena-match-columns{display:grid;grid-template-columns:minmax(0,.74fr) minmax(0,1.26fr);gap:13px;margin:12px 0 20px}
+.multiplayer-stage .arena-match-panel{min-width:0;display:flex;flex-direction:column;gap:9px;padding:13px;border:1px solid #cfddd6;
+  background:#f2f7f3;border-radius:17px}
+.multiplayer-stage .arena-match-panel h3{font-size:.73rem;letter-spacing:.1em;color:#2f6756;margin:1px 2px 7px}
+.multiplayer-stage .arena-term,.multiplayer-stage .arena-definition{display:flex;align-items:center;gap:10px;width:100%;
+  min-width:0;min-height:58px;border:2px solid #c2d9cd;background:#fff;border-radius:12px;padding:11px 13px;
+  color:#234b3e;text-align:left;font-size:.83rem;line-height:1.45;font-weight:700;white-space:normal;overflow-wrap:anywhere}
+.multiplayer-stage .arena-term{font-size:.86rem}
+.multiplayer-stage .arena-term:hover,.multiplayer-stage .arena-definition:not(:disabled):hover{border-color:#31795f;background:#f0faf4}
+.multiplayer-stage .arena-term.is-selected{background:#d9f4e3;border-color:#237553;box-shadow:0 0 0 2px #80cba450}
+.multiplayer-stage .arena-term.is-paired,.multiplayer-stage .arena-definition.is-paired{border-color:#8dbbb1;background:#e9f6f0}
+.multiplayer-stage .arena-definition-letter{display:grid;place-items:center;flex:none;width:29px;height:29px;
+  border-radius:9px;background:#d7e8de;color:#245643;font-size:.8rem;font-weight:850}
+.multiplayer-stage .arena-match-panel button:disabled{cursor:not-allowed}
+.multiplayer-stage .arena-definition:disabled:not(.is-paired){opacity:.7}
+.multiplayer-stage .arena-match-panel button:focus-visible,.multiplayer-stage .arena-sort-card:focus-visible,
+.multiplayer-stage .arena-zone-action:focus-visible{outline:3px solid #cc933d;outline-offset:2px}
+.multiplayer-stage .arena-submit{margin-top:20px;display:flex}
+.multiplayer-stage .arena-sort-bank{margin:12px 0 23px}
+.multiplayer-stage .arena-sort-bank h3{font-size:.73rem;letter-spacing:.11em;margin:0 0 8px;color:#2d6754}
+.multiplayer-stage .arena-sort-bank-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.multiplayer-stage .arena-sort-card{min-width:0;min-height:82px;text-align:left;display:flex;flex-direction:column;
+  justify-content:space-between;align-items:stretch;gap:7px;padding:13px;background:white;border:2px solid #bfcec7;
+  border-radius:12px;color:#26493d;white-space:normal;font-size:.79rem;line-height:1.45;overflow-wrap:anywhere}
+.multiplayer-stage .arena-sort-card small{color:#5a786a;font-weight:790;font-size:.65rem;line-height:1.4}
+.multiplayer-stage .arena-sort-card.is-placed{border-color:#79b49a;background:#eaf7ec}
+.multiplayer-stage .arena-sort-card.is-selected{outline:3px solid #c99037;outline-offset:2px;border-color:#17684c}
+.multiplayer-stage .arena-sort-destinations{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.multiplayer-stage .arena-sort-zone{min-width:0;border-radius:15px;border:1px solid #cadfd2;background:#f6faf6;
+  padding:13px;display:flex;flex-direction:column}
+.multiplayer-stage .arena-sort-zone h4{font-size:.8rem;font-weight:860;margin:0;color:#255e47;overflow-wrap:anywhere;line-height:1.4}
+.multiplayer-stage .arena-sort-zone .arena-zone-count{font-size:.7rem;margin:4px 0 9px;color:#56806c}
+.multiplayer-stage .arena-sort-zone ul{padding:0 0 0 14px;margin:0;flex:1}
+.multiplayer-stage .arena-sort-zone li{font-size:.73rem;color:#405e51;margin-bottom:8px;line-height:1.43;overflow-wrap:anywhere}
+.multiplayer-stage .arena-zone-action{background:#d9ebdf;border:1px solid #a9d0b7;color:#215b45;
+  border-radius:10px;padding:10px 8px;font-weight:830;font-size:.74rem;min-height:43px;margin-top:10px}
+.multiplayer-stage .arena-zone-action:disabled{opacity:.54;cursor:default}
+.multiplayer-stage .arena-math-review{display:grid;gap:10px;margin-top:17px}
+.multiplayer-stage .arena-review-line{padding:13px 15px;border:1px solid #c6ddcc;background:#f4faf5;border-radius:13px}
+.multiplayer-stage .arena-review-line strong{font-size:.84rem;color:#185a45}
+.multiplayer-stage .arena-review-line p{font-size:.81rem;margin:4px 0;line-height:1.6}
+.multiplayer-stage .arena-review-line .arena-explanation{font-size:.74rem;color:#527064}
+.multiplayer-stage .arena-my-result{background:#f7f2e3;padding:12px;border:1px solid #ddcda4;border-radius:12px;font-weight:780}
+@media(max-width:1000px){
+  .multiplayer-stage .arena-match-columns{grid-template-columns:1fr}
+  .multiplayer-stage .arena-sort-destinations{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+  .multiplayer-stage .arena-sort-bank-cards{grid-template-columns:1fr}
+  .multiplayer-stage .arena-match-panel,.multiplayer-stage .arena-sort-zone{padding:11px}
+  .multiplayer-stage .arena-term,.multiplayer-stage .arena-definition{padding:12px}
+  .multiplayer-stage .arena-sort-destinations{grid-template-columns:1fr}
+  .multiplayer-stage .arena-speed-form button{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  .multiplayer-stage .arena-match-panel button,.multiplayer-stage .arena-sort-card{transition:none}
+}
