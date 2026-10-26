@@ -39,7 +39,7 @@ test('Sort It! presents exactly two method panels and four distinguishable advan
  await expect(page.locator('[data-sort-card="srs-subgroups"]')).toContainText('Small subgroups may be underrepresented by chance.');
 });
 
-test('native mouse drag and drop actually moves a statement to the correct method and polarity',async({page})=>{
+test('pointer-based mouse drag and drop moves a statement to the correct method and polarity',async({page})=>{
  await page.setViewportSize({width:1440,height:950});
  await start(page);
  const card=page.locator('[data-sort-card="srs-subgroups"]');
