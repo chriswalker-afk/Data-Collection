@@ -43,6 +43,7 @@ npm run test:e2e
 GitHub Actions runs both unit/content validation and Chromium browser tests for PRs. **One-time publishing setup:** open Repository Settings → Pages → Build and deployment → Source: **GitHub Actions**. The `.github/workflows/deploy-pages.yml` workflow then publishes the site on the next push to `main` (or a manual workflow dispatch). The site's URL is not active until a deployment succeeds.
 
 ## Source & project notes
+- [UI Pass 1 navigation, learning-stage grouping and next steps](docs/UI_PASS_1.md)
 - [Pass 7 classroom trial guide and learning-journey audit](docs/PASS_7_CLASSROOM_TRIAL.md)
 - [Pass 6 examiner-scope, mathematical and UX quality audit](docs/PASS_6_AUDIT.md)
 - [Pass 5 Exam Lab mathematical grading, written self-review and storage safeguards](docs/PASS_5_SITE.md)

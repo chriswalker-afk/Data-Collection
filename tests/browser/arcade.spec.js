@@ -4,10 +4,12 @@ test('home has clear navigation, game cards, and topic switching', async ({ page
   await page.goto('/');
   await expect(page.getByRole('heading', {name:'Learn the language.'})).toBeVisible();
   await expect(page.getByRole('navigation', {name:'Main navigation'})).toBeVisible();
-  await expect(page.getByRole('link', {name:/Flashcards/}).first()).toBeVisible();
+  await page.locator('#activities-menu > summary').click();
+  await expect(page.getByRole('link', {name:'Flashcards',exact:true})).toBeVisible();
   await page.getByRole('button', { name: /Types of data/ }).click();
   await expect(page).toHaveURL(/#\/home\/data$/);
   await expect(page.getByRole('button', { name: /Types of data/ })).toHaveAttribute('aria-pressed','true');
+  await page.locator('#activities-menu > summary').click();
   await page.getByRole('link', {name:'Flashcards', exact:true}).click();
   await expect(page.getByRole('heading', {name:'Flashcards'})).toBeVisible();
   await expect(page.locator('.activity-topic')).toHaveText('Types of data');
