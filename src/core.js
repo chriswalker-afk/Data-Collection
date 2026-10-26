@@ -6,11 +6,17 @@ export const TOPICS = Object.freeze([
 export const GAMES = Object.freeze([
   { id: 'flashcards', title: 'Flashcards', subtitle: 'Recall the language', description: 'Reveal each definition, then grade your recall.', number: '01' },
   { id: 'match', title: 'Match Up', subtitle: 'Connect the pairs', description: 'Match terms to their definitions, one pair at a time.', number: '02' },
-  { id: 'cloze', title: 'Missing Words', subtitle: 'Fill the gaps', description: 'Identify the essential word in an Edexcel-aligned sentence.', number: '03' }
+  { id: 'cloze', title: 'Missing Words', subtitle: 'Fill the gaps', description: 'Identify the essential word in an Edexcel-aligned sentence.', number: '03' },
+  { id: 'sort', title: 'Sort It!', subtitle: 'Weigh up the methods', description: 'Sort advantages, disadvantages and important method distinctions.', number: '04' },
+  { id: 'identify', title: 'Which Method?', subtitle: 'Apply the definitions', description: 'Identify the method used in realistic sampling scenarios.', number: '05' }
 ]);
 export function topicLabel(id) { return TOPICS.find(t => t.id === id)?.label || TOPICS[0].label; }
 export function isTopic(id) { return TOPICS.some(t => t.id === id); }
 export function isGame(id) { return GAMES.some(g => g.id === id); }
+export function isSamplingOnlyGame(id) { return id === 'sort' || id === 'identify'; }
+export function effectiveTopic(mode, topic) {
+  return isSamplingOnlyGame(mode) ? 'sampling' : (isTopic(topic) ? topic : 'sampling');
+}
 export function shuffled(values, random = Math.random) {
   const result = [...values];
   for (let i = result.length - 1; i > 0; i--) {
@@ -52,9 +58,9 @@ export function routeFromHash(hash) {
   const path = String(hash || '').replace(/^#\/?/, '').split('/');
   const mode = isGame(path[0]) ? path[0] : 'home';
   const topicCandidate = mode === 'home' ? (path[0] === 'home' ? path[1] : path[0]) : path[1];
-  return { mode, topic: isTopic(topicCandidate) ? topicCandidate : 'sampling' };
+  return { mode, topic: effectiveTopic(mode, topicCandidate) };
 }
 export function hashFor(mode, topic) {
   const safeMode = isGame(mode) ? mode : 'home';
-  return '#/' + safeMode + '/' + (isTopic(topic) ? topic : 'sampling');
+  return '#/' + safeMode + '/' + effectiveTopic(safeMode, topic);
 }
