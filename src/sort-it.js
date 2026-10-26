@@ -63,9 +63,7 @@ export function validatePairBank(pairs,evaluations){
 export function makePairSortRound(pairs,evaluations,id,random=Math.random){
  const pair=pairs.find(item=>item.id===id);
  if(!pair)throw new Error('Unknown Sort It! pair: '+id);
- validatePairBank([pair],evaluations.filter(e=>pair.evaluationIds.includes(e.id)).concat(
-   // validation of one pair should not require every method represented across the global collection
-   []));
+ validatePairBank(pairs,evaluations);
  const index=new Map(evaluations.map(e=>[e.id,e]));
  const items=pair.evaluationIds.map(key=>{
   const evalItem=index.get(key);
