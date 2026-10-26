@@ -14,7 +14,7 @@ test('browse all cards by type, search and reveal without affecting saved progre
  await expect(page.locator('.flash-library-card:visible')).toHaveCount(32);
  await page.locator('#flash-library-filter').selectOption('disadvantage');
  await expect(page.locator('.flash-browser-count')).toHaveText('7 of 32 cards showing');
- await page.locator('#flash-library-search').fill('simple random');
+ await page.locator('#flash-library-search').fill('Small subgroups may be underrepresented by chance');
  await expect(page.locator('.flash-library-card:visible')).toHaveCount(1);
  const card=page.locator('.flash-library-card:visible');
  await expect(card).toContainText('Disadvantages of simple random sampling');
