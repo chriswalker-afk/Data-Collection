@@ -5,6 +5,9 @@ on:
     branches: [main]
 permissions:
   contents: read
+concurrency:
+  group: sampling-arcade-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   unit-and-content:
     name: Content and unit tests
@@ -21,6 +24,7 @@ jobs:
   multiplayer-fast:
     name: Fast multiplayer regression
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     needs: unit-and-content
     steps:
       - uses: actions/checkout@v4
