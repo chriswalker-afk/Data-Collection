@@ -14,7 +14,7 @@ export const GAME_MODES=Object.freeze({
 });
 export const GAME_IDS=Object.freeze(Object.keys(GAME_MODES));
 export function validLength(game,length){
-  return Boolean(GAME_MODES[game]&&Number.isInteger(length)&&GAME_MODES[game].lengths.includes(length));
+  return Boolean(typeof game==='string'&&Object.hasOwn(GAME_MODES,game)&&Number.isInteger(length)&&GAME_MODES[game].lengths.includes(length));
 }
 export function questionTimeMs(game){return (GAME_MODES[game]?.seconds??20)*1000;}
 function makeMatchBoard(terms,index,random){
