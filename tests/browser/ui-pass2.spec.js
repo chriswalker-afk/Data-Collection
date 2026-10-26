@@ -14,6 +14,10 @@ async function checkGuide(page,id){
   await expect(page.locator('.question-preamble')).toContainText('QUESTION');
  }else if(id==='flashcards'){
   await expect(page.locator('.flash-side-type').first()).toContainText('QUESTION');
+ }else if(id==='sort'){
+  await expect(page.locator('.sort-workspace')).toBeVisible();
+  await expect(page.locator('.sort-tray .sort-card')).toHaveCount(10);
+  await expect(page.locator('.sort-drop-zone')).toHaveCount(4);
  }else{
   const panel=page.locator('.cloze-panel,.classification-panel,.recall-panel,.exam-workspace').first();
   await expect(panel).toBeVisible();
