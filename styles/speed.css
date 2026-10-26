@@ -1,0 +1,104 @@
+/* Speed Recall — a focused retrieval surface, not a game of decorative speed. */
+.speed-page{--speed-dark:#173e48;--speed-teal:#1c735f;--speed-muted:#477269}
+.speed-page .speed-settings{gap:16px;align-items:flex-end;flex-wrap:wrap}
+.speed-page .speed-settings-note{flex-basis:100%;margin:0;font-size:.79rem;line-height:1.5;color:#526e64}
+.speed-page .speed-ready{
+  overflow:hidden;border:1px solid #376d6b;border-radius:23px;
+  background:linear-gradient(125deg,#123c42 0%,#19534f 65%,#216c5b 100%);color:#f5fffa;
+  box-shadow:0 14px 36px rgba(17,55,52,.15);padding:clamp(22px,4vw,42px);
+}
+.speed-page .speed-ready-main{display:grid;grid-template-columns:minmax(0,1fr) minmax(170px,210px);gap:22px;align-items:center}
+.speed-page .speed-ready-kicker{display:block;color:#bcebd1;font-size:.7rem;letter-spacing:.15em;font-weight:850}
+.speed-page .speed-ready-title{margin:10px 0 12px;color:#fff;font-size:clamp(1.55rem,3.5vw,2.3rem);line-height:1.14;letter-spacing:-.04em}
+.speed-page .speed-ready-copy{font-size:.92rem;line-height:1.68;margin:0 0 22px;color:#e3f4eb;max-width:590px}
+.speed-page .speed-ready .btn-primary{background:#e2f4e7;color:#174c3d;border-color:#e2f4e7;min-height:49px}
+.speed-page .speed-ready .btn-primary:hover{background:#fff;border-color:#fff;color:#134a36}
+.speed-page .speed-ready-clock{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  min-height:165px;border:1px solid rgba(221,255,235,.31);border-radius:20px;
+  background:rgba(233,255,244,.08);box-shadow:inset 0 1px 1px rgba(255,255,255,.05);
+}
+.speed-page .speed-ready-clock-number{color:#fff;font-weight:860;letter-spacing:-.04em;font-variant-numeric:tabular-nums;font-size:clamp(2rem,4vw,3rem)}
+.speed-page .speed-ready-clock-label{font-size:.74rem;color:#d6ebdf;font-weight:650}
+.speed-page .speed-round-controls{gap:12px;align-items:center}
+.speed-page .speed-round-controls .round-progress{min-width:0;flex:1 1 220px}
+.speed-page .timed-score{display:flex;align-items:center;gap:8px 14px;flex:1 1 220px;min-width:0}
+.speed-page .timed-score .round-caption{display:inline-flex;background:#edf5f1;color:#315f53;padding:8px 11px;border:1px solid #c8ded1;border-radius:9px;font-weight:780;font-size:.75rem}
+.speed-page .speed-clock{display:flex;flex-direction:column;align-items:stretch;gap:7px;flex:0 0 236px;min-width:0;max-width:100%;border:1px solid #80b4a4;background:#e5f5ed;border-radius:14px;padding:9px 13px;color:#1d5d4c}
+.speed-page .speed-clock-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.speed-page .speed-clock-copy{display:flex;flex-direction:column;gap:2px}
+.speed-page .clock-caption{font-size:.69rem;color:#1d5d4c;letter-spacing:.025em}
+.speed-page .clock-value{color:#155542;font-size:1.65rem;font-weight:900;line-height:1.15;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.speed-page .speed-clock-state{font-size:.66rem;font-weight:720;color:#437467}
+.speed-page .speed-clock-track{height:5px;width:100%;overflow:hidden;border-radius:9px;background:#b5d8c6}
+.speed-page .speed-clock-fill{display:block;height:100%;max-width:100%;background:#217a62;border-radius:9px;transition:width .2s linear}
+.speed-page .speed-clock.is-low{background:#fff5e5;border-color:#cc9f64}
+.speed-page .speed-clock.is-low .clock-caption,.speed-page .speed-clock.is-low .clock-value{color:#855221}
+.speed-page .speed-clock.is-low .speed-clock-track{background:#ead3ae}
+.speed-page .speed-clock.is-low .speed-clock-fill{background:#b57a2b}
+.speed-page .speed-recall-panel{
+  position:relative;overflow-wrap:anywhere;border:1px solid #b6d0c4;
+  border-radius:22px;background:linear-gradient(150deg,#fff 68%,#f7fbf8 100%);
+  box-shadow:0 8px 24px rgba(18,59,42,.06);margin-top:13px;
+  padding:clamp(20px,3.5vw,35px);animation:speed-card-enter .3s cubic-bezier(.2,.7,.25,1) both;
+}
+.speed-page .speed-question-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.speed-page .speed-question-head .eyebrow{margin:0;color:#236e54}
+.speed-page .speed-question-number{border:1px solid #c8ddd2;border-radius:9px;padding:6px 10px;background:#f0f7f2;color:#326f56;font-size:.73rem;font-weight:800;font-variant-numeric:tabular-nums}
+.speed-page .recall-title{color:var(--speed-dark);margin:8px 0 18px;font-size:clamp(1.26rem,2.8vw,1.72rem)}
+.speed-page .recall-definition{
+  font-size:clamp(1.08rem,2.35vw,1.37rem);line-height:1.78;
+  font-weight:690;color:#1c4840;background:#e9f5ed;border:1px solid #c2dfcd;
+  border-left:5px solid #218469;border-radius:13px;padding:clamp(19px,3.1vw,30px)
+}
+.speed-page .recall-instruction{color:#4e6c60;font-size:.83rem;margin:20px 0 0}
+.speed-page .typed-label{font-weight:790;color:#1c5846}
+.speed-page .typed-input{min-height:56px;border:2px solid #8ebaa7;font-weight:680;background:#fff}
+.speed-page .typed-input:focus-visible{border-color:#217b62;outline:3px solid #acdac4;outline-offset:2px}
+.speed-page .typed-input-row .btn{min-height:56px}
+.speed-page .speed-support-tools{margin:12px 0 0}
+.speed-page .speed-feedback{margin-top:22px;box-shadow:0 3px 12px rgba(15,80,56,.055)}
+.speed-page .speed-feedback .feedback-heading{font-size:1.07rem}
+.speed-page .speed-model-heading{display:block;margin-top:14px;letter-spacing:.075em;font-size:.68rem;font-weight:870}
+.speed-page .speed-model-example p,.speed-page .speed-model-caution p{line-height:1.65}
+.speed-page .speed-model-caution{margin-top:12px;padding-top:8px;border-top:1px solid currentColor}
+.speed-page .speed-model-caution .feedback-contrast{border:0;padding:0;margin:5px 0 0}
+.speed-page .speed-written-attempt{overflow-wrap:anywhere;font-weight:720}
+.speed-page .speed-feedback-tip{font-size:.75rem;color:#5c736b;margin:14px 0 0}
+.speed-page .speed-near-miss{border-left:4px solid #b17c38}
+.speed-page .speed-review-context{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;margin-top:17px;padding:15px 18px;background:#eaf4ef;border:1px solid #accfba;border-radius:15px}
+.speed-page .speed-review-context-copy{flex:1 1 240px}
+.speed-page .speed-review-kicker{color:#1a7055;font-weight:860;letter-spacing:.1em;font-size:.68rem}
+.speed-page .speed-review-message{font-size:.84rem;color:#315c4b;line-height:1.5;margin:4px 0 0}
+.speed-page .speed-summary{margin:20px auto;max-width:650px;text-align:left;padding:18px;border:1px solid #bbd7c7;border-radius:15px;background:#f2f8f4}
+.speed-page .speed-summary-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.speed-page .speed-summary-stat{display:flex;flex-direction:column;gap:3px;min-width:0}
+.speed-page .speed-summary-number{color:#185b49;font-weight:880;font-size:clamp(1.4rem,3.2vw,2rem);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.speed-page .speed-summary-label{font-size:.73rem;line-height:1.35;color:#46695a;font-weight:700}
+.speed-page .speed-summary-explainer{font-size:.74rem;color:#547366;line-height:1.5;margin:15px 0 0}
+.speed-page .speed-summary-next{font-size:.86rem;color:#254c3e;line-height:1.55;margin:7px 0 13px}
+.speed-page .speed-review-button{max-width:100%;white-space:normal}
+@keyframes speed-card-enter{from{opacity:.7;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:760px){
+ .speed-page .speed-ready-main{grid-template-columns:1fr}
+ .speed-page .speed-ready-clock{min-height:95px;flex-direction:row;gap:15px}
+ .speed-page .speed-clock{flex:1 1 210px}
+ .speed-page .speed-round-controls{align-items:stretch}
+}
+@media(max-width:480px){
+ .speed-page .speed-round-controls{flex-direction:column}
+ .speed-page .speed-clock{width:100%;flex:0 0 auto}
+ .speed-page .speed-recall-panel{padding:19px 14px}
+ .speed-page .speed-ready-clock-number{font-size:2.1rem}
+ .speed-page .speed-summary-stats{gap:7px}
+ .speed-page .speed-summary{padding:14px}
+ .speed-page .speed-feedback-tip{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+ .speed-page .speed-recall-panel{animation:none!important}
+ .speed-page .speed-clock-fill,.speed-page .speed-review-button{transition:none!important}
+}
+@media print{
+ .speed-page .speed-clock,.speed-page .speed-support-tools,.speed-page .speed-review-button{display:none!important}
+ .speed-page .speed-ready,.speed-page .speed-summary{box-shadow:none;color:#111;background:#fff}
+}
