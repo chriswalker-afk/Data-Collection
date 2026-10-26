@@ -310,7 +310,7 @@ function showCompletion(game) {
     : game === 'sort' ? session.correct + ' of ' + session.items.length + ' statements placed correctly on the first check'
     : game === 'identify' ? session.correct + ' of ' + session.items.length + ' scenarios identified correctly'
     : game === 'build' ? session.correct + ' of ' + session.methods.length + ' procedures correct on first check'
-    : game === 'error' ? session.correct + ' of ' + session.items.length + ' complete diagnoses
+    : game === 'error' ? session.correct + ' of ' + session.items.length + ' complete diagnoses'
     : game === 'reason' ? session.correct + ' of ' + session.items.length + ' complete model checklists'
     : session.correct + ' correct answers out of ' + session.items.length;
   return div('completed-screen',
