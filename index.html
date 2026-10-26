@@ -18,18 +18,39 @@
         <span class="brand-symbol" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
         <span class="brand-copy"><strong>Sampling Arcade</strong><small>A LEVEL MATHEMATICS · EDEXCEL 9MA0</small></span>
       </a>
-      <nav class="site-nav" aria-label="Main navigation">
-        <a data-nav="home" href="#/home/sampling">Home</a>
-        <a data-nav="flashcards" href="#/flashcards/sampling">Flashcards</a>
-        <a data-nav="match" href="#/match/sampling">Match Up</a>
-        <a data-nav="cloze" href="#/cloze/sampling">Missing Words</a>
-        <a data-nav="sort" href="#/sort/sampling">Sort It!</a>
-        <a data-nav="identify" href="#/identify/sampling">Which Method?</a>
-        <a data-nav="speed" href="#/speed/sampling">Speed Recall</a>
-        <a data-nav="build" href="#/build/sampling">Build the Method</a>
-        <a data-nav="error" href="#/error/sampling">Spot the Error</a>
-        <a data-nav="reason" href="#/reason/sampling">Contextual Reasoning</a>
-        <a data-nav="exam" href="#/exam/sampling">Exam Lab</a>
+      <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle" aria-controls="main-nav" aria-expanded="false">
+        <span>Menu</span><span class="mobile-menu-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+      <nav class="site-nav" id="main-nav" aria-label="Main navigation">
+        <a class="nav-primary-link" data-nav="home" href="#/home/sampling">Home</a>
+        <details class="activities-menu" id="activities-menu">
+          <summary class="activities-trigger">Activities <span class="nav-chevron" aria-hidden="true"></span></summary>
+          <div class="activities-panel">
+            <section class="nav-group" aria-labelledby="nav-recall-title">
+              <h2 class="nav-group-title" id="nav-recall-title">Learn &amp; Remember</h2>
+              <p class="nav-group-description">Build accurate recall</p>
+              <a data-nav="flashcards" href="#/flashcards/sampling">Flashcards</a>
+              <a data-nav="match" href="#/match/sampling">Match Up</a>
+              <a data-nav="cloze" href="#/cloze/sampling">Missing Words</a>
+              <a data-nav="speed" href="#/speed/sampling">Speed Recall</a>
+            </section>
+            <section class="nav-group" aria-labelledby="nav-apply-title">
+              <h2 class="nav-group-title" id="nav-apply-title">Apply &amp; Choose</h2>
+              <p class="nav-group-description">Identify suitable methods</p>
+              <a data-nav="sort" href="#/sort/sampling">Sort It!</a>
+              <a data-nav="identify" href="#/identify/sampling">Which Method?</a>
+            </section>
+            <section class="nav-group" aria-labelledby="nav-explain-title">
+              <h2 class="nav-group-title" id="nav-explain-title">Explain &amp; Evaluate</h2>
+              <p class="nav-group-description">Develop exam reasoning</p>
+              <a data-nav="build" href="#/build/sampling">Build the Method</a>
+              <a data-nav="error" href="#/error/sampling">Spot the Error</a>
+              <a data-nav="reason" href="#/reason/sampling">Contextual Reasoning</a>
+            </section>
+          </div>
+        </details>
+        <a class="nav-primary-link nav-exam-link" data-nav="exam" href="#/exam/sampling">Exam Lab</a>
+        <a class="nav-primary-link nav-progress-link" data-progress-nav href="#/home/sampling">My Progress</a>
       </nav>
     </div>
   </header>

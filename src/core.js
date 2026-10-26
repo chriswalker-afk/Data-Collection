@@ -15,6 +15,21 @@ export const GAMES = Object.freeze([
   { id: 'reason', title: 'Contextual Reasoning', subtitle: 'Make a defensible choice', description: 'Build a justified response with a limitation and an improvement.', number: '09' },
   { id: 'exam', title: 'Exam Lab', subtitle: 'Mixed examination practice', description: 'Combine numerical calculations, full methods and contextual evaluation.', number: '10' }
 ]);
+// Deliberately share the same activity IDs as existing routes and student progress keys.
+export const ACTIVITY_STAGES = Object.freeze([
+  { id: 'recall', number: '01', title: 'Learn & Remember',
+    subtitle: 'Build the vocabulary you need for accurate mathematical explanations.',
+    games: ['flashcards','match','cloze','speed'] },
+  { id: 'apply', number: '02', title: 'Apply & Choose',
+    subtitle: 'Identify sampling methods and weigh up how they work.',
+    games: ['sort','identify'] },
+  { id: 'explain', number: '03', title: 'Explain & Evaluate',
+    subtitle: 'Write clearer procedures, diagnose mistakes and justify decisions.',
+    games: ['build','error','reason'] },
+  { id: 'exam', number: '04', title: 'Exam Lab',
+    subtitle: 'Bring calculations, methods and evaluation together in one mixed paper.',
+    games: ['exam'] }
+]);
 export function topicLabel(id) { return TOPICS.find(t => t.id === id)?.label || TOPICS[0].label; }
 export function isTopic(id) { return TOPICS.some(t => t.id === id); }
 export function isGame(id) { return GAMES.some(g => g.id === id); }

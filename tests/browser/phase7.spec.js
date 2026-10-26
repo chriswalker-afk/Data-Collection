@@ -13,7 +13,8 @@ test('home clearly guides students through recall, application and exam work',as
  await expect(page.locator('.journey-suggestion')).toContainText('Start with the key terms');
  await expect(page.locator('.journey-step').last()).toContainText('Exam Lab');
  await page.locator('.journey-step').last().getByRole('link').click();
- await expect(page.getByRole('heading',{name:'Exam Lab'})).toBeVisible();
+ await expect(page).toHaveURL(/#\/exam\/sampling$/);
+ await expect(page.locator('#view-heading')).toHaveText('Exam Lab');
 });
 
 test('data-topic recommendations never direct students to sampling-only activities',async({page})=>{

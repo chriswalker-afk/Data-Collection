@@ -18,10 +18,16 @@ async function speedConcept(page,concepts) {
 test('navigation includes Speed Recall and original Missing Words defaults to choices',async ({page})=>{
   await page.goto('/#/home/data');
   await expect(page.locator('.game-card')).toHaveCount(10);
+  if(await page.locator('#mobile-menu-toggle').isVisible())
+    await page.locator('#mobile-menu-toggle').click();
+  await page.locator('#activities-menu > summary').click();
   await page.getByRole('link',{name:'Speed Recall',exact:true}).click();
   await expect(page).toHaveURL(/#\/speed\/data$/);
   await expect(page.getByRole('heading',{name:'Speed Recall'})).toBeVisible();
   await expect(page.locator('#speed-mode')).toHaveValue('untimed');
+  if(await page.locator('#mobile-menu-toggle').isVisible())
+    await page.locator('#mobile-menu-toggle').click();
+  await page.locator('#activities-menu > summary').click();
   await page.getByRole('link',{name:'Missing Words',exact:true}).click();
   await expect(page.locator('#cloze-level')).toHaveValue('choices');
   await expect(page.locator('[data-action="cloze-option"]')).toHaveCount(4);
