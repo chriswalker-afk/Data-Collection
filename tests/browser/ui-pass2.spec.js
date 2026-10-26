@@ -31,7 +31,7 @@ test('all ten activities share a purpose/task/question journey without modifying
  await expect(page.locator('link[href="./styles/activity-ui.css"]')).toHaveCount(1);
 });
 
-test('selecting help level changes the visible instructions, not the student's progress',async({page})=>{
+test('selecting help level changes instructions without changing saved progress',async({page})=>{
  await page.goto('/#/cloze/data');
  await expect(page.locator('.practice-guide')).toContainText('Choose the word');
  await page.locator('#cloze-level').selectOption('guided');
