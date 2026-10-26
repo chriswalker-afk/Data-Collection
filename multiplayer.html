@@ -33,7 +33,7 @@
         <h1 id="arena-heading">One class.<br>Four game modes.<br><em>Brilliant thinking.</em></h1>
         <p>Challenge your sampling knowledge together in four live games. Play with a six-digit room code and finish with a teacher-led awards ceremony featuring mathematical character trophies and a podium.</p>
         <div class="arcade-hero-facts">
-          <span>Four live games</span><span>Grand Awards Ceremony</span><span>No sign-ins</span>
+          <span>Four live games</span><span>Optional teams</span><span>Grand Awards Ceremony</span>
         </div>
       </div>
       <div class="multiplayer-hero-preview" aria-hidden="true">
@@ -56,7 +56,7 @@
             <span class="entry-mode-icon" aria-hidden="true">▣</span>
             <div><span class="entry-mode-tag">01 / TEACHER</span><h3 id="host-heading">Host a classroom</h3></div>
           </div>
-          <p>Choose a game and the challenge length. You control the start, answer reviews and every transition.</p>
+          <p>Choose a game and length, then optionally organise balanced teams or set a Class Quest. You control the start, teaching feedback and answer reviews.</p>
           <div class="entry-inputs">
             <label for="game-mode">Choose a game</label>
             <select id="game-mode">
@@ -116,6 +116,7 @@
         <section class="multiplayer-stage" id="stage"></section>
         <div id="game-announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
         <aside class="multiplayer-players" aria-labelledby="players-heading">
+          <div id="class-pulse" class="class-pulse" aria-label="Team and class quest progress" hidden></div>
           <div class="roster-heading">
             <div><span class="arcade-paths-kicker">IN THE ARENA</span><h2 id="players-heading">Classroom roster</h2></div>
             <span id="player-count" class="player-count">0 / 45</span>

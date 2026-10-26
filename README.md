@@ -26,9 +26,9 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 - The optional **Classroom feedback** section downloads a plain-text response for students to share if they choose. There are no names, logins, analytics or automatic submissions. Do not enter personally identifying information.
 - Local learning progress tracks formative practice. Mastery requires two consecutive credited checks; a flashcard “Know it” is self-rated, not externally marked. Ungraded written review counts as practice without cancelling mastery streaks, and corrected Match Up pairs cannot earn first-try credit. **Reset my progress** clears learning and exam-writing progress, but not the separately saved Trophy Cabinet.
 
-## Classroom multiplayer (Passes 1–4)
+## Classroom multiplayer (Passes 1–6)
 
-The ten Solo Arcade games and their saved progress remain unchanged. [Multiplayer Arena](./multiplayer.html) now has four classroom modes: **Which Method?**, **Speed Recall**, **Match Up** and **Sort It!**. The teacher chooses a game and length, shares a temporary six-digit code, and controls the start, locking/removal, mathematical answer reveal and subsequent questions. Student devices join by nickname without sign-in. Typed recall, matched pairs and sorting boards are all marked server-side.
+The ten Solo Arcade games and their saved progress remain unchanged. [Multiplayer Arena](./multiplayer.html) now has four classroom modes: **Which Method?**, **Speed Recall**, **Match Up** and **Sort It!**. The teacher chooses a game and length, shares a temporary six-digit code, and controls the start, locking/removal, mathematical answer reveal and subsequent questions. Student devices join by nickname without sign-in. Typed recall, matched pairs and sorting boards are all marked server-side. **Pass 6 adds optional balanced teams, average-per-member team rankings, teacher-set Class Quests and post-reveal mathematical feedback.** A 45-client synthetic load test checks simultaneous joining, marking and WebSocket reconnection.
 
 Cloudflare Workers and SQLite-backed Durable Objects handle rooms and **hibernatable WebSocket** updates. The server validates answer keys, grading, timing and teacher-only actions; temporary rooms expire after three hours. The system avoids continuous polling while WebSockets are working. **Solo trophies and Multiplayer keepsakes are available now.** Multiplayer awards are based on server-graded responses and celebrated together with a teacher-controlled podium and synchronised character reveals. Student devices save nickname-free local keepsakes separately from Solo mastery.
 
@@ -56,6 +56,7 @@ npm run test:e2e
 GitHub Actions runs unit/content validation, desktop/mobile Chromium browser tests and Cloudflare staging multiplayer smoke tests. The published site is available at the URL above through the successful `.github/workflows/deploy-pages.yml` workflow. `node scripts/build-pages.mjs` validates the static publish artifact and keeps Cloudflare Worker backend files out of GitHub Pages.
 
 ## Source & project notes
+- [Pass 6 Team Challenges: balanced groups, Class Quests, teacher feedback and 45-client stress testing](docs/PASS_6_TEAM_CHALLENGES.md)
 - [Pass 5 Grand Multiplayer Awards Ceremony: verified character awards, podium, synchronized reveals and privacy](docs/PASS_5_GRAND_AWARDS_CEREMONY.md)
 - [Pass 4 Multiplayer: Speed Recall, Match Up, Sort It!, scoring and classroom reliability](docs/PASS_4_MULTIPLAYER_GAMES.md)
 - [Pass 3 Trophy Cabinet: 16 awards, fairness rules, offline storage and backup/restore](docs/PASS_3_TROPHY_CABINET.md)

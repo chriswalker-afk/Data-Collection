@@ -68,6 +68,28 @@ export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
       outer.append(node('div','✦   🏆   ✧','ceremony-welcome-icons'),h(slide.title),
         node('p',slide.subtitle,'ceremony-subtitle'),
         node('p','A little celebration for the careful thinkers, determined improvers and mathematical detectives in the room.','ceremony-context'));
+    }else if(slide.kind==='team-podium'){
+      outer.append(node('div','🤝','ceremony-top-icon'),h(slide.title));
+      const board=node('div',undefined,'ceremony-team-podium');
+      for(const team of slide.standings){
+        const card=node('article');
+        card.append(node('span',team.icon,'team-avatar'),
+          node('strong',team.name,'team-name'),
+          node('span',team.rank?team.rank===1?'1st place':team.rank===2?'2nd place':
+            team.rank===3?'3rd place':'4th place':'No positive points yet','team-rank'),
+          node('strong',team.averageScore.toLocaleString('en-GB')+' average points','team-average'),
+          node('span',team.members+' members · '+team.accuracy+'% checked accuracy','team-quest-label'),
+          node('span',team.questComplete?'✦ Team Quest achieved':'Team Quest not yet achieved','team-quest-label'));
+        board.append(card);
+      }
+      outer.append(board,node('p',slide.subtitle,'ceremony-footnote'));
+    }else if(slide.kind==='class-quest'){
+      outer.append(node('div',slide.achieved?'✦   🎉   ✧':'✦   🤝   ✧','ceremony-welcome-icons'),
+        h(slide.title),
+        node('p',slide.accuracy+'% checked accuracy · '+slide.coverage+
+          '% class participation','ceremony-subtitle'),
+        node('p','Goal: '+slide.target+'% accuracy and 75% participation','ceremony-finale-count'),
+        node('p',slide.subtitle,'ceremony-footnote'));
     }else if(slide.kind==='podium'){
       outer.append(node('div','🏆','ceremony-top-icon'),h(slide.title));
       podium(slide,outer);
