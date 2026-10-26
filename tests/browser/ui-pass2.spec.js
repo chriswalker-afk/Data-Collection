@@ -69,18 +69,22 @@ test('written reasoning stays visually labelled as self-review even with all fou
  await page.goto('/#/reason/sampling');
  const id=await page.locator('[data-reason-id]').getAttribute('data-reason-id');
  const q=await page.evaluate(async id=>(await(await fetch('./content/exam-reasoning.json')).json()).reasoning.find(q=>q.id===id),id);
- await page.locator('#reason-written').fill('My own contextual explanation.');
- for(const key of ['method','reason','limitation','improvement'])
+ for(const key of ['method','reason','limitation','improvement']){
   await page.locator('input[name="reason-'+key+'"][value="'+q.answers[key]+'"]').check();
+  await page.getByRole('button',{name:'Continue →'}).click();
+ }
+ await page.locator('#reason-written').fill('My own contextual explanation.');
  await page.getByRole('button',{name:'Review my reasoning'}).click();
  const feedback=page.locator('.exam-workspace .ui-feedback');
  await expect(feedback).toHaveClass(/review/);
- await expect(feedback).not.toHaveClass(/\bcorrect\b/);
+ await expect(feedback).not.toHaveClass(/\\bcorrect\\b/);
  await expect(feedback.locator('.ui-feedback-badge')).toHaveText('Self-review');
- await expect(feedback).toContainText('not an official Edexcel mark scheme');
+ await expect(feedback).toContainText('not an examination mark');
  await expect(page.locator('.exam-draft')).toContainText('My own contextual explanation.');
  const progress=await page.evaluate(()=>JSON.parse(localStorage.getItem('sampling-arcade-progress-v1')));
  expect(progress.version).toBe(1);
+ expect(progress.answers).toBe(1);
+ expect(Object.values(progress.concepts)[0].correct).toBe(0);
 });
 
 test('Exam Lab numerical and written question views share wording without losing the honest marking distinction',async({page})=>{
