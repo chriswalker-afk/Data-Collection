@@ -112,7 +112,7 @@ test('45-student room: concurrent joins, WebSocket fanout, answers, reconnects a
     await expect.poll(async()=>page.evaluate(()=>
       Object.values(window.__stressStates).filter(s=>s?.status==='reveal').length
     ),{timeout:25000}).toBe(45);
-    const reconnecting=tickets.slice(0,6).map(t=>t.participantId);
+    const reconnecting=students.slice(0,6).map(s=>s.participantId);
     await page.evaluate(ids=>ids.forEach(id=>window.__stressSockets[id].close(1000,'Reconnecting')),reconnecting);
     const newTickets=await Promise.all(students.slice(0,6).map(async student=>{
       const r=await post(request,'/rooms/'+code+'/socket-ticket',{},student.token);
