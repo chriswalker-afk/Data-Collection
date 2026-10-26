@@ -13,7 +13,7 @@ async function savedProgress(page) {
 
 test('two new games are visible and sampling-only routes stay honest', async ({page}) => {
   await page.goto('/#/home/data');
-  await expect(page.locator('.game-card')).toHaveCount(6);
+  await expect(page.locator('.game-card')).toHaveCount(9);
   await expect(page.locator('.game-card').filter({hasText:'Sort It!'})).toContainText('Sampling only');
   await expect(page.locator('.game-card').filter({hasText:'Which Method?'})).toContainText('Sampling only');
   await page.locator('.game-card').filter({hasText:'Sort It!'}).click();

@@ -1,0 +1,425 @@
+{
+  "version": 1,
+  "errors": [
+    {
+      "id": "er-01",
+      "level": "foundation",
+      "methodId": "simple-random",
+      "context": "A school wants 20 different pupils from a complete register.",
+      "lines": [
+        "Number every eligible pupil from 1 to 400.",
+        "Use a random-number generator set to 1–400.",
+        "Keep the first 20 numbers produced, even when a number appears twice."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Keep going until 20 distinct valid numbers have been obtained; ignore repeats."
+        },
+        {
+          "id": "fix-1",
+          "text": "Replace the generator with a regular interval of 20."
+        },
+        {
+          "id": "fix-2",
+          "text": "Keep the repeats, but ask those pupils twice."
+        }
+      ],
+      "repair": "fix-0",
+      "explanation": "Repeated numbers would select the same sampling unit more than once. For a simple random sample without replacement, discard repeats and continue until 20 different pupils have been chosen."
+    },
+    {
+      "id": "er-02",
+      "level": "foundation",
+      "methodId": "systematic",
+      "context": "An inspector selects 20 items from a numbered list of 200.",
+      "lines": [
+        "Calculate the interval as 200 ÷ 20 = 10.",
+        "Start at item 1 without any random choice.",
+        "Take every tenth item until 20 are selected."
+      ],
+      "errorLine": 1,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Make the interval 20 instead."
+        },
+        {
+          "id": "fix-1",
+          "text": "Choose a random start from positions 1 to 10, then every tenth item."
+        },
+        {
+          "id": "fix-2",
+          "text": "Use the first ten items only."
+        }
+      ],
+      "repair": "fix-1",
+      "explanation": "Systematic sampling needs a random starting position within the first interval (for this exact integer interval). Always starting at 1 makes the choice of start non-random."
+    },
+    {
+      "id": "er-03",
+      "level": "foundation",
+      "methodId": "stratified",
+      "context": "A school has separate year-group registers and needs proportional representation.",
+      "lines": [
+        "Divide pupils into non-overlapping year groups.",
+        "Calculate the required number from each year group.",
+        "Take the first names alphabetically from each group until the target is reached."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Replace the year groups with a single volunteer queue."
+        },
+        {
+          "id": "fix-1",
+          "text": "Select the specified number randomly within each group, without repeats."
+        },
+        {
+          "id": "fix-2",
+          "text": "Keep the alphabetical order because the sample sizes are proportional."
+        }
+      ],
+      "repair": "fix-1",
+      "explanation": "Proportional group numbers alone do not make a sample stratified random: the units within each stratum must be chosen randomly."
+    },
+    {
+      "id": "er-04",
+      "level": "foundation",
+      "methodId": "quota",
+      "context": "Interviewers have targets of 30 commuters and 20 non-commuters.",
+      "lines": [
+        "Set a numerical target for each group.",
+        "Recruit eligible people encountered until each target is filled.",
+        "Because the group sizes are fixed, the individuals must have been chosen randomly."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Quota sampling uses non-random selection within groups; targets do not imply random selection."
+        },
+        {
+          "id": "fix-1",
+          "text": "Interview everyone, so that the investigation becomes a census."
+        },
+        {
+          "id": "fix-2",
+          "text": "Remove the group targets and only sample every tenth person."
+        }
+      ],
+      "repair": "fix-0",
+      "explanation": "A quota sets targets but typically fills them by approaching available respondents. Proportional quotas are not the same as random selection within strata."
+    },
+    {
+      "id": "er-05",
+      "level": "foundation",
+      "methodId": "simple-random",
+      "context": "A calculator is explicitly programmed to generate integers only from 1 to 150.",
+      "lines": [
+        "Number the 150 eligible people from 1 to 150.",
+        "Generate random integers in the inclusive range 1–150.",
+        "Reject any number outside 1–150 because this restricted generator regularly produces them."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Use a random starting position and take every tenth person."
+        },
+        {
+          "id": "fix-1",
+          "text": "Retain all repeats until the sample size is reached."
+        },
+        {
+          "id": "fix-2",
+          "text": "Discard repeats, but out-of-range rejection is unnecessary with a generator restricted to 1–150."
+        }
+      ],
+      "repair": "fix-2",
+      "explanation": "A generator constrained to 1–150 cannot produce out-of-range numbers. Ignore repeats; exclude invalid numbers only when the random source can actually produce them."
+    },
+    {
+      "id": "er-06",
+      "level": "develop",
+      "methodId": "simple-random",
+      "context": "A researcher wants a random sample of every club member, including new members.",
+      "lines": [
+        "Obtain last term's register, which excludes the new members.",
+        "Assign a unique number to everyone on that old register.",
+        "Generate distinct random numbers and contact those people."
+      ],
+      "errorLine": 0,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Include the new members in a complete up-to-date sampling frame before numbering."
+        },
+        {
+          "id": "fix-1",
+          "text": "Choose every fifth name in the old register."
+        },
+        {
+          "id": "fix-2",
+          "text": "Describe the old register as representative because random numbers are used."
+        }
+      ],
+      "repair": "fix-0",
+      "explanation": "Random selection from an incomplete frame cannot include units that are missing from it. A complete eligible-population frame is essential."
+    },
+    {
+      "id": "er-07",
+      "level": "develop",
+      "methodId": "stratified",
+      "context": "A school has 300 Year 12 and 200 Year 13 pupils. A proportional sample of 50 is wanted.",
+      "lines": [
+        "Separate the two year groups.",
+        "Allocate 25 places to Year 12 and 25 to Year 13 because there are two strata.",
+        "Randomly select the allocated number from each year-group register."
+      ],
+      "errorLine": 1,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Take 50 from each year group."
+        },
+        {
+          "id": "fix-1",
+          "text": "Allocate 30 to Year 12 and 20 to Year 13, then sample randomly within each."
+        },
+        {
+          "id": "fix-2",
+          "text": "Use 25 each but label it proportional because there are two groups."
+        }
+      ],
+      "repair": "fix-1",
+      "explanation": "Proportional allocation is 50×300/500=30 and 50×200/500=20. Equal allocation is not proportional when the group sizes differ."
+    },
+    {
+      "id": "er-08",
+      "level": "develop",
+      "methodId": "simple-random",
+      "context": "A survey team plans a sample from a complete population list.",
+      "lines": [
+        "Number the population and select distinct numbers randomly.",
+        "Apply the resulting sample to the survey.",
+        "A simple random sample is guaranteed to be representative because it is random."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Random sampling removes every possible bias, so the claim is correct."
+        },
+        {
+          "id": "fix-1",
+          "text": "A census never has response errors, unlike sampling."
+        },
+        {
+          "id": "fix-2",
+          "text": "Random selection gives a probability design but does not guarantee a representative realised sample."
+        }
+      ],
+      "repair": "fix-2",
+      "explanation": "Random selection can produce an unbalanced sample by chance, and nonresponse can introduce bias. Representativeness is not guaranteed."
+    },
+    {
+      "id": "er-09",
+      "level": "develop",
+      "methodId": "systematic",
+      "context": "A factory's packing list follows a repeating colour sequence every 10 items.",
+      "lines": [
+        "Order the full list and choose an interval of 10.",
+        "Use a random start within the first ten positions.",
+        "The random start ensures the repeating list order cannot cause a distorted sample."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "A random start does not eliminate a periodicity risk; investigate or change the ordering/design."
+        },
+        {
+          "id": "fix-1",
+          "text": "Always start at item 1 to prevent periodicity."
+        },
+        {
+          "id": "fix-2",
+          "text": "Choose a quota sample but call it systematic."
+        }
+      ],
+      "repair": "fix-0",
+      "explanation": "When the sampling interval matches a periodic pattern, one start may select only one phase of the pattern. Check for periodic ordering."
+    },
+    {
+      "id": "er-10",
+      "level": "develop",
+      "methodId": "quota",
+      "context": "A travel survey sets 40 morning and 60 afternoon respondent targets.",
+      "lines": [
+        "Decide and communicate the two quotas.",
+        "Recruit the first eligible volunteers available in each period.",
+        "Classify the method as stratified random because it has two groups."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "The use of a survey makes the method a census."
+        },
+        {
+          "id": "fix-1",
+          "text": "It is quota sampling: there is no random selection of individuals within each group."
+        },
+        {
+          "id": "fix-2",
+          "text": "It is simple random because group targets were set."
+        }
+      ],
+      "repair": "fix-1",
+      "explanation": "Having groups is insufficient to make a design stratified random. Without random selection within the groups, this is quota sampling."
+    },
+    {
+      "id": "er-11",
+      "level": "extend",
+      "methodId": "systematic",
+      "context": "A researcher needs 40 from an ordered register of 197.",
+      "lines": [
+        "The planned ratio N/n is 197/40 = 4.925.",
+        "Round the ratio to 5 and use every fifth entry after a random start.",
+        "Claim that rounding N/n to the nearest integer is the universal systematic rule and always returns the requested n."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Start at 1 and keep the rounded rule, which always works."
+        },
+        {
+          "id": "fix-1",
+          "text": "A non-integer ratio needs a deliberately specified suitable systematic pattern and count check; no universal rounding rule exists."
+        },
+        {
+          "id": "fix-2",
+          "text": "Ignore all people after the first 40 entries."
+        }
+      ],
+      "repair": "fix-1",
+      "explanation": "For non-integer N/n there is no single automatic rounding rule. The design must identify a workable pattern and verify the required sample size."
+    },
+    {
+      "id": "er-12",
+      "level": "extend",
+      "methodId": "opportunity",
+      "context": "A school wants views from all students but asks only students in the canteen at 12:30.",
+      "lines": [
+        "Define the target population as all students.",
+        "Ask those who are available at the canteen at 12:30.",
+        "Conclude that this gives an unbiased picture of all students because it is easy to carry out."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Treat the canteen group as an opportunity sample with possible time/location selection bias; broaden recruitment."
+        },
+        {
+          "id": "fix-1",
+          "text": "Describe all pupils at school as having been observed."
+        },
+        {
+          "id": "fix-2",
+          "text": "Choose every fifth canteen visitor and claim all students are equally likely."
+        }
+      ],
+      "repair": "fix-0",
+      "explanation": "Being available at a particular place and time may correlate with the behaviour being studied and exclude groups. Ease is not representativeness."
+    },
+    {
+      "id": "er-13",
+      "level": "extend",
+      "methodId": "stratified",
+      "context": "A survey aims for 55 out of 550, with strata sizes 205, 190 and 155.",
+      "lines": [
+        "Allocate approximately 20.5, 19 and 15.5 places to the three strata.",
+        "Round each allocation up, to 21, 19 and 16.",
+        "Proceed as if this is the requested sample of 55 people."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Take the first 55 names regardless of strata."
+        },
+        {
+          "id": "fix-1",
+          "text": "Round all three down and sample only 54 people."
+        },
+        {
+          "id": "fix-2",
+          "text": "Resolve whole-number allocations so that they sum to 55, then randomly select within each stratum."
+        }
+      ],
+      "repair": "fix-2",
+      "explanation": "21+19+16=56, not 55. Proportional allocations must be whole numbers that add to the required total; justified rounding is needed."
+    },
+    {
+      "id": "er-14",
+      "level": "extend",
+      "methodId": "simple-random",
+      "context": "A researcher uses an unrestricted random-digit table for numbers 001–180.",
+      "lines": [
+        "Create a full numbered frame 001 to 180.",
+        "Read three-digit groups from the random-digit table.",
+        "Retain values such as 000 and 924 as valid selections, as long as they have not appeared before."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Keep all values if no duplicate appears."
+        },
+        {
+          "id": "fix-1",
+          "text": "Reject values outside 001–180 and any repeats; continue until enough distinct units are chosen."
+        },
+        {
+          "id": "fix-2",
+          "text": "Replace the sampling frame with only the first 100 units."
+        }
+      ],
+      "repair": "fix-1",
+      "explanation": "Unlike a constrained 1–180 generator, a random-digit table can produce invalid values. Reject out-of-range values and repeats."
+    },
+    {
+      "id": "er-15",
+      "level": "extend",
+      "methodId": "opportunity",
+      "context": "An investigation compares the breakfast habits of all town residents.",
+      "lines": [
+        "Interview the first 30 willing shoppers at one supermarket on Monday morning.",
+        "Record their responses accurately.",
+        "Describe the survey as covering the target population equally because the sample is convenient."
+      ],
+      "errorLine": 2,
+      "repairs": [
+        {
+          "id": "fix-0",
+          "text": "Convenience alone makes it representative if n=30."
+        },
+        {
+          "id": "fix-1",
+          "text": "Treat the result as an opportunity sample with likely coverage and nonresponse limitations; sample at other times/places or use a suitable frame."
+        },
+        {
+          "id": "fix-2",
+          "text": "Claim all town residents are equally likely to visit that supermarket at that time."
+        }
+      ],
+      "repair": "fix-1",
+      "explanation": "The recruited people are only those available and willing at one place and time, not a random cross-section of all town residents."
+    }
+  ]
+}

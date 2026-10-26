@@ -25,4 +25,20 @@ assert(sr.conditionalProcedure.some(p=>/outside/i.test(p.text)),'Unrestricted di
 const st=methods.find(m=>m.id==='stratified');assert(st.procedure.some(p=>/randomly/i.test(p.text)&&/repeats/i.test(p.text)),'Stratified random selection and repeats required');
 const sy=methods.find(m=>m.id==='systematic');assert(sy.conditionalProcedure.some(p=>/not an integer/i.test(p.condition)),'Systematic non-integer caveat required');
 assert(concepts.find(c=>c.id==='simple-random-sampling').definition.includes('every possible group'),'SRS definition must concern whole samples');
+const {errors}=load('exam-errors'),{reasoning}=load('exam-reasoning');
+unique(ids(errors),'exam error');unique(ids(reasoning),'exam reasoning');
+for(const q of errors){
+ assert(['foundation','develop','extend'].includes(q.level)&&methodsById.has(q.methodId),'Invalid error level or method: '+q.id);
+ assert(q.lines.length>=3&&Number.isInteger(q.errorLine)&&q.errorLine>=0&&q.errorLine<q.lines.length,'Invalid error line: '+q.id);
+ assert(q.repairs.length===3&&q.repairs.some(x=>x.id===q.repair)&&q.explanation,'Invalid repair: '+q.id);
+}
+for(const q of reasoning){
+ assert(['foundation','develop','extend'].includes(q.level)&&q.scenario&&q.priority&&q.model&&q.tradeoff,'Invalid scenario: '+q.id);
+ for(const key of ['method','reason','limitation','improvement']){
+  assert(q.options[key]?.length>=3,'Invalid options: '+q.id+'/'+key);
+  assert(key==='method'?methodsById.has(q.answers[key])&&q.options[key].includes(q.answers[key]):
+    Number.isInteger(q.answers[key])&&q.answers[key]>=0&&q.answers[key]<q.options[key].length,'Invalid key: '+q.id+'/'+key);
+ }
+}
+assert(errors.length>=15&&reasoning.length>=9,'Incomplete exam skills bank');
 console.log('PASS: '+concepts.length+' concepts, '+methods.length+' methods, '+evaluations.length+' evaluations, '+scenarios.length+' scenarios, '+cloze.length+' cloze, '+rounds.length+' sort rounds; all references/answer keys valid.');

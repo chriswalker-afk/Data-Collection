@@ -15,7 +15,7 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 - **Which Method?** uses balanced 5-, 10- or 20-scenario rounds to identify all five methods with contextual explanations.
 - **Speed Recall** asks for a term from its definition; choose untimed ten-term practice (eight for Types of Data) or 30-, 60- and 90-second timed challenges. The timer pauses during feedback and when the tab is hidden.
 - Typos can prompt one spelling correction, but are **never automatically credited**. Only curated mathematical synonyms are accepted.
-- **Sort It!** and **Which Method?** are sampling-only activities. The other four games support Sampling, Types of data and Mixed revision.
+- **Sort It!**, **Which Method?**, **Build the Method**, **Spot the Error** and **Contextual Reasoning** are sampling-only activities. The other four games support Sampling, Types of data and Mixed revision.
 - Local progress tracks practice attempts and mastery across games, requiring two consecutive successful responses per concept. Use Reset my progress to clear this browser's saved information.
 
 ## Run locally

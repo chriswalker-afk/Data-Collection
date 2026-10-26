@@ -17,7 +17,7 @@ async function speedConcept(page,concepts) {
 
 test('navigation includes Speed Recall and original Missing Words defaults to choices',async ({page})=>{
   await page.goto('/#/home/data');
-  await expect(page.locator('.game-card')).toHaveCount(6);
+  await expect(page.locator('.game-card')).toHaveCount(9);
   await page.getByRole('link',{name:'Speed Recall',exact:true}).click();
   await expect(page).toHaveURL(/#\/speed\/data$/);
   await expect(page.getByRole('heading',{name:'Speed Recall'})).toBeVisible();

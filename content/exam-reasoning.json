@@ -1,0 +1,329 @@
+{
+  "version": 1,
+  "reasoning": [
+    {
+      "id": "cr-01",
+      "level": "foundation",
+      "scenario": "A sixth-form college has 300 Year 12 and 200 Year 13 pupils. The research question compares study time across year groups. Complete year-group registers exist. The team can sample 50 pupils.",
+      "priority": "Prioritise year-group representation while selecting pupils randomly.",
+      "options": {
+        "method": [
+          "stratified",
+          "quota",
+          "opportunity"
+        ],
+        "reason": [
+          "A proportional selection of 30 Year 12 and 20 Year 13 pupils, randomly chosen from each list, represents both groups in the design.",
+          "Taking the first 50 people in the library is guaranteed to include both year groups.",
+          "A proportional split is impossible when each year group has its own register."
+        ],
+        "limitation": [
+          "Some randomly chosen pupils may not respond, and proportional allocation does not guarantee a representative realised sample.",
+          "Every individual would have the same chance of selection regardless of group size.",
+          "Random selection means no nonresponse bias can arise."
+        ],
+        "improvement": [
+          "Plan follow-ups for nonrespondents and explain how response rates differ between year groups.",
+          "Replace each nonrespondent with the nearest friend.",
+          "Keep the first 50 volunteers and still call it stratified random."
+        ]
+      },
+      "answers": {
+        "method": "stratified",
+        "reason": 0,
+        "limitation": 0,
+        "improvement": 0
+      },
+      "model": "I would use stratified random sampling: split pupils by year group, allocate 30 and 20 places, and randomly select different pupils within each register. This matches the study's focus on comparing years. Nonresponse could still distort the results, so I would follow up and report response rates by year.",
+      "tradeoff": "A census would also supply both groups, but it may not be practical with limited time."
+    },
+    {
+      "id": "cr-02",
+      "level": "foundation",
+      "scenario": "A quality inspector needs 20 items from a batch of 200 stored in an ordered register. The order is not linked to any repeating production pattern.",
+      "priority": "Prioritise a quick, evenly spread sample with an available ordered list.",
+      "options": {
+        "method": [
+          "opportunity",
+          "systematic",
+          "quota"
+        ],
+        "reason": [
+          "A random start in positions 1–10, followed by every tenth item, spreads the sample through the batch.",
+          "Choosing the first 20 items is random because they are in a list.",
+          "A quota guarantees every individual item has the same chance of selection."
+        ],
+        "limitation": [
+          "If the ordering actually has a ten-item cycle, this design could be distorted.",
+          "A random start automatically removes all possible ordering effects.",
+          "This method requires interviewing volunteers."
+        ],
+        "improvement": [
+          "Check the register for hidden periodic patterns before sampling.",
+          "Remove the random starting position to save time.",
+          "Select only items from the first box."
+        ]
+      },
+      "answers": {
+        "method": "systematic",
+        "reason": 0,
+        "limitation": 0,
+        "improvement": 0
+      },
+      "model": "I would use systematic sampling with interval 200/20=10 and a random start from 1 to 10, then take every tenth item. It is efficient and covers the ordered batch. A hidden ten-item production cycle could bias selection, so I would first inspect how items are ordered.",
+      "tradeoff": "Simple random selection could also be defensible if the complete frame is easy to number."
+    },
+    {
+      "id": "cr-03",
+      "level": "foundation",
+      "scenario": "A student has twenty minutes at a school sports event to hear quick impressions from attendees. There is no attendee register and results are explicitly described as exploratory.",
+      "priority": "Prioritise feasibility and be honest about what the evidence supports.",
+      "options": {
+        "method": [
+          "opportunity",
+          "simple-random",
+          "stratified"
+        ],
+        "reason": [
+          "Approaching available eligible attendees is possible without constructing a complete sampling frame.",
+          "A sample at one entrance is guaranteed to represent every spectator.",
+          "The easiest way to ensure proportional strata is to ask only friends."
+        ],
+        "limitation": [
+          "People present at that entrance and time may differ from all attendees.",
+          "No one can refuse to answer a convenient survey.",
+          "The method requires a randomly chosen position within every interval."
+        ],
+        "improvement": [
+          "Try several entrances and time periods, then describe the coverage limitation.",
+          "Claim the results apply to all local residents.",
+          "Ignore any differences between available volunteers and absent spectators."
+        ]
+      },
+      "answers": {
+        "method": "opportunity",
+        "reason": 0,
+        "limitation": 0,
+        "improvement": 0
+      },
+      "model": "For quick exploratory feedback I would use opportunity sampling, asking eligible attendees who are available. The responses may overrepresent people at that entrance and time, so I would visit several locations and make the limitation explicit.",
+      "tradeoff": "If a full list became available and generalisation mattered, a probability-based method would be preferable."
+    },
+    {
+      "id": "cr-04",
+      "level": "develop",
+      "scenario": "A survey team needs responses from 40 commuters and 60 non-commuters this week. No complete list of people exists, but fieldworkers can recruit in several locations.",
+      "priority": "Prioritise meeting the two specified group targets with limited resources.",
+      "options": {
+        "method": [
+          "systematic",
+          "quota",
+          "simple-random"
+        ],
+        "reason": [
+          "Set the two group quotas and recruit eligible available respondents until each is full.",
+          "Choose only the first 100 people, ignoring how many are commuters.",
+          "Random-number generation is possible without any sampling frame."
+        ],
+        "limitation": [
+          "Within each quota, the available respondents are not randomly chosen, so selection bias can remain.",
+          "The sample is guaranteed to be representative because it has group targets.",
+          "A systematic sampling interval removes nonresponse."
+        ],
+        "improvement": [
+          "Recruit at multiple sites and times and report that within-group selection was non-random.",
+          "Call the result stratified random without changing recruitment.",
+          "Only recruit near a commuter station during rush hour."
+        ]
+      },
+      "answers": {
+        "method": "quota",
+        "reason": 0,
+        "limitation": 0,
+        "improvement": 0
+      },
+      "model": "Quota sampling fits the fieldwork constraint. I would set targets of 40 commuters and 60 non-commuters and recruit eligible respondents until each quota is filled. Selection within groups is non-random, which may bias the results; I would vary locations and times and report this limitation.",
+      "tradeoff": "Stratified random sampling would usually be stronger for generalisation, but needs usable frames within strata."
+    },
+    {
+      "id": "cr-05",
+      "level": "develop",
+      "scenario": "A club has 120 members on a complete up-to-date register. It wants to ask 15 members about a change to meeting times without focusing on any subgroup.",
+      "priority": "Prioritise a probability sample from the complete list.",
+      "options": {
+        "method": [
+          "quota",
+          "simple-random",
+          "opportunity"
+        ],
+        "reason": [
+          "Number all 120 members and select 15 different integers randomly, ignoring repeats.",
+          "Ask whichever 15 members next arrive, calling the method random.",
+          "Allocate equal quotas even though no group is relevant."
+        ],
+        "limitation": [
+          "A particular subgroup can be underrepresented by chance despite random selection.",
+          "Random selection removes any possible nonresponse or measurement error.",
+          "A sampling frame prevents any member from declining the survey."
+        ],
+        "improvement": [
+          "Check response rates and follow up sampled members; avoid claiming guaranteed representativeness.",
+          "Replace difficult-to-contact members with friends.",
+          "Select the same number twice if it is generated twice."
+        ]
+      },
+      "answers": {
+        "method": "simple-random",
+        "reason": 0,
+        "limitation": 0,
+        "improvement": 0
+      },
+      "model": "A simple random sample is suitable with this complete register: number members 1–120 and generate random integers, ignoring repeats until 15 members are chosen. The realised sample may still be unbalanced or have nonresponse, so I would follow up and acknowledge these limits.",
+      "tradeoff": "If subgroup comparisons became important, stratified random sampling could be preferable."
+    },
+    {
+      "id": "cr-06",
+      "level": "develop",
+      "scenario": "A school intends to investigate travel habits among boarding and day pupils. Its full register identifies both categories, and both must appear in approximately their population proportions.",
+      "priority": "Prioritise category coverage and a defensible selection procedure.",
+      "options": {
+        "method": [
+          "stratified",
+          "quota",
+          "systematic"
+        ],
+        "reason": [
+          "Allocate places in proportion to boarding/day numbers, then randomly draw distinct names within each group.",
+          "Recruit boarding pupils outside one dormitory and day pupils by the main gate.",
+          "Use every kth name from a list sorted by boarding status without checking its ordering."
+        ],
+        "limitation": [
+          "The proportional allocation needs whole numbers that total the requested sample size.",
+          "A complete register guarantees everyone will complete the questionnaire.",
+          "Random sampling guarantees the sample's realised proportions in every other characteristic."
+        ],
+        "improvement": [
+          "Check final allocations add up and plan follow-up contact across both groups.",
+          "Allow each group allocation to be rounded up even if the total exceeds n.",
+          "Replace random within-group draws with the first available pupils."
+        ]
+      },
+      "answers": {
+        "method": "stratified",
+        "reason": 0,
+        "limitation": 0,
+        "improvement": 0
+      },
+      "model": "I would use stratified random sampling: divide the complete register into boarding and day pupils, allocate proportional whole-number sample sizes, then draw distinct names randomly within each group. Rounding may affect the total, so I would verify allocations add to n and follow up nonrespondents.",
+      "tradeoff": "Quota sampling can meet targets, but selection within the categories would not be random."
+    },
+    {
+      "id": "cr-07",
+      "level": "extend",
+      "scenario": "A factory produces parts in ten-position cycles, with one position always checked by an operator. The inspector needs 30 parts from 300 records and suspects the pattern affects defect rates.",
+      "priority": "Prioritise avoiding alignment with the repeating ten-position production cycle.",
+      "options": {
+        "method": [
+          "systematic",
+          "simple-random",
+          "opportunity"
+        ],
+        "reason": [
+          "Randomly choose 30 distinct numbered parts from a complete frame to avoid locking into one cycle position.",
+          "Start systematically at position 1 and choose every tenth part.",
+          "Interview the people who packed the parts rather than inspect the parts."
+        ],
+        "limitation": [
+          "A simple random sample may still be unbalanced by chance and must be practical to inspect.",
+          "Systematic sampling with k=10 is guaranteed to cover every cycle position.",
+          "A random sample automatically contains exactly three parts from each cycle position."
+        ],
+        "improvement": [
+          "Verify all 300 parts are listed and can be accessed, then draw unique random numbers.",
+          "Always choose every tenth item because its interval matches the cycle.",
+          "Choose only the end-of-cycle parts."
+        ]
+      },
+      "answers": {
+        "method": "simple-random",
+        "reason": 0,
+        "limitation": 0,
+        "improvement": 0
+      },
+      "model": "I would use a simple random sample of 30 distinct numbered parts from the full set of 300. Taking every tenth item could repeatedly select one phase of the production cycle. Random selection avoids fixing the sample to that phase, although chance variation remains; I would ensure the frame is complete and every selected part can be inspected.",
+      "tradeoff": "A specially designed stratified sample across cycle positions might be stronger if each position needs representation."
+    },
+    {
+      "id": "cr-08",
+      "level": "extend",
+      "scenario": "A researcher wants opinions from all students, including those who study off-site, but the only existing register lists students who attend lessons on campus.",
+      "priority": "Prioritise valid coverage before selecting any sampling method.",
+      "options": {
+        "method": [
+          "opportunity",
+          "simple-random",
+          "quota"
+        ],
+        "reason": [
+          "First expand the eligibility list to include off-site students, then randomly select distinct units from the completed frame.",
+          "Randomly choosing numbers from the campus list automatically includes off-site students.",
+          "A larger campus sample compensates exactly for the missing off-site students."
+        ],
+        "limitation": [
+          "If off-site students remain missing from the frame, they have no chance of selection.",
+          "A bigger sample from an incomplete frame always fixes coverage bias.",
+          "Sampling with replacement guarantees no missed subgroup."
+        ],
+        "improvement": [
+          "Rebuild and verify the population frame, then contact selected off-site students through suitable channels.",
+          "Take a campus-only sample and describe it as all students.",
+          "Discard all off-site students from the target population without disclosure."
+        ]
+      },
+      "answers": {
+        "method": "simple-random",
+        "reason": 0,
+        "limitation": 0,
+        "improvement": 0
+      },
+      "model": "I would first construct a full sampling frame covering campus and off-site students, then take a simple random sample using distinct valid numbers. The existing register excludes part of the population, so a random draw from it would not solve coverage bias. I would verify the frame and plan suitable follow-up contact.",
+      "tradeoff": "The design only becomes a genuine random sample of all students after the frame has been repaired."
+    },
+    {
+      "id": "cr-09",
+      "level": "extend",
+      "scenario": "A town wants to estimate how often residents use parks. Interviewers can work in several parks but cannot obtain a list of every resident. The study must report limitations carefully.",
+      "priority": "Prioritise a practical initial survey without pretending the sampled people are all residents.",
+      "options": {
+        "method": [
+          "stratified",
+          "opportunity",
+          "simple-random"
+        ],
+        "reason": [
+          "Interview eligible park users who are available, and explicitly limit the strength of conclusions.",
+          "A random sample of all residents can be obtained just by choosing one park entrance.",
+          "Everyone living in the town is equally likely to be present in a park on Tuesday."
+        ],
+        "limitation": [
+          "People who never visit parks could be entirely absent, distorting an estimate for all residents.",
+          "There is no possible bias because each person at the park can volunteer.",
+          "A convenient sample automatically becomes a census."
+        ],
+        "improvement": [
+          "Vary locations/times and state that a resident-wide probability sample would need a better frame.",
+          "Interpret the park-user result as a population-wide estimate with no caveat.",
+          "Only interview people wearing running clothes."
+        ]
+      },
+      "answers": {
+        "method": "opportunity",
+        "reason": 0,
+        "limitation": 0,
+        "improvement": 0
+      },
+      "model": "An opportunity sample of available park users could provide exploratory information quickly, but it cannot reliably estimate behaviour for every resident because non-users may be excluded. I would sample across several parks and times and clearly label the coverage limitation. A proper resident-wide estimate needs a better sampling design.",
+      "tradeoff": "This is not a strong design for a representative town-wide estimate; feasibility does not justify unwarranted generalisation."
+    }
+  ]
+}
