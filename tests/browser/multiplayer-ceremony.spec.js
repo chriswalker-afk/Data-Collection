@@ -98,6 +98,7 @@ test('students cannot choose podiums, launch or advance ceremony or mint awards 
   expect((await request.post(route(code)+'/command',{headers:{Authorization:'Bearer '+secret},
     data:{type:'ceremony-start',awards:['precision-penguin'],score:100000}})).status()).toBe(400);
   await page.getByRole('button',{name:'Start challenge'}).click();
+  await expect.poll(async()=> (await state(request,code,secret)).status).toBe('playing');
   const q=(await state(request,code,secret)).question;
   const scenario=SCENARIOS.find(s=>s.id===q.id);
   const wrong=['quota','opportunity','systematic','stratified','simple-random']
@@ -108,6 +109,7 @@ test('students cannot choose podiums, launch or advance ceremony or mint awards 
   expect((await request.post(route(code)+'/command',{headers:{Authorization:'Bearer '+secret},
     data:{type:'ceremony-start'}})).status()).toBe(400);
   await page.getByRole('button',{name:'End challenge'}).click();
+  await expect.poll(async()=> (await state(request,code,secret)).status).toBe('finished');
   expect((await request.post(route(code)+'/command',{headers:{Authorization:'Bearer '+secret},
     data:{type:'ceremony-start'}})).status()).toBe(400);
   const teacher=await token(page);
@@ -115,10 +117,12 @@ test('students cannot choose podiums, launch or advance ceremony or mint awards 
   expect((await request.post(route(code)+'/command',{headers:{Authorization:'Bearer '+secret},
     data:{type:'ceremony-next'}})).status()).toBe(400);
   await page.getByRole('button',{name:'Next reveal'}).click();
+  await expect.poll(async()=> (await state(request,code,secret)).ceremony?.step).toBe(1);
   const stateNow=await state(request,code,secret);
   expect(stateNow.ceremony.slide.kind).toBe('podium');
   expect(stateNow.ceremony.slide.standings).toEqual([]);
   await page.getByRole('button',{name:'Next reveal'}).click();
+  await expect.poll(async()=> (await state(request,code,secret)).ceremony?.slide?.kind).toBe('finale');
   const final=await state(request,code,secret);
   expect(final.ceremony.slide.kind).toBe('finale');
   expect(final.myMultiplayerAwards.awarded).toEqual([]);
