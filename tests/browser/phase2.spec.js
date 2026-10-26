@@ -20,7 +20,8 @@ test('two new games are visible and sampling-only routes stay honest', async ({p
   await expect(page).toHaveURL(/#\/sort\/sampling$/);
   await expect(page.getByRole('heading',{name:'Sort It!'})).toBeVisible();
   await expect(page.locator('.activity-scope')).toContainText('Sampling methods only');
-  await expect(page.locator('.classification-choice')).toHaveCount(2);
+  await expect(page.locator('.sort-drop-zone')).toHaveCount(4);
+  await expect(page.locator('.sort-tray .sort-card')).toHaveCount(10);
   if(await page.locator('#mobile-menu-toggle').isVisible())
     await page.locator('#mobile-menu-toggle').click();
   await page.locator('#activities-menu > summary').click();
@@ -32,71 +33,49 @@ test('two new games are visible and sampling-only routes stay honest', async ({p
   await expect(page.locator('.activity-topic')).toHaveText('Sampling');
 });
 
-test('Sort It! grades the actual evaluation and logs an answer only once', async ({page}) => {
-  await page.goto('/#/sort/sampling');
-  await expect(page.locator('#sort-set')).toHaveValue('sort-srs');
-  const cards = await loadBank(page,'evaluations','evaluations');
-  const id = await page.locator('[data-item-id]').getAttribute('data-item-id');
-  const card = cards.find(item => item.id === id);
-  expect(card).toBeTruthy();
-  const wrong = card.polarity === 'advantage' ? 'disadvantage' : 'advantage';
-  await page.locator('[data-action="classify-option"][data-choice="' + wrong + '"]').click();
-  await expect(page.locator('.classification-feedback')).toBeVisible();
-  await expect(page.locator('.classification-feedback')).toContainText(card.explanation);
-  await expect(page.locator('.feedback-heading')).toContainText(card.polarity === 'advantage' ? 'Advantage' : 'Disadvantage');
-  await expect(page.locator('.classification-choice:disabled')).toHaveCount(2);
-  const stored = await savedProgress(page);
-  expect(stored.answers).toBe(1);
-  expect(stored.concepts['simple-random-sampling'].attempts).toBe(1);
-  expect(stored.concepts['simple-random-sampling'].correct).toBe(0);
-  await page.locator('[data-action="classify-option"]').first().evaluate(node=>node.click());
-  expect((await savedProgress(page)).answers).toBe(1);
-  await page.getByRole('button',{name:'Next question →'}).click();
-  await expect(page.locator('[data-item-id]')).not.toHaveAttribute('data-item-id',id);
+test('Sort It! records an entire two-method board on the first check, never on movement',async({page})=>{
+ await page.goto('/#/sort/sampling');
+ await expect(page.locator('#sort-set')).toHaveValue('pair-srs-stratified');
+ const bank=await loadBank(page,'evaluations','evaluations');
+ const card=bank.find(c=>c.id==='srs-subgroups');
+ await expect(page.locator('[data-sort-card="srs-subgroups"]')).toContainText(card.claim);
+ await page.locator('[data-sort-card="srs-subgroups"]').click();
+ await page.locator('[data-action="sort-place"][data-sort-destination="simple-random:disadvantage"]').click();
+ await expect(page.locator('[data-sort-drop="simple-random:disadvantage"] [data-sort-card="srs-subgroups"]')).toBeVisible();
+ expect(await savedProgress(page)).toBe(null);
+ const pairs=await loadBank(page,'sort-pairs','pairs');
+ const original=pairs.find(p=>p.id==='pair-srs-stratified');
+ for(const id of original.evaluationIds.filter(id=>id!=='srs-subgroups')){
+  const item=bank.find(x=>x.id===id);
+  await page.locator('[data-sort-card="'+id+'"]').click();
+  await page.locator('[data-action="sort-place"][data-sort-destination="'+item.subject+':'+item.polarity+'"]').click();
+ }
+ await expect(page.locator('[data-action="sort-check"]')).toBeEnabled();
+ await page.locator('[data-action="sort-check"]').click();
+ await expect(page.locator('.sort-board-feedback')).toContainText('All placements are correct');
+ const saved=await savedProgress(page);
+ expect(saved.answers).toBe(original.evaluationIds.length);
+ expect(saved.concepts['simple-random-sampling'].correct).toBe(6);
+ expect(saved.concepts['stratified-sampling'].correct).toBe(4);
+ await page.locator('[data-action="sort-check"]').evaluate(el=>el.click());
+ expect((await savedProgress(page)).answers).toBe(original.evaluationIds.length);
+ await page.locator('[data-action="sort-finish"]').click();
+ await expect(page.locator('.completion-score')).toContainText('first check');
+ expect((await savedProgress(page)).sessions).toBe(1);
 });
 
-test('Sort It! offers all nine sets including the explicit comparisons', async ({page}) => {
-  await page.goto('/#/sort/sampling');
-  await expect(page.locator('#sort-set option')).toHaveCount(9);
-  await page.locator('#sort-set').selectOption('compare-quota-stratified');
-  await expect(page.locator('.classification-choice')).toHaveCount(2);
-  await expect(page.locator('[data-choice="stratified"]')).toBeVisible();
-  await expect(page.locator('[data-choice="quota"]')).toBeVisible();
-  const bank = await loadBank(page,'sort-rounds','rounds');
-  const cardId = await page.locator('[data-item-id]').getAttribute('data-item-id');
-  const [roundId,index] = cardId.split(':');
-  const card = bank.find(item=>item.id===roundId).cards[Number(index)];
-  await page.locator('[data-action="classify-option"][data-choice="' + card.answer + '"]').focus();
-  await page.keyboard.press('Enter');
-  await expect(page.locator('.classification-feedback')).toContainText(card.why);
-  await expect(page.locator('.classification-feedback')).toBeFocused();
-  await expect(page.locator('[data-choice="'+card.answer+'"]')).toHaveAttribute('aria-pressed','true');
-  await page.locator('#sort-set').selectOption('compare-simple-systematic');
-  await expect(page.locator('[data-choice="simple-random"]')).toBeVisible();
-  await expect(page.locator('[data-choice="systematic"]')).toBeVisible();
+test('Sort It! offers six curated two-method sets, each with four destinations',async({page})=>{
+ await page.goto('/#/sort/sampling');
+ await expect(page.locator('#sort-set option')).toHaveCount(6);
+ const pairs=await loadBank(page,'sort-pairs','pairs');
+ for(const pair of pairs){
+  await page.locator('#sort-set').selectOption(pair.id);
+  await expect(page.locator('.sort-method')).toHaveCount(2);
+  await expect(page.locator('.sort-drop-zone')).toHaveCount(4);
+  await expect(page.locator('.sort-tray .sort-card')).toHaveCount(pair.evaluationIds.length);
+  await expect(page.locator('.sort-board-title')).toContainText('Place each statement');
+ }
 });
-
-test('Sort It! completes a census round and saves result with no duplicate session', async ({page}) => {
-  await page.goto('/#/sort/sampling');
-  await page.locator('#sort-set').selectOption('sort-census');
-  const evaluations = await loadBank(page,'evaluations','evaluations');
-  for (let i=0;i<5;i++) {
-    const id = await page.locator('[data-item-id]').getAttribute('data-item-id');
-    const card = evaluations.find(item=>item.id===id);
-    await page.locator('[data-action="classify-option"][data-choice="'+card.polarity+'"]').click();
-    await page.locator('[data-action="classify-next"]').click();
-  }
-  await expect(page.getByText('Round complete', {exact:true})).toBeVisible();
-  await expect(page.locator('.completion-score')).toContainText('5 of 5');
-  const stored = await savedProgress(page);
-  expect(stored.answers).toBe(5);
-  expect(stored.sessions).toBe(1);
-  expect(stored.concepts.census.streak).toBe(5);
-  await page.reload();
-  await page.goto('/#/home/sampling');
-  await expect(page.locator('.progress-panel .stat-number').first()).toHaveText('5');
-});
-
 test('Which Method? balances one of each in quick mode and completes a round', async ({page}) => {
   await page.goto('/#/identify/sampling');
   await expect(page.locator('#scenario-length')).toHaveValue('10');
@@ -143,20 +122,21 @@ test('Which Method? incorrect response shows contrast and does not award false m
   await expect(page.locator('.progress-panel .stat-number').first()).toHaveText('1');
 });
 
-test('new games remain usable at 320px and 390px including answer feedback', async ({page}) => {
-  for(const width of [320,390]) {
-    await page.setViewportSize({width,height:780});
-    for(const game of ['sort','identify']) {
-      await page.goto('/#/'+game+'/sampling');
-      await expect(page.locator('.classification-choice').first()).toBeVisible();
-      let sizes = await page.evaluate(()=>({scrollWidth:document.documentElement.scrollWidth,width:innerWidth}));
-      expect(sizes.scrollWidth, game+' '+width).toBeLessThanOrEqual(width+1);
-      await page.locator('[data-action="classify-option"]').first().click();
-      await expect(page.locator('.classification-feedback')).toBeVisible();
-      sizes=await page.evaluate(()=>({scrollWidth:document.documentElement.scrollWidth,width:innerWidth}));
-      expect(sizes.scrollWidth, game+' feedback '+width).toBeLessThanOrEqual(width+1);
-    }
-  }
+test('Sort It! and Which Method? remain usable at 320px and 390px',async({page})=>{
+ for(const width of [320,390]){
+  await page.setViewportSize({width,height:780});
+  await page.goto('/#/sort/sampling');
+  await page.locator('.sort-tray .sort-card').first().click();
+  await page.locator('.sort-drop-button').first().click();
+  await expect(page.locator('.sort-zone-cards .sort-card')).toHaveCount(1);
+  let dimensions=await page.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth}));
+  expect(dimensions.scroll,'sort '+width).toBeLessThanOrEqual(dimensions.width+1);
+  await page.goto('/#/identify/sampling');
+  await page.locator('.classification-choice').first().click();
+  await expect(page.locator('.classification-feedback')).toBeVisible();
+  dimensions=await page.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth}));
+  expect(dimensions.scroll,'identify '+width).toBeLessThanOrEqual(dimensions.width+1);
+ }
 });
 
 test('keyboard-only student can choose a scenario answer and continue', async ({page}) => {
