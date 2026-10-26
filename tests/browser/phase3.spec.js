@@ -59,12 +59,12 @@ test('independent Missing Words offers one typo correction without double record
     await page.getByRole('button',{name:/Next question/}).click();
   }
   expect(current.answer.length).toBeGreaterThanOrEqual(8);
-  const before=(await saved(page)).answers;
+  const before=(await saved(page))?.answers ?? 0;
   await page.locator('#cloze-answer').fill(current.answer.slice(0,-1));
   await page.locator('#cloze-answer').press('Enter');
   await expect(page.locator('.typed-near-miss')).toBeVisible();
   await expect(page.locator('#cloze-answer')).toBeFocused();
-  expect((await saved(page)).answers).toBe(before);
+  expect((await saved(page))?.answers ?? 0).toBe(before);
   await page.locator('#cloze-answer').fill(current.answer);
   await page.locator('#cloze-answer').press('Enter');
   await expect(page.locator('.typed-feedback')).toContainText('Exactly right');
@@ -132,7 +132,7 @@ test('Speed Recall typo correction does not count until exact answer is submitte
   await page.locator('#speed-answer').fill(item.label.slice(0,-1));
   await page.locator('#speed-answer').press('Enter');
   await expect(page.locator('.typed-near-miss')).toBeVisible();
-  expect((await saved(page)).answers).toBe(0);
+  expect((await saved(page))?.answers ?? 0).toBe(0);
   await page.locator('#speed-answer').fill(item.label);
   await page.locator('#speed-answer').press('Enter');
   await expect(page.locator('.typed-feedback')).toBeFocused();
@@ -151,7 +151,7 @@ test('timed Speed Recall starts on demand and expires at the limit without marki
   await page.clock.fastForward(31_000);
   await expect(page.getByText('Round complete',{exact:true})).toBeVisible();
   await expect(page.locator('.completion-score')).toContainText('Time is up');
-  expect((await saved(page)).answers).toBe(0);
+  expect((await saved(page))?.answers ?? 0).toBe(0);
   expect((await saved(page)).sessions).toBe(1);
 });
 
