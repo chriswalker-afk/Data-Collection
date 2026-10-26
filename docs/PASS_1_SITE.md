@@ -17,7 +17,7 @@ A dependency-light, static and responsive site built from the reviewed Pass 0 co
 All results are stored locally under the key `sampling-arcade-progress-v1`, not sent to a server. A concept counts as mastered after **two consecutive successful responses** (across games). Answers, sessions, practiced concepts and mastered concepts appear on the home screen. Reset requires confirmation. If local storage is unavailable, games remain usable but saving may not persist. Progress may not carry across browsers, devices or private browsing sessions.
 
 ### Hosting
-The GitHub Pages workflow publishes the site automatically from the `main` branch. Static site content consists only of `index.html`, `styles.css`, `favicon.svg`, `src/*.js` and the two JSON files used by Pass 1. Hash routes work within the project subpath. No account, build system or analytics is required.
+The GitHub Pages workflow publishes the site from `main` once the repository owner enables Pages through **Settings → Pages → Build and deployment → Source: GitHub Actions**. The default `GITHUB_TOKEN` cannot enable Pages on its own; this is a one-time GitHub repository setting. After enabling, push to `main` or run **Publish Sampling Arcade** manually. Static site content consists only of `index.html`, `styles.css`, `favicon.svg`, `src/*.js` and the two JSON files used by Pass 1. Hash routes work within the project subpath. No account, build system or analytics is required.
 
 ### Testing
 - `npm run check`: Pass 0 content validation plus Node.js unit tests for shuffling, coverage, matching, cloze, routes and persistence.

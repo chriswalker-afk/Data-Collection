@@ -140,6 +140,7 @@ function homeView() {
     span('eyebrow', 'YOUR REVISION'),
     heading(2, 'panel-title', 'Progress at a glance', { id: 'progress-title' }),
     metaBar(),
+    paragraph('mastery-explainer', 'Mastery means two correct recalls in a row.'),
     div('summary-numbers',
       div('', heading(3, 'stat-number', String(stats.answers)), paragraph('stat-label', 'Answers recorded')),
       div('', heading(3, 'stat-number', String(stats.sessions)), paragraph('stat-label', 'Rounds completed'))
@@ -234,7 +235,7 @@ function flashcardView() {
     card.append(body);
     card.append(
       div('grade-wrap',
-        paragraph('grade-prompt', 'How well did you remember it?'),
+        paragraph('grade-prompt', 'How well did you remember it? “Know it” counts towards mastery.'),
         div('grade-options',
           action('Again', 'grade', { 'data-grade': 'again' }, 'btn btn-grade btn-again'),
           action('Nearly', 'grade', { 'data-grade': 'nearly' }, 'btn btn-grade btn-nearly'),

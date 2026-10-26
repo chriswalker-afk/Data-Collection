@@ -4,7 +4,7 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 
 **Pass 1:** a playable static website with Flashcards, Match Up and Missing Words; topic selection, immediate feedback and locally saved progress. The mathematical question bank was audited in [Pass 0](docs/PASS_0_CONTENT_AUDIT.md).
 
-**Website:** https://chriswalker-afk.github.io/Data-Collection/ (automatically published from `main` once GitHub Pages deployment is enabled).
+**Website:** https://chriswalker-afk.github.io/Data-Collection/ (published from `main` once Pages is enabled).
 
 ## Student features
 - Choose **Sampling**, **Types of data** or **Mixed revision**.
@@ -32,7 +32,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-GitHub Actions runs both unit/content validation and Chromium browser tests for PRs. Deployment is handled by `.github/workflows/deploy-pages.yml` after merge.
+GitHub Actions runs both unit/content validation and Chromium browser tests for PRs. **One-time publishing setup:** open Repository Settings → Pages → Build and deployment → Source: **GitHub Actions**. The `.github/workflows/deploy-pages.yml` workflow then publishes the site on the next push to `main` (or a manual workflow dispatch). The site's URL is not active until a deployment succeeds.
 
 ## Source & project notes
 - [Pass 1 feature and accessibility notes](docs/PASS_1_SITE.md)
