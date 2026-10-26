@@ -21,6 +21,7 @@ import {createExperienceUI} from './experience-ui.js';
 import {nextAfterRound} from './journey.js';
 import {guideForActivity} from './activity-guidance.js';
 import {makeFlashSession,rateFlashSession,skipFlashSession,makeFlashReviewSession,flashCardLabel} from './flashcards.js';
+import {chooseMatch,matchNextStep,matchStatus,MATCH_MOTION_MS} from './match-up.js';
 
 const mount = document.getElementById('app');
 const announcer = document.getElementById('announcer');
@@ -39,6 +40,7 @@ let speedDuration = 60;
 let buildMethodId='simple-random';
 let examLevel='foundation';
 let clockHandle = null;
+let matchSettleTimer = null;
 let progressJumpPending = false;
 const headerNav=document.getElementById('main-nav');
 const mobileMenuToggle=document.getElementById('mobile-menu-toggle');
@@ -394,38 +396,75 @@ function flashcardView() {
   return root;
 }
 
-function matchView() {
-  const root = div('page activity-page');
-  root.append(activityTop('match'));
-  if (session.complete) { root.append(showCompletion('match')); return root; }
-  const complete = session.matched.size;
-  root.append(
-    div('round-controls', roundProgress(complete, session.terms.length, 'Pairs matched'),
-      span('quiet-tag', session.mistakes + ' to revisit')),
-    practiceGuide('match'),
-    div('question-preamble',span('question-kicker','QUESTION'),
-      heading(2,'question-preamble-title','Match the pairs'))
+function matchTile(item,side){
+  const isTerm=side==='term';
+  const selected=isTerm?session.selectedTerm===item.id:session.selectedDefinition===item.id;
+  const label=isTerm?item.label:item.definition;
+  const button=action('','match-'+(isTerm?'term':'def'),{
+    'data-id':item.id,'aria-pressed':selected,
+    'aria-label':(isTerm?'Term: ':'Definition: ')+label
+  },'match-tile '+(isTerm?'term-tile':'definition-tile')+(selected?' is-selected':''));
+  button.append(
+    span('match-tile-initial',isTerm?'T':'D'),
+    span('match-tile-text',label),
+    span('match-tile-check',selected?'✓':'↗')
   );
-  const termCol = div('match-column');
-  const defCol = div('match-column');
-  termCol.append(heading(2, 'match-column-label', 'Terms'));
-  defCol.append(heading(2, 'match-column-label', 'Definitions'));
-  for (const item of session.terms.filter(c => !session.matched.has(c.id))) {
-    const chosen = session.selectedTerm === item.id;
-    termCol.append(action(item.label, 'match-term', {
-      'data-id': item.id, 'aria-pressed': chosen
-    }, 'match-tile term-tile' + (chosen ? ' is-selected' : '')));
+  button.querySelector('.match-tile-initial').setAttribute('aria-hidden','true');
+  button.querySelector('.match-tile-check').setAttribute('aria-hidden','true');
+  return button;
+}
+function matchView(){
+  const root=div('page activity-page match-page');
+  root.append(activityTop('match'));
+  if(session.complete){root.append(showCompletion('match'));return root;}
+  const done=session.matched.size;
+  const summary=matchStatus(done,session.terms.length,session.mistakes);
+  root.append(
+    div('round-controls match-round-controls',
+      roundProgress(done,session.terms.length,'Pairs matched'),
+      span('match-try-count',summary.mistakes)),
+    practiceGuide('match')
+  );
+  const board=element('section',{
+    className:'match-board'+(session.resolving?' is-resolving':''),
+    'aria-labelledby':'match-question-title',
+    'aria-busy':String(Boolean(session.resolving))
+  });
+  const info=div('match-board-intro',
+    div('match-board-copy',
+      span('match-board-kicker','MATCH THE PAIRS'),
+      heading(2,'match-board-title','Make the connection',{id:'match-question-title'})),
+    div('match-progress-markers',
+      ...session.terms.map((_,i)=>span('match-progress-pip'+(i<done?' is-complete':''),i<done?'✓':String(i+1)))
+    )
+  );
+  info.querySelector('.match-progress-markers').setAttribute('aria-hidden','true');
+  const step=matchNextStep(session);
+  const selection=div('match-instruction-bar',
+    div('match-instruction-main',
+      span('match-instruction-icon',session.selectedTerm||session.selectedDefinition?'↗':'◎'),
+      paragraph('match-instruction-text',step)),
+    span('match-pairs-remaining',summary.remaining)
+  );
+  selection.querySelector('.match-instruction-text').id='match-instruction-text';
+  selection.querySelector('.match-instruction-icon').setAttribute('aria-hidden','true');
+  const termCol=div('match-column match-terms');
+  const defCol=div('match-column match-definitions');
+  termCol.setAttribute('role','group');termCol.setAttribute('aria-labelledby','match-terms-label');
+  defCol.setAttribute('role','group');defCol.setAttribute('aria-labelledby','match-definitions-label');
+  termCol.append(heading(3,'match-column-label','Terms',{id:'match-terms-label'}));
+  defCol.append(heading(3,'match-column-label','Definitions',{id:'match-definitions-label'}));
+  for(const item of session.terms.filter(c=>!session.matched.has(c.id)))termCol.append(matchTile(item,'term'));
+  for(const item of session.definitions.filter(c=>!session.matched.has(c.id)))defCol.append(matchTile(item,'definition'));
+  board.append(info,selection,div('match-columns',termCol,defCol));
+  root.append(board);
+  if(session.feedback){
+    const feedback=feedbackBanner(session.feedbackGood?'correct':'incorrect',session.feedback,[],'match-feedback');
+    root.append(feedback);
   }
-  for (const item of session.definitions.filter(c => !session.matched.has(c.id))) {
-    const chosen = session.selectedDefinition === item.id;
-    defCol.append(action(item.definition, 'match-def', {
-      'data-id': item.id, 'aria-pressed': chosen
-    }, 'match-tile definition-tile' + (chosen ? ' is-selected' : '')));
-  }
-  root.append(div('match-columns', termCol, defCol));
-  if (session.feedback) root.append(feedbackBanner(session.feedbackGood?'correct':'incorrect',session.feedback));
   return root;
 }
+
 function clozeModePicker() {
   const wrap = div('game-settings recall-settings');
   const label = element('label', {for:'cloze-level',className:'game-settings-label'}, 'Choose your level');
@@ -1015,13 +1054,14 @@ function render(focusTarget) {
     });
   }
 }
-function restartGame() {
+function restartGame(){
+  if(matchSettleTimer!==null){clearTimeout(matchSettleTimer);matchSettleTimer=null;}
   if (mode === 'flashcards') {
     session=makeFlashSession(shuffled(conceptsInTopic(data.concepts,topic)));
   } else if (mode === 'match') {
     const round = makeMatchRound(data.concepts, topic);
     session = { ...round, matched: new Set(), selectedTerm: null, selectedDefinition: null,
-      mistakes: 0, feedback: '', feedbackGood: false, complete: false };
+      mistakes: 0, feedback: '', feedbackGood: false, complete: false, resolving: null };
   } else if (mode === 'cloze') {
     const items = shuffled(clozeInTopic(data.cloze, data.concepts, topic));
     const options = Object.fromEntries(items.map(q => [q.id, shuffled(q.choices)]));
@@ -1100,37 +1140,86 @@ function advanceFlash() {
   if (session.index === session.items.length - 1) finishRound();
   else { session.index += 1; render('[data-action="flip"]'); }
 }
-function selectMatch(side, id) {
-  if (session.matched.has(id)) return;
-  if (side === 'term') session.selectedTerm = id;
-  else session.selectedDefinition = id;
-  if (session.selectedTerm && session.selectedDefinition) {
-    const right = session.selectedTerm === session.selectedDefinition;
-    const currentId = session.selectedTerm;
-    if (right) {
-      session.matched.add(currentId);
-      remember(currentId, true);
-      session.feedback = 'Correct pair. Well matched!';
-      session.feedbackGood = true;
-      session.selectedTerm = null;
-      session.selectedDefinition = null;
-      announce('Correct pair. ' + session.matched.size + ' of ' + session.terms.length + ' matched.');
-      if (session.matched.size === session.terms.length) { finishRound(); return; }
-      render('[data-action="match-term"]');
-    } else {
-      remember(currentId, false);
-      session.mistakes += 1;
-      session.feedback = 'Not a match. Try to identify the exact defining feature.';
-      session.feedbackGood = false;
-      session.selectedTerm = null;
-      session.selectedDefinition = null;
-      render('[data-action="match-term"]');
-      announce(session.feedback);
-    }
-  } else {
-    session.feedback = '';
-    render(side === 'term' ? '[data-action="match-def"]' : '[data-action="match-term"]');
+function matchTilePositions(){
+  const map=new Map();
+  for(const tile of mount.querySelectorAll('.match-board .match-tile')){
+    map.set(tile.dataset.action+':'+tile.dataset.id,tile.getBoundingClientRect().top);
   }
+  return map;
+}
+function animateMatchReflow(before){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  for(const tile of mount.querySelectorAll('.match-board .match-tile')){
+    const key=tile.dataset.action+':'+tile.dataset.id;
+    if(!before.has(key)||typeof tile.animate!=='function')continue;
+    const delta=before.get(key)-tile.getBoundingClientRect().top;
+    if(Math.abs(delta)<2)continue;
+    tile.animate([{transform:'translateY('+delta+'px)'},{transform:'translateY(0)'}],
+      {duration:MATCH_MOTION_MS.settle,easing:'cubic-bezier(.2,.75,.23,1)'});
+  }
+}
+function showMatchResolution(success,termId,definitionId){
+  const board=mount.querySelector('.match-board');
+  if(!board)return;
+  board.classList.add('is-resolving',success?'is-confirming':'is-trying');
+  board.setAttribute('aria-busy','true');
+  const instruction=board.querySelector('.match-instruction-text');
+  if(instruction)instruction.textContent=matchNextStep(session);
+  for(const tile of board.querySelectorAll('.match-tile')){
+    const chosen=(tile.dataset.action==='match-term'&&tile.dataset.id===termId)||
+      (tile.dataset.action==='match-def'&&tile.dataset.id===definitionId);
+    tile.setAttribute('aria-disabled','true');
+    if(chosen){
+      tile.setAttribute('aria-pressed','true');
+      tile.classList.add('is-selected',success?'is-match-success':'is-match-error');
+      const check=tile.querySelector('.match-tile-check');
+      if(check)check.textContent=success?'✓':'!';
+    }
+  }
+}
+function selectMatch(side,id){
+  if(mode!=='match'||!session||session.complete||session.resolving||session.matched.has(id))return;
+  const next=chooseMatch(session,side,id);
+  session.selectedTerm=next.selectedTerm;
+  session.selectedDefinition=next.selectedDefinition;
+  session.feedback='';
+  if(!next.complete){
+    const other=next.selectedTerm?'definition':next.selectedDefinition?'term':'term';
+    render('[data-action="match-'+(other==='definition'?'def':'term')+'"]');
+    announce(matchNextStep(session));
+    return;
+  }
+  session.resolving=next.correct?'correct':'incorrect';
+  showMatchResolution(next.correct,next.selectedTerm,next.selectedDefinition);
+  const round=session;
+  const duration=window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ?0:MATCH_MOTION_MS[session.resolving];
+  matchSettleTimer=window.setTimeout(()=>{
+    matchSettleTimer=null;
+    // Ignore a delayed response from a game or topic the student has already left.
+    if(mode!=='match'||session!==round||!session.resolving)return;
+    const positions=next.correct?matchTilePositions():null;
+    const termId=session.selectedTerm;
+    if(next.correct){
+      session.matched.add(termId);
+      remember(termId,true);
+      session.feedback='Correct pair. Well matched!';
+      session.feedbackGood=true;
+    }else{
+      remember(termId,false);
+      session.mistakes+=1;
+      session.feedback='Not a match. Try to identify the exact defining feature.';
+      session.feedbackGood=false;
+    }
+    session.selectedTerm=null;session.selectedDefinition=null;session.resolving=null;
+    if(next.correct&&session.matched.size===session.terms.length){
+      finishRound();
+    }else{
+      render('[data-action="match-term"]');
+      if(positions)animateMatchReflow(positions);
+      announce(next.correct?'Correct pair. '+session.matched.size+' of '+session.terms.length+' matched.':session.feedback);
+    }
+  },duration);
 }
 
 function resolveCloze(value, skipped=false) {
