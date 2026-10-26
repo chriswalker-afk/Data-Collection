@@ -61,7 +61,10 @@ export function gradeErrorDiagnosis(item,line,repair,impact) {
 export function validateErrorBank(errors){
  const levels=['foundation','develop','extend'];
  const methods=['simple-random','systematic','stratified','quota','opportunity'];
- if(errors.length<15)throw Error('Error bank needs at least 15 cases');
+ if(errors.length<30)throw Error('Error bank needs at least 30 cases');
+ for(const level of levels)for(const method of methods)
+  if(errors.filter(q=>q.level===level&&q.methodId===method).length!==2)
+   throw Error('Unbalanced error cases: '+level+'/'+method);
  for(const q of errors){
   if(!levels.includes(q.level)||!methods.includes(q.methodId))throw Error('Bad case level/method: '+q.id);
   if(q.lines.length<3||!Number.isInteger(q.errorLine)||q.errorLine<0||q.errorLine>=q.lines.length)throw Error('Invalid error step: '+q.id);
