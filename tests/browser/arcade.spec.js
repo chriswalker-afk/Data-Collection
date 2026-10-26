@@ -114,6 +114,8 @@ test('a full Match Up round is recorded and a new round starts cleanly', async (
     const id = await page.locator('[data-action="match-term"]').first().getAttribute('data-id');
     await page.locator('[data-action="match-term"][data-id="' + id + '"]').click();
     await page.locator('[data-action="match-def"][data-id="' + id + '"]').click();
+    // Each premium pairing has a short confirmation animation before removal.
+    await expect(page.locator('[data-action="match-term"][data-id="' + id + '"]')).toHaveCount(0);
   }
   await expect(page.getByText('Round complete', {exact:true})).toBeVisible();
   expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('sampling-arcade-progress-v1')).sessions)).toBe(1);

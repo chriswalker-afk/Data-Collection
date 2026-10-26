@@ -11,7 +11,7 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 ## Student features
 - Choose **Sampling**, **Types of data** or **Mixed revision**.
 - **Flashcards** support term→definition and definition→term recall, examples and common misconceptions.
-- **Match Up** hides successfully matched definition pairs.
+- **Match Up** offers tactile term–definition tiles with selected-state guidance, short success/retry animations, visible pair progress and accessible keyboard or touch interaction.
 - **Missing Words** now has three levels: **Recognise** (the original four choices), **Recall** (type a word with an optional first-letter hint) and **Independent** (type without choices or hints).
 - **Sort It!** classifies advantages and disadvantages for seven specific subjects, or distinguishes stratified from quota and simple random from systematic sampling.
 - **Which Method?** uses balanced 5-, 10- or 20-scenario rounds to identify all five methods with contextual explanations.
@@ -45,6 +45,7 @@ npm run test:e2e
 GitHub Actions runs both unit/content validation and Chromium browser tests for PRs. **One-time publishing setup:** open Repository Settings → Pages → Build and deployment → Source: **GitHub Actions**. The `.github/workflows/deploy-pages.yml` workflow then publishes the site on the next push to `main` (or a manual workflow dispatch). The site's URL is not active until a deployment succeeds.
 
 ## Source & project notes
+- [Premium Match Up: interaction, animations, mobile accessibility and tests](docs/MATCH_UP_PREMIUM.md)
 - [Premium Flashcards: flip animation, accessibility, review and classroom checks](docs/FLASHCARDS_PREMIUM.md)
 - [UI Pass 3 responsive and accessibility audit](docs/UI_PASS_3.md)
 - [UI Pass 2 instructional, feedback and design consistency audit](docs/UI_PASS_2.md)

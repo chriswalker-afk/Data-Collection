@@ -6,7 +6,7 @@ export const ACTIVITY_GUIDANCE=Object.freeze({
     task:'Try the answer, flip the card to check, then rate your recall. Again and Nearly cards can be revisited.'}),
   match:Object.freeze({
     practice:'Connect the correct mathematical term to its definition.',
-    task:'Select a term and then its matching definition. Correct pairs disappear.'}),
+    task:'Select a term or definition, then its partner. Correct pairs briefly light up before disappearing.'}),
   cloze:Object.freeze({
     practice:'Retrieve the precise mathematical language used in definitions.',
     task:'Complete the missing word in the definition.'}),
