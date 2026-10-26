@@ -1,10 +1,11 @@
 // DOM-only rendering and interaction for Pass 5; math and persistence live in exam-sim.js.
-import {PAPER_SIZES,PAPER_TYPES,makePaper,makeReviewPaper,numericalKey,gradeNumbers,
+import {PAPER_SIZES,PAPER_TYPES,PAPER_LEVELS,makePaper,makeReviewPaper,numericalKey,gradeNumbers,
  writtenChecklist,procedureModelSteps,paperEntry,changeReviewTargets,paperSummary,reportCsv} from './exam-sim.js';
 import {METHOD_LABELS} from './phase2.js';
 
 export function createExamSimulationUI(deps){
  let exportDrafts=false;
+ let paperDifficulty='mixed';
  const {element,div,span,paragraph,heading,action,link,icon,activityTop,roundProgress}=deps;
  const get=()=>deps.getState();
  const currentQuestion=()=>{
@@ -31,6 +32,20 @@ export function createExamSimulationUI(deps){
    heading(2,'sim-landing-title','Put it all together.'),
    paragraph('sim-lead','Mix proportional allocations, systematic sampling calculations, full procedures and method evaluation in one paper.'),
    paragraph('sim-honesty','Calculations are checked automatically. Written explanations are compared with a model and self-reviewed — not graded by a computer.'));
+  const levels=element('fieldset',{className:'sim-level-picker'});
+  levels.append(element('legend',{},'Choose your starting level'));
+  const levelDescriptions=[
+    ['confidence','Build confidence','Introductory and developing questions'],
+    ['mixed','Mixed progression','A range of levels, easier questions first'],
+    ['stretch','Stretch','Developing and extension questions']
+  ];
+  for(const [value,labelText,description] of levelDescriptions){
+    levels.append(element('label',{className:'sim-level-choice'},
+      element('input',{type:'radio',name:'exam-difficulty',value,
+        'data-sim-difficulty':'',checked:paperDifficulty===value}),
+      element('span',{},element('strong',{},labelText),element('small',{},description))));
+  }
+  hero.append(levels);
   const choices=div('sim-paper-choices');
   for(const [variant,count] of Object.entries(PAPER_SIZES)){
    const descriptions={quick:'A focused four-question check.',standard:'Two questions from each skill area.',full:'Three questions from each skill area.'};
@@ -209,7 +224,9 @@ export function createExamSimulationUI(deps){
   const head=div('sim-report-head',
    span('eyebrow','YOUR PERSONAL PRACTICE REPORT'),
    heading(2,'completion-title','Paper complete',{tabindex:'-1'}),
-   paragraph('sim-help','Formative practice, not an official Edexcel result. Your work stays on this device.'));
+   paragraph('sim-help','Formative practice, not an official Edexcel result. Your work stays on this device.'),
+   paragraph('sim-help',session.variant==='review'?'Targeted practice using your saved questions.':
+     'Paper level: '+({confidence:'Build confidence',mixed:'Mixed progression',stretch:'Stretch'})[session.difficulty||'mixed']+'. Questions are ordered from introductory to more demanding where levels differ.'));
   const grid=div('sim-report-metrics',
     div('sim-metric',span('sim-metric-value',stats.correctParts+' / '+stats.possibleParts),
       span('sim-metric-label','Automatically checked numerical parts')),
@@ -238,6 +255,12 @@ export function createExamSimulationUI(deps){
    section.append(card);
   }
   page.append(section);
+  page.append(div('sim-report-coaching',
+    heading(3,'sim-panel-heading','What should you do next?'),
+    paragraph('sim-help',examState.reviewIds.length
+      ? 'You have '+examState.reviewIds.length+' saved question'+(examState.reviewIds.length===1?'':'s')+
+        ' to revisit. Try them again independently, without revealing hints or the model first.'
+      : 'Your current paper has no saved practice targets. Try a longer paper or the next challenge level, and explain each result in full sentences.')));
   const exportSettings=div('sim-export-settings',
    heading(3,'sim-panel-heading','Share a summary with your teacher'),
    paragraph('sim-help','Download a CSV report to share yourself. No student name or cloud upload. Written drafts are excluded unless you opt in; self-reviews are not examination marks.'),
@@ -248,6 +271,7 @@ export function createExamSimulationUI(deps){
     action('Print this report','sim-print',{},'btn btn-primary'),
     action('Export CSV report','sim-export',{},'btn btn-quiet'),
     action('Back to paper choices','sim-menu',{},'btn btn-quiet'),
+    action('Share short feedback','sim-experience-feedback',{},'text-button'),
     ...(examState.reviewIds.length?[action('Practise saved targets','sim-review',{},'btn btn-quiet')]:[])));
   return page;
  }
@@ -262,7 +286,7 @@ export function createExamSimulationUI(deps){
   if(variant==='review'){
    if(!examState.reviewIds.length)return;
    paper=makeReviewPaper(data.examQuestions,examState.reviewIds);
-  }else paper=makePaper(data.examQuestions,variant);
+  }else paper=makePaper(data.examQuestions,variant,Math.random,paperDifficulty);
   if(examState.paper&&!examState.paper.complete&&!window.confirm(
     'Replace your unfinished paper? Saved draft writing in that paper will be cleared.'))return;
   exportDrafts=false;deps.beginPaper(paper);persist();show('#sim-question-heading');deps.announce('Paper started.');
@@ -287,6 +311,9 @@ export function createExamSimulationUI(deps){
   deps.announce(result.correct?(independent?'Calculations correct.':'Correct with hints; practise independently next.'):'Worked solutions are available.');
  }
  function handle(command,button){
+  if(command==='sim-experience-feedback'){
+    deps.openFeedback?.();return;
+  }
   if(command==='sim-start'){begin(button.dataset.variant);return;}
   if(command==='sim-review'){begin('review');return;}
   if(command==='sim-resume'){
@@ -368,6 +395,10 @@ export function createExamSimulationUI(deps){
  }
  function onChange(control){
   const {session}=get();
+  if(control.matches('[data-sim-difficulty]')&&session?.ready){
+   if(PAPER_LEVELS.includes(control.value))paperDifficulty=control.value;
+   return;
+  }
   if(control.matches('#sim-export-drafts')&&session?.complete){
    exportDrafts=control.checked;return;
   }

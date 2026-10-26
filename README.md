@@ -2,7 +2,7 @@
 
 A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** revision games covering sampling definitions, procedures and introductory types of data.
 
-**Pass 6:** ten activities including an expanded **Exam Lab** bank of 46 original questions. This audit corrected context-specific model procedures, added population/census/inference questions, independent-versus-hinted progress, and an opt-in privacy-first CSV report. The original v1 concept progress format remains unchanged.
+**Pass 7:** a clearer route from vocabulary to exam responses, contextual next-activity guidance, three student-chosen Exam Lab difficulty paths, and an optional offline classroom feedback form. The 46-question bank and all ten games remain in place; no student writing or feedback is sent anywhere automatically.
 
 **Website:** https://chriswalker-afk.github.io/Data-Collection/ (published from `main` once Pages is enabled).
 
@@ -16,7 +16,9 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 - **Speed Recall** asks for a term from its definition; choose untimed ten-term practice (eight for Types of Data) or 30-, 60- and 90-second timed challenges. The timer pauses during feedback and when the tab is hidden.
 - Typos can prompt one spelling correction, but are **never automatically credited**. Only curated mathematical synonyms are accepted.
 - **Sort It!**, **Which Method?**, **Build the Method**, **Spot the Error**, **Contextual Reasoning** and **Exam Lab** are sampling-only. The four recall games support Sampling, Types of data and Mixed revision.
-- **Exam Lab** offers balanced 4-, 8- or 12-question papers, exact proportional allocation and systematic checking, context-sensitive procedural models, staged hints, self-reviewed writing, local resume, adaptive revision and printable or CSV reports. Writing is **never automatically graded or credited as mastered**. Hinted numerical answers are correct practice, not independent mastery.
+- **Exam Lab** offers balanced 4-, 8- or 12-question papers at **Build confidence**, **Mixed progression** or **Stretch** levels. Questions increase in difficulty through each paper. Exact proportional allocations and systematic calculations are checked; written procedures and explanations are self-reviewed using audited models. Hinted numerical answers remain practice, not independent mastery. Reports can be printed or exported locally.
+- The homepage offers **four goal-based routes** and a suggestion based only on the progress saved in this browser. Every completed mini-game recommends an optional next activity; Exam Lab reports explain how to follow up.
+- The optional **Classroom feedback** section downloads a plain-text response for students to share if they choose. There are no names, logins, analytics or automatic submissions. Do not enter personally identifying information.
 - Local progress tracks practice attempts and mastery across games, requiring two consecutive successful responses per concept. Use Reset my progress to clear this browser's saved information.
 
 ## Run locally
@@ -41,6 +43,7 @@ npm run test:e2e
 GitHub Actions runs both unit/content validation and Chromium browser tests for PRs. **One-time publishing setup:** open Repository Settings → Pages → Build and deployment → Source: **GitHub Actions**. The `.github/workflows/deploy-pages.yml` workflow then publishes the site on the next push to `main` (or a manual workflow dispatch). The site's URL is not active until a deployment succeeds.
 
 ## Source & project notes
+- [Pass 7 classroom trial guide and learning-journey audit](docs/PASS_7_CLASSROOM_TRIAL.md)
 - [Pass 6 examiner-scope, mathematical and UX quality audit](docs/PASS_6_AUDIT.md)
 - [Pass 5 Exam Lab mathematical grading, written self-review and storage safeguards](docs/PASS_5_SITE.md)
 - [Pass 4 exam skills](docs/PASS_4_SITE.md)
@@ -54,4 +57,4 @@ GitHub Actions runs both unit/content validation and Chromium browser tests for 
 
 All content is independently worded for teaching, rather than copied verbatim from textbooks. This site is not affiliated with or endorsed by Pearson.
 
-**Next: Pass 7 — classroom trial and further improvements to the student revision journey, informed by actual student and teacher feedback.**
+**Next: Pass 8 — prioritise evidence from a real classroom trial, then refine any weak navigation, unclear feedback or over/under-challenging tasks. Pass 7 provides the trial-ready workflow; it does not claim to have observed real students.**
