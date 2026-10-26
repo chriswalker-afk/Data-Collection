@@ -12,7 +12,7 @@ export const ACTIVITY_GUIDANCE=Object.freeze({
     task:'Complete the missing word in the definition.'}),
   sort:Object.freeze({
     practice:'Compare the strengths and limitations of two sampling methods.',
-    task:'Drag each mixed statement into one of four destinations: an advantage or disadvantage for either method. On phones or with a keyboard, select a statement and choose its destination. Check the completed board, then explain and correct mistakes.'}),
+    task:'Drag each statement to the correct method’s advantages or disadvantages. You can also select a card and choose its destination. Check the full board, then correct any mistakes.'}),
   identify:Object.freeze({
     practice:'Recognise a sampling method from how participants or items are selected.',
     task:'Read the selection procedure, then choose the method that was used.'}),
