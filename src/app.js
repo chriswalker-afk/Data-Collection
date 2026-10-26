@@ -17,6 +17,8 @@ import {
 import {EXAM_LEVELS,procedureRound,checkProcedure,moveStep,makeErrorDeck,gradeError,makeReasoningDeck,assessReasoning} from './exam.js';
 import {emptyExamStore,loadExamStore,saveExamStore,clearExamStore} from './exam-sim.js';
 import {createExamSimulationUI} from './exam-sim-ui.js';
+import {createExperienceUI} from './experience-ui.js';
+import {nextAfterRound} from './journey.js';
 
 const mount = document.getElementById('app');
 const announcer = document.getElementById('announcer');
@@ -114,6 +116,9 @@ function gameCard(game) {
   );
   return card;
 }
+const experience=createExperienceUI({element,div,span,paragraph,heading,action,link,announce,render,
+  getState:()=>({progress,data,topic,examStore,mode})
+});
 function homeView() {
   const root = div('page page-home');
   const hero = element('section', { className: 'hero' });
@@ -145,7 +150,7 @@ function homeView() {
       paragraph('section-note', 'Four recall games support both topics; the other six challenges focus on sampling.')),
     topicPicker()
   );
-  root.append(topicSection);
+  root.append(topicSection,experience.journeyView());
   const gameSection = element('section', { className: 'section games-section', 'aria-labelledby': 'games-title' });
   gameSection.append(
     div('section-top', div('', span('eyebrow', 'TEN WAYS TO LEARN'), heading(2, 'section-title', 'Choose a challenge', { id: 'games-title' })),
@@ -160,7 +165,7 @@ function homeView() {
     span('eyebrow', 'YOUR REVISION'),
     heading(2, 'panel-title', 'Progress at a glance', { id: 'progress-title' }),
     metaBar(),
-    paragraph('mastery-explainer', 'Mastery means two correct responses in a row, across the games.'),
+    paragraph('mastery-explainer', 'In tracked activities, mastery means two correct answers in a row. Written self-reviews are not automatically graded.'),
     div('summary-numbers',
       div('', heading(3, 'stat-number', String(stats.answers)), paragraph('stat-label', 'Answers recorded')),
       div('', heading(3, 'stat-number', String(stats.sessions)), paragraph('stat-label', 'Rounds completed'))
@@ -176,7 +181,7 @@ function homeView() {
     paragraph('exam-caveat', 'If random digits can generate out-of-range values, ignore those too. This is unnecessary for a generator already restricted to the valid range.')
   );
   bottom.append(progressCard, examCard);
-  root.append(bottom);
+  root.append(bottom,experience.feedbackView());
   if (!persistenceAvailable) root.append(paragraph('storage-notice', 'Local storage is unavailable. You can still play, but your progress may not remain after closing this page.'));
   return root;
 }
@@ -205,6 +210,7 @@ function roundProgress(current, total, label) {
   );
 }
 function showCompletion(game) {
+  const next=nextAfterRound(game,topic);
   const gameTitle = GAMES.find(g => g.id === game).title;
   const scoreLine = game === 'speed'
     ? session.correct + ' correct of ' + session.attempted + ' submitted · ' +
@@ -223,12 +229,19 @@ function showCompletion(game) {
     heading(2, 'completion-title', 'Nicely done. Keep it going.', { tabindex: '-1' }),
     paragraph('completion-description', gameTitle + ' · ' + topicLabel(topic)),
     paragraph('completion-score', scoreLine),
+    div('completion-next',
+      span('eyebrow','A USEFUL NEXT STEP'),
+      heading(3,'completion-next-title',next.label),
+      paragraph('completion-next-detail',next.reason),
+      link('Try '+GAMES.find(g=>g.id===next.game).title,hashFor(next.game,topic),'btn btn-quiet')),
+
     ...(game === 'cloze' && clozeLevel !== 'independent'
       ? [action('Try the next level →', 'cloze-step-up', {}, 'btn btn-quiet')] : []),
     metaBar(),
     div('complete-actions',
       action('Play another round ↻', 'restart', {}, 'btn btn-primary'),
-      link('Back to arcade', hashFor('home', topic), 'btn btn-quiet')
+      link('Back to arcade', hashFor('home', topic), 'btn btn-quiet'),
+      action('Share short feedback', 'open-feedback', {}, 'text-button')
     )
   );
 }
@@ -893,7 +906,8 @@ const examSimulator=createExamSimulationUI({
   beginPaper:paper=>{session=paper;examStore.paper=paper;},
   beginReady:()=>{session={ready:true,complete:false};},
   persist:()=>{if(!saveExamStore(examStore,data.examQuestions,data.methods))persistenceAvailable=false;},
-  recordNumerical:remember,finish:finishRound,render,announce
+  recordNumerical:remember,finish:finishRound,render,announce,
+  openFeedback:experience.openFeedback
 });
 function render(focusTarget) {
   if (!data) return;
@@ -952,7 +966,7 @@ function setRoute() {
   mode = route.mode;
   topic = route.topic;
   if (changed) { stopClock(); restartGame(); }
-  render(changed && mode !== 'home' ? '#view-heading' : null);
+  render(experience.isFeedbackOpen()&&mode==='home'?'#classroom-feedback-summary':changed&&mode!=='home'?'#view-heading':null);
 }
 function remember(conceptId, correct) {
   progress = recordAnswer(progress, conceptId, correct);
@@ -1034,6 +1048,7 @@ function onAction(button) {
   const command = button.dataset.action;
   if(command.startsWith('sim-')){examSimulator.handle(command,button);return;}
   if(['build-move','build-check','build-reveal','build-next','error-check','error-next','reason-check','reason-next'].includes(command)){examAction(command,button);return;}
+  if(command==='open-feedback'){experience.openFeedback();return;}
   if (command === 'topic') {
     window.location.hash = hashFor(mode, button.dataset.topic);
     return;
@@ -1185,6 +1200,9 @@ mount.addEventListener('submit', event => {
   const form=event.target.closest('form[data-form]');
   if (!form) return;
   event.preventDefault();
+  if(form.dataset.form==='trial-feedback'&&mode==='home'){
+    experience.submitFeedback(form);return;
+  }
   if(form.dataset.form==='sim-numeric'&&mode==='exam'){
     examSimulator.submit(form);return;
   }
