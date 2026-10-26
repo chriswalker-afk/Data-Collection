@@ -1,22 +1,46 @@
-# Data Collection — Sampling Arcade
+# Sampling Arcade — Data Collection
 
-A Year 12 Edexcel A level Mathematics (9MA0) revision arcade, starting with sampling and introductory data vocabulary.
+A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** revision games covering sampling definitions, procedures and introductory types of data.
 
-**Status: Pass 0 content bank completed.** The website and its games are planned for Pass 1 onward; no playable UI is included yet.
+**Pass 1:** a playable static website with Flashcards, Match Up and Missing Words; topic selection, immediate feedback and locally saved progress. The mathematical question bank was audited in [Pass 0](docs/PASS_0_CONTENT_AUDIT.md).
 
-The project is not affiliated with or endorsed by Pearson.
+**Website:** https://chriswalker-afk.github.io/Data-Collection/ (published from `main` once Pages is enabled).
 
-## Review and validation
+## Student features
+- Choose **Sampling**, **Types of data** or **Mixed revision**.
+- **Flashcards** support term→definition and definition→term recall, examples and common misconceptions.
+- **Match Up** hides successfully matched definition pairs.
+- **Missing Words** uses checked four-option questions with specific feedback.
+- Local progress tracks practice attempts and mastery across games, requiring two consecutive successful responses per concept. Use Reset my progress to clear this browser's saved information.
 
-- [Pass 0 audit and content decisions](docs/PASS_0_CONTENT_AUDIT.md)
-- [Concept definitions](content/concepts.json)
-- [Sampling method procedures](content/methods.json)
-- [Advantages and disadvantages](content/evaluations.json)
-- [Classifying scenarios](content/scenarios.json)
-- [Missing-word questions](content/cloze.json)
-- [Sorting rounds](content/sort-rounds.json)
-- [Source register](content/sources.json)
+## Run locally
+Start a static server (do not open the file directly in the browser because JSON is fetched):
 
-Run `node scripts/validate-content.mjs` using Node.js 20+.
+```sh
+python3 -m http.server 4173
+```
 
-**Next:** Pass 1 — site shell, flashcards, matching, missing words and local progress.
+Open http://127.0.0.1:4173
+
+## Tests
+Requires Node.js 20+ and Python 3 for browser tests.
+
+```sh
+npm install
+npm run check
+npx playwright install chromium
+npm run test:e2e
+```
+
+GitHub Actions runs both unit/content validation and Chromium browser tests for PRs. **One-time publishing setup:** open Repository Settings → Pages → Build and deployment → Source: **GitHub Actions**. The `.github/workflows/deploy-pages.yml` workflow then publishes the site on the next push to `main` (or a manual workflow dispatch). The site's URL is not active until a deployment succeeds.
+
+## Source & project notes
+- [Pass 1 feature and accessibility notes](docs/PASS_1_SITE.md)
+- [Pass 0 source and editorial audit](docs/PASS_0_CONTENT_AUDIT.md)
+- Content bank: `content/*.json`
+- UI: `index.html`, `styles.css`, `src/`
+- Tests: `tests/`
+
+All content is independently worded for teaching, rather than copied verbatim from textbooks. This site is not affiliated with or endorsed by Pearson.
+
+**Next: Pass 2 — sorting advantages/disadvantages and identifying methods from scenarios.**
