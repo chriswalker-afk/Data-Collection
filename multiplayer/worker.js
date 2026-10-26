@@ -65,19 +65,34 @@ async function smallJSON(request){
   if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw new Error('Expected a JSON object');
   return parsed;
 }
-function publicState(room,participant,now,connections){
+function preparedView(room){
+  const visible=room.status==='playing'?
+    (room.results||[]).filter(r=>r.index<room.index):room.results||[];
+  const visibleScores=new Map();
+  for(const result of visible)
+    visibleScores.set(result.playerId,(visibleScores.get(result.playerId)||0)+result.points);
+  return {
+    visibleScores,answered:new Set(room.answers.map(a=>a.id)),
+    teams:teamStandings(room,room.status!=='playing'),
+    classQuest:classQuestSnapshot(room),
+    teacherFeedback:classroomFeedbackSnapshot(room),
+    questionPulse:questionPulse(room)
+  };
+}
+function publicState(room,participant,now,connections,prepared=preparedView(room)){
   const game=room.game||'which'; // Pass 1/2 rooms remain compatible.
   const question=room.status==='playing'?room.deck[room.index]:null;
   const revealed=room.status==='reveal'?room.deck[room.index]:null;
   return {
     code:room.code,status:room.status,game,roundLength:room.roundLength,
     teamCount:room.teamCount||0,goalTarget:room.goalTarget||0,
-    teams:teamStandings(room),classQuest:classQuestSnapshot(room),
-    teacherFeedback:classroomFeedbackSnapshot(room),questionPulse:questionPulse(room),
+    teams:prepared.teams,classQuest:prepared.classQuest,
+    teacherFeedback:prepared.teacherFeedback,questionPulse:prepared.questionPulse,
     questionSeconds:questionTimeMs(game)/1000,locked:Boolean(room.locked),
     players:room.players.map(p=>({
-      id:p.id,name:p.name,score:p.score,teamId:p.teamId||null,online:connections.has(p.id),
-      answered:room.answers.some(a=>a.id===p.id)
+      id:p.id,name:p.name,score:prepared.visibleScores.get(p.id)||0,
+      teamId:p.teamId||null,online:connections.has(p.id),
+      answered:prepared.answered.has(p.id)
     })),
     me:{id:participant.id,name:participant.name,host:participant.host===true},
     question:question?{index:room.index+1,total:room.deck.length,
@@ -275,10 +290,11 @@ export class GameRoom extends DurableObject{
   broadcast(){
     const room=this.room();if(!room)return;
     const online=this.currentConnections();const now=Date.now();
+    const prepared=preparedView(room);
     for(const ws of this.ctx.getWebSockets()){
       const data=ws.deserializeAttachment()||{};
       const person=data.id==='host'?{id:'host',name:'Teacher',host:true}:room.players.find(p=>p.id===data.id);
-      if(person){try{ws.send(JSON.stringify({type:'state',data:publicState(room,person,now,online)}));}catch{ /* client reconnects */ }}
+      if(person){try{ws.send(JSON.stringify({type:'state',data:publicState(room,person,now,online,prepared)}));}catch{ /* client reconnects */ }}
     }
   }
   async fetch(request){
