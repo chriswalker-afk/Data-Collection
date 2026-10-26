@@ -21,7 +21,7 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 - **Exam Lab** offers balanced 4-, 8- or 12-question papers at **Build confidence**, **Mixed progression** or **Stretch** levels. Questions increase in difficulty through each paper. Exact proportional allocations and systematic calculations are checked; written procedures and explanations are self-reviewed using audited models. Hinted numerical answers remain practice, not independent mastery. Reports can be printed or exported locally.
 - The homepage offers **four goal-based routes** and a suggestion based only on the progress saved in this browser. Every completed mini-game recommends an optional next activity; Exam Lab reports explain how to follow up.
 - The optional **Classroom feedback** section downloads a plain-text response for students to share if they choose. There are no names, logins, analytics or automatic submissions. Do not enter personally identifying information.
-- Local progress tracks practice attempts and mastery across games, requiring two consecutive successful responses per concept. Use Reset my progress to clear this browser's saved information.
+- Local progress tracks formative practice. Mastery is a revision indicator requiring two consecutive credited checks; a flashcard “Know it” is self-rated, not externally marked. Ungraded written self-review counts as practice without cancelling an existing mastery streak. Corrected Match Up pairs cannot earn first-try credit. Use Reset my progress to clear this browser's saved information.
 
 ## Run locally
 Start a static server (do not open the file directly in the browser because JSON is fetched):

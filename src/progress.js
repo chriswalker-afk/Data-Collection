@@ -52,6 +52,21 @@ export function recordAnswer(progress, conceptId, correct) {
   next.answers += 1;
   return next;
 }
+// Observing a model or self-reviewing prose is practice, not a wrong answer.
+// Count the exposure so the student can see their work, but preserve any
+// previously earned independent-recall streak (and never create new credit).
+export function recordPractice(progress, conceptId) {
+  if (!/^[a-z0-9-]{1,80}$/.test(conceptId)) throw new Error('Invalid concept identifier.');
+  const next = sanitizeProgress(progress);
+  const current = next.concepts[conceptId] || { attempts: 0, correct: 0, streak: 0 };
+  next.concepts[conceptId] = {
+    attempts: current.attempts + 1,
+    correct: current.correct,
+    streak: current.streak
+  };
+  next.answers += 1;
+  return next;
+}
 export function recordSession(progress) {
   const next = sanitizeProgress(progress);
   next.sessions += 1;

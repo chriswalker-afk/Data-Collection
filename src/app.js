@@ -4,7 +4,7 @@ import {
 } from './core.js';
 import {
   emptyProgress, loadProgress, saveProgress, clearProgress,
-  recordAnswer, recordSession, progressForTopic
+  recordAnswer, recordPractice, recordSession, progressForTopic
 } from './progress.js';
 import {
   METHOD_ORDER, METHOD_LABELS, ROUND_LENGTHS,
@@ -22,8 +22,9 @@ import {createExamSimulationUI} from './exam-sim-ui.js';
 import {createExperienceUI} from './experience-ui.js';
 import {nextAfterRound} from './journey.js';
 import {guideForActivity} from './activity-guidance.js';
+import {completionHeading,completionCreditNote} from './quality.js';
 import {makeFlashSession,rateFlashSession,skipFlashSession,makeFlashReviewSession,flashCardLabel} from './flashcards.js';
-import {chooseMatch,matchNextStep,matchStatus,MATCH_MOTION_MS} from './match-up.js';
+import {chooseMatch,matchNextStep,matchStatus,matchAttemptCredit,MATCH_MOTION_MS} from './match-up.js';
 import {clozePresentation} from './cloze-ui.js';
 import {makePairSortRound,validatePairBank} from './sort-it.js';
 import {createSortItUI} from './sort-ui.js';
@@ -216,9 +217,9 @@ function homeView() {
     span('eyebrow', 'YOUR REVISION'),
     heading(2, 'panel-title', 'Progress at a glance', { id: 'progress-title', tabindex: '-1' }),
     metaBar(),
-    paragraph('mastery-explainer', 'In tracked activities, mastery means two correct answers in a row. Written self-reviews are not automatically graded.'),
+    paragraph('mastery-explainer', 'This is a revision indicator, not an exam grade: mastery requires two consecutive credited checks. “Know it” on flashcards is self-rated. Ungraded writing is practice, never a failed answer.'),
     div('summary-numbers',
-      div('', heading(3, 'stat-number', String(stats.answers)), paragraph('stat-label', 'Answers recorded')),
+      div('', heading(3, 'stat-number', String(stats.answers)), paragraph('stat-label', 'Practice responses')),
       div('', heading(3, 'stat-number', String(stats.sessions)), paragraph('stat-label', 'Rounds completed'))
     ),
     action('Reset my progress', 'reset', {}, 'text-button')
@@ -308,7 +309,7 @@ function showCompletion(game) {
       (session.speedMode === 'timed' ? speedDuration + '-second challenge' : 'untimed practice') +
       (session.finishedReason === 'time' ? ' · Time is up' : '')
     : game === 'flashcards' ? session.correct + ' confident recalls out of ' + session.items.length + ' cards'
-    : game === 'match' ? 'All ' + session.terms.length + ' pairs matched · ' + session.mistakes + ' incorrect attempts'
+    : game === 'match' ? 'All ' + session.terms.length + ' pairs connected · ' + session.independentPairs + ' first-try matches · ' + session.mistakes + ' incorrect attempts'
     : game === 'sort' ? session.correct + ' of ' + session.items.length + ' statements placed correctly on the first check'
     : game === 'identify' ? session.correct + ' of ' + session.items.length + ' scenarios identified correctly'
     : game === 'build' ? session.correct + ' of ' + session.methods.length + ' procedures correct on first check'
@@ -317,9 +318,10 @@ function showCompletion(game) {
     : session.correct + ' correct answers out of ' + session.items.length;
   return div('completed-screen',
     div('completion-badge', icon('✓'), span('', 'Round complete')),
-    heading(2, 'completion-title', 'Nicely done. Keep it going.', { tabindex: '-1' }),
+    heading(2, 'completion-title', completionHeading(game, session), { tabindex: '-1' }),
     paragraph('completion-description', gameTitle + ' · ' + topicLabel(topic)),
     paragraph('completion-score', scoreLine),
+    paragraph('completion-credit-note',completionCreditNote(game,session)),
     ...(game==='speed'?[speedCompletionPanel()]:[]),
     ...(game==='reason'?[reasoningUI.summaryView()]:[]),
     ...(game==='error'?[div('error-summary',...[['Located',session.errorStats.located],['Repaired',session.errorStats.repaired],['Explained',session.errorStats.explained]].map(([label,n])=>div('error-metric',span('error-metric-value',String(n)),span('',label)))),
@@ -1104,7 +1106,7 @@ const reasoningUI=createReasoningUI({
  element,div,span,paragraph,heading,action,activityTop,examLevelPicker,roundProgress,
  practiceGuide,feedbackBanner,showCompletion,getState:()=>({data,session,mode}),
  setSession:next=>{session=next;},
- render,announce,remember,finishRound,conceptIdForSubject
+ render,announce,rememberPractice,finishRound,conceptIdForSubject
 });
 const sortUI=createSortItUI({
   mount,element,div,span,paragraph,heading,action,activityTop,roundProgress,
@@ -1153,7 +1155,7 @@ function restartGame(){
   } else if (mode === 'match') {
     const round = makeMatchRound(data.concepts, topic);
     session = { ...round, matched: new Set(), selectedTerm: null, selectedDefinition: null,
-      mistakes: 0, feedback: '', feedbackGood: false, complete: false, resolving: null };
+      mistakes: 0, independentPairs: 0, exposedIds: new Set(), feedback: '', feedbackGood: false, complete: false, resolving: null };
   } else if (mode === 'cloze') {
     const items = shuffled(clozeInTopic(data.cloze, data.concepts, topic));
     const options = Object.fromEntries(items.map(q => [q.id, shuffled(q.choices)]));
@@ -1201,6 +1203,10 @@ function setRoute() {
 }
 function remember(conceptId, correct) {
   progress = recordAnswer(progress, conceptId, correct);
+  if (!saveProgress(progress)) persistenceAvailable = false;
+}
+function rememberPractice(conceptId) {
+  progress = recordPractice(progress, conceptId);
   if (!saveProgress(progress)) persistenceAvailable = false;
 }
 function finishRound() {
@@ -1296,10 +1302,14 @@ function selectMatch(side,id){
     if(mode!=='match'||session!==round||!session.resolving)return;
     const positions=next.correct?matchTilePositions():null;
     const termId=session.selectedTerm;
+    const credit=matchAttemptCredit(session.exposedIds,termId,session.selectedDefinition);
+    session.exposedIds=credit.exposed;
     if(next.correct){
       session.matched.add(termId);
-      remember(termId,true);
-      session.feedback='Correct pair. Well matched!';
+      if(credit.independent)session.independentPairs++;
+      remember(termId,credit.independent);
+      session.feedback=credit.independent?'Correct pair. Well matched!':
+        'Pair connected after an earlier mistake. A useful correction, but not first-try recall credit.';
       session.feedbackGood=true;
     }else{
       remember(termId,false);

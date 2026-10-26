@@ -13,7 +13,7 @@ Nine existing Edexcel 9MA0-aligned scenarios, three difficulty levels, every sam
 All nine cases received individual short coaching for the four dimensions and all 72 incorrect options have authored feedback. The original method/priority/model/tradeoff are retained; one rounding/nonresponse limitation was clarified.
 
 ## Scoring and privacy
-The pre-existing progress schema and concept identifiers are unchanged. The first complete submission still records exactly one **non-mastery** practice answer (recordAnswer false) for the question's model-method concept. Neither a model match, a written self-check, a hint, nor a flagged case earns mastery. Repeated clicks cannot double-record.
+The pre-existing progress schema and concept identifiers are unchanged. As refined by the site-wide quality audit (PR #22), the first complete submission records one **ungraded practice exposure** via `recordPractice` for the question's model-method concept. It increases practice attempts without treating written work as an incorrect answer or erasing a previously earned mastery streak. Neither a model match, a written self-check, a hint, nor a flagged case earns new mastery. Repeated clicks cannot double-record.
 
 End-of-round summaries distinguish guided work from independent responses. Guided wrong choices automatically flag the investigation. Students can also voluntarily flag a case, or self-identify missing written points. The resulting targeted review uses a fresh, **unscored** round: it changes neither answers, mastery, nor completed session count.
 

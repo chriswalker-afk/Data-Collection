@@ -245,3 +245,6 @@
   .ui-feedback-badge { color:#111!important; }
   .activity-page :is(.exam-workspace,.sim-question,.sim-report-row) { break-inside:avoid; }
 }
+
+/* Site-wide audit: present assessment boundaries plainly, without a new card. */
+.completed-screen .completion-credit-note{max-width:64ch;margin:9px auto 0;color:#466154;font-size:.83rem;line-height:1.6;text-wrap:pretty}

@@ -9,7 +9,7 @@ const n=(amount)=>String(amount);
 export function createReasoningUI({
  element,div,span,paragraph,heading,action,activityTop,examLevelPicker,roundProgress,
  practiceGuide,feedbackBanner,showCompletion,getState,setSession,render,announce,
- remember,finishRound,conceptIdForSubject
+ rememberPractice,finishRound,conceptIdForSubject
 }){
  const state=()=>getState().session;
  const question=()=>state().items[state().index];
@@ -260,11 +260,11 @@ export function createReasoningUI({
     s.guidedCases++;s.matchedPoints+=result.met.length;
     if(result.complete)s.correct++;
    }else s.writtenCases++;
-   // As before, selections and self-reflections are not independent mastery evidence.
-   // Never write any progress during an unscored revisit.
+   // A self-review is ungraded practice, not a correct or incorrect mathematical answer.
+   // Preserve existing credited streaks; never write progress during an unscored revisit.
    if(!s.reviewMode){
     const {data}=getState();
-    remember(conceptIdForSubject(q.answers.method,data.methods),false);
+    rememberPractice(conceptIdForSubject(q.answers.method,data.methods));
    }
    render('.reason-feedback-start');
    announce(guided?'Guided answers reviewed; your writing is not graded.':'Model available for self-review.');return;

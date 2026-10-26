@@ -22,7 +22,7 @@ This targeted refinement improves **one existing game**, rather than adding feat
 ## Safeguards
 
 - Existing `makeMatchRound` vocabulary bank and randomised five-pair deck are unchanged.
-- A correct pair calls the existing `remember(id,true)` **once**; an incorrect pair calls `remember(id,false)` **once**. Merely selecting or changing a highlighted tile does not count as an attempt.
+- As refined by the site-wide quality audit (PR #22), a **first-try correct pairing of two previously unexposed tiles** calls `remember(id,true)` once. A wrong pairing records an incorrect attempt and flags both tiles as exposed for the current round; subsequently connecting either pair remains useful practice but cannot earn an independent correct response. Merely selecting or changing a highlighted tile does not count as an attempt.
 - Existing `sampling-arcade-progress-v1` storage, score reporting, finished-round logic and ten-game navigation are unchanged.
 - No new user tracking, sound autoplay or stored personal information.
 - Styling isolated in `styles/match-up.css`. Pure selection and instructional helpers live in `src/match-up.js`.
