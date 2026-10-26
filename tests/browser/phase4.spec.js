@@ -46,13 +46,15 @@ test('Spot the Error diagnoses step, correction and consequence exactly once',as
  await page.getByRole('button',{name:'Next case →'}).click();
  expect((await store(page)).answers).toBe(1);
 });
-test('Contextual Reasoning preserves typed draft, compares model, does not grant checklist mastery',async({page})=>{
+test('Contextual Reasoning guides four contextual decisions and does not claim to grade prose',async({page})=>{
  await page.goto('/#/reason/sampling');const questions=await bank(page,'exam-reasoning','reasoning');
  const id=await page.locator('[data-reason-id]').getAttribute('data-reason-id'),q=questions.find(x=>x.id===id);
- await page.locator('#reason-written').fill('My reason is specific to the study and I can explain it.');
- for(const key of ['method','reason','limitation','improvement'])
+ await expect(page.locator('.reason-fact')).toHaveCount(3);
+ for(const key of ['method','reason','limitation','improvement']){
   await page.locator('input[name="reason-'+key+'"][value="'+q.answers[key]+'"]').check();
- await expect(page.locator('#reason-written')).toHaveValue(/My reason is specific/);
+  await page.getByRole('button',{name:'Continue →'}).click();
+ }
+ await page.locator('#reason-written').fill('My reason is specific to the study and I can explain it.');
  await page.getByRole('button',{name:'Review my reasoning'}).click();
  await expect(page.locator('.typed-feedback')).toContainText('4 of 4');
  await expect(page.locator('.exam-draft')).toContainText('My reason is specific');
