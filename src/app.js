@@ -1030,7 +1030,7 @@ function errorView(){
  const q=session.items[session.index];
  root.append(roundProgress(session.index+1,session.items.length,(session.reviewMode?'Review ':'Case ')+(session.index+1)+' of '+session.items.length),practiceGuide('error'));
  const panel=element('section',{className:'exam-workspace error-workspace','data-error-id':q.id,'aria-labelledby':'exam-heading'});
- panel.append(div('error-head',div('',span('eyebrow',session.reviewMode?'UNSCORED REVIEW':'SAMPLING CASE FILE'),heading(2,'exam-heading','Inspect the procedure',{id:'exam-heading',tabindex:'-1'})),span('error-method',METHOD_LABELS[q.methodId])),
+ panel.append(div('error-head',div('',span('eyebrow',session.reviewMode?'QUESTION · UNSCORED REVIEW':'QUESTION · SAMPLING CASE FILE'),heading(2,'exam-heading','Inspect the procedure',{id:'exam-heading',tabindex:'-1'})),span('error-method',METHOD_LABELS[q.methodId])),
  paragraph('exam-scenario',q.context),paragraph('error-note','Identify the flawed step, choose a correction and diagnose its mathematical consequence.'));
  const steps=element('fieldset',{className:'error-steps'});
  steps.append(element('legend',{className:'error-legend'},'01 · Locate the error'));
