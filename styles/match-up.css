@@ -204,7 +204,8 @@
 }
 @media(max-width:480px){
   .match-page .match-board {border-radius:17px; padding:14px 11px;}
-  .match-page .match-board-intro.question-preamble {align-items:flex-start; gap:8px;}
+  .match-page .match-board-intro.question-preamble {flex-direction:column;align-items:stretch;gap:9px;min-width:0;}
+  .match-page .match-progress-markers {flex-wrap:wrap;max-width:100%;justify-content:flex-start;}
   .match-page .match-progress-markers {gap:4px;}
   .match-page .match-progress-pip {width:23px; height:23px; flex-basis:23px; border-radius:8px;font-size:.65rem;}
   .match-page .match-board-title {font-size:1.18rem;}
