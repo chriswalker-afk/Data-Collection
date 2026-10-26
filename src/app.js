@@ -14,6 +14,7 @@ import {
   CLOZE_LEVELS, SPEED_MODES, SPEED_DURATIONS, gradeCloze, gradeTerm,
   speedDeck, formatClock, validateTermBank
 } from './recall.js';
+import {EXAM_LEVELS,procedureRound,checkProcedure,moveStep,makeErrorDeck,gradeError,makeReasoningDeck,assessReasoning} from './exam.js';
 
 const mount = document.getElementById('app');
 const announcer = document.getElementById('announcer');
@@ -28,6 +29,8 @@ let scenarioLength = 10;
 let clozeLevel = 'choices';
 let speedMode = 'untimed';
 let speedDuration = 60;
+let buildMethodId='simple-random';
+let examLevel='foundation';
 let clockHandle = null;
 
 function element(tag, attributes = {}, ...children) {
@@ -98,7 +101,7 @@ function metaBar() {
   );
 }
 function gameCard(game) {
-  const symbol = { flashcards: '▧', match: '⇄', cloze: '✎', sort: '↕', identify: '?', speed: '⌨' }[game.id];
+  const symbol = { flashcards: '▧', match: '⇄', cloze: '✎', sort: '↕', identify: '?', speed: '⌨', build: '≡', error: '!', reason: '◇' }[game.id];
   const card = link('', hashFor(game.id, topic), 'game-card');
   card.append(
     div('game-card-top', span('game-number', game.number + ' / REVISE'), icon(symbol, 'game-icon')),
@@ -136,13 +139,13 @@ function homeView() {
   const topicSection = element('section', { className: 'section section-topic', 'aria-labelledby': 'topic-title' });
   topicSection.append(
     div('section-top', div('', span('eyebrow', 'MAKE IT YOURS'), heading(2, 'section-title', 'What are you revising?', { id: 'topic-title' })),
-      paragraph('section-note', 'All games except Sort It! and Which Method? support both topics.')),
+      paragraph('section-note', 'The first four games support both topics; the five method games focus on sampling.')),
     topicPicker()
   );
   root.append(topicSection);
   const gameSection = element('section', { className: 'section games-section', 'aria-labelledby': 'games-title' });
   gameSection.append(
-    div('section-top', div('', span('eyebrow', 'SIX WAYS TO LEARN'), heading(2, 'section-title', 'Choose a challenge', { id: 'games-title' })),
+    div('section-top', div('', span('eyebrow', 'NINE WAYS TO LEARN'), heading(2, 'section-title', 'Choose a challenge', { id: 'games-title' })),
       paragraph('section-note', 'A different way to practise the same mathematics.')),
     div('games-grid', GAMES.map(gameCard))
   );
@@ -187,7 +190,7 @@ function activityTop(game) {
       div('activity-topic', topicLabel(topic))
     ),
     isSamplingOnlyGame(game)
-      ? div('activity-scope', 'Sampling methods only · Revise types of data in the first three games.')
+      ? div('activity-scope', 'Sampling methods only · Flashcards, Match Up, Missing Words and Speed Recall also cover types of data.')
       : topicPicker()
   );
   return root;
@@ -208,6 +211,9 @@ function showCompletion(game) {
     : game === 'match' ? 'All ' + session.terms.length + ' pairs matched · ' + session.mistakes + ' incorrect attempts'
     : game === 'sort' ? session.correct + ' of ' + session.items.length + ' statements sorted correctly'
     : game === 'identify' ? session.correct + ' of ' + session.items.length + ' scenarios identified correctly'
+    : game === 'build' ? session.correct + ' of ' + session.methods.length + ' procedures correct on first check'
+    : game === 'error' ? session.correct + ' of ' + session.items.length + ' errors diagnosed and repaired'
+    : game === 'reason' ? session.correct + ' of ' + session.items.length + ' complete model checklists'
     : session.correct + ' correct answers out of ' + session.items.length;
   return div('completed-screen',
     div('completion-badge', icon('✓'), span('', 'Round complete')),
@@ -728,7 +734,7 @@ function render(focusTarget) {
   if (!data) return;
   navSync();
   const views = { home: homeView, flashcards: flashcardView, match: matchView, cloze: clozeView,
-    sort: sortView, identify: identifyView, speed: speedView };
+    sort: sortView, identify: identifyView, speed: speedView, build: buildView, error: errorView, reason: reasoningView };
   const view = (views[mode] || homeView)();
   mount.replaceChildren(view);
   ensureClock();
@@ -766,6 +772,11 @@ function restartGame() {
       answered: false, draft: '', status: null, typoRetry: false,
       remainingMs: speedDuration * 1000, lastTick: null, attempted: 0,
       correct: 0, skipped: 0, complete: false, finishedReason: null };
+  } else if(mode==='build') {
+    const order=[buildMethodId,...data.methods.map(m=>m.id).filter(id=>id!==buildMethodId)];
+    session={methods:order.map(id=>({...procedureRound(data.methods,id),checked:false,correct:false})),index:0,correct:0,complete:false};
+  } else if(mode==='error'||mode==='reason') {
+    session={items:mode==='error'?makeErrorDeck(data.errors,examLevel):makeReasoningDeck(data.reasoning,examLevel),index:0,correct:0,complete:false,answered:false,selectedLine:null,selectedRepair:null,selections:{},draft:''};
   } else session = null;
 }
 function setRoute() {
@@ -854,6 +865,7 @@ function resolveCloze(value, skipped=false) {
 
 function onAction(button) {
   const command = button.dataset.action;
+  if(['build-move','build-check','build-reveal','build-next','error-check','error-next','reason-check','reason-next'].includes(command)){examAction(command,button);return;}
   if (command === 'topic') {
     window.location.hash = hashFor(mode, button.dataset.topic);
     return;
@@ -980,6 +992,19 @@ mount.addEventListener('click', event => {
   const button = event.target.closest('button[data-action]');
   if (button && !button.disabled) onAction(button);
 });
+mount.addEventListener('change',event=>{
+ const control=event.target;
+ if(mode==='error'&&!session?.answered&&control.matches('input[data-error-line],input[data-error-repair]')){
+   if(control.dataset.errorLine!==undefined)session.selectedLine=Number(control.value);
+   else session.selectedRepair=control.value;
+   render('input[name="'+control.name+'"]:checked');
+ }
+ if(mode==='reason'&&!session?.answered&&control.matches('input[data-reason-field]')){
+   session.draft=mount.querySelector('#reason-written')?.value||'';
+   session.selections[control.dataset.reasonField]=control.value;
+   render('input[name="'+control.name+'"]:checked');
+ }
+});
 mount.addEventListener('submit', event => {
   const form=event.target.closest('form[data-form]');
   if (!form) return;
@@ -992,7 +1017,11 @@ mount.addEventListener('submit', event => {
 mount.addEventListener('change', event => {
   const control = event.target;
   if (!control.matches('select[data-control]')) return;
-  if (control.dataset.control === 'sort-round' && mode === 'sort') {
+  if(control.dataset.control==='build-method'&&mode==='build'){
+    if(!data.methods.some(m=>m.id===control.value))return;buildMethodId=control.value;
+  } else if(control.dataset.control==='exam-level'&&(mode==='error'||mode==='reason')){
+    if(!EXAM_LEVELS.includes(control.value))return;examLevel=control.value;
+  } else if (control.dataset.control === 'sort-round' && mode === 'sort') {
     if (!data.rounds.some(r => r.id === control.value)) return;
     sortRoundId = control.value;
   } else if (control.dataset.control === 'scenario-length' && mode === 'identify') {
@@ -1027,7 +1056,7 @@ async function loadData() {
     const sources = [
       ['concepts', 'concepts'], ['cloze', 'cloze'], ['evaluations', 'evaluations'],
       ['sort-rounds', 'rounds'], ['scenarios', 'scenarios'], ['methods', 'methods'],
-      ['accepted-terms', 'terms']
+      ['accepted-terms', 'terms'], ['exam-errors', 'errors'], ['exam-reasoning','reasoning']
     ];
     const responses = await Promise.all(sources.map(([name]) =>
       fetch(new URL('./content/' + name + '.json', document.baseURI))));
@@ -1042,7 +1071,7 @@ async function loadData() {
     }
     data.acceptedTerms=data.terms;
     validateTermBank(data.concepts,data.acceptedTerms);
-    if (data.rounds.length < 9 || data.scenarios.length < 20 || data.methods.length !== 5) {
+    if (data.rounds.length < 9 || data.scenarios.length < 20 || data.methods.length !== 5 || data.errors.length < 15 || data.reasoning.length < 9) {
       throw new Error('Incomplete sampling content.');
     }
     setRoute();

@@ -9,12 +9,15 @@ export const GAMES = Object.freeze([
   { id: 'cloze', title: 'Missing Words', subtitle: 'Fill the gaps', description: 'Identify the essential word in an Edexcel-aligned sentence.', number: '03' },
   { id: 'sort', title: 'Sort It!', subtitle: 'Weigh up the methods', description: 'Sort advantages, disadvantages and important method distinctions.', number: '04' },
   { id: 'identify', title: 'Which Method?', subtitle: 'Apply the definitions', description: 'Identify the method used in realistic sampling scenarios.', number: '05' },
-  { id: 'speed', title: 'Speed Recall', subtitle: 'Type from memory', description: 'Type the mathematical term from its definition, with or without a timer.', number: '06' }
+  { id: 'speed', title: 'Speed Recall', subtitle: 'Type from memory', description: 'Type the mathematical term from its definition, with or without a timer.', number: '06' },
+  { id: 'build', title: 'Build the Method', subtitle: 'Sequence the steps', description: 'Put the five sampling procedures into a valid examination order.', number: '07' },
+  { id: 'error', title: 'Spot the Error', subtitle: 'Find and correct it', description: 'Diagnose inaccurate sampling instructions and choose the correct repair.', number: '08' },
+  { id: 'reason', title: 'Contextual Reasoning', subtitle: 'Make a defensible choice', description: 'Build a justified response with a limitation and an improvement.', number: '09' }
 ]);
 export function topicLabel(id) { return TOPICS.find(t => t.id === id)?.label || TOPICS[0].label; }
 export function isTopic(id) { return TOPICS.some(t => t.id === id); }
 export function isGame(id) { return GAMES.some(g => g.id === id); }
-export function isSamplingOnlyGame(id) { return id === 'sort' || id === 'identify'; }
+export function isSamplingOnlyGame(id) { return ['sort','identify','build','error','reason'].includes(id); }
 export function effectiveTopic(mode, topic) {
   return isSamplingOnlyGame(mode) ? 'sampling' : (isTopic(topic) ? topic : 'sampling');
 }
