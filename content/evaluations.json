@@ -396,6 +396,118 @@
         "pearson-textbook-ch1",
         "teacher-screenshots"
       ]
+    },
+    {
+      "id": "srs-lottery",
+      "subject": "simple-random",
+      "polarity": "advantage",
+      "claim": "A uniform lottery over whole samples avoids interviewer judgement when choosing which units enter the study.",
+      "explanation": "When every possible fixed-size subset is equally likely, selection is impartial; later nonresponse can still affect findings.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "srs-no-proportions",
+      "subject": "simple-random",
+      "polarity": "disadvantage",
+      "claim": "Without separately planned subgroup draws, a random sample does not guarantee fixed numbers from each year group.",
+      "explanation": "Ordinary simple random sampling makes every fixed-size subset equally likely; subgroup counts may vary by chance.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sys-single-start",
+      "subject": "systematic",
+      "polarity": "advantage",
+      "claim": "After one randomly chosen starting position, the remaining selected positions follow a fixed repeatable interval.",
+      "explanation": "There is no need to generate a separate random number for every selected item when the sampling interval is set.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sys-noninteger",
+      "subject": "systematic",
+      "polarity": "disadvantage",
+      "claim": "If N divided by n is not an integer, an unsuitable rounded interval may give the wrong final sample size.",
+      "explanation": "A non-integer ratio needs a stated systematic plan that produces the requested number, not an assumed universal rounding rule.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "strata-precision",
+      "subject": "stratified",
+      "polarity": "advantage",
+      "claim": "Sample sizes can be set separately for important strata before random draws are made within each stratum.",
+      "explanation": "Planned subgroup coverage is ensured by allocations; the selection of people within each stratum must remain random.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "strata-frames",
+      "subject": "stratified",
+      "polarity": "disadvantage",
+      "claim": "Separate reliable group lists are required for random selection of the allocated number from each stratum.",
+      "explanation": "Obtaining accurate membership and sampling frames for multiple strata can demand extra preparation and checking.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "quota-speed",
+      "subject": "quota",
+      "polarity": "advantage",
+      "claim": "Recruiters can efficiently fill fixed subgroup targets by approaching eligible willing people directly.",
+      "explanation": "Interviewers need not construct complete sampling frames or carry out random draws within each quota group.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "quota-unseen",
+      "subject": "quota",
+      "polarity": "disadvantage",
+      "claim": "Replacing refusals with the next willing person may conceal nonresponse and favour approachable volunteers within quotas.",
+      "explanation": "Even with correct group totals, respondents selected by convenience may differ from all eligible people in those groups.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "opp-zero-frame",
+      "subject": "opportunity",
+      "polarity": "advantage",
+      "claim": "An investigation can begin with available eligible volunteers without compiling a population list or subgroup targets.",
+      "explanation": "Directly approaching convenient respondents needs little preliminary selection infrastructure.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "opp-time",
+      "subject": "opportunity",
+      "polarity": "disadvantage",
+      "claim": "People absent from the chosen location or time are systematically unlikely to enter the sample.",
+      "explanation": "A sample recruited at one place and time may exclude people with different routines, creating selection bias.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
     }
   ]
 }
