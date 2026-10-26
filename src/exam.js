@@ -37,6 +37,25 @@ export function gradeError(item,line,repair) {
   return {lineCorrect:Number(line)===item.errorLine,repairCorrect:repair===item.repair,
     correct:Number(line)===item.errorLine&&repair===item.repair};
 }
+export function gradeErrorDiagnosis(item,line,repair,impact) {
+ const base=gradeError(item,line,repair);
+ const impactCorrect=impact===item.impact?.answer;
+ return {...base,impactCorrect,correct:base.correct&&impactCorrect,
+  identified:base.lineCorrect?1:0,repaired:base.repairCorrect?1:0,explained:impactCorrect?1:0};
+}
+export function validateErrorBank(errors){
+ const levels=['foundation','develop','extend'];
+ const methods=['simple-random','systematic','stratified','quota','opportunity'];
+ if(errors.length<15)throw Error('Error bank needs at least 15 cases');
+ for(const q of errors){
+  if(!levels.includes(q.level)||!methods.includes(q.methodId))throw Error('Bad case level/method: '+q.id);
+  if(q.lines.length<3||!Number.isInteger(q.errorLine)||q.errorLine<0||q.errorLine>=q.lines.length)throw Error('Invalid error step: '+q.id);
+  if(q.repairs.length!==3||new Set(q.repairs.map(x=>x.id)).size!==3||!q.repairs.some(x=>x.id===q.repair))throw Error('Invalid corrections: '+q.id);
+  const opts=q.impact?.options;
+  if(!q.impact?.question||!q.impact?.explanation||opts?.length!==3||new Set(opts.map(o=>o.id)).size!==3||!opts.some(o=>o.id===q.impact.answer)||opts.some(o=>!o.text))throw Error('Invalid consequence options: '+q.id);
+ }
+ return true;
+}
 export function makeReasoningDeck(items,level,random=Math.random) {
   if(!EXAM_LEVELS.includes(level))throw new Error('Invalid difficulty');
   return shuffled(items.filter(x=>x.level===level),random);
