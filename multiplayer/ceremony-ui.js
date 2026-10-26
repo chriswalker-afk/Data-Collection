@@ -31,7 +31,7 @@ export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
       for(const group of groups){
         const medal=MEDALS[group.rank],item=node('li',undefined,'ceremony-podium-step is-'+medal.tone);
         item.append(node('span',medal.emoji,'ceremony-podium-emoji'),
-          node('span',medal.label+' · '+(group.rows.length>1?'Joint '+group.rank+'st place':group.rank===1?'1st place':group.rank===2?'2nd place':'3rd place'),
+          node('span',medal.label+' · '+(group.rows.length>1?'Joint ':'')+(group.rank===1?'1st':group.rank===2?'2nd':'3rd')+' place',
             'ceremony-podium-rank'));
         const names=node('div',undefined,'ceremony-podium-names');
         for(const person of group.rows)names.append(node('strong',person.name));
