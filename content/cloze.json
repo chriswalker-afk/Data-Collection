@@ -548,7 +548,7 @@
     {
       "id": "cz-random-judgement",
       "conceptId": "random-sampling",
-      "prompt": "An interviewer choosing people to fit personal preferences is not using {{blank}} sampling.",
+      "prompt": "A chance-based method that avoids interviewers choosing their favourites belongs to the broad family of {{blank}} sampling.",
       "answer": "random",
       "choices": [
         "random",
@@ -556,7 +556,7 @@
         "quota",
         "stratified"
       ],
-      "explanation": "Personal preference is not a chance-based method; random sampling requires an impartial random process.",
+      "explanation": "Random is the broad classification for chance-based selection. Specific random methods, such as systematic or stratified sampling, need additional rules.",
       "sourceIds": [
         "pearson-textbook-ch1",
         "teacher-screenshots"
@@ -752,7 +752,7 @@
     {
       "id": "cz-prop-percent",
       "conceptId": "proportional-allocation",
-      "prompt": "If one stratum contains 20% of the population, proportional allocation assigns it {{blank}}% of the sample.",
+      "prompt": "If a stratum contains 20% of a population, proportional allocation gives it {{blank}} places in a sample of 100.",
       "answer": "20",
       "choices": [
         "20",
@@ -760,7 +760,7 @@
         "40",
         "80"
       ],
-      "explanation": "Proportional allocation uses the same population share for the target sample share; 20% stays 20%.",
+      "explanation": "The group receives 20% of 100 = 20 selected places; selection within the stratum is then random.",
       "sourceIds": [
         "pearson-textbook-ch1",
         "teacher-screenshots"
