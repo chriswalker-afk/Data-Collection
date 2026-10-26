@@ -1,4 +1,6 @@
 import {ARENA_MODES,createModeUI} from './mode-ui.js';
+import {createCeremonyUI} from './ceremony-ui.js';
+import {saveKeepsake} from './keepsakes.js';
 // Multiplayer networking is independent of the solo practice/progress store.
 // Requests that change scores are authenticated HTTPS actions; room updates
 // arrive on a hibernatable WebSocket (with slow polling only during reconnect).
@@ -65,14 +67,21 @@ async function joinRoom(){
 function receiveState(data){
   if(!data||data.code!==roomCode)return;
   if(room?.question?.id!==data.question?.id)pendingAnswer=false;
-  const previous=room?.status+'|'+(room?.question?.id||room?.reveal?.question?.id||'');
+  const previous=room?.status+'|'+(room?.question?.id||room?.reveal?.question?.id||'')+
+    '|'+(room?.ceremony?.run||0)+'|'+(room?.ceremony?.step??'-');
   room=data;
+  if(data.myMultiplayerAwards?.completed&&data.myMultiplayerAwards.awarded?.length){
+    saveKeepsake(data.myMultiplayerAwards);
+  }
   if(room.question?.serverNow)clockOffset=room.question.serverNow-Date.now();
   render();
-  const current=room.status+'|'+(room.question?.id||room.reveal?.question?.id||'');
+  const current=room.status+'|'+(room.question?.id||room.reveal?.question?.id||'')+
+    '|'+(room.ceremony?.run||0)+'|'+(room.ceremony?.step??'-');
   if(previous!=='undefined|'&&previous!==current){
     const announcement=room.status==='playing'?'New question '+room.question.index+' of '+room.question.total:
-      room.status==='reveal'?'Answer revealed':room.status==='finished'?'Round complete':'Classroom lobby';
+      room.status==='reveal'?'Answer revealed':
+      room.status==='ceremony'?'Awards ceremony reveal '+(room.ceremony.step+1)+' of '+room.ceremony.total:
+      room.status==='finished'?'Round complete':'Classroom lobby';
     $('game-announcer').textContent=announcement;
   }
 }
@@ -194,11 +203,13 @@ const modeUI=createModeUI({
   summaryProgress,announce:message=>{$('game-announcer').textContent=message;},
   refreshStage:()=>render()
 });
+const ceremonyUI=createCeremonyUI({make,button,actionRow,command,stageKicker});
 function render(){
   const active=Boolean(roomCode&&room);
   $('entry').hidden=active;
   $('room').hidden=!active;
   if(!active)return;
+  $('room').classList.toggle('is-ceremony',room.status==='ceremony');
 
   $('room-title').textContent=isHost?'TEACHER CLASSROOM':'YOUR CLASSROOM';
   $('room-id').textContent=roomCode;
@@ -206,7 +217,8 @@ function render(){
     lobby:'Lobby · waiting for players',
     playing:'Question '+room.question?.index+' of '+room.question?.total,
     reveal:'Answer review · discuss the mathematics',
-    finished:'Challenge complete · final standings'
+    finished:'Challenge complete · final standings',
+    ceremony:'Grand Awards Ceremony · reveal '+(room.ceremony?.step+1)+' of '+room.ceremony?.total
   }[room.status]||'Classroom';
   const closed=room.status!=='lobby'||room.locked;
   $('room-lock').textContent=closed?'Joining closed':'Joining open';
@@ -330,6 +342,8 @@ function render(){
       actions.append(button(reveal.index===reveal.total?'Finish challenge':'Next question',()=>command('next')));
       stage.append(actions);
     }
+  }else if(room.status==='ceremony'&&room.ceremony?.slide){
+    ceremonyUI.render(room,isHost,stage);
   }else if(room.status==='finished'){
     stage.append(stageKicker('ROUND COMPLETE'));
     const h2=make('h2','Challenge complete!');h2.tabIndex=-1;stage.append(h2);
@@ -338,10 +352,22 @@ function render(){
     const top=list[0];
     summary.append(make('p',top?'Top score: '+top.name+' · '+top.score+' points':'Thank you for taking part.'));
     stage.append(summary);
-    stage.append(make('p','Special achievement awards and the grand ceremony are planned for a later pass.','small-note'));
+    stage.append(make('p',room.finished?.ceremonyCompleted?
+      'The ceremony is complete. Open My Awards to see your saved Multiplayer keepsakes.':
+      'The teacher can now present the Grand Awards Ceremony, with a podium and mathematical character trophies.','small-note'));
+    if(!isHost&&room.finished?.ceremonyCompleted)stage.append(make('a','See My Awards','ceremony-awards-link'));
+    if(!isHost&&room.finished?.ceremonyCompleted){
+      const link=stage.querySelector('.ceremony-awards-link');link.href='./awards.html';
+    }
     if(isHost){
       const actions=actionRow();
-      actions.append(button('Create another room',()=>{leave();$('length').focus();window.scrollTo({top:0,behavior:'smooth'});}));
+      const ceremony=button(room.finished?.ceremonyCompleted?'Replay awards ceremony':'Start awards ceremony',
+        ()=>void command('ceremony-start'));
+      ceremony.id='ceremony-start';
+      ceremony.disabled=!room.finished?.ceremonyAvailable;
+      actions.append(ceremony,
+        button('Create another room',()=>{leave();$('length').focus();window.scrollTo({top:0,behavior:'smooth'});}));
+
       stage.append(actions);
     }
   }
