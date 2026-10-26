@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "editorialNote": "Original Edexcel-aligned practice prompts, not Pearson examination questions or official mark schemes. Numerical answers only are auto-checked; written responses are self-reviewed.",
+  "version": 2,
+  "editorialNote": "Original educational tasks aligned to Edexcel 9MA0 statistical sampling. Pearson enhanced content guidance emphasises census/sample, inference, five sampling methods and different samples leading to different conclusions. Numerical parts only are auto-checked; writing is self-reviewed.",
   "questions": [
     {
       "id": "alloc-year-groups",
@@ -30,7 +30,11 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
       ],
-      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum."
+      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum.",
+      "hints": [
+        "Start by finding the total population N. The share for one group is (group size ÷ N) × sample size.",
+        "Check the whole-number allocations sum to the required sample size. Selection within each stratum must then be random."
+      ]
     },
     {
       "id": "alloc-boarders",
@@ -60,7 +64,11 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
       ],
-      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum."
+      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum.",
+      "hints": [
+        "Start by finding the total population N. The share for one group is (group size ÷ N) × sample size.",
+        "Check the whole-number allocations sum to the required sample size. Selection within each stratum must then be random."
+      ]
     },
     {
       "id": "alloc-urban",
@@ -90,7 +98,11 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
       ],
-      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum."
+      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum.",
+      "hints": [
+        "Start by finding the total population N. The share for one group is (group size ÷ N) × sample size.",
+        "Check the whole-number allocations sum to the required sample size. Selection within each stratum must then be random."
+      ]
     },
     {
       "id": "alloc-departments",
@@ -125,7 +137,11 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
       ],
-      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum."
+      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum.",
+      "hints": [
+        "Start by finding the total population N. The share for one group is (group size ÷ N) × sample size.",
+        "Check the whole-number allocations sum to the required sample size. Selection within each stratum must then be random."
+      ]
     },
     {
       "id": "alloc-school-sites",
@@ -160,7 +176,11 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
       ],
-      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum."
+      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum.",
+      "hints": [
+        "Start by finding the total population N. The share for one group is (group size ÷ N) × sample size.",
+        "Check the whole-number allocations sum to the required sample size. Selection within each stratum must then be random."
+      ]
     },
     {
       "id": "alloc-age",
@@ -195,7 +215,11 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
       ],
-      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum."
+      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum.",
+      "hints": [
+        "Start by finding the total population N. The share for one group is (group size ÷ N) × sample size.",
+        "Check the whole-number allocations sum to the required sample size. Selection within each stratum must then be random."
+      ]
     },
     {
       "id": "alloc-clubs",
@@ -230,7 +254,11 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
       ],
-      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum."
+      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum.",
+      "hints": [
+        "Start by finding the total population N. The share for one group is (group size ÷ N) × sample size.",
+        "Check the whole-number allocations sum to the required sample size. Selection within each stratum must then be random."
+      ]
     },
     {
       "id": "alloc-library",
@@ -265,7 +293,11 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
       ],
-      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum."
+      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum.",
+      "hints": [
+        "Start by finding the total population N. The share for one group is (group size ÷ N) × sample size.",
+        "Check the whole-number allocations sum to the required sample size. Selection within each stratum must then be random."
+      ]
     },
     {
       "id": "sys-warehouse",
@@ -285,7 +317,11 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
       ],
-      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame."
+      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame.",
+      "hints": [
+        "For an exact integer ratio, calculate the interval k = N ÷ n.",
+        "The last selected position is the random start plus (n − 1) intervals. Check it is in the list."
+      ]
     },
     {
       "id": "sys-pupils",
@@ -305,7 +341,11 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
       ],
-      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame."
+      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame.",
+      "hints": [
+        "For an exact integer ratio, calculate the interval k = N ÷ n.",
+        "The last selected position is the random start plus (n − 1) intervals. Check it is in the list."
+      ]
     },
     {
       "id": "sys-products",
@@ -325,7 +365,11 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
       ],
-      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame."
+      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame.",
+      "hints": [
+        "For an exact integer ratio, calculate the interval k = N ÷ n.",
+        "The last selected position is the random start plus (n − 1) intervals. Check it is in the list."
+      ]
     },
     {
       "id": "sys-records",
@@ -345,7 +389,11 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
       ],
-      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame."
+      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame.",
+      "hints": [
+        "For an exact integer ratio, calculate the interval k = N ÷ n.",
+        "The last selected position is the random start plus (n − 1) intervals. Check it is in the list."
+      ]
     },
     {
       "id": "sys-package",
@@ -365,7 +413,11 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
       ],
-      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame."
+      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame.",
+      "hints": [
+        "For an exact integer ratio, calculate the interval k = N ÷ n.",
+        "The last selected position is the random start plus (n − 1) intervals. Check it is in the list."
+      ]
     },
     {
       "id": "sys-cards",
@@ -385,7 +437,11 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
       ],
-      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame."
+      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame.",
+      "hints": [
+        "For an exact integer ratio, calculate the interval k = N ÷ n.",
+        "The last selected position is the random start plus (n − 1) intervals. Check it is in the list."
+      ]
     },
     {
       "id": "sys-files",
@@ -405,7 +461,11 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
       ],
-      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame."
+      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame.",
+      "hints": [
+        "For an exact integer ratio, calculate the interval k = N ÷ n.",
+        "The last selected position is the random start plus (n − 1) intervals. Check it is in the list."
+      ]
     },
     {
       "id": "sys-inspect",
@@ -425,7 +485,11 @@
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
       ],
-      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame."
+      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame.",
+      "hints": [
+        "For an exact integer ratio, calculate the interval k = N ÷ n.",
+        "The last selected position is the random start plus (n − 1) intervals. Check it is in the list."
+      ]
     },
     {
       "id": "proc-random-1",
@@ -446,6 +510,10 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Write instructions another student could actually carry out: identify the eligible units and the way each unit will be chosen.",
+        "Consider which random source is being used and whether some numbers must be ignored."
       ]
     },
     {
@@ -467,6 +535,10 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Write instructions another student could actually carry out: identify the eligible units and the way each unit will be chosen.",
+        "Specify the interval, random start and selection pattern; does this list have a special complication?"
       ]
     },
     {
@@ -488,6 +560,10 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Write instructions another student could actually carry out: identify the eligible units and the way each unit will be chosen.",
+        "How are the group totals fixed, and is recruitment within groups random?"
       ]
     },
     {
@@ -509,6 +585,10 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Write instructions another student could actually carry out: identify the eligible units and the way each unit will be chosen.",
+        "What information defines the strata, and how are pupils selected within each group?"
       ]
     },
     {
@@ -530,6 +610,10 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Write instructions another student could actually carry out: identify the eligible units and the way each unit will be chosen.",
+        "Who would be available at this place and time, and who would the method miss?"
       ]
     },
     {
@@ -551,6 +635,33 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "modelSteps": [
+        {
+          "id": "frame",
+          "text": "Use the complete club register and assign the 180 members the distinct labels 001 to 180."
+        },
+        {
+          "id": "read",
+          "text": "Read successive three-digit groups from the unrestricted random-digit table."
+        },
+        {
+          "id": "reject",
+          "text": "Ignore 000, numbers from 181 to 999, and any number already accepted."
+        },
+        {
+          "id": "complete",
+          "text": "Continue until 20 different valid numbers have been accepted."
+        },
+        {
+          "id": "select",
+          "text": "Take the 20 members corresponding to those accepted labels."
+        }
+      ],
+      "warning": "This is an unrestricted digit table, not a generator limited to 001–180; invalid labels must be rejected.",
+      "hints": [
+        "Write instructions another student could actually carry out: identify the eligible units and the way each unit will be chosen.",
+        "Consider which random source is being used and whether some numbers must be ignored."
       ]
     },
     {
@@ -572,6 +683,10 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Write instructions another student could actually carry out: identify the eligible units and the way each unit will be chosen.",
+        "Specify the interval, random start and selection pattern; does this list have a special complication?"
       ]
     },
     {
@@ -593,6 +708,10 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Write instructions another student could actually carry out: identify the eligible units and the way each unit will be chosen.",
+        "What information defines the strata, and how are pupils selected within each group?"
       ]
     },
     {
@@ -614,6 +733,33 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "modelSteps": [
+        {
+          "id": "frame",
+          "text": "Number all 197 eligible names in the ordered sampling frame."
+        },
+        {
+          "id": "ratio",
+          "text": "Calculate N/n = 197/40 = 4.925, noting that it is not an integer."
+        },
+        {
+          "id": "plan",
+          "text": "Choose a feasible systematic plan. For example, choose a random start of 1 or 2 and then use interval 5."
+        },
+        {
+          "id": "positions",
+          "text": "Select 40 distinct positions, including the start and 39 further positions separated by 5."
+        },
+        {
+          "id": "verify",
+          "text": "Check the final position is at most 197: the final position is 196 when starting at 1 or 197 when starting at 2."
+        }
+      ],
+      "warning": "This is one workable scheme, not a universal 'always round N/n' rule. Alternative systematic selection procedures may be defensible if they use a random start and produce the required count.",
+      "hints": [
+        "Write instructions another student could actually carry out: identify the eligible units and the way each unit will be chosen.",
+        "Specify the interval, random start and selection pattern; does this list have a special complication?"
       ]
     },
     {
@@ -646,6 +792,11 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "coverageArea": "inference",
+      "hints": [
+        "Identify the population the conclusion is supposed to describe. Which people or items were actually reached?",
+        "Could different selections, missing responses or measurement issues change the conclusion?"
       ]
     },
     {
@@ -678,6 +829,11 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "coverageArea": "methods",
+      "hints": [
+        "Identify the population the conclusion is supposed to describe. Which people or items were actually reached?",
+        "Give a context-specific limitation and a practical improvement rather than a generic claim about bias."
       ]
     },
     {
@@ -710,6 +866,11 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "coverageArea": "inference",
+      "hints": [
+        "Identify the population the conclusion is supposed to describe. Which people or items were actually reached?",
+        "Could different selections, missing responses or measurement issues change the conclusion?"
       ]
     },
     {
@@ -741,6 +902,11 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "coverageArea": "methods",
+      "hints": [
+        "Identify the population the conclusion is supposed to describe. Which people or items were actually reached?",
+        "Give a context-specific limitation and a practical improvement rather than a generic claim about bias."
       ]
     },
     {
@@ -772,6 +938,11 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "coverageArea": "methods",
+      "hints": [
+        "Identify the population the conclusion is supposed to describe. Which people or items were actually reached?",
+        "Give a context-specific limitation and a practical improvement rather than a generic claim about bias."
       ]
     },
     {
@@ -803,6 +974,11 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "coverageArea": "methods",
+      "hints": [
+        "Identify the population the conclusion is supposed to describe. Which people or items were actually reached?",
+        "Give a context-specific limitation and a practical improvement rather than a generic claim about bias."
       ]
     },
     {
@@ -834,6 +1010,11 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "coverageArea": "methods",
+      "hints": [
+        "Identify the population the conclusion is supposed to describe. Which people or items were actually reached?",
+        "Give a context-specific limitation and a practical improvement rather than a generic claim about bias."
       ]
     },
     {
@@ -865,6 +1046,11 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "coverageArea": "methods",
+      "hints": [
+        "Identify the population the conclusion is supposed to describe. Which people or items were actually reached?",
+        "Give a context-specific limitation and a practical improvement rather than a generic claim about bias."
       ]
     },
     {
@@ -897,6 +1083,443 @@
       "sourceIds": [
         "pearson-textbook-ch1",
         "pearson-9ma0-guidance"
+      ],
+      "coverageArea": "methods",
+      "hints": [
+        "Identify the population the conclusion is supposed to describe. Which people or items were actually reached?",
+        "Give a context-specific limitation and a practical improvement rather than a generic claim about bias."
+      ]
+    },
+    {
+      "id": "eval-population-sample",
+      "type": "evaluation",
+      "level": "foundation",
+      "title": "Identify population and sample",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "context": "A college wants to estimate the mean journey time of all 850 pupils. A questionnaire was given only to 40 members of the cycling club.",
+      "task": "State the population and the sample, and explain why the result might not represent all pupils.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The population of interest is all 850 pupils, not just cycling club members."
+        },
+        {
+          "id": "point-2",
+          "text": "The sample is the 40 cycling-club members who received the questionnaire."
+        },
+        {
+          "id": "point-3",
+          "text": "Cyclists may travel differently from other pupils; sample coverage or selection should include the wider school."
+        }
+      ],
+      "model": "The population is all 850 pupils, while the sample consists of the 40 cycling-club pupils. Because pupils who cycle might have different journey times from those who travel by bus or car, it would be better to select from a complete list of all eligible pupils.",
+      "sourceEvaluationIds": [
+        "srs-frame",
+        "sample-variation"
+      ],
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Define the population and identify the group actually observed before deciding what the result means.",
+        "Think about sampling variation, who may have been missed and whether the conclusion goes beyond the evidence."
+      ]
+    },
+    {
+      "id": "eval-full-survey-nonresponse",
+      "type": "evaluation",
+      "level": "foundation",
+      "title": "A census with missing responses",
+      "methodId": "opportunity",
+      "coverageArea": "inference",
+      "context": "A town council sends a survey to every one of its 500 registered households but only 190 households respond. It calls the 190 replies a complete census of town opinion.",
+      "task": "Evaluate this claim and describe one limitation.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Inviting the full register is a census attempt, but only 190 households provided observations."
+        },
+        {
+          "id": "point-2",
+          "text": "People who did not respond may have different opinions, causing nonresponse bias."
+        },
+        {
+          "id": "point-3",
+          "text": "The registered-household list may not include every household, and follow-up or response-rate disclosure is needed."
+        }
+      ],
+      "model": "Although the council attempted to collect responses from the whole register, the reported results come from only 190 responding households. The other households may think differently. The council should report its response rate and attempt follow-up, and check whether the register covers the population.",
+      "sourceEvaluationIds": [
+        "opp-unrepresentative",
+        "sample-bias"
+      ],
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Define the population and identify the group actually observed before deciding what the result means.",
+        "Think about sampling variation, who may have been missed and whether the conclusion goes beyond the evidence."
+      ]
+    },
+    {
+      "id": "eval-two-samples",
+      "type": "evaluation",
+      "level": "foundation",
+      "title": "Different samples, different estimates",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "context": "Two students each independently take a simple random sample of 30 pupils from the same school. They estimate mean daily screen time as 2.8 hours and 3.5 hours.",
+      "task": "Explain why the estimates could differ even if both samples were selected correctly.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The two students may select different pupils even when both procedures are genuinely random."
+        },
+        {
+          "id": "point-2",
+          "text": "Sample means vary naturally from sample to sample and need not equal the population mean."
+        },
+        {
+          "id": "point-3",
+          "text": "Neither sample result alone proves the population mean exactly; describe this uncertainty when drawing a conclusion."
+        }
+      ],
+      "model": "The pupils chosen could be different, so the two sample means need not be equal. This is sampling variation, not proof that one student used an incorrect method. Both estimates are uncertain approximations of the school population's mean.",
+      "sourceEvaluationIds": [
+        "srs-frame",
+        "sample-variation"
+      ],
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Define the population and identify the group actually observed before deciding what the result means.",
+        "Think about sampling variation, who may have been missed and whether the conclusion goes beyond the evidence."
+      ]
+    },
+    {
+      "id": "eval-census-practical",
+      "type": "evaluation",
+      "level": "develop",
+      "title": "When a census may be suitable",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "context": "A small laboratory has 24 reusable measuring devices. The staff can inspect each device in two minutes without damaging it.",
+      "task": "Choose between a census and sample for checking their calibration. Justify your choice and state a limitation.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "A census of all 24 devices is practical because the group is small and inspection is nondestructive."
+        },
+        {
+          "id": "point-2",
+          "text": "Checking every device avoids uncertainty caused solely by omitting some devices."
+        },
+        {
+          "id": "point-3",
+          "text": "Measurement errors or incorrect calibration procedures are still possible, even with a census."
+        }
+      ],
+      "model": "A census is feasible because all 24 devices can be checked in a short time without damage. This means no device is missed merely by sampling, although a poor calibration procedure could still give inaccurate readings.",
+      "sourceEvaluationIds": [
+        "srs-frame",
+        "sample-variation"
+      ],
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Define the population and identify the group actually observed before deciding what the result means.",
+        "Think about sampling variation, who may have been missed and whether the conclusion goes beyond the evidence."
+      ]
+    },
+    {
+      "id": "eval-inference-transport",
+      "type": "evaluation",
+      "level": "develop",
+      "title": "What can this survey tell us?",
+      "methodId": "opportunity",
+      "coverageArea": "inference",
+      "context": "Researchers interview 60 bus passengers at 8 a.m. and report that 70% of all residents travel to work by bus.",
+      "task": "Critique the inference and suggest a defensible claim or improved sampling method.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Passengers at one bus stop and time do not form a representative selection of all residents."
+        },
+        {
+          "id": "point-2",
+          "text": "People who do not work, use other transport or travel later are omitted."
+        },
+        {
+          "id": "point-3",
+          "text": "Limit the conclusion to the observed commuters or sample residents through a broader frame/times and locations."
+        }
+      ],
+      "model": "The result describes the 60 people interviewed at that time, not necessarily all town residents. Many other residents would never be at this stop. I would use a broader sample of residents or report the result only for those surveyed.",
+      "sourceEvaluationIds": [
+        "opp-unrepresentative",
+        "sample-bias"
+      ],
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Define the population and identify the group actually observed before deciding what the result means.",
+        "Think about sampling variation, who may have been missed and whether the conclusion goes beyond the evidence."
+      ]
+    },
+    {
+      "id": "eval-different-conclusions",
+      "type": "evaluation",
+      "level": "develop",
+      "title": "Two different conclusions",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "context": "Two independent random samples of 50 voters are selected from one complete town register. In one sample a proposed plan has 54% support; in the other it has 46%.",
+      "task": "Explain how both findings could arise and why neither gives a certain statement about the town.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Independent random samples need not contain the same people."
+        },
+        {
+          "id": "point-2",
+          "text": "Sampling variation can yield different sample proportions and even opposite majority results."
+        },
+        {
+          "id": "point-3",
+          "text": "Treat the estimates cautiously and avoid claiming the whole town definitely supports or opposes the proposal."
+        }
+      ],
+      "model": "Both procedures can be random and valid while selecting different sets of 50 voters. Chance differences can put the estimated support above or below 50%, so neither small sample proves the whole town supports or opposes the plan.",
+      "sourceEvaluationIds": [
+        "srs-frame",
+        "sample-variation"
+      ],
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Define the population and identify the group actually observed before deciding what the result means.",
+        "Think about sampling variation, who may have been missed and whether the conclusion goes beyond the evidence."
+      ]
+    },
+    {
+      "id": "eval-census-expense",
+      "type": "evaluation",
+      "level": "develop",
+      "title": "A costly national census",
+      "methodId": "stratified",
+      "coverageArea": "inference",
+      "context": "A business wants the average waiting time of customers across 4,000 stores. It proposes monitoring every transaction for a year, but only has resources to analyse 3,000 transactions.",
+      "task": "Explain why a sample is reasonable and describe a limitation of the resulting estimate.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Observing all transactions across 4,000 stores for a year would be costly and time-consuming."
+        },
+        {
+          "id": "point-2",
+          "text": "A carefully designed sample can reduce workload while giving an estimate of the wider population."
+        },
+        {
+          "id": "point-3",
+          "text": "Sampling variability, unequal store coverage and timing may affect conclusions; selection must address these."
+        }
+      ],
+      "model": "Monitoring every transaction would be costly, so a manageable sample is reasonable. Selection should cover stores and times appropriately, perhaps with strata. The sample estimate may still differ from the full-population mean due to sampling variation.",
+      "sourceEvaluationIds": [
+        "strata-comparison",
+        "sample-variation"
+      ],
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Define the population and identify the group actually observed before deciding what the result means.",
+        "Think about sampling variation, who may have been missed and whether the conclusion goes beyond the evidence."
+      ]
+    },
+    {
+      "id": "eval-survey-nonresponse",
+      "type": "evaluation",
+      "level": "develop",
+      "title": "Nonresponse after random selection",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "context": "An investigator randomly selects 200 employees from a complete staff register. Only 55 reply, mostly people who are enthusiastic about a new workplace policy.",
+      "task": "Evaluate the claim that the results are unbiased because the original selection was random.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "A genuinely random initial selection does not eliminate nonresponse bias."
+        },
+        {
+          "id": "point-2",
+          "text": "Those who reply may systematically differ from the 145 who did not."
+        },
+        {
+          "id": "point-3",
+          "text": "The researcher should report and investigate the low response rate, follow up selected staff and qualify conclusions."
+        }
+      ],
+      "model": "The original selection is random, but only 55 respond; enthusiastic staff may be more likely to reply, biasing the results. I would follow up the selected nonrespondents and explain that the estimate may not represent every employee.",
+      "sourceEvaluationIds": [
+        "srs-frame",
+        "sample-variation"
+      ],
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Define the population and identify the group actually observed before deciding what the result means.",
+        "Think about sampling variation, who may have been missed and whether the conclusion goes beyond the evidence."
+      ]
+    },
+    {
+      "id": "eval-small-subgroup",
+      "type": "evaluation",
+      "level": "extend",
+      "title": "A small subgroup in the sample",
+      "methodId": "stratified",
+      "coverageArea": "methods",
+      "context": "Only 8% of a school are boarding pupils. A student takes a simple random sample of 20 pupils and finds no boarding pupils, then concludes there are no boarding pupils at the school.",
+      "task": "Explain the flaw in the conclusion and propose a better design if boarding pupils must be included.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "A random sample can miss a small subgroup by chance, even if the subgroup exists."
+        },
+        {
+          "id": "point-2",
+          "text": "Zero boarding pupils in this sample does not show that the full population contains none."
+        },
+        {
+          "id": "point-3",
+          "text": "A stratified design can deliberately cover boarding and day pupils, with random selection inside each stratum."
+        }
+      ],
+      "model": "There are boarding pupils, but a small random sample can exclude them by chance. This absence is not evidence that no boarding pupils exist. Stratifying by boarding status and randomly choosing within each group would ensure planned coverage.",
+      "sourceEvaluationIds": [
+        "strata-comparison",
+        "sample-variation"
+      ],
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Define the population and identify the group actually observed before deciding what the result means.",
+        "Think about sampling variation, who may have been missed and whether the conclusion goes beyond the evidence."
+      ]
+    },
+    {
+      "id": "eval-coverage-register",
+      "type": "evaluation",
+      "level": "extend",
+      "title": "A complete-sounding census",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "context": "A survey claims to include every adult in a district, but its register omits newly arrived residents and all residents without internet access.",
+      "task": "Explain why the census claim is misleading and how the issue could be addressed.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "A census requires coverage of the defined population, not merely every record in an incomplete list."
+        },
+        {
+          "id": "point-2",
+          "text": "Omitted residents have zero chance of inclusion, so coverage bias remains even if every listed person replies."
+        },
+        {
+          "id": "point-3",
+          "text": "The register and contact approach must be improved before making district-wide inferences."
+        }
+      ],
+      "model": "The study may survey every person on its list, but that list does not include every adult in the district. The missing groups are systematically excluded. I would update the frame and offer accessible contact routes before interpreting the findings.",
+      "sourceEvaluationIds": [
+        "srs-frame",
+        "sample-variation"
+      ],
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Define the population and identify the group actually observed before deciding what the result means.",
+        "Think about sampling variation, who may have been missed and whether the conclusion goes beyond the evidence."
+      ]
+    },
+    {
+      "id": "eval-weather-stations",
+      "type": "evaluation",
+      "level": "extend",
+      "title": "Generalising from stations",
+      "methodId": "stratified",
+      "coverageArea": "inference",
+      "context": "A student uses average rainfall measurements from three coastal weather stations in one month and calls the result 'the typical rainfall of the whole country in every season'.",
+      "task": "Identify the inference problem and suggest a more defensible study design.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Three coastal stations in one month cannot automatically describe the entire country across all seasons."
+        },
+        {
+          "id": "point-2",
+          "text": "Geography and seasonal timing may affect the rainfall recorded."
+        },
+        {
+          "id": "point-3",
+          "text": "Use more appropriately chosen sites and times, acknowledge the limits, or restrict the conclusion to the observed stations and month."
+        }
+      ],
+      "model": "These measurements describe the chosen coastal stations in one month, not necessarily inland areas or other seasons. I would include a wider set of sites and a relevant period, or limit the claim to the measured stations and month.",
+      "sourceEvaluationIds": [
+        "strata-comparison",
+        "sample-variation"
+      ],
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Define the population and identify the group actually observed before deciding what the result means.",
+        "Think about sampling variation, who may have been missed and whether the conclusion goes beyond the evidence."
+      ]
+    },
+    {
+      "id": "eval-repeat-results",
+      "type": "evaluation",
+      "level": "extend",
+      "title": "Repeated samples are not a contradiction",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "context": "In two independently selected probability samples, 44% and 52% of respondents favour a new timetable. The author calls one result a statistical error because the findings disagree.",
+      "task": "Explain why the disagreement does not, by itself, establish that either procedure was wrong.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Different probability samples can include different respondents."
+        },
+        {
+          "id": "point-2",
+          "text": "Both percentages may reflect ordinary sampling variation, especially around a close split."
+        },
+        {
+          "id": "point-3",
+          "text": "Examine sample sizes, selection, response and uncertainty instead of declaring one sample automatically incorrect."
+        }
+      ],
+      "model": "The two random samples might contain different people, so their percentages can differ without either sampling method being wrong. I would inspect their sizes, response rates and uncertainty, and avoid treating either estimate as an exact population percentage.",
+      "sourceEvaluationIds": [
+        "srs-frame",
+        "sample-variation"
+      ],
+      "sourceIds": [
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Define the population and identify the group actually observed before deciding what the result means.",
+        "Think about sampling variation, who may have been missed and whether the conclusion goes beyond the evidence."
       ]
     }
   ]
