@@ -41,4 +41,40 @@ for(const q of reasoning){
  }
 }
 assert(errors.length>=15&&reasoning.length>=9,'Incomplete exam skills bank');
+
+const {questions:examQuestions}=load('exam-practice');
+unique(ids(examQuestions),'exam practice');
+assert(examQuestions.length>=32,'Insufficient mixed exam questions');
+for(const type of ['allocation','systematic','procedure','evaluation'])
+ assert(examQuestions.filter(q=>q.type===type).length>=8,'Unbalanced exam bank: '+type);
+for(const q of examQuestions){
+ assert(['allocation','systematic','procedure','evaluation'].includes(q.type),'Unsupported exam type: '+q.id);
+ assert(['foundation','develop','extend'].includes(q.level)&&q.title&&q.context&&q.task,'Incomplete exam prompt: '+q.id);
+ assert(methodsById.has(q.methodId),'Unknown exam method: '+q.id);
+ referenceSources(q);
+ if(q.type==='allocation'){
+  assert(conceptsById.has(q.conceptId)&&q.conceptId==='proportional-allocation','Allocation concept missing '+q.id);
+  const {sampleSize,groups}=q.data||{};
+  assert(Number.isSafeInteger(sampleSize)&&sampleSize>0&&groups?.length>=2,'Invalid allocation: '+q.id);
+  unique(ids(groups),'group ID for '+q.id);
+  const N=groups.reduce((total,g)=>{assert(g.label&&Number.isSafeInteger(g.size)&&g.size>0,'Invalid group size '+q.id);return total+g.size},0);
+  assert(sampleSize<=N&&groups.every(g=>Number.isInteger(g.size*sampleSize/N)),'Non-integer numerical allocation '+q.id);
+  assert(groups.reduce((total,g)=>total+g.size*sampleSize/N,0)===sampleSize,'Allocation total wrong '+q.id);
+ }else if(q.type==='systematic'){
+  assert(q.conceptId==='sampling-interval'&&conceptsById.has(q.conceptId),'Systematic concept missing '+q.id);
+  const {populationSize:N,sampleSize:n,randomStart:start}=q.data||{};
+  assert([N,n,start].every(Number.isSafeInteger)&&n>0&&N>=n&&N%n===0&&start>=1&&start<=N/n,'Invalid interval '+q.id);
+  assert(start+(n-1)*(N/n)<=N,'Systematic end outside frame '+q.id);
+ }else if(q.type==='procedure'){
+  assert(q.focus&&q.note&&Array.isArray(q.extraPoints)&&q.extraPoints.length>0,'Incomplete procedure rationale '+q.id);
+  unique(ids(q.extraPoints),'procedure extra point '+q.id);
+  for(const p of q.extraPoints)assert(p.text,'Missing procedure point '+q.id);
+ }else{
+  assert(q.model&&q.checklist?.length>=3&&q.sourceEvaluationIds?.length>0,'Incomplete evaluation '+q.id);
+  unique(ids(q.checklist),'evaluation point '+q.id);
+  for(const p of q.checklist)assert(p.text,'Missing evaluation point '+q.id);
+  for(const id of q.sourceEvaluationIds)assert(evalById.has(id),'Unknown evaluation source: '+q.id+'/'+id);
+ }
+}
+
 console.log('PASS: '+concepts.length+' concepts, '+methods.length+' methods, '+evaluations.length+' evaluations, '+scenarios.length+' scenarios, '+cloze.length+' cloze, '+rounds.length+' sort rounds; all references/answer keys valid.');

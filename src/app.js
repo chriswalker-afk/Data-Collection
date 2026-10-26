@@ -15,11 +15,14 @@ import {
   speedDeck, formatClock, validateTermBank
 } from './recall.js';
 import {EXAM_LEVELS,procedureRound,checkProcedure,moveStep,makeErrorDeck,gradeError,makeReasoningDeck,assessReasoning} from './exam.js';
+import {emptyExamStore,loadExamStore,saveExamStore,clearExamStore} from './exam-sim.js';
+import {createExamSimulationUI} from './exam-sim-ui.js';
 
 const mount = document.getElementById('app');
 const announcer = document.getElementById('announcer');
 let data = null;
 let progress = loadProgress();
+let examStore = emptyExamStore();
 let persistenceAvailable = true;
 let topic = 'sampling';
 let mode = 'home';
@@ -101,7 +104,7 @@ function metaBar() {
   );
 }
 function gameCard(game) {
-  const symbol = { flashcards: '▧', match: '⇄', cloze: '✎', sort: '↕', identify: '?', speed: '⌨', build: '≡', error: '!', reason: '◇' }[game.id];
+  const symbol = { flashcards: '▧', match: '⇄', cloze: '✎', sort: '↕', identify: '?', speed: '⌨', build: '≡', error: '!', reason: '◇', exam: '✦' }[game.id];
   const card = link('', hashFor(game.id, topic), 'game-card');
   card.append(
     div('game-card-top', span('game-number', game.number + ' / REVISE'), icon(symbol, 'game-icon')),
@@ -139,14 +142,14 @@ function homeView() {
   const topicSection = element('section', { className: 'section section-topic', 'aria-labelledby': 'topic-title' });
   topicSection.append(
     div('section-top', div('', span('eyebrow', 'MAKE IT YOURS'), heading(2, 'section-title', 'What are you revising?', { id: 'topic-title' })),
-      paragraph('section-note', 'The first four games support both topics; the five method games focus on sampling.')),
+      paragraph('section-note', 'Four recall games support both topics; the other six challenges focus on sampling.')),
     topicPicker()
   );
   root.append(topicSection);
   const gameSection = element('section', { className: 'section games-section', 'aria-labelledby': 'games-title' });
   gameSection.append(
-    div('section-top', div('', span('eyebrow', 'NINE WAYS TO LEARN'), heading(2, 'section-title', 'Choose a challenge', { id: 'games-title' })),
-      paragraph('section-note', 'A different way to practise the same mathematics.')),
+    div('section-top', div('', span('eyebrow', 'TEN WAYS TO LEARN'), heading(2, 'section-title', 'Choose a challenge', { id: 'games-title' })),
+      paragraph('section-note', 'Build from accurate recall to full exam-style reasoning.')),
     div('games-grid', GAMES.map(gameCard))
   );
   root.append(gameSection);
@@ -884,11 +887,19 @@ function examAction(command,button){
  if(command==='reason-next'&&mode==='reason'&&session.answered){examAdvance();return;}
 }
 
+const examSimulator=createExamSimulationUI({
+  element,div,span,paragraph,heading,action,link,icon,activityTop,roundProgress,
+  getState:()=>({data,session,examState:examStore}),
+  beginPaper:paper=>{session=paper;examStore.paper=paper;},
+  beginReady:()=>{session={ready:true,complete:false};},
+  persist:()=>{if(!saveExamStore(examStore,data.examQuestions,data.methods))persistenceAvailable=false;},
+  recordNumerical:remember,finish:finishRound,render,announce
+});
 function render(focusTarget) {
   if (!data) return;
   navSync();
   const views = { home: homeView, flashcards: flashcardView, match: matchView, cloze: clozeView,
-    sort: sortView, identify: identifyView, speed: speedView, build: buildView, error: errorView, reason: reasoningView };
+    sort: sortView, identify: identifyView, speed: speedView, build: buildView, error: errorView, reason: reasoningView, exam: examSimulator.view };
   const view = (views[mode] || homeView)();
   mount.replaceChildren(view);
   ensureClock();
@@ -931,6 +942,8 @@ function restartGame() {
     session={methods:order.map(id=>({...procedureRound(data.methods,id),checked:false,correct:false})),index:0,correct:0,complete:false};
   } else if(mode==='error'||mode==='reason') {
     session={items:mode==='error'?makeErrorDeck(data.errors,examLevel):makeReasoningDeck(data.reasoning,examLevel),index:0,correct:0,complete:false,answered:false,selectedLine:null,selectedRepair:null,selections:{},draft:''};
+  } else if(mode==='exam'){
+    session={ready:true,complete:false};
   } else session = null;
 }
 function setRoute() {
@@ -1019,6 +1032,7 @@ function resolveCloze(value, skipped=false) {
 
 function onAction(button) {
   const command = button.dataset.action;
+  if(command.startsWith('sim-')){examSimulator.handle(command,button);return;}
   if(['build-move','build-check','build-reveal','build-next','error-check','error-next','reason-check','reason-next'].includes(command)){examAction(command,button);return;}
   if (command === 'topic') {
     window.location.hash = hashFor(mode, button.dataset.topic);
@@ -1027,7 +1041,11 @@ function onAction(button) {
   if (command === 'reset') {
     if (window.confirm('Reset all saved Sampling Arcade progress on this browser? This cannot be undone.')) {
       progress = emptyProgress();
-      persistenceAvailable = clearProgress();
+      const knowledgeCleared=clearProgress();
+      const writingCleared=clearExamStore();
+      persistenceAvailable=knowledgeCleared&&writingCleared;
+      examStore = emptyExamStore();
+      if(mode==='exam')restartGame();
       render();
       announce('Your saved revision progress was reset.');
     }
@@ -1147,6 +1165,7 @@ mount.addEventListener('click', event => {
   if (button && !button.disabled) onAction(button);
 });
 mount.addEventListener('change',event=>{
+ if(mode==='exam')examSimulator.onChange(event.target);
  const control=event.target;
  if(mode==='error'&&!session?.answered&&control.matches('input[data-error-line],input[data-error-repair]')){
    if(control.dataset.errorLine!==undefined)session.selectedLine=Number(control.value);
@@ -1159,10 +1178,16 @@ mount.addEventListener('change',event=>{
    render('input[name="'+control.name+'"]:checked');
  }
 });
+mount.addEventListener('input',event=>{
+  if(mode==='exam')examSimulator.onInput(event.target);
+});
 mount.addEventListener('submit', event => {
   const form=event.target.closest('form[data-form]');
   if (!form) return;
   event.preventDefault();
+  if(form.dataset.form==='sim-numeric'&&mode==='exam'){
+    examSimulator.submit(form);return;
+  }
   const input=form.querySelector('input[name="answer"]');
   if(!input || !input.value.trim()) return;
   if(form.dataset.form==='cloze') resolveCloze(input.value);
@@ -1210,13 +1235,15 @@ async function loadData() {
     const sources = [
       ['concepts', 'concepts'], ['cloze', 'cloze'], ['evaluations', 'evaluations'],
       ['sort-rounds', 'rounds'], ['scenarios', 'scenarios'], ['methods', 'methods'],
-      ['accepted-terms', 'terms'], ['exam-errors', 'errors'], ['exam-reasoning','reasoning']
+      ['accepted-terms', 'terms'], ['exam-errors', 'errors'], ['exam-reasoning','reasoning'], ['exam-practice','questions']
     ];
     const responses = await Promise.all(sources.map(([name]) =>
       fetch(new URL('./content/' + name + '.json', document.baseURI))));
     if (responses.some(response => !response.ok)) throw new Error('The revision content could not be loaded.');
     const payloads = await Promise.all(responses.map(response => response.json()));
     data = Object.fromEntries(sources.map((source, i) => [source[1], payloads[i][source[1]]]));
+    data.examQuestions=data.questions;
+    delete data.questions;
     if (Object.entries(data).some(([key,items]) => key!=='terms' && !Array.isArray(items))) {
       throw new Error('Unexpected content format.');
     }
@@ -1225,11 +1252,13 @@ async function loadData() {
     }
     data.acceptedTerms=data.terms;
     validateTermBank(data.concepts,data.acceptedTerms);
-    if (data.rounds.length < 9 || data.scenarios.length < 20 || data.methods.length !== 5 || data.errors.length < 15 || data.reasoning.length < 9) {
+    if (data.rounds.length < 9 || data.scenarios.length < 20 || data.methods.length !== 5 || data.errors.length < 15 || data.reasoning.length < 9 || data.examQuestions.length < 32) {
       throw new Error('Incomplete sampling content.');
     }
+    examStore=loadExamStore(data.examQuestions,data.methods);
     setRoute();
-  } catch {
+  } catch (error) {
+    console.error('Sampling Arcade initialisation failed:', error);
     data = null;
     mount.replaceChildren(div('error-panel',
       heading(1, 'panel-title', 'We couldn’t load the questions.'),
