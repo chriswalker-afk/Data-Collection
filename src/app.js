@@ -15,6 +15,8 @@ import {
   speedDeck, formatClock, validateTermBank
 } from './recall.js';
 import {EXAM_LEVELS,procedureRound,checkProcedure,moveStep,makeErrorDeck,gradeError,gradeErrorDiagnosis,validateErrorBank,makeReasoningDeck,assessReasoning} from './exam.js';
+import {createReasonRound,validateReasonBank} from './reasoning.js';
+import {createReasoningUI} from './reasoning-ui.js';
 import {emptyExamStore,loadExamStore,saveExamStore,clearExamStore} from './exam-sim.js';
 import {createExamSimulationUI} from './exam-sim-ui.js';
 import {createExperienceUI} from './experience-ui.js';
@@ -311,7 +313,7 @@ function showCompletion(game) {
     : game === 'identify' ? session.correct + ' of ' + session.items.length + ' scenarios identified correctly'
     : game === 'build' ? session.correct + ' of ' + session.methods.length + ' procedures correct on first check'
     : game === 'error' ? session.correct + ' of ' + session.items.length + ' complete diagnoses'
-    : game === 'reason' ? session.correct + ' of ' + session.items.length + ' complete model checklists'
+    : game === 'reason' ? session.guidedCases + ' guided cases · ' + session.writtenCases + ' independent responses'
     : session.correct + ' correct answers out of ' + session.items.length;
   return div('completed-screen',
     div('completion-badge', icon('✓'), span('', 'Round complete')),
@@ -319,6 +321,7 @@ function showCompletion(game) {
     paragraph('completion-description', gameTitle + ' · ' + topicLabel(topic)),
     paragraph('completion-score', scoreLine),
     ...(game==='speed'?[speedCompletionPanel()]:[]),
+    ...(game==='reason'?[reasoningUI.summaryView()]:[]),
     ...(game==='error'?[div('error-summary',...[['Located',session.errorStats.located],['Repaired',session.errorStats.repaired],['Explained',session.errorStats.explained]].map(([label,n])=>div('error-metric',span('error-metric-value',String(n)),span('',label)))),
       paragraph('error-note',session.reviewMode?'Unscored practice: progress unchanged.':'Only the first attempt contributes to mastery.'),
       ...(!session.reviewMode&&session.missed.length?[action('Review missed cases →','error-review')]:[])]:[]),
@@ -1063,43 +1066,6 @@ function errorView(){
  }
  root.append(panel);return root;
 }
-function reasoningView(){
- const root=div('page activity-page');root.append(activityTop('reason'),examLevelPicker());
- if(session.complete){root.append(showCompletion('reason'));return root;}
- const q=session.items[session.index];root.append(roundProgress(session.index+1,session.items.length,'Investigation '+(session.index+1)+' of '+session.items.length),practiceGuide('reason'));
- const panel=element('section',{className:'exam-workspace','data-reason-id':q.id,'aria-labelledby':'exam-heading'});
- panel.append(span('eyebrow','QUESTION · EXAM REASONING'),heading(2,'exam-heading','Build a justified answer',{id:'exam-heading',tabindex:'-1'}),
- paragraph('exam-scenario',q.scenario),paragraph('exam-help','Priority: '+q.priority),
- paragraph('exam-help','Compare your choices with one defensible model. Alternative well-justified methods may also be valid.'));
- for(const [part,title] of [['method','Method'],['reason','Contextual justification'],['limitation','Limitation'],['improvement','Improvement']]){
-  const group=element('fieldset',{className:'exam-fieldset'});group.append(element('legend',{},title));
-  q.options[part].forEach((choice,i)=>{
-   const value=part==='method'?choice:String(i);
-   group.append(examRadio('reason-'+part,value,part==='method'?METHOD_LABELS[choice]:choice,
-    String(session.selections[part])===value,session.answered,'data-reason-field'));
-  });panel.append(group);
- }
- const draft=element('textarea',{id:'reason-written',rows:'4',maxlength:'2000',placeholder:'I would use… because… One limitation… I would improve…',disabled:session.answered});
- draft.value=session.draft||'';
- panel.append(element('label',{for:'reason-written',className:'typed-label'},'Write your own explanation (optional, not automatically marked)'),draft);
- if(!session.answered)panel.append(div('exam-buttons',action('Review my reasoning','reason-check',
-   {disabled:['method','reason','limitation','improvement'].some(k=>session.selections[k]===undefined)})));
- else{
-  const result=assessReasoning(q,session.selections);
-  const feedback=feedbackBanner('review',result.met.length+' of 4 model points matched',[
-     paragraph('','This formative checklist is not an official Edexcel mark scheme or a grade for your written answer.')
-   ]);
-  const list=element('ul',{className:'exam-checklist'});
-  for(const [part,title] of [['method','Method'],['reason','Justification'],['limitation','Limitation'],['improvement','Improvement']])
-   list.append(element('li',{},(result.met.includes(part)?'✓ ':'○ ')+title+': '+
-   (part==='method'?METHOD_LABELS[q.answers.method]:q.options[part][q.answers[part]])));
-  panel.append(feedback,list,heading(3,'exam-model-heading','Model explanation'),paragraph('exam-model',q.model),
-   paragraph('exam-help','Another perspective: '+q.tradeoff),
-   ...(session.draft?[paragraph('exam-draft','Your unmarked draft: '+session.draft)]:[]),
-   div('next-row',action(session.index===session.items.length-1?'Finish round →':'Next investigation →','reason-next')));
- }
- root.append(panel);return root;
-}
 function examAdvance(){
  if(mode==='build'){
   if(session.index===session.methods.length-1){finishRound();return;}
@@ -1130,19 +1096,16 @@ function examAction(command,button){
   if(!session.reviewMode)remember(conceptIdForSubject(q.methodId,data.methods),mark.correct);
   render('.error-analysis');announce(mark.correct?'All three decisions correct.':'Review the mathematical explanation.');return;
  }
- if(command==='reason-check'&&mode==='reason'&&!session.answered){
-  if(['method','reason','limitation','improvement'].some(k=>session.selections[k]===undefined))return;
-  session.draft=mount.querySelector('#reason-written')?.value||'';
-  const q=session.items[session.index],result=assessReasoning(q,session.selections);
-  session.answered=true;if(result.complete)session.correct++;
-  // A model checklist is not sufficient to award independent conceptual mastery.
-  remember(conceptIdForSubject(q.answers.method,data.methods),false);
-  render('.exam-workspace .typed-feedback');announce('Model feedback available.');return;
- }
  if(command==='error-next'&&mode==='error'&&session.answered){examAdvance();return;}
- if(command==='reason-next'&&mode==='reason'&&session.answered){examAdvance();return;}
+ 
 }
 
+const reasoningUI=createReasoningUI({
+ element,div,span,paragraph,heading,action,activityTop,examLevelPicker,roundProgress,
+ practiceGuide,feedbackBanner,showCompletion,getState:()=>({data,session,mode}),
+ setSession:next=>{session=next;},
+ render,announce,remember,finishRound,conceptIdForSubject
+});
 const sortUI=createSortItUI({
   mount,element,div,span,paragraph,heading,action,activityTop,roundProgress,
   practiceGuide,feedbackBanner,showCompletion,
@@ -1163,7 +1126,7 @@ function render(focusTarget) {
   if (!data) return;
   navSync();
   const views = { home: homeView, flashcards: flashcardView, match: matchView, cloze: clozeView,
-    sort: sortView, identify: identifyView, speed: speedView, build: buildView, error: errorView, reason: reasoningView, exam: examSimulator.view };
+    sort: sortView, identify: identifyView, speed: speedView, build: buildView, error: errorView, reason: reasoningUI.view, exam: examSimulator.view };
   const view = (views[mode] || homeView)();
   mount.replaceChildren(view);
   ensureClock();
@@ -1214,9 +1177,11 @@ function restartGame(){
   } else if(mode==='build') {
     const order=[buildMethodId,...data.methods.map(m=>m.id).filter(id=>id!==buildMethodId)];
     session={methods:order.map(id=>({...procedureRound(data.methods,id),checked:false,correct:false})),index:0,correct:0,complete:false};
-  } else if(mode==='error'||mode==='reason') {
-    session={items:mode==='error'?makeErrorDeck(data.errors,examLevel):makeReasoningDeck(data.reasoning,examLevel),index:0,correct:0,complete:false,answered:false,selectedLine:null,selectedRepair:null,selectedImpact:null,reviewMode:false,missed:[],errorStats:{located:0,repaired:0,explained:0},selections:{},draft:''};
-  } else if(mode==='exam'){
+  } else if(mode==='error') {
+    session={items:makeErrorDeck(data.errors,examLevel),index:0,correct:0,complete:false,answered:false,selectedLine:null,selectedRepair:null,selectedImpact:null,reviewMode:false,missed:[],errorStats:{located:0,repaired:0,explained:0}};
+  } else if(mode==='reason') {
+    session=createReasonRound(makeReasoningDeck(data.reasoning,examLevel));
+  } } else if(mode==='exam'){
     session={ready:true,complete:false};
   } else session = null;
 }
@@ -1241,7 +1206,7 @@ function remember(conceptId, correct) {
 function finishRound() {
   if (session.complete) return;
   session.complete = true;
-  if(mode==='error'&&session.reviewMode){render('.completion-title');return;}
+  if((mode==='error'||mode==='reason')&&session.reviewMode){render('.completion-title');return;}
   if (mode === 'speed') stopClock();
   progress = recordSession(progress);
   if (!saveProgress(progress)) persistenceAvailable = false;
@@ -1383,9 +1348,10 @@ function onAction(button) {
   if(command==='error-review'&&mode==='error'&&session?.complete&&!session.reviewMode&&session.missed.length){
   session={items:session.missed.map(id=>data.errors.find(q=>q.id===id)),index:0,correct:0,complete:false,answered:false,reviewMode:true,missed:[],errorStats:{located:0,repaired:0,explained:0},selectedLine:null,selectedRepair:null,selectedImpact:null};render('#exam-heading');return;
  }
- if(command.startsWith('sort-')&&mode==='sort'){sortUI.handle(command,button);return;}
+ if(command.startsWith('reason-')&&mode==='reason'){reasoningUI.handle(command,button);return;}
+  if(command.startsWith('sort-')&&mode==='sort'){sortUI.handle(command,button);return;}
   if(command.startsWith('sim-')){examSimulator.handle(command,button);return;}
-  if(['build-move','build-check','build-reveal','build-next','error-check','error-next','reason-check','reason-next'].includes(command)){examAction(command,button);return;}
+  if(['build-move','build-check','build-reveal','build-next','error-check','error-next'].includes(command)){examAction(command,button);return;}
   if(command==='open-feedback'){experience.openFeedback();return;}
   if (command === 'topic') {
     window.location.hash = hashFor(mode, button.dataset.topic);
@@ -1602,14 +1568,11 @@ mount.addEventListener('change',event=>{
     else session.selectedImpact=control.value;
    render('input[name="'+control.name+'"]:checked');
  }
- if(mode==='reason'&&!session?.answered&&control.matches('input[data-reason-field]')){
-   session.draft=mount.querySelector('#reason-written')?.value||'';
-   session.selections[control.dataset.reasonField]=control.value;
-   render('input[name="'+control.name+'"]:checked');
- }
+ if(mode==='reason')reasoningUI.onChange(control);
 });
 mount.addEventListener('input',event=>{
   if(mode==='exam')examSimulator.onInput(event.target);
+  if(mode==='reason')reasoningUI.onInput(event.target);
   if(mode==='cloze'&&!session?.answered&&event.target.id==='cloze-answer'){
     session.draft=event.target.value;
     const blank=mount.querySelector('.cloze-blank');
@@ -1701,6 +1664,7 @@ async function loadData() {
       throw new Error('Incomplete sampling content.');
     }
     validateErrorBank(data.errors);
+    validateReasonBank(data.reasoning);
     examStore=loadExamStore(data.examQuestions,data.methods);
     setRoute();
   } catch (error) {
