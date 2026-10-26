@@ -37,8 +37,9 @@ async function command(request,code,secret,action,codeExpected=200){
   expect(res.status(),JSON.stringify(result)).toBe(codeExpected);
   return result;
 }
-test('teacher leads fully synchronized Match Up ceremony, podium and locally saved keepsakes',async({page,browser,request})=>{
-  const student=await browser.newPage({viewport:{width:390,height:844}});
+test('teacher leads fully synchronized Match Up ceremony, podium and locally saved keepsakes',async({page,browser,request,isMobile})=>{
+  test.skip(isMobile,'Mobile and touch layouts are already exercised explicitly in this test.');
+  const student=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
   try{
     const code=await host(page,'match',1);
     await join(student,code);
@@ -91,7 +92,8 @@ test('teacher leads fully synchronized Match Up ceremony, podium and locally sav
     await expect(student.locator('#cabinet-count')).toHaveText('0 / 16');
   }finally{await student.close();}
 });
-test('students cannot choose podiums, launch or advance ceremony or mint awards from errors',async({page,request})=>{
+test('students cannot choose podiums, launch or advance ceremony or mint awards from errors',async({page,request,isMobile})=>{
+  test.skip(isMobile,'Identical permission checks are covered in desktop and a real mobile-width student.');
   const code=await host(page,'which',5);
   const joined=await (await request.post(route(code)+'/join',{data:{name:'Only Errors'}})).json();
   const secret=joined.token;
@@ -128,8 +130,9 @@ test('students cannot choose podiums, launch or advance ceremony or mint awards 
   expect(final.ceremony.slide.kind).toBe('finale');
   expect(final.myMultiplayerAwards.awarded).toEqual([]);
 });
-test('full Sort It! awards ceremony fits 320px and preserves Solo progress',async({page,browser,request})=>{
-  const student=await browser.newPage({viewport:{width:320,height:780}});
+test('full Sort It! awards ceremony fits 320px and preserves Solo progress',async({page,browser,request,isMobile})=>{
+  test.skip(isMobile,'Mobile and touch layouts are already exercised explicitly in this test.');
+  const student=await browser.newPage({viewport:{width:320,height:780},isMobile:true,hasTouch:true});
   try{
     const code=await host(page,'sort',1);
     await join(student,code,'Sorting Stoat');
