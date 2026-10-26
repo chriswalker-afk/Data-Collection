@@ -1,0 +1,474 @@
+{
+  "version": 1,
+  "policy": "Each concept retains its original audited definition plus two equivalent alternative retrieval clues. Clues do not change the accepted answer terms or award credit for a typo.",
+  "clues": [
+    {
+      "id": "population-1",
+      "conceptId": "population",
+      "text": "A study concerns every adult in a town. What name is given to the entire group of interest?",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "population-2",
+      "conceptId": "population",
+      "text": "An investigation aims to describe all 240 members of a club, not just those interviewed. Name the full group.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "census-1",
+      "conceptId": "census",
+      "text": "Every one of 180 households in a defined area is measured rather than only a subset. Name this investigation.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "census-2",
+      "conceptId": "census",
+      "text": "An investigation observes every unit in the defined group. Selection-based sampling variation is avoided, but measurement errors remain possible.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sample-1",
+      "conceptId": "sample",
+      "text": "Of 400 pupils at a school, only 40 are chosen and surveyed. What is the name for these 40 pupils?",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sample-2",
+      "conceptId": "sample",
+      "text": "In a study of 800 trees, the 25 selected and measured trees form what kind of group?",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "raw-data-1",
+      "conceptId": "raw-data",
+      "text": "These are the individual rainfall observations as first recorded, before totals or averages are calculated.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "raw-data-2",
+      "conceptId": "raw-data",
+      "text": "Name the unprocessed measurements, rather than grouped frequencies or a calculated mean.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sampling-unit-1",
+      "conceptId": "sampling-unit",
+      "text": "The selectable entity in a survey design, such as one household when households are selected.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sampling-unit-2",
+      "conceptId": "sampling-unit",
+      "text": "If classrooms, not individual pupils, are selected from a school register, each classroom plays this role.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sampling-frame-1",
+      "conceptId": "sampling-frame",
+      "text": "An identification list of eligible people or items from which the researcher makes a selection.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sampling-frame-2",
+      "conceptId": "sampling-frame",
+      "text": "A faulty employee register omits eligible workers; name the selection list that needs correcting.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "random-sampling-1",
+      "conceptId": "random-sampling",
+      "text": "This family of methods uses chance-based selection rather than a researcher's judgement.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "random-sampling-2",
+      "conceptId": "random-sampling",
+      "text": "A selection mechanism relies on a fair lottery, rather than convenience; name the general chance-based approach.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "simple-random-sampling-1",
+      "conceptId": "simple-random-sampling",
+      "text": "From a complete numbered list, distinct positions are drawn so every possible group of the required size has the same chance.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "simple-random-sampling-2",
+      "conceptId": "simple-random-sampling",
+      "text": "This design makes every possible subset of n units equally likely, not merely each individual unit equally likely.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "systematic-sampling-1",
+      "conceptId": "systematic-sampling",
+      "text": "A random initial list position is followed by a fixed step through the ordered entries.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "systematic-sampling-2",
+      "conceptId": "systematic-sampling",
+      "text": "For 600 numbered units and 30 selections, choose a random start among 1–20, then take every twentieth unit.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "stratified-sampling-1",
+      "conceptId": "stratified-sampling",
+      "text": "Split the population into non-overlapping groups and randomly choose units separately within each group.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "stratified-sampling-2",
+      "conceptId": "stratified-sampling",
+      "text": "The researcher randomly selects 15 Year 12 pupils and 20 Year 13 pupils from separate verified registers.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "stratum-1",
+      "conceptId": "stratum",
+      "text": "One of the mutually exclusive population groups used before separate random draws, such as the whole of Year 12.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "stratum-2",
+      "conceptId": "stratum",
+      "text": "This is a single subgroup in a partition of a population, rather than an individual person selected from it.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "quota-sampling-1",
+      "conceptId": "quota-sampling",
+      "text": "Interviewers recruit available volunteers until each fixed group target is filled; there is no random draw within groups.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "quota-sampling-2",
+      "conceptId": "quota-sampling",
+      "text": "A survey stops after recruiting 40 willing adults and 20 willing younger visitors without chance-based selection.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "opportunity-sampling-1",
+      "conceptId": "opportunity-sampling",
+      "text": "Participants are included because they are present and willing at the time, with no fixed subgroup targets.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "opportunity-sampling-2",
+      "conceptId": "opportunity-sampling",
+      "text": "A pupil asks the next 20 available people outside the canteen and sets no age-group counts.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "selection-bias-1",
+      "conceptId": "selection-bias",
+      "text": "A design systematically favours some eligible members over others, potentially distorting survey estimates.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "selection-bias-2",
+      "conceptId": "selection-bias",
+      "text": "Workers absent from the register cannot be picked even if the lottery over the listed workers is fair. Name this selection problem.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "representativeness-1",
+      "conceptId": "representativeness",
+      "text": "Which type of sample closely resembles the target population in characteristics relevant to the research question?",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "representativeness-2",
+      "conceptId": "representativeness",
+      "text": "A group selected for a survey mirrors the population in the particular characteristics needed for valid conclusions. What type of sample is it?",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sampling-variation-1",
+      "conceptId": "sampling-variation",
+      "text": "Two well-chosen chance-based subsets of the same pupils yield different mean heights even though neither draw is incorrect.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sampling-variation-2",
+      "conceptId": "sampling-variation",
+      "text": "Name the natural differences between statistics from separate valid random selections, distinct from systematic bias.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sampling-interval-1",
+      "conceptId": "sampling-interval",
+      "text": "When every twelfth record is selected after a random start, name the fixed gap of twelve positions.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sampling-interval-2",
+      "conceptId": "sampling-interval",
+      "text": "For 500 ordered invoices and a desired 50, the constant selection step is ten. Name this step quantity.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "proportional-allocation-1",
+      "conceptId": "proportional-allocation",
+      "text": "A subgroup forming 30% of a population receives 30% of the planned overall survey size before random selection within the subgroup.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "proportional-allocation-2",
+      "conceptId": "proportional-allocation",
+      "text": "A designer assigns numbers from each subgroup according to its share of the entire population. Name this allocation rule.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "qualitative-data-1",
+      "conceptId": "qualitative-data",
+      "text": "Eye colour and preferred transport mode are examples of this category-based information, not numerical measurement.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "qualitative-data-2",
+      "conceptId": "qualitative-data",
+      "text": "Bus route 25 is a label, not a count or amount. What type of information is the route code?",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "quantitative-data-1",
+      "conceptId": "quantitative-data",
+      "text": "Distances measured in kilometres and numbers of goals scored belong to this broad category of information.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "quantitative-data-2",
+      "conceptId": "quantitative-data",
+      "text": "Measurements of time and counts of pupils are examples of this numerical type of information.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "discrete-variable-1",
+      "conceptId": "discrete-variable",
+      "text": "The number of visitors arriving in an hour can take only separate count values. What kind of numerical variable is it?",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "discrete-variable-2",
+      "conceptId": "discrete-variable",
+      "text": "The result of one standard die roll is restricted to 1, 2, 3, 4, 5 or 6, not every value between them. Name this variable type.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "continuous-variable-1",
+      "conceptId": "continuous-variable",
+      "text": "A runner's completion time can theoretically take any value in a suitable interval. Name this variable type.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "continuous-variable-2",
+      "conceptId": "continuous-variable",
+      "text": "The true length of a leaf can vary across an interval, even though a ruler records a rounded measurement.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "grouped-frequency-table-1",
+      "conceptId": "grouped-frequency-table",
+      "text": "Counts of results are organised into intervals such as 0–10 and 10–20 rather than individual values.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "grouped-frequency-table-2",
+      "conceptId": "grouped-frequency-table",
+      "text": "This display lists class intervals alongside counts of observations in each interval, rather than every original measurement.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "class-boundaries-1",
+      "conceptId": "class-boundaries",
+      "text": "The precise cut-off values at the edges of a grouped interval, such as 149.5 and 159.5 for measurements rounded to whole centimetres.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "class-boundaries-2",
+      "conceptId": "class-boundaries",
+      "text": "In the interval 10 ≤ x < 20, the endpoint values 10 and 20 play this role.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "class-width-1",
+      "conceptId": "class-width",
+      "text": "For a grouped interval running from 12.5 to 17.5, the value of this quantity is 5.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "class-width-2",
+      "conceptId": "class-width",
+      "text": "Subtract the lower edge of a class from its upper edge to obtain this quantity.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "class-midpoint-1",
+      "conceptId": "class-midpoint",
+      "text": "The value halfway between two interval endpoints, such as 15 for a class running from 10 to 20.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "class-midpoint-2",
+      "conceptId": "class-midpoint",
+      "text": "To estimate the mean from grouped measurements, each class can be represented by the average of its two endpoints.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    }
+  ]
+}

@@ -60,7 +60,7 @@ test('typos get a single correction opportunity, never automatic credit',()=>{
  assert.equal(gradeTyped('quota',['stratified']).status,'wrong');
 });
 test('cloze independent checking matches the audited missing word exactly',()=>{
- assert.equal(cloze.length,25);
+ assert.equal(cloze.length,53);
  for(const question of cloze){
    assert.equal(gradeCloze('  '+question.answer.toUpperCase()+'  ',question).status,'correct',question.id);
    assert.equal(gradeCloze(question.choices.find(c=>c!==question.answer),question).status,'wrong',question.id);

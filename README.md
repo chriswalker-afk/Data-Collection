@@ -13,11 +13,11 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 ## Student features
 - Choose **Sampling**, **Types of data** or **Mixed revision**.
 - **Flashcards** support term→definition and definition→term recall, plus separate advantage and disadvantage cards for each of five sampling methods, census and sample. Browse every card with search and filters or start a full, unscored review. Model points use the same audited evaluation bank as Sort It!.
-- **Match Up** offers tactile term–definition tiles with selected-state guidance, short success/retry animations, visible pair progress and accessible keyboard or touch interaction.
-- **Missing Words** now has three levels: **Recognise** (the original four choices), **Recall** (type a word with an optional first-letter hint) and **Independent** (type without choices or hints).
+- **Match Up** uses tactile term–definition tiles and alternate description wording, with 5-, 7- or 10-pair options (up to eight for Types of Data), visible progress, first-try credit and accessible keyboard/touch interaction.
+- **Missing Words** now contains **53 audited prompts**, at least two for every concept. Choose a focused 10-question round, 20 questions or the full topic bank, then practise at **Recognise**, **Recall** (optional first-letter hint) or **Independent** (no hints) level.
 - **Sort It!** gives two sampling methods and mixed advantage/disadvantage statements. Place each statement in the correct method-and-category column; only the first complete check counts towards progress.
 - **Which Method?** uses balanced 5-, 10- or 20-scenario rounds to identify all five methods with contextual explanations.
-- **Speed Recall** asks for a term from its definition; choose untimed ten-term practice (eight for Types of Data) or 30-, 60- and 90-second timed challenges. The timer pauses during feedback and when the tab is hidden.
+- **Speed Recall** now draws from **three precise clues per term** (78 descriptions across 26 concepts), rotating wording to deepen recall. Choose untimed ten-term practice (eight for Types of Data) or 30-, 60- and 90-second timed challenges; feedback pauses the timer.
 - Typos can prompt one spelling correction, but are **never automatically credited**. Only curated mathematical synonyms are accepted.
 - **Sort It!**, **Which Method?**, **Build the Method**, **Spot the Error**, **Contextual Reasoning** and **Exam Lab** are sampling-only. The four recall games support Sampling, Types of data and Mixed revision.
 - **My Awards / Trophy Cabinet** offers 16 quirky collectible mathematical trophies. Checked achievements require appropriate first-attempt, unassisted mathematical evidence; writing effort and flashcard confidence are clearly identified as ungraded practice. Earned awards are stored separately on this browser; use the Cabinet to view progress, filter collectibles, export, merge/restore and reset awards without altering Solo progress or exam-writing drafts.
@@ -56,6 +56,7 @@ npm run test:e2e
 GitHub Actions runs unit/content validation, desktop/mobile Chromium browser tests and Cloudflare staging multiplayer smoke tests. The published site is available at the URL above through the successful `.github/workflows/deploy-pages.yml` workflow. `node scripts/build-pages.mjs` validates the static publish artifact and keeps Cloudflare Worker backend files out of GitHub Pages.
 
 ## Source & project notes
+- [Pass B Retrieval Depth: 53 Missing Words prompts, 52 new clues and flexible Match Up rounds](docs/PASS_B_RETRIEVAL_DEPTH.md)
 - [Pass 6 Team Challenges: balanced groups, Class Quests, teacher feedback and 45-client stress testing](docs/PASS_6_TEAM_CHALLENGES.md)
 - [Pass 5 Grand Multiplayer Awards Ceremony: verified character awards, podium, synchronized reveals and privacy](docs/PASS_5_GRAND_AWARDS_CEREMONY.md)
 - [Pass 4 Multiplayer: Speed Recall, Match Up, Sort It!, scoring and classroom reliability](docs/PASS_4_MULTIPLAYER_GAMES.md)

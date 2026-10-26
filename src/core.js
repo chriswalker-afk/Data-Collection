@@ -52,9 +52,12 @@ export function clozeInTopic(cloze, concepts, topic) {
   const ids = new Set(conceptsInTopic(concepts, topic).map(item => item.id));
   return cloze.filter(item => ids.has(item.conceptId));
 }
-export function makeMatchRound(concepts, topic, random = Math.random, count = 5) {
+export function makeMatchRound(concepts, topic, random = Math.random, count = 5, avoidIds = []) {
   const pool = conceptsInTopic(concepts, topic);
-  const picks = shuffled(pool, random).slice(0, Math.min(count, pool.length));
+  const options = shuffled(pool, random);
+  const avoid = new Set(avoidIds);
+  const picks = [...options.filter(x=>!avoid.has(x.id)),
+    ...options.filter(x=>avoid.has(x.id))].slice(0, Math.min(count, pool.length));
   if (picks.length < 2) throw new Error('At least two terms are needed to make a match.');
   const definitions = shuffled(picks, random);
   if (definitions.some((item, i) => item.id === picks[i].id)) {

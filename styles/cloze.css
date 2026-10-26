@@ -1,5 +1,7 @@
 /* Missing Words: a quiet, focused three-step retrieval experience. */
-.cloze-page .cloze-level-settings{display:grid;grid-template-columns:minmax(155px,.35fr) minmax(0,1fr);align-items:center;gap:10px 20px}
+.cloze-page .cloze-level-settings{display:grid;grid-template-columns:minmax(150px,.24fr) minmax(160px,.25fr) minmax(0,.6fr);align-items:center;gap:10px 16px}
+.cloze-page .cloze-round-choice{display:flex;flex-direction:column;gap:8px;min-width:0}
+.cloze-page .cloze-round-choice .game-select{max-width:100%;min-width:0}
 .cloze-page .cloze-level-choice{display:flex;flex-direction:column;gap:8px;min-width:0}
 .cloze-page .cloze-level-track{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;min-width:0}
 .cloze-page .cloze-stage{position:relative;min-width:0;display:grid;grid-template-columns:27px minmax(0,1fr);grid-template-rows:auto auto;align-items:center;gap:2px 7px;padding:9px;border:1px solid #d1ded5;border-radius:11px;background:#f6f9f7;color:#577267}
@@ -30,7 +32,8 @@
 .cloze-page .typed-near-miss{border-left:4px solid #b98036}
 .cloze-page .typed-input-row .btn{min-height:52px}
 @media(hover:hover) and (pointer:fine){.cloze-page .cloze-choice:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 6px 13px rgba(34,85,65,.1)}}
-@media(max-width:760px){.cloze-page .cloze-level-settings{grid-template-columns:1fr}.cloze-page .cloze-level-choice{max-width:280px}}
+@media(max-width:1000px){.cloze-page .cloze-level-track{grid-column:1/-1}}
+@media(max-width:760px){.cloze-page .cloze-level-settings{grid-template-columns:1fr}.cloze-page .cloze-level-choice,.cloze-page .cloze-round-choice{max-width:290px}}
 @media(max-width:390px){.cloze-page .cloze-stage{display:flex;flex-direction:column;align-items:flex-start;padding:8px;gap:4px}.cloze-page .cloze-stage-caption{font-size:.64rem}.cloze-page .cloze-choice{min-height:60px;padding:11px 12px}}
 @media(prefers-reduced-motion:reduce){.cloze-page .cloze-choice,.cloze-page .cloze-blank{transition:none!important;transform:none!important}}
 @media print{.cloze-page .cloze-panel{box-shadow:none}.cloze-page .cloze-blank{background:#fff;border-color:#555}}

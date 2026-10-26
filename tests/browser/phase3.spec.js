@@ -56,6 +56,9 @@ test('independent Missing Words offers one typo correction without double record
   await page.goto('/#/cloze/sampling');
   const questions=await bank(page,'cloze','cloze');
   await page.locator('#cloze-level').selectOption('independent');
+  // The default is now a focused ten-question round. Use the full library here
+  // because the spelling test must include at least one long answer.
+  await page.locator('#cloze-length').selectOption('all');
   let current;
   for(let index=0;index<questions.length;index++){
     const id=await page.locator('[data-question-id]').getAttribute('data-question-id');

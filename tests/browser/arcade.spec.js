@@ -127,6 +127,9 @@ test('a full Match Up round is recorded and a new round starts cleanly', async (
 
 test('a full Missing Words round can be finished from the checked data bank', async ({page}) => {
   await page.goto('/#/cloze/data');
+  // Pass B defaults to a focused 10-question round; explicitly choose the
+  // full Data bank for this end-to-end completion regression.
+  await page.locator('#cloze-length').selectOption('all');
   const bank = await page.evaluate(async()=>{
     const response = await fetch('./content/cloze.json');
     return (await response.json()).cloze;
