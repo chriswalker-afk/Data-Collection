@@ -371,6 +371,11 @@ function showCompletion(game) {
       ...(game === 'flashcards'&&session.revisitIds?.length
         ? [action('Review '+session.revisitIds.length+' tricky card'+(session.revisitIds.length===1?'':'s')+' ↻',
           'flash-review',{},'btn btn-primary')] : []),
+      ...(game==='flashcards'?[
+        action('Review all '+makeFlashDeck(data.concepts,data.evaluations,topic).length+' cards ↻',
+          'flash-review-all',{},'btn btn-quiet'),
+        action('Browse all cards','flash-browse',{},'btn btn-quiet')
+      ]:[]),
       action('Play another round ↻', 'restart', {}, 'btn '+(game==='flashcards'&&session.revisitIds?.length?'btn-quiet':'btn-primary')),
       link('Back to arcade', hashFor('home', topic), 'btn btn-quiet'),
       action('Share short feedback', 'open-feedback', {}, 'text-button')
@@ -1389,7 +1394,9 @@ function finishRound() {
   progress = recordSession(progress);
   if (!saveProgress(progress)) persistenceAvailable = false;
   render('.completion-title');
-  announce('Round complete. Your revision progress has been updated.');
+  announce(mode==='flashcards'&&session.isReview?
+    'All selected cards reviewed. Your mastery has not changed.':
+    'Round complete. Your revision progress has been updated.');
 }
 function flipCurrentFlashcard(){
   if(mode!=='flashcards'||!session||session.complete)return;
@@ -1405,7 +1412,7 @@ function flipCurrentFlashcard(){
   button.querySelector('.flash-face-back')?.setAttribute('aria-hidden',String(!session.revealed));
   const gradePanel=mount.querySelector('.flash-grade-panel');
   if(gradePanel)gradePanel.hidden=!session.revealed;
-  announce(session.revealed?'Answer: '+(session.reversed?current.label:current.definition)+
+  announce(session.revealed?'Answer: '+flashFaces(session,current).answer+
     '. Rate Again, Nearly or Know it.':'Prompt shown.');
 }
 
@@ -1563,6 +1570,29 @@ function onAction(button) {
     announce('New round started.');
     return;
   }
+  if(command==='flash-browse'&&mode==='flashcards'){
+    flashBrowseOpen=!flashBrowseOpen;
+    render(flashBrowseOpen?'#flash-browser-title':'#view-heading');
+    if(flashBrowseOpen)updateFlashLibrary();
+    announce(flashBrowseOpen?'Browsing the full card library without changing progress.':'Returned to flashcards.');
+    return;
+  }
+  if(command==='flash-library-reveal'&&mode==='flashcards'&&flashBrowseOpen){
+    const cards=[...mount.querySelectorAll('.flash-library-card:not([hidden])')];
+    const revealing=cards.some(card=>!card.open);
+    for(const card of cards)card.open=revealing;
+    button.textContent=revealing?'Hide all answers':'Reveal all answers';
+    announce((revealing?'Revealed ':'Hidden ')+cards.length+' answers.');
+    return;
+  }
+  if(command==='flash-review-all'&&mode==='flashcards'){
+    flashBrowseOpen=false;
+    session=makeFlashSession(makeFlashDeck(data.concepts,data.evaluations,topic),
+      {reversed:session.reversed,isReview:true,reviewType:'all'});
+    render('[data-action="flip"]');
+    announce('Reviewing all '+session.items.length+' cards in order. This review does not change mastery.');
+    return;
+  }
   if(command==='flip'){flipCurrentFlashcard();return;}
   if (command === 'reverse') {
     const reversed = !session.reversed;
@@ -1577,7 +1607,7 @@ function onAction(button) {
     const grade=button.dataset.grade;
     const concept=session.items[session.index];
     session=rateFlashSession(session,grade);
-    remember(concept.id,grade==='know');
+    if(!session.isReview)remember(concept.id,grade==='know');
     advanceFlash();
     announce('Recall rated '+grade+'.');
     return;
@@ -1761,6 +1791,8 @@ mount.addEventListener('change',event=>{
 mount.addEventListener('input',event=>{
   if(mode==='exam')examSimulator.onInput(event.target);
   if(mode==='reason')reasoningUI.onInput(event.target);
+  if(mode==='flashcards'&&flashBrowseOpen&&event.target.id==='flash-library-search')
+    updateFlashLibrary();
   if(mode==='cloze'&&!session?.answered&&event.target.id==='cloze-answer'){
     session.draft=event.target.value;
     const blank=mount.querySelector('.cloze-blank');
@@ -1789,6 +1821,9 @@ mount.addEventListener('submit', event => {
 mount.addEventListener('change', event => {
   const control = event.target;
   if (!control.matches('select[data-control]')) return;
+  if(control.dataset.control==='flash-library-filter'&&mode==='flashcards'&&flashBrowseOpen){
+    updateFlashLibrary();return;
+  }
   if(control.dataset.control==='build-method'&&mode==='build'){
     if(!data.methods.some(m=>m.id===control.value))return;buildMethodId=control.value;
   } else if(control.dataset.control==='exam-level'&&(mode==='error'||mode==='reason')){
