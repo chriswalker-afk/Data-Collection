@@ -25,6 +25,10 @@ import {guideForActivity} from './activity-guidance.js';
 import {completionHeading,completionCreditNote} from './quality.js';
 import {makeFlashDeck,flashFaces,makeFlashSession,rateFlashSession,skipFlashSession,makeFlashReviewSession,flashCardLabel} from './flashcards.js';
 import {chooseMatch,matchNextStep,matchStatus,matchAttemptCredit,MATCH_MOTION_MS} from './match-up.js';
+import {
+  CLOZE_ROUND_LENGTHS,clozeLengthsForTopic,makeClozeRound,validateClozeCoverage,
+  matchLengthsForTopic,makeVariedMatchRound,makeVariedSpeedDeck,addRecallClues,validateRecallClues
+} from './retrieval-depth.js';
 import {clozePresentation} from './cloze-ui.js';
 import {makePairSortRound,validatePairBank} from './sort-it.js';
 import {createSortItUI} from './sort-ui.js';
@@ -46,6 +50,11 @@ let flashBrowseOpen = false;
 let sortRoundId = 'pair-srs-stratified';
 let scenarioLength = 10;
 let clozeLevel = 'choices';
+let clozeLength = 10;
+let matchLength = 5;
+const previousClozeIds = new Map();
+const previousMatchIds = new Map();
+let previousRecallClues = new Map();
 let speedMode = 'untimed';
 let speedDuration = 60;
 let buildMethodId='simple-random';
@@ -565,9 +574,21 @@ function matchTile(item,side){
   button.querySelector('.match-tile-check').setAttribute('aria-hidden','true');
   return button;
 }
+function matchLengthPicker(){
+  const sizes=matchLengthsForTopic(data.concepts,topic);
+  const wrap=div('game-settings match-settings');
+  const select=element('select',{id:'match-length',className:'game-select','data-control':'match-length'});
+  for(const count of sizes)select.append(element('option',{value:count,selected:count===matchLength},
+    count===5?'5 · Quick connections':count===7?'7 · Extended practice':
+      count+' · '+(count===conceptsInTopic(data.concepts,topic).length?'All topic terms':'Deep connections')));
+  wrap.append(div('setting-group',
+    element('label',{for:'match-length',className:'game-settings-label'},'Pairs per round'),select),
+    paragraph('settings-hint','Descriptions vary between rounds. New terms are prioritised when you replay.'));
+  return wrap;
+}
 function matchView(){
   const root=div('page activity-page match-page');
-  root.append(activityTop('match'));
+  root.append(activityTop('match'),matchLengthPicker());
   if(session.complete){root.append(showCompletion('match'));return root;}
   const done=session.matched.size;
   const summary=matchStatus(done,session.terms.length,session.mistakes);
@@ -644,8 +665,18 @@ function clozeModePicker() {
       span('cloze-stage-title',level.label),
       span('cloze-stage-caption',purposes[index])));
   }
+  const total=clozeInTopic(data.cloze,data.concepts,topic).length;
+  const sizes=clozeLengthsForTopic(data.cloze,data.concepts,topic);
+  const amountSelect=element('select',{id:'cloze-length',className:'game-select','data-control':'cloze-length'});
+  for(const amount of sizes)amountSelect.append(element('option',{
+    value:amount,selected:amount===clozeLength},
+    amount==='all'?'All '+total+' · Full review':
+      amount===10?'10 · Focused practice':'20 · Extended practice'));
   wrap.append(
     div('cloze-level-choice',label,select),
+    div('cloze-round-choice',
+      element('label',{for:'cloze-length',className:'game-settings-label'},'Questions per round'),
+      amountSelect),
     path,
     paragraph('settings-hint cloze-stage-explain',
       CLOZE_LEVELS.find(level=>level.id===clozeLevel).description+
@@ -891,7 +922,7 @@ function speedView(){
         'Term '+(session.attempted+1))
     ),
     heading(2,'recall-title','Which mathematical term is described?',{id:'recall-title'}),
-    element('div',{className:'recall-definition',id:'speed-definition'},current.definition)
+    element('div',{className:'recall-definition',id:'speed-definition'},current.recallPrompt||current.definition)
   );
   if(!session.answered){
     panel.append(
