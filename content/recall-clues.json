@@ -257,7 +257,7 @@
     {
       "id": "representativeness-1",
       "conceptId": "representativeness",
-      "text": "Name the property of a chosen group that closely resembles the target group in characteristics relevant to the research question.",
+      "text": "Which type of sample closely resembles the target population in characteristics relevant to the research question?",
       "sourceIds": [
         "pearson-textbook-ch1",
         "teacher-screenshots"
@@ -266,7 +266,7 @@
     {
       "id": "representativeness-2",
       "conceptId": "representativeness",
-      "text": "Matching the gender split does not necessarily mean the selected people mirror the population in travel habits. Which sample quality is in doubt?",
+      "text": "A group selected for a survey mirrors the population in the particular characteristics needed for valid conclusions. What type of sample is it?",
       "sourceIds": [
         "pearson-textbook-ch1",
         "teacher-screenshots"
