@@ -29,6 +29,16 @@ export function buildReasonChoices(item,random=Math.random){
   }
   return layout;
 }
+
+export function createReasonRound(items,{reviewMode=false,track='guided',random=Math.random}={}){
+  if(!['guided','independent'].includes(track))throw Error('Unknown reasoning mode');
+  return {
+    items,index:0,correct:0,complete:false,answered:false,reviewMode,track,stage:0,
+    selections:{},draft:'',selfChecks:{},flagReview:false,reviewTargets:[],
+    guidedCases:0,writtenCases:0,matchedPoints:0,
+    optionOrders:Object.fromEntries(items.map(item=>[item.id,buildReasonChoices(item,random)]))
+  };
+}
 export function reasonDiagnosis(item,selections){
   const model=assessReasoning(item,selections);
   return {...model,rows:REASON_DIMENSIONS.map(field=>{
