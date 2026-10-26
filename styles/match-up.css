@@ -8,6 +8,9 @@
   color:#46695c; font-size:.79rem; font-weight:760; white-space:nowrap;
 }
 .match-page .practice-guide { margin-bottom:17px; }
+.match-page .match-settings{display:flex;align-items:flex-end;gap:10px 20px;flex-wrap:wrap}
+.match-page .match-settings .setting-group{min-width:155px;max-width:260px;flex:0 1 auto}
+.match-page .match-settings .settings-hint{flex:1 1 260px;margin:0;line-height:1.45}
 .match-page .match-board {
   position:relative; padding:clamp(17px,3vw,29px);
   background:linear-gradient(158deg,#fff 0%,#f7fbf8 100%);
