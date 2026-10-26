@@ -803,8 +803,7 @@ function syncClock() {
     session.remainingMs=Math.max(0,session.remainingMs-(now-session.lastTick));
   }
   session.lastTick=now;
-  const timer=mount.querySelector('[data-clock]');
-  if (timer) timer.textContent=formatClock(session.remainingMs);
+  paintSpeedClock();
   if (session.remainingMs<=0) {
     session.finishedReason='time';
     finishRound();
@@ -851,6 +850,7 @@ function resolveSpeed(value, skipped=false) {
   session.attempted++;
   if(correct) session.correct++;
   if(skipped) session.skipped++;
+  if(!correct)session.reviewIds.add(current.id);
   session.lastTick=null; // Reading explanatory feedback is not against the clock.
   remember(current.id,correct);
   render('.recall-panel .typed-feedback');
@@ -1209,7 +1209,8 @@ function restartGame(){
     session = { items: pool, index: 0, speedMode, started: speedMode === 'untimed',
       answered: false, draft: '', status: null, typoRetry: false,
       remainingMs: speedDuration * 1000, lastTick: null, attempted: 0,
-      correct: 0, skipped: 0, complete: false, finishedReason: null };
+      correct: 0, skipped: 0, complete: false, finishedReason: null,
+      reviewMode:false,reviewIds:new Set() };
   } else if(mode==='build') {
     const order=[buildMethodId,...data.methods.map(m=>m.id).filter(id=>id!==buildMethodId)];
     session={methods:order.map(id=>({...procedureRound(data.methods,id),checked:false,correct:false})),index:0,correct:0,complete:false};
@@ -1474,6 +1475,21 @@ function onAction(button) {
     resolveSpeed('',true);
     return;
   }
+  if(command==='speed-review'&&mode==='speed'&&session.complete&&session.reviewIds?.size){
+    const items=speedReviewDeck(data.concepts,session.reviewIds);
+    session={items,index:0,speedMode:'untimed',started:true,answered:false,
+      draft:'',status:null,typoRetry:false,aliasUsed:false,
+      remainingMs:0,lastTick:null,attempted:0,correct:0,skipped:0,
+      complete:false,finishedReason:null,reviewMode:true,reviewIds:new Set()};
+    render('#speed-answer');
+    announce('Targeted review started. '+items.length+' terms to recall without clues.');
+    return;
+  }
+  if(command==='speed-exit-review'&&mode==='speed'&&session.reviewMode){
+    stopClock();restartGame();render('#view-heading');
+    announce('Standard Speed Recall is ready.');
+    return;
+  }
   if (command === 'speed-next') {
     speedForward();
     return;
@@ -1552,6 +1568,11 @@ document.querySelector('.skip-link').addEventListener('click', event => {
 // Shortcuts only work within the live flashcard or its self-rating controls.
 // Avoid intercepting inputs, site navigation or assistive technology modifiers.
 mount.addEventListener('keydown',event=>{
+  if(mode==='speed'&&session?.answered&&!session.complete&&
+    event.key==='Enter'&&!event.repeat&&!event.ctrlKey&&!event.altKey&&!event.metaKey&&
+    event.target.matches('.speed-recall-panel .typed-feedback')){
+    event.preventDefault();speedForward();return;
+  }
   if(mode!=='flashcards'||!session?.revealed||session.complete||event.repeat||
      event.altKey||event.ctrlKey||event.metaKey||event.shiftKey)return;
   const target=event.target;
