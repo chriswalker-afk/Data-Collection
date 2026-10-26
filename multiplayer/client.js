@@ -292,6 +292,8 @@ function render(){
         button('Close classroom',()=>{if(window.confirm('End this classroom for everyone?'))void command('close');},'btn btn-danger'));
       stage.append(actions);
       if(!room.players.length)stage.append(make('p','At least one student must join before you can start.','small-note'));
+      else if(room.teamCount>room.players.length)
+        stage.append(make('p','Each team needs at least one participant before the challenge can start.','small-note'));
     }else{
       stage.append(supportBox('Waiting for your teacher',
         'Your nickname appears in the roster. The teacher will start the selected challenge; read each instruction carefully.'));
