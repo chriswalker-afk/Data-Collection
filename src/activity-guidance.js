@@ -3,7 +3,7 @@
 export const ACTIVITY_GUIDANCE=Object.freeze({
   flashcards:Object.freeze({
     practice:'Recall precise mathematical terms and definitions.',
-    task:'Recall the full answer before revealing it, then choose Again, Nearly or Know it.'}),
+    task:'Try the answer, flip the card to check, then rate your recall. Again and Nearly cards can be revisited.'}),
   match:Object.freeze({
     practice:'Connect the correct mathematical term to its definition.',
     task:'Select a term and then its matching definition. Correct pairs disappear.'}),
@@ -37,7 +37,7 @@ export function guideForActivity(id,options={}){
   if(!original)throw new Error('Unknown activity '+id);
   const result={...original};
   if(id==='flashcards'&&options.reversed===true)
-    result.task='Name the mathematical term from its definition, reveal the answer, then rate your recall.';
+    result.task='Read the definition, recall the term, flip the card to check, then rate your recall.';
   if(id==='cloze'){
     const level=options.level||'choices';
     result.task=level==='choices'

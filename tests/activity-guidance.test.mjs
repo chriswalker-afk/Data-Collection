@@ -15,7 +15,7 @@ test('all ten games have concise two-part instructions with no scoring logic',()
  assert.throws(()=>guideForActivity('does-not-exist'),/Unknown activity/);
 });
 test('recall instructions adapt to help, without claiming assisted mastery',()=>{
- assert.match(guideForActivity('flashcards',{reversed:true}).task,/Name the mathematical term/);
+ assert.match(guideForActivity('flashcards',{reversed:true}).task,/Read the definition, recall the term/);
  assert.match(guideForActivity('cloze',{level:'choices'}).task,/Choose the word/);
  assert.match(guideForActivity('cloze',{level:'guided'}).task,/practice, not mastery/);
  assert.match(guideForActivity('cloze',{level:'independent'}).task,/without a word bank/);
