@@ -1041,7 +1041,9 @@ function onAction(button) {
   if (command === 'reset') {
     if (window.confirm('Reset all saved Sampling Arcade progress on this browser? This cannot be undone.')) {
       progress = emptyProgress();
-      persistenceAvailable = clearProgress() && clearExamStore();
+      const knowledgeCleared=clearProgress();
+      const writingCleared=clearExamStore();
+      persistenceAvailable=knowledgeCleared&&writingCleared;
       examStore = emptyExamStore();
       if(mode==='exam')restartGame();
       render();

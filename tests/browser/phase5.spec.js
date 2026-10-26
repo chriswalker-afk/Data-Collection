@@ -132,6 +132,7 @@ test('Malformed numeric input is not submitted and original progress is preserve
  await page.goto('/#/home/sampling');
  await page.evaluate(key=>localStorage.setItem(key,JSON.stringify({version:1,answers:7,sessions:2,
   concepts:{population:{attempts:2,correct:2,streak:2}}})),PROGRESS_KEY);
+ await page.reload();
  await page.goto('/#/exam/sampling');const questions=await bank(page);
  await page.getByRole('button',{name:'Start quick practice'}).click();
  let q;
