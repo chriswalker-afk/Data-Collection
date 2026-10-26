@@ -10,14 +10,14 @@ export function createModeUI({make,button,command,updateClock,actionRow,supportB
   let key=null,selected=null;
   let pairs={},placements={},typed='';
   const append=(node,...others)=>{node.append(...others);return node;};
-  function setKey(q){if(q.id===key)return;key=q.id;selected=null;pairs={};placements={};typed='';}
+  function setKey(q,code){const next=code+'|'+q.id;if(next===key)return;key=next;selected=null;pairs={};placements={};typed='';}
   const timeExpired=q=>Date.now()+(q?.serverNow? q.serverNow-Date.now():0)>=q.deadline;
   function row(label,description){
     return append(make('div',undefined,'arena-instruction'),make('strong',label),make('p',description));
   }
   function shell(room,stage){
     const q=room.question;
-    setKey(q);
+    setKey(q,room.code);
     stage.append(stageKicker(ARENA_MODES[room.game].label.toUpperCase()+' · '+q.index+' OF '+q.total),
       summaryProgress(q.index-1,q.total));
     const h=make('h2',q.kind==='sort'?q.title:q.prompt);h.tabIndex=-1;stage.append(h);
@@ -151,7 +151,7 @@ export function createModeUI({make,button,command,updateClock,actionRow,supportB
     if(!locked)submit(room,stage,{placements:{...placements}},done===q.statements.length,'Check my sorting');
   }
   function renderQuestion(room,isHost,pending,stage){
-    const q=room.question;setKey(q);shell(room,stage);
+    const q=room.question;setKey(q,room.code);shell(room,stage);
     if(isHost){
       const preview=q.kind==='match'?'Students are matching '+q.terms.length+' mathematical terms.':
         q.kind==='sort'?'Students are sorting '+q.statements.length+' statements across four categories.':
