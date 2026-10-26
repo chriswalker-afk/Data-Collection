@@ -19,7 +19,8 @@ test('recall instructions adapt to help, without claiming assisted mastery',()=>
  assert.match(guideForActivity('cloze',{level:'choices'}).task,/Choose the word/);
  assert.match(guideForActivity('cloze',{level:'guided'}).task,/practice, not mastery/);
  assert.match(guideForActivity('cloze',{level:'independent'}).task,/without a word bank/);
- assert.match(guideForActivity('sort',{comparison:true}).task,/comparison/);
+ assert.match(guideForActivity('sort').task,/advantages or disadvantages/);
+ assert.match(guideForActivity('sort').task,/Check the full board/);
  assert.match(guideForActivity('speed',{timed:true}).task,/timer pauses/);
 });
 test('Exam Lab distinguishes automatically checked numbers from written self-review',()=>{
