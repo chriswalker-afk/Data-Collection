@@ -11,8 +11,8 @@ export const ACTIVITY_GUIDANCE=Object.freeze({
     practice:'Retrieve the precise mathematical language used in definitions.',
     task:'Complete the missing word in the definition.'}),
   sort:Object.freeze({
-    practice:'Distinguish the strengths, limitations and defining features of sampling methods.',
-    task:'Read each statement and classify it for the method or methods described.'}),
+    practice:'Compare the strengths and limitations of two sampling methods.',
+    task:'Drag each mixed statement into one of four destinations: an advantage or disadvantage for either method. On phones or with a keyboard, select a statement and choose its destination. Check the completed board, then explain and correct mistakes.'}),
   identify:Object.freeze({
     practice:'Recognise a sampling method from how participants or items are selected.',
     task:'Read the selection procedure, then choose the method that was used.'}),
