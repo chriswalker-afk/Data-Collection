@@ -24,7 +24,7 @@ import {nextAfterRound} from './journey.js';
 import {guideForActivity} from './activity-guidance.js';
 import {completionHeading} from './quality.js';
 import {makeFlashSession,rateFlashSession,skipFlashSession,makeFlashReviewSession,flashCardLabel} from './flashcards.js';
-import {chooseMatch,matchNextStep,matchStatus,MATCH_MOTION_MS} from './match-up.js';
+import {chooseMatch,matchNextStep,matchStatus,matchAttemptCredit,MATCH_MOTION_MS} from './match-up.js';
 import {clozePresentation} from './cloze-ui.js';
 import {makePairSortRound,validatePairBank} from './sort-it.js';
 import {createSortItUI} from './sort-ui.js';
@@ -1301,10 +1301,14 @@ function selectMatch(side,id){
     if(mode!=='match'||session!==round||!session.resolving)return;
     const positions=next.correct?matchTilePositions():null;
     const termId=session.selectedTerm;
+    const credit=matchAttemptCredit(session.exposedIds,termId,session.selectedDefinition);
+    session.exposedIds=credit.exposed;
     if(next.correct){
       session.matched.add(termId);
-      remember(termId,true);
-      session.feedback='Correct pair. Well matched!';
+      if(credit.independent)session.independentPairs++;
+      remember(termId,credit.independent);
+      session.feedback=credit.independent?'Correct pair. Well matched!':
+        'Pair connected after an earlier mistake. A useful correction, but not first-try recall credit.';
       session.feedbackGood=true;
     }else{
       remember(termId,false);
