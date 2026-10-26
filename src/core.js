@@ -10,7 +10,7 @@ export const GAMES = Object.freeze([
   { id: 'sort', title: 'Sort It!', subtitle: 'Compare two methods', description: 'Drag mixed advantages and disadvantages into the correct column for each of two sampling methods.', number: '04' },
   { id: 'identify', title: 'Which Method?', subtitle: 'Find the decisive clue', description: 'Identify the sampling rule in a real scenario and learn why plausible alternatives are wrong.', number: '05' },
   { id: 'speed', title: 'Speed Recall', subtitle: 'Type from memory', description: 'Type the mathematical term from its definition, with or without a timer.', number: '06' },
-  { id: 'build', title: 'Build the Method', subtitle: 'Sequence the steps', description: 'Put the five sampling procedures into a valid examination order.', number: '07' },
+  { id: 'build', title: 'Build the Method', subtitle: 'Construct a valid procedure', description: 'Drag sampling steps into a defensible order and discover why each prerequisite matters.', number: '07' },
   { id: 'error', title: 'Spot the Error', subtitle: 'Find and correct it', description: 'Diagnose inaccurate sampling instructions and choose the correct repair.', number: '08' },
   { id: 'reason', title: 'Contextual Reasoning', subtitle: 'Make a defensible choice', description: 'Build a justified response with a limitation and an improvement.', number: '09' },
   { id: 'exam', title: 'Exam Lab', subtitle: 'Mixed examination practice', description: 'Combine numerical calculations, full methods and contextual evaluation.', number: '10' }

@@ -21,7 +21,7 @@ export const ACTIVITY_GUIDANCE=Object.freeze({
     task:'Type the term that matches the definition, then check your answer.'}),
   build:Object.freeze({
     practice:'Sequence a defensible sampling procedure and justify its steps.',
-    task:'Use the up/down arrows to order the steps, then check the procedure. Equivalent valid orders can count.'}),
+    task:'Drag steps or use the arrow buttons to make a valid sequence. Check the prerequisites, then review why each step matters. Different valid orders are accepted.'}),
   error:Object.freeze({
     practice:'Identify and repair errors in sampling procedures.',
     task:'Find the flawed line and select the appropriate repair before checking.'}),
