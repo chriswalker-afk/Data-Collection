@@ -56,7 +56,10 @@ export function teamStandings(room,includeCurrent=true){
   const entries=checkedEvidence(room,{includeCurrent});
   const results=TEAM_DEFINITIONS.slice(0,count).map(info=>{
     const members=(room.players||[]).filter(p=>p.teamId===info.id);
-    const totalScore=members.reduce((n,p)=>n+(safeInt(p.score)?p.score:0),0);
+    const ids=new Set(members.map(p=>p.id));
+    const totalScore=includeCurrent?
+      members.reduce((n,p)=>n+(safeInt(p.score)?p.score:0),0):
+      entries.filter(e=>ids.has(e.playerId)).reduce((n,e)=>n+e.points,0);
     const averageScore=members.length?Math.round(totalScore/members.length):0;
     const progress=playerStats(room,members,entries,TEAM_QUEST_TARGET);
     return {...info,members:members.length,totalScore,averageScore,
