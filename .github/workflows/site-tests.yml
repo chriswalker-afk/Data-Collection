@@ -44,3 +44,17 @@ jobs:
             playwright-report/
             test-results/
           retention-days: 7
+
+  multiplayer-staging:
+    name: Cloudflare staging multiplayer smoke
+    runs-on: ubuntu-latest
+    needs: [unit-and-content, browser]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test deployed Cloudflare room, WebSocket and server scoring
+        run: node scripts/multiplayer-smoke.mjs
+        env:
+          MULTIPLAYER_API: https://sampling-arcade-multiplayer-stage.chris-walker-d8b.workers.dev
