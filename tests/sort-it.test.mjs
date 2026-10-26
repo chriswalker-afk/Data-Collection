@@ -8,7 +8,7 @@ const {pairs}=file('sort-pairs'),{evaluations}=file('evaluations');
 const byId=new Map(evaluations.map(e=>[e.id,e]));
 
 test('every pair presents two sampling methods and four destinations with balanced audited claims',()=>{
- assert.equal(pairs.length,6);
+ assert.equal(pairs.length,10);
  assert.equal(validatePairBank(pairs,evaluations),true);
  const covered=new Set();
  for(const pair of pairs){
