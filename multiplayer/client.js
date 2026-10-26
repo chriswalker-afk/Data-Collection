@@ -1,3 +1,4 @@
+import {ARENA_MODES,createModeUI} from './mode-ui.js';
 // Multiplayer networking is independent of the solo practice/progress store.
 // Requests that change scores are authenticated HTTPS actions; room updates
 // arrive on a hibernatable WebSocket (with slow polling only during reconnect).
@@ -7,6 +8,8 @@ const LABELS=Object.freeze({
   stratified:'Stratified sampling',quota:'Quota sampling',opportunity:'Opportunity sampling'
 });
 const STORAGE_KEY='sampling-arcade-multiplayer-v1';
+const gameMode=()=>$('game-mode').value;
+const modeName=game=>ARENA_MODES[game||'which']?.label||'Which Method?';
 const $=id=>document.getElementById(id);
 let roomCode=null,token=null,isHost=false,room=null,websocket=null;
 let generation=0,retryTimer=null,pollTimer=null,clockTimer=null,backoff=750;
@@ -44,7 +47,7 @@ function leave(){
 async function createRoom(){
   try{
     notice('Creating the classroom…');
-    const response=await api('/rooms',{roundLength:Number($('length').value)});
+    const response=await api('/rooms',{roundLength:Number($('length').value),game:gameMode()});
     roomCode=response.code;token=response.token;isHost=true;store();notice('');
     connect();
   }catch(e){notice(e.message);}
@@ -138,7 +141,7 @@ function connect(){
 async function command(type,method,targetId){
   if(!token)return;
   try{
-    const request={type,...(method?{method}:{}),...(targetId?{targetId}:{})};
+    const request={type,...(method?typeof method==='string'?{method}:{...method}:{}),...(targetId?{targetId}:{})};
     if(type==='answer'){pendingAnswer=true;render();}
     await api('/rooms/'+roomCode+'/command',request,true);
     // Socket push is authoritative; HTTP refresh protects against a lost push.
@@ -157,7 +160,7 @@ function updateClock(){
   const reveal=$('host-reveal');
   if(reveal)reveal.disabled=seconds>0&&!room.players.every(p=>p.answered);
   if(seconds===0){
-    for(const control of document.querySelectorAll('#stage .method-option')){
+    for(const control of document.querySelectorAll('#stage .method-option, #stage .arena-term, #stage .arena-definition, #stage .arena-sort-card, #stage .arena-zone-action, #stage .arena-submit, #stage #arena-speed-form input, #stage #arena-speed-form button')){
       control.disabled=true;
     }
   }
@@ -186,6 +189,11 @@ function summaryProgress(index,total){
   fill.style.width=(100*index/total)+'%';track.append(fill);
   return track;
 }
+const modeUI=createModeUI({
+  make,button,command,updateClock,actionRow,supportBox,stageKicker,
+  summaryProgress,announce:message=>{$('game-announcer').textContent=message;},
+  refreshStage:()=>render()
+});
 function render(){
   const active=Boolean(roomCode&&room);
   $('entry').hidden=active;
@@ -203,7 +211,7 @@ function render(){
   const closed=room.status!=='lobby'||room.locked;
   $('room-lock').textContent=closed?'Joining closed':'Joining open';
   $('room-lock').classList.toggle('is-locked',closed);
-  $('room-meta').textContent='Which Method? · '+room.roundLength+' questions';
+  $('room-meta').textContent=modeName(room.game)+' · '+room.roundLength+' '+(ARENA_MODES[room.game||'which']?.unit||'questions');
   $('player-count').textContent=room.players.length+' / 45';
   $('players-heading').textContent=room.status==='lobby'?'Classroom roster':'Live leaderboard';
   $('roster-help').textContent=isHost?(room.status==='lobby'?
@@ -233,6 +241,8 @@ function render(){
   }
 
   const focused=document.activeElement?.dataset?.method;
+  const activeInput=document.activeElement?.id==='arena-speed-answer';
+  const cursor=activeInput?document.activeElement.selectionStart:null;
   const stage=$('stage');stage.replaceChildren();
   if(room.status==='lobby'){
     stage.append(stageKicker(isHost?'HOST CONTROL CENTRE':'YOU ARE READY'));
@@ -243,8 +253,9 @@ function render(){
       'The teacher will start the round. Keep this tab open for live questions and feedback.'));
     const stats=make('div',undefined,'lobby-stat-row');
     stats.append(statusChip(room.players.length+' joined'),
-      statusChip(room.roundLength+' questions'),
-      statusChip('20 seconds each'));
+      statusChip(room.roundLength+' '+(ARENA_MODES[room.game||'which']?.unit||'questions')),
+      statusChip((room.questionSeconds||20)+' seconds each'));
+    stage.append(make('p',modeName(room.game)+' · '+(ARENA_MODES[room.game||'which']?.label==='Speed Recall'?'Type exact mathematical terms.':ARENA_MODES[room.game||'which']?.label==='Match Up'?'Pair terms with precise definitions.':ARENA_MODES[room.game||'which']?.label==='Sort It!'?'Sort advantages and disadvantages across two methods.':'Identify the sampling method from its context.'),'arena-mode-intro'));
     stage.append(stats);
     if(isHost){
       stage.append(supportBox(room.locked?'Joining is locked':'Joining is open',
@@ -262,8 +273,10 @@ function render(){
       if(!room.players.length)stage.append(make('p','At least one student must join before you can start.','small-note'));
     }else{
       stage.append(supportBox('Waiting for your teacher',
-        'Your nickname appears in the roster. Once the challenge starts, choose the method that best fits each scenario.'));
+        'Your nickname appears in the roster. The teacher will start the selected challenge; read each instruction carefully.'));
     }
+  }else if(room.status==='playing'&&room.question&&room.game!=='which'){
+    modeUI.renderQuestion(room,isHost,pendingAnswer,stage);
   }else if(room.status==='playing'&&room.question){
     stage.append(stageKicker('QUESTION '+room.question.index+' OF '+room.question.total));
     stage.append(summaryProgress(room.question.index-1,room.question.total));
@@ -297,6 +310,8 @@ function render(){
         updateClock();
       }
     }
+  }else if(room.status==='reveal'&&room.reveal&&room.game!=='which'){
+    modeUI.renderReview(room,isHost,stage);
   }else if(room.status==='reveal'&&room.reveal){
     const reveal=room.reveal;
     stage.append(stageKicker('QUESTION '+reveal.index+' OF '+reveal.total+' · ANSWER REVIEW'));
@@ -331,9 +346,29 @@ function render(){
     }
   }
   if(focused)stage.querySelector('[data-method="'+focused+'"]')?.focus({preventScroll:true});
+  if(activeInput){const input=stage.querySelector('#arena-speed-answer');if(input&&!input.disabled){input.focus({preventScroll:true});input.setSelectionRange(cursor,cursor);}}
   if(!clockTimer)clockTimer=setInterval(updateClock,250);
 }
 
+function updateLengthPicker(){
+  const game=gameMode(),selected=String($('length').value);
+  const options=ARENA_MODES[game]?.lengths||[5,10,20];
+  $('length').replaceChildren();
+  options.forEach((n,i)=>{
+    const opt=make('option',n+' '+(ARENA_MODES[game]?.unit||'questions')+
+      (i===0?' · Quick starter':i===options.length-1?' · Extended':' · Class challenge'));
+    opt.value=String(n);$('length').append(opt);
+  });
+  $('length').value=options.includes(Number(selected))?selected:String(options[Math.min(1,options.length-1)]);
+  $('mode-description').textContent={
+    which:'Five sampling methods are balanced across the challenge. 20 seconds per question.',
+    speed:'Type the mathematical term without a word bank. 25 seconds per definition.',
+    match:'Connect six term–definition pairs per board. 75 seconds per board.',
+    sort:'Sort 8–10 statements into four destinations. 90 seconds per board.'
+  }[game];
+}
+$('game-mode').addEventListener('change',updateLengthPicker);
+updateLengthPicker();
 $('create').addEventListener('click',createRoom);
 $('join-form').addEventListener('submit',event=>{event.preventDefault();void joinRoom();});
 $('leave').addEventListener('click',async()=>{
