@@ -1930,7 +1930,7 @@ async function loadData() {
   mount.replaceChildren(div('loading', 'Loading your revision activities…'));
   try {
     const sources = [
-      ['concepts', 'concepts'], ['cloze', 'cloze'], ['recall-clues','recallClues'],
+      ['concepts', 'concepts'], ['cloze', 'cloze'], ['recall-clues','clues'],
       ['evaluations', 'evaluations'],
       ['sort-rounds', 'rounds'], ['sort-pairs', 'pairs'], ['scenarios', 'scenarios'], ['methods', 'methods'],
       ['accepted-terms', 'terms'], ['exam-errors', 'errors'], ['exam-reasoning','reasoning'], ['exam-practice','questions']
@@ -1944,6 +1944,8 @@ async function loadData() {
     delete data.questions;
     data.sortPairs=data.pairs;
     delete data.pairs;
+    data.recallClues=data.clues;
+    delete data.clues;
     if (Object.entries(data).some(([key,items]) => key!=='terms' && !Array.isArray(items))) {
       throw new Error('Unexpected content format.');
     }
