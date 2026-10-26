@@ -45,7 +45,7 @@ test('recognition records one response and highlights the correct word',async({p
  await page.locator('[data-action="cloze-option"][data-choice="'+wrong+'"]').click();
  await expect(page.locator('.cloze-choice.is-correct')).toHaveCount(1);
  await expect(page.locator('.cloze-choice.is-incorrect')).toHaveCount(1);
- await expect(page.locator('.cloze-feedback')).toBeFocused();
+ await expect(page.locator('[data-action="cloze-next"]')).toBeFocused();
  await expect(page.locator('.cloze-reason')).toHaveText(item.explanation);
  expect((await page.evaluate(k=>JSON.parse(localStorage.getItem(k)),key)).answers).toBe(1);
 });
