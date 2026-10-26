@@ -10,8 +10,8 @@ const read = name => JSON.parse(readFileSync(new URL('../content/' + name + '.js
 const {concepts} = read('concepts');
 const {cloze} = read('cloze');
 
-test('all five games and topic filters are available', () => {
-  assert.deepEqual(GAMES.map(g => g.id), ['flashcards','match','cloze','sort','identify']);
+test('all six games and topic filters are available', () => {
+  assert.deepEqual(GAMES.map(g => g.id), ['flashcards','match','cloze','sort','identify','speed']);
   assert.deepEqual(TOPICS.map(t => t.id), ['sampling','data','all']);
   assert.equal(conceptsInTopic(concepts, 'sampling').length, 18);
   assert.equal(conceptsInTopic(concepts, 'data').length, 8);
