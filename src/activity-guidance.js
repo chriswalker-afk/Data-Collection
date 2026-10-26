@@ -2,7 +2,7 @@
 // Keep mathematics, scoring, saved progress and teacher assessment claims elsewhere.
 export const ACTIVITY_GUIDANCE=Object.freeze({
   flashcards:Object.freeze({
-    practice:'Recall terminology and the advantages and disadvantages of sampling methods.'
+    practice:'Recall terminology and the advantages and disadvantages of sampling methods.',
     task:'Recall the definition or the main evaluation points, flip to check, then rate your recall. Browse all cards whenever you want.'}),
   match:Object.freeze({
     practice:'Connect the correct mathematical term to its definition.',
