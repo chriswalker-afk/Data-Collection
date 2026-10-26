@@ -37,7 +37,7 @@ export function guideForActivity(id,options={}){
   if(!original)throw new Error('Unknown activity '+id);
   const result={...original};
   if(id==='flashcards'&&options.reversed===true)
-    result.task='For terminology, read the definition and recall the term. Evaluation cards still ask for strengths or limitations. Flip to check, then rate your recall.';
+    result.task='Read the definition, recall the term, then flip to check. Evaluation cards still ask for strengths or limitations. Rate your recall.';
   if(id==='cloze'){
     const level=options.level||'choices';
     result.task=level==='choices'
