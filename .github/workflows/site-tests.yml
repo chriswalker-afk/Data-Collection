@@ -16,6 +16,8 @@ jobs:
           node-version: '20'
       - run: npm install --no-audit --no-fund
       - run: npm run check
+      - name: Verify publish artifact and all local page assets
+        run: node scripts/build-pages.mjs
   multiplayer-fast:
     name: Fast multiplayer regression
     runs-on: ubuntu-latest
