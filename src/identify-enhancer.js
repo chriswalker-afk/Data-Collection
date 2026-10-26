@@ -85,7 +85,8 @@ function enhanceFeedback(panel,scenario){
  const description=el('p','identify-result-description',
   correct?'You recognised the selection rule. Notice exactly which phrase makes it decisive.':
     'Compare your choice with the actual method of selecting individuals.');
- feedback.insertBefore(description,feedback.querySelector('.feedback-heading')?.nextSibling||feedback.firstChild);
+ const feedbackBody=feedback.querySelector('.ui-feedback-body')||feedback;
+ feedbackBody.insertBefore(description,feedbackBody.querySelector('.feedback-heading')?.nextSibling||feedbackBody.firstChild);
  // Preserve the original feedback paragraph and original audited contrast.
  const originalContrast=feedback.querySelector('.feedback-contrast');
  if(originalContrast){
