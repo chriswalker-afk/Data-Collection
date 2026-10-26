@@ -35,9 +35,9 @@ export function createExamSimulationUI(deps){
   const levels=element('fieldset',{className:'sim-level-picker'});
   levels.append(element('legend',{},'Choose your starting level'));
   const levelDescriptions=[
-    ['confidence','Build confidence','Foundation and developing examples'],
-    ['mixed','Mixed progression','All three levels, easier questions first'],
-    ['stretch','Stretch','Developing and more demanding examples']
+    ['confidence','Build confidence','Introductory and developing questions'],
+    ['mixed','Mixed progression','A range of levels, easier questions first'],
+    ['stretch','Stretch','Developing and extension questions']
   ];
   for(const [value,labelText,description] of levelDescriptions){
     levels.append(element('label',{className:'sim-level-choice'},
@@ -225,7 +225,8 @@ export function createExamSimulationUI(deps){
    span('eyebrow','YOUR PERSONAL PRACTICE REPORT'),
    heading(2,'completion-title','Paper complete',{tabindex:'-1'}),
    paragraph('sim-help','Formative practice, not an official Edexcel result. Your work stays on this device.'),
-   paragraph('sim-help','Paper level: '+({confidence:'Build confidence',mixed:'Mixed progression',stretch:'Stretch'})[session.difficulty||'mixed']+'. Questions progress from easier to harder.'));
+   paragraph('sim-help',session.variant==='review'?'Targeted practice using your saved questions.':
+     'Paper level: '+({confidence:'Build confidence',mixed:'Mixed progression',stretch:'Stretch'})[session.difficulty||'mixed']+'. Questions are ordered from introductory to more demanding where levels differ.'));
   const grid=div('sim-report-metrics',
     div('sim-metric',span('sim-metric-value',stats.correctParts+' / '+stats.possibleParts),
       span('sim-metric-label','Automatically checked numerical parts')),
