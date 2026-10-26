@@ -298,7 +298,13 @@ function dropIndex(x,y){
  if(!list)return null;
  const rows=[...list.querySelectorAll('.exam-step[data-step-id]')];
  const rect=list.getBoundingClientRect();
- if(x<rect.left-15||x>rect.right+15||y<rect.top-30||y>rect.bottom+30)return null;
+ // When a long list auto-scrolls, its final card moves upwards while the
+ // pointer stays near the bottom of the viewport. Accept that bottom region
+ // as a request to put the dragged step last, rather than silently cancelling.
+ if(x<rect.left-15||x>rect.right+15)return null;
+ if(y<rect.top-45||y>rect.bottom+Math.min(220,window.innerHeight*.22))return null;
+ if(y<=rect.top)return rows.length?0:null;
+ if(y>=rect.bottom)return rows.length?rows.length-1:null;
  const hovered=document.elementFromPoint(x,y)?.closest('.exam-step[data-step-id]');
  if(hovered&&rows.includes(hovered))return rows.indexOf(hovered);
  let best=0,distance=Infinity;
@@ -365,8 +371,12 @@ function onPointerMove(event){
   ghost.style.top=(event.clientY+13)+'px';
  }
  highlightIndex(dropIndex(event.clientX,event.clientY));
- if(event.clientY>window.innerHeight-52)window.scrollBy(0,18);
- else if(event.clientY<65)window.scrollBy(0,-18);
+ const listBox=panel()?.querySelector('.build-step-list')?.getBoundingClientRect();
+ if(event.clientY>window.innerHeight-52&&listBox?.bottom>window.innerHeight-15){
+  window.scrollBy(0,18);
+ }else if(event.clientY<65&&listBox?.top<65){
+  window.scrollBy(0,-18);
+ }
 }
 function onPointerUp(event){
  const drag=pointerDrag;
