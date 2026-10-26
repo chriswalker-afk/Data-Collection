@@ -1,0 +1,64 @@
+/* Premium Which Method? — reason from the selection mechanism, not memorised
+   labels. A standalone presentation layer preserves the original grader. */
+.identify-page{--identify-ink:#193e45;--identify-teal:#1b7865;--identify-border:#bed6ce}
+.identify-page .identify-settings{align-items:center;gap:12px 24px}
+.identify-page .identify-settings-note{margin:0;max-width:460px;font-size:.82rem;line-height:1.56;color:#4d6f61}
+.identify-page .identify-panel{background:linear-gradient(145deg,#fff 66%,#f4faf7);padding:clamp(20px,3vw,35px);border:1px solid #aecfbf;border-radius:22px;box-shadow:0 9px 24px rgba(19,63,51,.072);animation:identify-arrive .28s ease both}
+.identify-page .identify-panel>.eyebrow{color:#276954;font-size:.69rem;font-weight:850;letter-spacing:.12em}
+.identify-page .classification-title{color:var(--identify-ink);font-size:clamp(1.3rem,2.7vw,1.8rem);margin:10px 0 15px}
+.identify-page .identify-scenario{font-size:clamp(1.02rem,2.3vw,1.35rem);line-height:1.88;font-weight:700;padding:clamp(20px,3vw,31px);color:#f7fff9;background:linear-gradient(130deg,#173e47 0%,#1c5652 68%,#286d5c 100%);border:1px solid #377c71;border-left:6px solid #85d4aa;box-shadow:0 8px 22px rgba(16,66,57,.115);border-radius:16px}
+.identify-page .identify-evidence-mark{background:#f7e7b0;color:#4b3513;border-radius:4px;padding:2px 4px;box-decoration-break:clone;-webkit-box-decoration-break:clone;box-shadow:0 0 0 1px #f0d38b;font-weight:850}
+.identify-page .identify-choice-note{font-size:.83rem;color:#44665a;margin:17px 0 12px}
+.identify-page .identify-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.identify-page .identify-option{display:flex;align-items:center;gap:13px;min-height:78px;min-width:0;text-align:left;padding:13px 17px;background:#f3f9f5;border:1px solid #b1d0bd;border-radius:13px;color:#1d5345;font-size:.92rem;font-weight:770;line-height:1.4;box-shadow:0 3px 0 rgba(25,82,62,.065);transition:transform .17s,border-color .17s,background-color .17s,box-shadow .17s}
+.identify-page .identify-option:last-child{grid-column:1/-1}
+.identify-page .identify-option:not(:disabled):hover{transform:translateY(-2px);background:#e5f4ec;border-color:#398e72;box-shadow:0 7px 16px rgba(29,85,61,.12)}
+.identify-page .identify-choice-letter{flex:0 0 34px;display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:#dfeee4;color:#2b6c52;font-size:.78rem;font-weight:880}
+.identify-page .identify-choice-label{flex:1;min-width:0;overflow-wrap:anywhere}
+.identify-page .identify-choice-check{flex:0 0 22px;min-width:22px;text-align:center;font-size:1.2rem;font-weight:900;color:inherit}
+.identify-page .identify-option.is-correct{background:#e0f4e7;border-color:#41956f;color:#18543b;box-shadow:inset 0 0 0 1px #41956f}
+.identify-page .identify-option.is-correct .identify-choice-letter{background:#237957;color:#fff}
+.identify-page .identify-option.is-incorrect{background:#fff1e9;border-color:#d19672;color:#7b422b;box-shadow:inset 0 0 0 1px #c79169}
+.identify-page .identify-option.is-incorrect .identify-choice-letter{background:#edcfb9;color:#7b422b}
+.identify-page .identify-option.is-muted{opacity:.66}
+.identify-page .identify-option:disabled{cursor:default}
+.identify-page .identify-feedback{margin-top:20px;scroll-margin-top:30px}
+.identify-page .identify-feedback .ui-feedback-body{min-width:0;max-width:100%}
+.identify-page .identify-result-description{color:inherit;opacity:.87;font-size:.82rem;margin:6px 0 0}
+.identify-page .identify-evidence-detail{background:rgba(255,255,255,.61);border:1px solid rgba(30,100,79,.2);border-left:4px solid #2b8065;border-radius:12px;padding:16px 18px;margin:16px 0 0}
+.identify-page .identify-feedback-kicker{display:block;font-size:.66rem;letter-spacing:.1em;font-weight:900;line-height:1.4;color:#26644f}
+.identify-page .identify-evidence-quote{font-weight:870;color:#1a4e40;font-size:1rem;line-height:1.6;margin:7px 0!important;overflow-wrap:anywhere}
+.identify-page .identify-evidence-why{color:#2b5144;margin:5px 0!important;font-size:.86rem;line-height:1.66}
+.identify-page .identify-why-not{margin-top:13px;border:1px solid #e1bb83;background:#fff8ed;border-radius:12px;padding:14px 17px;color:#704822}
+.identify-page .identify-why-not .identify-feedback-kicker{color:#895822}
+.identify-page .identify-targeted-contrast{margin:6px 0 0!important;font-size:.87rem;line-height:1.64}
+.identify-page .identify-other-kicker{margin:17px 0 2px;opacity:.9}
+.identify-page .identify-original-contrast{margin:7px 0 0!important;padding:0 0 0 11px!important;border:0!important;border-left:2px solid currentColor!important;font-size:.85rem;line-height:1.58}
+.identify-page .identify-settings-note,.identify-page .identify-result-description{overflow-wrap:anywhere}
+.identify-page .identify-summary{margin:21px 0;padding:clamp(16px,3vw,24px);background:#f0f8f3;border:1px solid #aecfb9;border-radius:17px;text-align:left}
+.identify-page .identify-summary-eyebrow{font-size:.67rem;letter-spacing:.12em;font-weight:870;color:#267657}
+.identify-page .identify-summary-title{font-size:1.18rem;line-height:1.3;letter-spacing:-.03em;margin:7px 0 7px;color:#194a3b}
+.identify-page .identify-summary-caption{font-size:.8rem;color:#486c58;line-height:1.55;margin:0 0 17px}
+.identify-page .identify-summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 15px}
+.identify-page .identify-summary-row{display:flex;flex-direction:column;gap:5px;padding:11px 12px;border:1px solid #cee2d4;border-radius:12px;background:#fff}
+.identify-page .identify-summary-row-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.identify-page .identify-summary-label{font-size:.78rem;font-weight:770;color:#295b46;overflow-wrap:anywhere}
+.identify-page .identify-summary-result{font-size:.81rem;font-weight:860;color:#1d6b4f;white-space:nowrap;font-variant-numeric:tabular-nums}
+.identify-page .identify-summary-meter{height:5px;border-radius:9px;overflow:hidden;background:#dcebe0}
+.identify-page .identify-summary-fill{display:block;height:100%;background:#267b5e;border-radius:9px}
+.identify-page .identify-review{margin-top:17px;background:#fff;border:1px solid #c4ddce;border-radius:13px;padding:0}
+.identify-page .identify-review-toggle{cursor:pointer;list-style:revert;font-size:.86rem;font-weight:800;color:#235d49;padding:14px 19px}
+.identify-page .identify-review-toggle:focus-visible{outline:3px solid #db9838;outline-offset:2px}
+.identify-page .identify-review-list{display:grid;gap:10px;padding:0 14px 14px}
+.identify-page .identify-review-case{padding:15px;border:1px solid #cfdfd6;border-radius:11px;background:#f7fbf8}
+.identify-page .identify-review-case p{margin:4px 0;font-size:.8rem;line-height:1.6;color:#345b4b}
+.identify-page .identify-review-case .identify-review-title{font-size:.87rem;font-weight:850;color:#164d3b}
+.identify-page .identify-review-case .identify-review-key{font-weight:820;color:#1b6651}
+.identify-page .identify-review-case .identify-review-trap{color:#795024}
+.identify-page .identify-summary-perfect{font-size:.82rem;color:#1b6049;line-height:1.6;margin:12px 0 0}
+@keyframes identify-arrive{from{transform:translateY(6px);opacity:.75}to{transform:translateY(0);opacity:1}}
+@media(min-width:1060px){.identify-page .identify-options{grid-template-columns:repeat(3,minmax(0,1fr))}.identify-page .identify-option:last-child{grid-column:auto}}
+@media(max-width:760px){.identify-page .identify-settings{flex-direction:column;align-items:stretch}.identify-page .identify-summary-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.identify-page .identify-options{grid-template-columns:1fr}.identify-page .identify-option:last-child{grid-column:auto}.identify-page .identify-option{min-height:68px;padding:12px 13px;font-size:.84rem}.identify-page .identify-scenario{padding:18px 15px}.identify-page .identify-evidence-detail{padding:13px}}
+@media(prefers-reduced-motion:reduce){.identify-page .identify-panel{animation:none!important}.identify-page .identify-option{transition:none!important;transform:none!important}}
+@media print{.identify-page .identify-panel{animation:none;box-shadow:none}.identify-page .identify-options{break-inside:avoid}.identify-page .identify-summary-row{break-inside:avoid}}

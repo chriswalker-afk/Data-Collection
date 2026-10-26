@@ -15,7 +15,7 @@ export const ACTIVITY_GUIDANCE=Object.freeze({
     task:'Drag each statement to the correct method’s advantages or disadvantages. You can also select a card and choose its destination. Check the full board, then correct any mistakes.'}),
   identify:Object.freeze({
     practice:'Recognise a sampling method from how participants or items are selected.',
-    task:'Read the selection procedure, then choose the method that was used.'}),
+    task:'Read how the sample was selected, then choose the method. After checking, study the decisive clue and the contrasting alternatives.'}),
   speed:Object.freeze({
     practice:'Recall the exact mathematical term from its definition.',
     task:'Type the term that matches the definition, then check your answer.'}),
