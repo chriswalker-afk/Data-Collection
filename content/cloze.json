@@ -425,6 +425,482 @@
         "pearson-textbook-ch1",
         "teacher-screenshots"
       ]
+    },
+    {
+      "id": "cz-pop-study",
+      "conceptId": "population",
+      "prompt": "For a study concerned with all 320 Year 12 pupils, those 320 pupils form the {{blank}}.",
+      "answer": "population",
+      "choices": [
+        "population",
+        "sample",
+        "stratum",
+        "frame"
+      ],
+      "explanation": "The population is defined by the investigation, not by the eventual subset surveyed.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-census-error",
+      "conceptId": "census",
+      "prompt": "Even if every pupil is measured in a census, {{blank}} errors can still occur.",
+      "answer": "measurement",
+      "choices": [
+        "measurement",
+        "sampling variation",
+        "selection",
+        "random-draw"
+      ],
+      "explanation": "A census avoids sampling variation from choosing a subset, but it does not prevent measurement or recording errors.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-sample-subset",
+      "conceptId": "sample",
+      "prompt": "Measuring 35 randomly chosen trees out of 500 produces a {{blank}}, not a census.",
+      "answer": "sample",
+      "choices": [
+        "sample",
+        "population",
+        "quota",
+        "class"
+      ],
+      "explanation": "A sample is the subset observed; the 500 trees are the target population.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-raw-observations",
+      "conceptId": "raw-data",
+      "prompt": "The original unsummarised measurements in a scientist's notebook are {{blank}} data.",
+      "answer": "raw",
+      "choices": [
+        "raw",
+        "grouped",
+        "average",
+        "stratified"
+      ],
+      "explanation": "Individual measurements before summaries are raw data; calculated means are not.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-unit-classroom",
+      "conceptId": "sampling-unit",
+      "prompt": "When whole classrooms are selected from a list of classrooms, each classroom is a sampling {{blank}}.",
+      "answer": "unit",
+      "choices": [
+        "unit",
+        "frame",
+        "interval",
+        "stratum"
+      ],
+      "explanation": "The sampling unit is what can be selected; here that is a classroom, not a pupil.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-frame-missing",
+      "conceptId": "sampling-frame",
+      "prompt": "An employee register that omits eligible workers is an incomplete sampling {{blank}}.",
+      "answer": "frame",
+      "choices": [
+        "frame",
+        "interval",
+        "sample",
+        "census"
+      ],
+      "explanation": "A sampling frame identifies units available for selection; omitted workers have no chance of being chosen from this register.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-random-chance",
+      "conceptId": "random-sampling",
+      "prompt": "Selection by an impartial chance procedure rather than the researcher's judgement is {{blank}} sampling.",
+      "answer": "random",
+      "choices": [
+        "random",
+        "quota",
+        "opportunity",
+        "systematic"
+      ],
+      "explanation": "Random selection is chance-based; its precise probabilities depend on the sampling design.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-random-judgement",
+      "conceptId": "random-sampling",
+      "prompt": "An interviewer choosing people to fit personal preferences is not using {{blank}} sampling.",
+      "answer": "random",
+      "choices": [
+        "random",
+        "opportunity",
+        "quota",
+        "stratified"
+      ],
+      "explanation": "Personal preference is not a chance-based method; random sampling requires an impartial random process.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-stratum-one",
+      "conceptId": "stratum",
+      "prompt": "In a survey divided into year groups, one complete year-group subgroup is a {{blank}}.",
+      "answer": "stratum",
+      "choices": [
+        "stratum",
+        "sampling unit",
+        "sampling interval",
+        "quota"
+      ],
+      "explanation": "A stratum is one group in a partition of the population, not a single sampled person.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-stratum-plural",
+      "conceptId": "stratum",
+      "prompt": "The singular name for one population subgroup within a stratified design is {{blank}}.",
+      "answer": "stratum",
+      "choices": [
+        "stratum",
+        "strata",
+        "sample",
+        "sampling frame"
+      ],
+      "explanation": "Stratum is singular; strata refers to two or more of the population groups.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-quota-nonrandom",
+      "conceptId": "quota-sampling",
+      "prompt": "Filling a quota by approaching willing people is {{blank}} selection within each group.",
+      "answer": "non-random",
+      "choices": [
+        "non-random",
+        "random",
+        "systematic",
+        "proportional"
+      ],
+      "explanation": "Quota sampling uses fixed group targets but does not randomly select people within those groups.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-op-convenience",
+      "conceptId": "opportunity-sampling",
+      "prompt": "Asking the next willing customers at a shop entrance without setting group targets is {{blank}} sampling.",
+      "answer": "opportunity",
+      "choices": [
+        "opportunity",
+        "stratified",
+        "systematic",
+        "simple random"
+      ],
+      "explanation": "People are recruited because they are available; without group targets this is not quota sampling.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-bias-selection",
+      "conceptId": "selection-bias",
+      "prompt": "If some eligible residents have no chance of being approached, the survey may suffer {{blank}} bias.",
+      "answer": "selection",
+      "choices": [
+        "selection",
+        "sampling variation",
+        "class",
+        "measurement"
+      ],
+      "explanation": "Unequal or missing inclusion opportunities can systematically distort the people represented.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-bias-frame",
+      "conceptId": "selection-bias",
+      "prompt": "Leaving particular eligible groups off a register can introduce selection {{blank}}.",
+      "answer": "bias",
+      "choices": [
+        "bias",
+        "variation",
+        "interval",
+        "allocation"
+      ],
+      "explanation": "An incomplete frame can exclude groups systematically even if the draw from that frame is random.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-representative-definition",
+      "conceptId": "representativeness",
+      "prompt": "A {{blank}} sample resembles its target population in characteristics relevant to the investigation.",
+      "answer": "representative",
+      "choices": [
+        "representative",
+        "census",
+        "discrete",
+        "systematic"
+      ],
+      "explanation": "Representativeness concerns relevant population characteristics, not just the number sampled.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-representative-warning",
+      "conceptId": "representativeness",
+      "prompt": "Matching an age-group proportion alone does not guarantee a sample is {{blank}} for every outcome.",
+      "answer": "representative",
+      "choices": [
+        "representative",
+        "random",
+        "continuous",
+        "complete"
+      ],
+      "explanation": "Matching one characteristic cannot guarantee agreement in all other characteristics or behaviours.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-variation-means",
+      "conceptId": "sampling-variation",
+      "prompt": "Two different well-chosen random samples can have different means due to sampling {{blank}}.",
+      "answer": "variation",
+      "choices": [
+        "variation",
+        "bias",
+        "certainty",
+        "frame"
+      ],
+      "explanation": "Different subsets can yield different statistics even when the sampling procedure is valid.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-interval-calc",
+      "conceptId": "sampling-interval",
+      "prompt": "If 600 numbered records are sampled systematically using 40 positions with a fixed gap, the sampling {{blank}} is 15.",
+      "answer": "interval",
+      "choices": [
+        "interval",
+        "frame",
+        "unit",
+        "quota"
+      ],
+      "explanation": "For this exact integer case, the systematic interval is 600 ÷ 40 = 15.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-interval-def",
+      "conceptId": "sampling-interval",
+      "prompt": "The constant gap between selected positions in systematic sampling is the sampling {{blank}}.",
+      "answer": "interval",
+      "choices": [
+        "interval",
+        "stratum",
+        "unit",
+        "boundary"
+      ],
+      "explanation": "An interval is the fixed step along the ordered list, used after choosing a random start.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-prop-percent",
+      "conceptId": "proportional-allocation",
+      "prompt": "If one stratum contains 20% of the population, proportional allocation assigns it {{blank}}% of the sample.",
+      "answer": "20",
+      "choices": [
+        "20",
+        "5",
+        "40",
+        "80"
+      ],
+      "explanation": "Proportional allocation uses the same population share for the target sample share; 20% stays 20%.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-qual-bus",
+      "conceptId": "qualitative-data",
+      "prompt": "A bus route identified by the code 17 is a {{blank}} category, not a measured numerical amount.",
+      "answer": "qualitative",
+      "choices": [
+        "qualitative",
+        "quantitative",
+        "continuous",
+        "discrete"
+      ],
+      "explanation": "A route number is a label even though digits are used, so it is categorical or qualitative data.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-quant-count",
+      "conceptId": "quantitative-data",
+      "prompt": "The number of tickets sold at a cinema each hour is {{blank}} data.",
+      "answer": "quantitative",
+      "choices": [
+        "quantitative",
+        "qualitative",
+        "nominal",
+        "systematic"
+      ],
+      "explanation": "A count is a numerical amount; a route or ticket category code may instead be qualitative.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-discrete-die",
+      "conceptId": "discrete-variable",
+      "prompt": "The result of rolling a standard six-sided die is a {{blank}} numerical variable.",
+      "answer": "discrete",
+      "choices": [
+        "discrete",
+        "continuous",
+        "qualitative",
+        "stratified"
+      ],
+      "explanation": "The result takes one of six distinct possible numerical values rather than any value in an interval.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-cont-rounded",
+      "conceptId": "continuous-variable",
+      "prompt": "A length rounded to the nearest centimetre is still modelled as a {{blank}} variable.",
+      "answer": "continuous",
+      "choices": [
+        "continuous",
+        "discrete",
+        "qualitative",
+        "random"
+      ],
+      "explanation": "The underlying measured length can vary continuously even though recorded values are rounded.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-grouped-loss",
+      "conceptId": "grouped-frequency-table",
+      "prompt": "After values are grouped into class intervals, the original exact measurements cannot normally be {{blank}}.",
+      "answer": "recovered",
+      "choices": [
+        "recovered",
+        "counted",
+        "grouped",
+        "ordered"
+      ],
+      "explanation": "Grouped frequencies tell how many values fall into each interval but lose the individual exact observations.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-bound-rounding",
+      "conceptId": "class-boundaries",
+      "prompt": "For heights recorded to the nearest centimetre, the upper class boundary for the class 150–159 cm is {{blank}} cm.",
+      "answer": "159.5",
+      "choices": [
+        "159.5",
+        "159",
+        "160",
+        "158.5"
+      ],
+      "explanation": "Measurements recorded as 159 cm can represent true lengths up to 159.5 cm, the upper boundary.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-width-numerical",
+      "conceptId": "class-width",
+      "prompt": "A class with lower boundary 12.5 and upper boundary 17.5 has width {{blank}}.",
+      "answer": "5",
+      "choices": [
+        "5",
+        "4",
+        "6",
+        "30"
+      ],
+      "explanation": "Class width equals upper boundary minus lower boundary: 17.5 − 12.5 = 5.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "cz-mid-numerical",
+      "conceptId": "class-midpoint",
+      "prompt": "For the interval 10 ≤ x < 20, the class midpoint is {{blank}}.",
+      "answer": "15",
+      "choices": [
+        "15",
+        "10",
+        "20",
+        "30"
+      ],
+      "explanation": "The midpoint is the mean of the two boundaries: (10 + 20)/2 = 15.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
     }
   ]
 }
