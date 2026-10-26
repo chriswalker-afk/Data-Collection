@@ -1,0 +1,123 @@
+/* Build the Method — dependency-aware procedure workshop.
+   Names and explanations always accompany colour; original buttons remain native. */
+.build-page{--build-forest:#1b6251;--build-ink:#183f47;--build-muted:#47675d}
+.build-page .build-settings{display:flex;align-items:center;gap:10px 22px;flex-wrap:wrap}
+.build-page .build-settings label{flex:0 0 auto}
+.build-page .build-settings select{flex:1 1 220px;max-width:420px}
+.build-page .build-settings-explainer{flex-basis:100%;color:#527065;font-size:.79rem;line-height:1.55;margin:0}
+.build-page .build-workspace{border:1px solid #b6d4c6;border-radius:23px;padding:clamp(18px,3.2vw,34px);background:linear-gradient(151deg,#fff 69%,#f5fbf8);box-shadow:0 12px 27px rgba(19,71,55,.075)}
+.build-page .build-workspace>.eyebrow{color:#277054;font-weight:860;letter-spacing:.12em}
+.build-page .exam-heading{font-size:clamp(1.4rem,2.8vw,1.95rem);color:#183f47;margin:9px 0 13px}
+.build-page .build-instructions{font-size:.85rem;line-height:1.65;color:#506d61;margin:0 0 18px}
+.build-page .build-context{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:linear-gradient(120deg,#173d45 0%,#1f6659 100%);border:1px solid #297a65;color:#fff;border-radius:16px;padding:clamp(17px,2.8vw,26px);box-shadow:0 9px 19px rgba(17,71,55,.105)}
+.build-page .build-context-copy{flex:1 1 220px;min-width:0}
+.build-page .build-context-kicker{display:block;font-size:.69rem;letter-spacing:.11em;font-weight:850;color:#217253;line-height:1.4}
+.build-page .build-context .build-context-kicker{color:#b9e5ce}
+.build-page .build-context-description{font-size:clamp(.96rem,1.9vw,1.1rem);font-weight:720;line-height:1.6;color:#f5fff8;margin:6px 0 0}
+.build-page .build-method-family{display:inline-flex;align-items:center;min-height:36px;max-width:220px;padding:8px 12px;border-radius:10px;border:1px solid rgba(202,247,220,.4);background:rgba(255,255,255,.09);font-size:.73rem;font-weight:740;color:#ebfff1}
+.build-page .build-arrange-head{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:24px 3px 11px}
+.build-page .build-arrange-title{margin:4px 0 0;font-size:1.14rem;line-height:1.3;letter-spacing:-.03em;color:#1a4e41}
+.build-page .build-arrange-tip{font-size:.74rem;line-height:1.45;color:#4e7161;margin:0;max-width:265px}
+.build-page .build-step-list{list-style:none;padding:0;margin:0;display:grid;gap:11px;min-width:0}
+.build-page .build-step{position:relative;display:flex;align-items:center;gap:13px;min-width:0;background:#fbfffc;border:1px solid #bdd7c8;border-radius:14px;padding:13px 15px;box-shadow:0 3px 0 rgba(23,80,60,.055);transition:transform .16s,border-color .16s,box-shadow .16s,background-color .16s}
+.build-page .build-step:has(.build-grip):hover{border-color:#73a990;box-shadow:0 6px 16px rgba(22,75,54,.095)}
+.build-page .build-step:has(.build-grip):focus-within{border-color:#459574}
+.build-page .build-step.is-being-dragged{opacity:.57;background:#e9f6ed}
+.build-page .build-step.is-drop-target{background:#e0f3e7;border-color:#237b5a;box-shadow:inset 0 0 0 2px #308768}
+.build-page .build-grip{display:grid;place-items:center;flex:0 0 43px;width:43px;height:45px;min-height:45px;border:1px solid #accdbd;border-radius:10px;background:#eaf5ed;color:#237053;font-size:1.35rem;font-weight:870;line-height:1;touch-action:none;user-select:none;cursor:grab}
+.build-page .build-grip:active{cursor:grabbing;background:#d1ecdb}
+.build-page .build-grip:focus-visible,.build-page .build-practice-arrow:focus-visible,.build-page .build-practice-check:focus-visible{outline:3px solid #d99b4d;outline-offset:2px}
+.build-page .exam-step-number{flex:0 0 35px;width:35px;height:35px;color:#1c6750;background:#e1f1e7;border:1px solid #c6dfd0;border-radius:11px;font-size:.84rem;font-weight:860;font-variant-numeric:tabular-nums}
+.build-page .build-step-copy{display:flex;flex-direction:column;gap:3px;flex:1 1 180px;min-width:0;color:#294d42;line-height:1.54;font-size:.83rem;font-weight:590}
+.build-page .build-step-title{display:block;font-size:.8rem;line-height:1.35;font-weight:870;color:#1a604a;letter-spacing:.008em}
+.build-page .exam-step-actions{display:flex;gap:7px;align-items:center;margin:0;flex:0 0 auto}
+.build-page .exam-arrow{min-width:44px;min-height:44px;border:1px solid #b5d4c2;border-radius:10px;background:#edf7ef;color:#1a624e;font-size:1.22rem;font-weight:800}
+.build-page .exam-arrow:not(:disabled):hover{border-color:#458f6c;background:#dcefe1}
+.build-page .exam-arrow:disabled{opacity:.4}
+.build-page .exam-buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.build-page .exam-buttons .btn{min-height:48px}
+.build-page .exam-buttons .btn-primary{background:#176b55;border-color:#176b55;color:#fff}
+.build-page .exam-buttons .btn-primary:hover{background:#12543f}
+.build-page .build-step.is-checked{background:#fafcfb;box-shadow:none}
+.build-page .build-step.build-needs-review{border-color:#d1a06a;background:#fff8ee}
+.build-page .build-step-flag{display:block;flex-basis:100%;color:#80521d;font-size:.71rem;font-weight:770;line-height:1.4}
+.build-page .build-analysis{margin:18px 0 6px;background:#eff7f2;border:1px solid #b9d5c4;border-radius:16px;padding:clamp(15px,2.7vw,22px)}
+.build-page .build-analysis-top{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px 14px}
+.build-page .build-analysis-top-copy{flex:1 1 220px;min-width:0}
+.build-page .build-analysis-title{font-size:clamp(1rem,2.3vw,1.16rem);letter-spacing:-.02em;color:#1c5947;line-height:1.32;margin:5px 0 0}
+.build-page .build-analysis-count{display:inline-block;border:1px solid #99c3a9;background:#dcefe3;border-radius:9px;color:#2d6c4b;padding:8px 10px;font-size:.72rem;font-weight:840;font-variant-numeric:tabular-nums}
+.build-page .build-analysis-description{color:#356251;line-height:1.68;font-size:.85rem;margin:10px 0 0}
+.build-page .build-unmet-list{padding-left:23px;display:grid;gap:11px;margin:14px 0 0}
+.build-page .build-unmet-item{background:#fff7ee;border-left:4px solid #ba884b;border-radius:9px;padding:11px 14px;color:#78501f;font-size:.84rem;line-height:1.6}
+.build-page .build-unmet-pair{display:block;color:#7c471d;font-weight:820}
+.build-page .build-unmet-reason{margin:3px 0 0;color:#674824}
+.build-page .exam-model-list{padding-left:30px;display:grid;gap:12px}
+.build-page .build-model-list>li{padding:11px 13px;border:1px solid #d1e1d7;border-radius:11px;background:#f8fbf9;line-height:1.58;font-size:.87rem;color:#275040}
+.build-page .build-model-list>li::marker{font-weight:850;color:#217355}
+.build-page .build-step-why{margin-top:7px}
+.build-page .build-step-why-summary{cursor:pointer;display:inline-block;font-weight:780;font-size:.76rem;color:#2d7057;padding:3px 0;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:4px}
+.build-page .build-step-why-text{font-size:.78rem;line-height:1.65;color:#396657;margin:8px 0 1px}
+.build-page .build-worked-example{margin:17px 0;border:1px solid #bed6c8;border-radius:12px;background:#f1f8f3}
+.build-page .build-worked-summary{font-size:.85rem;font-weight:840;color:#215e47;padding:13px 18px;cursor:pointer}
+.build-page .build-worked-text{border-top:1px solid #d0e2d6;margin:0;padding:13px 18px;color:#295e47;font-size:.86rem;line-height:1.7}
+.build-page .exam-warning{border-left-width:4px}
+.build-page .build-correction{margin:21px 0 17px;border:1px solid #b7d0c0;border-radius:13px;background:#f7fbf8;overflow:hidden}
+.build-page .build-correction-toggle{font-size:.85rem;line-height:1.55;font-weight:850;cursor:pointer;color:#1b6349;padding:14px 17px}
+.build-page .build-correction-body{border-top:1px solid #d4e4d9;padding:16px}
+.build-page .build-correction-description{font-size:.82rem;line-height:1.6;color:#3b6151;margin:0 0 13px}
+.build-page .build-correction-list{padding:0;display:grid;gap:8px;list-style:none;margin:0}
+.build-page .build-correction-step{display:flex;align-items:center;gap:10px;justify-content:space-between;min-width:0;padding:11px 13px;border:1px solid #d5e4d9;border-radius:10px;background:#fff}
+.build-page .build-correction-text{flex:1;min-width:0;font-size:.8rem;line-height:1.5;color:#34594b;overflow-wrap:anywhere}
+.build-page .build-correction-controls{display:flex;gap:5px;flex:0 0 auto}
+.build-page .build-practice-arrow{min-width:44px;min-height:44px;border:1px solid #a8c6b4;border-radius:9px;background:#eaf5ed;color:#1b6650;font-size:1.14rem;font-weight:850;cursor:pointer}
+.build-page .build-practice-arrow:disabled{opacity:.36;cursor:default}
+.build-page .build-practice-check{margin-top:13px;min-height:48px}
+.build-page .build-practice-result{margin-top:12px;font-size:.82rem;line-height:1.6}
+.build-page .build-practice-result.is-correct,.build-page .build-practice-result.is-incorrect{border-radius:10px;padding:12px 14px}
+.build-page .build-practice-result.is-correct{border:1px solid #a1cdb3;background:#e9f8ee;color:#215e43}
+.build-page .build-practice-result.is-incorrect{border:1px solid #dcba8f;background:#fff6e9;color:#7e4d24}
+.build-page .build-practice-result ul{margin:9px 0 7px;padding-left:20px}
+.build-page .build-practice-result p{margin:8px 0 0}
+.build-page .build-round-summary{margin:22px auto;padding:22px;max-width:740px;background:#f1f8f3;border:1px solid #b2d4c1;border-radius:17px;text-align:left}
+.build-page .build-round-summary-title{font-size:1.18rem;line-height:1.28;color:#1c5945;letter-spacing:-.02em;margin:6px 0 7px}
+.build-page .build-summary-subtitle{margin:0 0 14px;font-size:.81rem;line-height:1.6;color:#4a685c}
+.build-page .build-summary-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.build-page .build-summary-item{min-width:0;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #d1e4d7;border-radius:12px;padding:12px}
+.build-page .build-summary-item.is-wrong,.build-page .build-summary-item.is-revealed{background:#fffaf2;border-color:#e0cdb0}
+.build-page .build-summary-symbol{display:grid;place-items:center;flex:0 0 30px;height:30px;background:#e0f1e7;border-radius:9px;color:#185b41;font-size:.95rem;font-weight:850}
+.build-page .is-wrong .build-summary-symbol,.build-page .is-revealed .build-summary-symbol{background:#fae7d0;color:#8e5623}
+.build-page .build-summary-item-copy{min-width:0;display:flex;flex-direction:column;gap:3px}
+.build-page .build-summary-item-name{font-size:.79rem;line-height:1.4;color:#214c3d}
+.build-page .build-summary-item-status{font-size:.73rem;line-height:1.45;color:#5b715d}
+.build-drag-ghost{position:fixed;pointer-events:none;z-index:10000;max-width:min(330px,76vw);padding:12px 16px;top:0;left:0;color:#fff;background:linear-gradient(120deg,#17464c,#26785e);border:2px solid #9bddb5;border-radius:12px;box-shadow:0 14px 28px rgba(17,64,45,.23);font-size:.83rem;font-weight:820;line-height:1.45;transform:rotate(-2deg)}
+@media(hover:hover) and (pointer:fine){.build-page .build-step:has(.build-grip){cursor:grab}}
+@media(max-width:780px){
+ .build-page .build-step{display:grid;grid-template-columns:43px 35px minmax(0,1fr);grid-template-areas:'grip num copy' '. actions actions';gap:9px 10px;padding:12px}
+ .build-page .build-grip{grid-area:grip}
+ .build-page .exam-step-number{grid-area:num}
+ .build-page .build-step-copy{grid-area:copy;min-width:0;flex-basis:auto}
+ .build-page .exam-step-actions{grid-area:actions;justify-self:end;margin:0}
+ .build-page .build-step-flag{grid-column:1/-1}
+ .build-page .build-summary-list{grid-template-columns:1fr}
+}
+@media(max-width:420px){
+ .build-page .build-context{padding:16px}
+ .build-page .build-workspace{padding:17px 13px}
+ .build-page .build-step{gap:8px 9px;padding:10px}
+ .build-page .build-arrange-head{margin-top:19px}
+ .build-page .build-arrange-tip{max-width:none}
+ .build-page .build-correction-step{align-items:stretch;flex-direction:column}
+ .build-page .build-correction-controls{align-self:flex-end}
+ .build-page .build-round-summary{padding:15px}
+ .build-page .exam-buttons .btn{flex:1 1 140px}
+}
+@media(prefers-reduced-motion:reduce){
+ .build-page .build-step{transition:none!important;transform:none!important}
+ .build-drag-ghost{transform:none!important}
+}
+@media print{
+ .build-page .build-grip,.build-page .build-correction-controls,.build-page .build-practice-check,.build-page .exam-arrow{display:none!important}
+ .build-page .build-workspace,.build-page .build-context,.build-page .build-round-summary{box-shadow:none}
+ .build-page .build-context{background:white;color:#111;border-color:#888}
+ .build-page .build-context-description,.build-page .build-context-kicker,.build-page .build-method-family{color:#111}
+}
