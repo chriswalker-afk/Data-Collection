@@ -5,11 +5,11 @@ export const ACTIVITY_GUIDANCE=Object.freeze({
     practice:'Recall terminology and the advantages and disadvantages of sampling methods.',
     task:'Try the answer, flip the card to check, then rate your recall. For evaluation cards, recall the main strengths or limitations. Browse all cards whenever you want.'}),
   match:Object.freeze({
-    practice:'Connect the correct mathematical term to its definition.',
-    task:'Select a term or definition, then its partner. Correct pairs briefly light up before disappearing.'}),
+    practice:'Connect mathematical terms with precise definitions or equivalent descriptions.'
+    task:'Choose five, seven or a full topic round, then connect each term to its description. Different descriptions support deeper recall.'}),
   cloze:Object.freeze({
-    practice:'Retrieve the precise mathematical language used in definitions.',
-    task:'Complete the missing word in the definition.'}),
+    practice:'Retrieve precise mathematical vocabulary from definitions, examples and important distinctions.'
+    task:'Complete the mathematical sentence. Choose a focused round or review the full question bank.'}),
   sort:Object.freeze({
     practice:'Compare the strengths and limitations of two sampling methods.',
     task:'Drag each statement to the correct method’s advantages or disadvantages. You can also select a card and choose its destination. Check the full board, then correct any mistakes.'}),
@@ -17,8 +17,8 @@ export const ACTIVITY_GUIDANCE=Object.freeze({
     practice:'Recognise a sampling method from how participants or items are selected.',
     task:'Read how the sample was selected, then choose the method. After checking, study the decisive clue and the contrasting alternatives.'}),
   speed:Object.freeze({
-    practice:'Recall the exact mathematical term from its definition.',
-    task:'Type the term that matches the definition, then check your answer.'}),
+    practice:'Recall mathematical terms from differently worded but mathematically equivalent clues.'
+    task:'Read the clue, retrieve the precise term and check your answer. Repeat rounds to practise new wording.'}),
   build:Object.freeze({
     practice:'Sequence a defensible sampling procedure and justify its steps.',
     task:'Drag steps or use the arrow buttons to make a valid sequence. Check the prerequisites, then review why each step matters. Different valid orders are accepted.'}),
