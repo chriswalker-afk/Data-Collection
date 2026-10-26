@@ -972,7 +972,15 @@ function render(focusTarget) {
   if (focusTarget) {
     requestAnimationFrame(() => {
       const target = mount.querySelector(focusTarget) || mount.querySelector('#view-heading');
-      target?.focus({ preventScroll: true });
+      if(!target)return;
+      target.focus({preventScroll:true});
+      // Keyboard focus must remain visible, including after long mathematical answers.
+      const rect=target.getBoundingClientRect();
+      const header=document.querySelector('.site-header');
+      const sticky=header&&getComputedStyle(header).position==='sticky';
+      const visibleTop=sticky?header.getBoundingClientRect().bottom+12:12;
+      if(rect.top<visibleTop||rect.bottom>window.innerHeight-16)
+        target.scrollIntoView({block:'center',behavior:'auto'});
     });
   }
 }
@@ -1267,7 +1275,7 @@ document.addEventListener('keydown',event=>{
 document.querySelector('.skip-link').addEventListener('click', event => {
   event.preventDefault();
   const main=document.getElementById('main');
-  main.scrollIntoView({block:'start',behavior:'instant'});
+  main.scrollIntoView({block:'start',behavior:'auto'});
   main.focus({preventScroll:true});
 });
 mount.addEventListener('click', event => {
