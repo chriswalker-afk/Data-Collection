@@ -23,7 +23,7 @@ async function join(page,code,name){
   await expect(page.locator('#connection')).toHaveText('Live connection',{timeout:15000});
 }
 
-test('unified navigation keeps ten solo games, leads to multiplayer and previews awards honestly',async({page})=>{
+test('unified navigation keeps ten solo games, leads to multiplayer and the live Trophy Cabinet',async({page})=>{
   await page.goto('/#/home/sampling');
   await expect(page.locator('.game-card')).toHaveCount(10);
   await expect(page.locator('.arcade-path-card')).toHaveCount(3);
@@ -32,9 +32,9 @@ test('unified navigation keeps ten solo games, leads to multiplayer and previews
   await expect(page.locator('#games-title')).toBeFocused();
   await page.locator('.arcade-path-card.is-awards').click();
   await expect(page).toHaveURL(/\/awards\.html$/);
-  await expect(page.getByRole('heading',{name:'Every mathematician has a story.'})).toBeVisible();
-  await expect(page.getByText('These are previews, not yet earned or saved.')).toBeVisible();
-  await expect(page.locator('.arcade-award-card')).toHaveCount(3);
+  await expect(page.getByRole('heading',{name:'Good thinking deserves a little glory.'})).toBeVisible();
+  await expect(page.locator('#cabinet-count')).toHaveText('0 / 16');
+  await expect(page.locator('.trophy-card')).toHaveCount(16);
   await page.getByRole('link',{name:'Multiplayer',exact:true}).click();
   await expect(page).toHaveURL(/\/multiplayer\.html$/);
   await expect(page.locator('#entry')).toBeVisible();
