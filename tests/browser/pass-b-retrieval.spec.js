@@ -13,7 +13,9 @@ test('Missing Words has focused ten-question practice and an optional complete b
   const bank=await page.evaluate(async()=>await(await fetch('./content/cloze.json')).json());
   expect(bank.cloze).toHaveLength(53);
   await page.goto('/#/cloze/sampling');
-  await expect(page.locator('#cloze-length')).toHaveValue('10');
+  await expect(page.locator('#cloze-length')).toHaveValue('all','Selected full-review length persists when switching to Sampling');
+  await page.locator('#cloze-length').selectOption('10');
+  await expect(page.locator('.round-progress')).toContainText('1 / 10');
   await page.locator('#cloze-length').selectOption('20');
   await expect(page.locator('.round-progress')).toContainText('1 / 20');
   await page.locator('#cloze-length').selectOption('all');
