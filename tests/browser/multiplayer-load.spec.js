@@ -42,35 +42,43 @@ test('45-student room: concurrent joins, WebSocket fanout, answers, reconnects a
   const sizes=snap.teams.map(t=>t.members);
   expect(Math.max(...sizes)-Math.min(...sizes)).toBeLessThanOrEqual(1);
   expect(snap.classQuest.target).toBe(80);
-  const tickets=await Promise.all(students.map(async(s)=>{
-    const r=await post(request,'/rooms/'+code+'/socket-ticket',{},s.token);
-    expect(r.status()).toBe(200);return r.json();
-  }));
   await page.goto('/multiplayer.html');
-  const connectedAt=performance.now();
-  const sockets=await page.evaluate(async({code,tickets})=>{
+  await page.evaluate(()=>{
     window.__stressSockets={};window.__stressStates={};window.__stressMessages={};
-    const timeout=ms=>new Promise((_,reject)=>setTimeout(()=>reject(new Error('WebSocket connection timeout')),ms));
-    async function connect(t){
-      return Promise.race([new Promise((resolve,reject)=>{
-        const ws=new WebSocket('ws://127.0.0.1:8787/rooms/'+code+'/ws?id='+t.participantId+'&ticket='+t.ticket);
-        window.__stressSockets[t.participantId]=ws;
-        ws.onmessage=event=>{
-          try{
-            const msg=JSON.parse(event.data);
-            if(msg.type==='state'){
-              window.__stressStates[t.participantId]=msg.data;
-              window.__stressMessages[t.participantId]=(window.__stressMessages[t.participantId]||0)+1;
-              resolve(true);
-            }
-          }catch(e){reject(e)}
-        };
-        ws.onerror=()=>reject(new Error('WebSocket upgrade failed'));
-      }),timeout(28000)]);
-    }
-    const results=await Promise.all(tickets.map(connect));
-    return results.filter(Boolean).length;
-  },{code,tickets});
+  });
+  const connectedAt=performance.now();
+  let sockets=0;
+  // Ticket validity is only 30 seconds. Real students request their own tickets
+  // just before connecting, so simulate that with batches rather than minting 45
+  // tickets at once and accidentally testing the expiry window.
+  for(let offset=0;offset<students.length;offset+=15){
+    const tickets=await Promise.all(students.slice(offset,offset+15).map(async(s)=>{
+      const r=await post(request,'/rooms/'+code+'/socket-ticket',{},s.token);
+      expect(r.status()).toBe(200);return r.json();
+    }));
+    sockets+=await page.evaluate(async({code,tickets})=>{
+      const timeout=ms=>new Promise((_,reject)=>setTimeout(()=>reject(new Error('WebSocket connection timeout')),ms));
+      async function connect(t){
+        return Promise.race([new Promise((resolve,reject)=>{
+          const ws=new WebSocket('ws://127.0.0.1:8787/rooms/'+code+'/ws?id='+t.participantId+'&ticket='+t.ticket);
+          window.__stressSockets[t.participantId]=ws;
+          ws.onmessage=event=>{
+            try{
+              const msg=JSON.parse(event.data);
+              if(msg.type==='state'){
+                window.__stressStates[t.participantId]=msg.data;
+                window.__stressMessages[t.participantId]=(window.__stressMessages[t.participantId]||0)+1;
+                resolve(true);
+              }
+            }catch(e){reject(e)}
+          };
+          ws.onerror=()=>reject(new Error('WebSocket upgrade failed'));
+        }),timeout(22000)]);
+      }
+      const results=await Promise.all(tickets.map(connect));
+      return results.filter(Boolean).length;
+    },{code,tickets});
+  }
   expect(sockets).toBe(45);
   timings.push({name:'45 socket handshakes',ms:Math.round(performance.now()-connectedAt)});
   try{
