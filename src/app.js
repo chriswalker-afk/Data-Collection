@@ -730,6 +730,160 @@ function nextClassification() {
   announce('Next question.');
 }
 
+
+function examLevelPicker() {
+ const wrap=div('game-settings');
+ const select=element('select',{id:'exam-level',className:'game-select','data-control':'exam-level'});
+ for(const level of EXAM_LEVELS)select.append(element('option',{value:level,selected:level===examLevel},({foundation:'Foundation skills',develop:'Developing explanations',extend:'Stretch and critique'})[level]));
+ wrap.append(element('label',{for:'exam-level',className:'game-settings-label'},'Challenge level'),select);
+ return wrap;
+}
+function buildPicker() {
+ const wrap=div('game-settings'),select=element('select',{id:'build-method',className:'game-select','data-control':'build-method'});
+ for(const method of data.methods)select.append(element('option',{value:method.id,selected:method.id===buildMethodId},METHOD_LABELS[method.id]));
+ wrap.append(element('label',{for:'build-method',className:'game-settings-label'},'First method'),select);
+ return wrap;
+}
+function buildView(){
+ const root=div('page activity-page');root.append(activityTop('build'),buildPicker());
+ if(session.complete){root.append(showCompletion('build'));return root;}
+ const current=session.methods[session.index],method=current.method;
+ root.append(roundProgress(session.index+1,session.methods.length,'Method '+(session.index+1)+' of '+session.methods.length));
+ const panel=element('section',{className:'exam-workspace','data-method-id':method.id});
+ panel.append(span('eyebrow','ORDER THE STEPS'),heading(2,'exam-heading',METHOD_LABELS[method.id],{id:'exam-heading',tabindex:'-1'}),
+  paragraph('exam-help','Move steps with the arrow buttons, using touch or keyboard. Equivalent valid orderings are accepted.'));
+ const list=element('ol',{className:'exam-step-list'});
+ current.steps.forEach((step,i)=>{
+   const li=element('li',{className:'exam-step','data-step-id':step.id});
+   li.append(span('exam-step-number',String(i+1)),paragraph('exam-step-copy',step.text),
+     div('exam-step-actions',
+       action('↑','build-move',{'data-step':step.id,'data-dir':'-1',disabled:current.checked||i===0,'aria-label':'Move step '+(i+1)+' up'},'exam-arrow'),
+       action('↓','build-move',{'data-step':step.id,'data-dir':'1',disabled:current.checked||i===current.steps.length-1,'aria-label':'Move step '+(i+1)+' down'},'exam-arrow')));
+   list.append(li);
+ });panel.append(list);
+ if(!current.checked)panel.append(div('exam-buttons',action('Check procedure','build-check'),action('Reveal model','build-reveal',{},'btn btn-quiet')));
+ else {
+   const feedback=div('inline-feedback typed-feedback'+(current.correct?' correct':' incorrect'),
+     icon(current.correct?'✓':'!'),div('',heading(3,'feedback-heading',current.correct?'Valid procedure.':'Study this model procedure.'),
+     paragraph('',current.correct?'This order satisfies the compulsory dependencies.':'Some compulsory steps were in the wrong order, or you chose to reveal the answer.')));
+   feedback.setAttribute('tabindex','-1');
+   const model=element('ol',{className:'exam-model-list'});
+   method.procedure.forEach(step=>model.append(element('li',{},step.text)));
+   panel.append(feedback,heading(3,'exam-model-heading','Model method'),model,
+    paragraph('exam-help','Exam details: '+method.examKeywords.join(' · ')),
+    ...(method.conditionalProcedure||[]).map(x=>paragraph('exam-help','Only if '+x.condition.toLowerCase()+': '+x.text)),
+    paragraph('exam-warning',method.warning),
+    div('next-row',action(session.index===session.methods.length-1?'Finish round →':'Next method →','build-next')));
+ }
+ root.append(panel);return root;
+}
+function examRadio(name,value,text,checked,disabled,attribute) {
+ const input=element('input',{type:'radio',name,value,checked,disabled,[attribute]:attribute==='data-error-line'||attribute==='data-error-repair'?'':name.slice(7)});
+ return element('label',{className:'exam-choice'},input,span('',text));
+}
+function errorView(){
+ const root=div('page activity-page');root.append(activityTop('error'),examLevelPicker());
+ if(session.complete){root.append(showCompletion('error'));return root;}
+ const q=session.items[session.index];root.append(roundProgress(session.index+1,session.items.length,'Case '+(session.index+1)+' of '+session.items.length));
+ const panel=element('section',{className:'exam-workspace','data-error-id':q.id});
+ panel.append(span('eyebrow','DIAGNOSE AND REPAIR'),heading(2,'exam-heading','Find the flawed line',{id:'exam-heading',tabindex:'-1'}),
+  paragraph('exam-scenario',q.context));
+ const lines=element('fieldset',{className:'exam-fieldset'});lines.append(element('legend',{},'1. Which line is flawed?'));
+ q.lines.forEach((line,i)=>lines.append(examRadio('error-line',String(i),String(i+1)+'. '+line,session.selectedLine===i,session.answered,'data-error-line')));
+ const fixes=element('fieldset',{className:'exam-fieldset'});fixes.append(element('legend',{},'2. Which repair is correct?'));
+ q.repairs.forEach(fix=>fixes.append(examRadio('error-repair',fix.id,fix.text,session.selectedRepair===fix.id,session.answered,'data-error-repair')));
+ panel.append(lines,fixes);
+ if(!session.answered)panel.append(div('exam-buttons',action('Check my diagnosis','error-check',{disabled:session.selectedLine===null||!session.selectedRepair})));
+ else{
+  const result=gradeError(q,session.selectedLine,session.selectedRepair);
+  const feedback=div('inline-feedback typed-feedback'+(result.correct?' correct':' incorrect'),icon(result.correct?'✓':'!'),
+   div('',heading(3,'feedback-heading',result.correct?'Both choices correct.':'Here is the accurate correction.'),
+   paragraph('',(result.lineCorrect?'You identified the faulty line. ':'The flawed line is '+(q.errorLine+1)+'. ')+
+    (result.repairCorrect?'Your repair was correct.':'Correct repair: '+q.repairs.find(x=>x.id===q.repair).text)),
+   paragraph('',q.explanation)));
+  feedback.setAttribute('tabindex','-1');panel.append(feedback,div('next-row',action(session.index===session.items.length-1?'Finish round →':'Next case →','error-next')));
+ }
+ root.append(panel);return root;
+}
+function reasoningView(){
+ const root=div('page activity-page');root.append(activityTop('reason'),examLevelPicker());
+ if(session.complete){root.append(showCompletion('reason'));return root;}
+ const q=session.items[session.index];root.append(roundProgress(session.index+1,session.items.length,'Investigation '+(session.index+1)+' of '+session.items.length));
+ const panel=element('section',{className:'exam-workspace','data-reason-id':q.id});
+ panel.append(span('eyebrow','EXAM REASONING'),heading(2,'exam-heading','Build a justified answer',{id:'exam-heading',tabindex:'-1'}),
+ paragraph('exam-scenario',q.scenario),paragraph('exam-help','Priority: '+q.priority),
+ paragraph('exam-help','Compare your choices with one defensible model. Alternative well-justified methods may also be valid.'));
+ for(const [part,title] of [['method','Method'],['reason','Contextual justification'],['limitation','Limitation'],['improvement','Improvement']]){
+  const group=element('fieldset',{className:'exam-fieldset'});group.append(element('legend',{},title));
+  q.options[part].forEach((choice,i)=>{
+   const value=part==='method'?choice:String(i);
+   group.append(examRadio('reason-'+part,value,part==='method'?METHOD_LABELS[choice]:choice,
+    String(session.selections[part])===value,session.answered,'data-reason-field'));
+  });panel.append(group);
+ }
+ const draft=element('textarea',{id:'reason-written',rows:'4',maxlength:'2000',placeholder:'I would use… because… One limitation… I would improve…',disabled:session.answered});
+ draft.value=session.draft||'';
+ panel.append(element('label',{for:'reason-written',className:'typed-label'},'Write your own explanation (optional, not automatically marked)'),draft);
+ if(!session.answered)panel.append(div('exam-buttons',action('Review my reasoning','reason-check',
+   {disabled:['method','reason','limitation','improvement'].some(k=>session.selections[k]===undefined)})));
+ else{
+  const result=assessReasoning(q,session.selections);
+  const feedback=div('inline-feedback typed-feedback'+(result.complete?' correct':' incorrect'),
+    icon(result.complete?'✓':'!'),div('',heading(3,'feedback-heading',result.met.length+' of 4 model points matched'),
+      paragraph('','This formative checklist is not an official Edexcel mark scheme or a grade for your written answer.')));
+  feedback.setAttribute('tabindex','-1');
+  const list=element('ul',{className:'exam-checklist'});
+  for(const [part,title] of [['method','Method'],['reason','Justification'],['limitation','Limitation'],['improvement','Improvement']])
+   list.append(element('li',{},(result.met.includes(part)?'✓ ':'○ ')+title+': '+
+   (part==='method'?METHOD_LABELS[q.answers.method]:q.options[part][q.answers[part]])));
+  panel.append(feedback,list,heading(3,'exam-model-heading','Model explanation'),paragraph('exam-model',q.model),
+   paragraph('exam-help','Another perspective: '+q.tradeoff),
+   ...(session.draft?[paragraph('exam-draft','Your unmarked draft: '+session.draft)]:[]),
+   div('next-row',action(session.index===session.items.length-1?'Finish round →':'Next investigation →','reason-next')));
+ }
+ root.append(panel);return root;
+}
+function examAdvance(){
+ if(mode==='build'){
+  if(session.index===session.methods.length-1){finishRound();return;}
+ }else if(session.index===session.items.length-1){finishRound();return;}
+ session.index++;session.answered=false;session.selectedLine=null;session.selectedRepair=null;session.selections={};session.draft='';
+ render('#exam-heading');
+}
+function examAction(command,button){
+ if(command==='build-move'&&mode==='build'){
+  const current=session.methods[session.index];if(current.checked)return;
+  current.steps=moveStep(current.steps,button.dataset.step,Number(button.dataset.dir));
+  render('[data-step-id="'+button.dataset.step+'"] .exam-arrow');announce('Step moved.');return;
+ }
+ if((command==='build-check'||command==='build-reveal')&&mode==='build'){
+  const current=session.methods[session.index];if(current.checked)return;
+  current.correct=command==='build-check'&&checkProcedure(current.method,current.steps).correct;
+  current.checked=true;if(current.correct)session.correct++;
+  remember(current.method.conceptId,current.correct);
+  render('.exam-workspace .typed-feedback');announce(current.correct?'Valid procedure.':'Review the model procedure.');return;
+ }
+ if(command==='build-next'&&mode==='build'&&session.methods[session.index].checked){examAdvance();return;}
+ if(command==='error-check'&&mode==='error'&&!session.answered){
+  if(session.selectedLine===null||!session.selectedRepair)return;
+  const q=session.items[session.index],result=gradeError(q,session.selectedLine,session.selectedRepair);
+  session.answered=true;if(result.correct)session.correct++;
+  remember(conceptIdForSubject(q.methodId,data.methods),result.correct);
+  render('.exam-workspace .typed-feedback');announce(result.correct?'Correct diagnosis.':'Read the model repair.');return;
+ }
+ if(command==='reason-check'&&mode==='reason'&&!session.answered){
+  if(['method','reason','limitation','improvement'].some(k=>session.selections[k]===undefined))return;
+  session.draft=mount.querySelector('#reason-written')?.value||'';
+  const q=session.items[session.index],result=assessReasoning(q,session.selections);
+  session.answered=true;if(result.complete)session.correct++;
+  // A model checklist is not sufficient to award independent conceptual mastery.
+  remember(conceptIdForSubject(q.answers.method,data.methods),false);
+  render('.exam-workspace .typed-feedback');announce('Model feedback available.');return;
+ }
+ if(command==='error-next'&&mode==='error'&&session.answered){examAdvance();return;}
+ if(command==='reason-next'&&mode==='reason'&&session.answered){examAdvance();return;}
+}
+
 function render(focusTarget) {
   if (!data) return;
   navSync();
