@@ -108,6 +108,7 @@ test('students cannot choose podiums, launch or advance ceremony or mint awards 
   expect(scored.players[0].score).toBe(0);
   expect((await request.post(route(code)+'/command',{headers:{Authorization:'Bearer '+secret},
     data:{type:'ceremony-start'}})).status()).toBe(400);
+  page.once('dialog',async dialog=>dialog.accept());
   await page.getByRole('button',{name:'End challenge'}).click();
   await expect.poll(async()=> (await state(request,code,secret)).status).toBe('finished');
   expect((await request.post(route(code)+'/command',{headers:{Authorization:'Bearer '+secret},
