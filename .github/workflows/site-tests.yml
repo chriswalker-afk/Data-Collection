@@ -1,0 +1,38 @@
+name: Test Sampling Arcade
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  unit-and-content:
+    name: Content and unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install --no-audit --no-fund
+      - run: npm run check
+  browser:
+    name: Chromium browser tests
+    runs-on: ubuntu-latest
+    needs: unit-and-content
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sampling-arcade-playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
