@@ -5,8 +5,8 @@ loadExamStore,saveExamStore,clearExamStore,EXAM_STORE_KEY} from '../src/exam-sim
 const read=(f,key)=>JSON.parse(readFileSync(new URL('../content/'+f+'.json',import.meta.url),'utf8'))[key];
 const questions=read('exam-practice','questions'),methods=read('methods','methods');
 test('authored bank has a balanced range, valid calculations and contextual checklists',()=>{
- assert.equal(questions.length,34);
- assert.deepEqual([...new Set(questions.map(x=>x.id))].length,34);
+ assert.equal(questions.length,46);
+ assert.deepEqual([...new Set(questions.map(x=>x.id))].length,46);
  for(const type of PAPER_TYPES)assert.ok(questions.filter(x=>x.type===type).length>=8);
  for(const q of questions){
   if(PAPER_TYPES.slice(0,2).includes(q.type)){

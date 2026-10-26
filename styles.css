@@ -600,3 +600,19 @@ progress::-moz-progress-bar { border-radius: 30px; background: #198775; }
  .sim-page,.shell{max-width:none!important;width:100%!important}
  .sim-report-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
+
+
+/* Pass 6 — gentle formative hints, honest self-review and private export. */
+.sim-hints{margin:19px 0;padding:12px 0;min-width:0;outline-offset:4px}
+.sim-hint-heading{font-size:.95rem;color:#245d50;margin:5px 0 12px}
+.sim-hint-list{background:#f2f8f5;border-left:3px solid #72b69a;border-radius:8px;padding:13px 20px 13px 34px;font-size:.88rem;line-height:1.75;color:#305d51}
+.sim-hint-list li+li{margin-top:8px}
+.sim-hint-button{min-height:44px;max-width:100%;white-space:normal}
+.sim-check-count{font-size:.85rem;font-weight:750;color:#266454;margin:10px 0}
+.sim-export-settings{background:#fff;border:1px solid var(--border);border-radius:17px;padding:20px 24px;margin:24px 0 10px}
+.sim-export-choice{display:flex;align-items:flex-start;gap:12px;margin-top:15px;padding:12px 14px;border:1px solid #dae7de;border-radius:11px;line-height:1.65;font-size:.86rem;cursor:pointer}
+.sim-export-choice:focus-within{outline:3px solid #88cbb6;outline-offset:2px}
+.sim-export-choice input{width:20px;height:20px;min-width:20px;accent-color:#197e6a;margin:2px 0 0}
+.sim-report-actions .btn{min-height:44px}
+@media(max-width:580px){.sim-hint-list{padding:12px 14px 12px 32px}.sim-export-settings{padding:18px 14px}}
+@media print{.sim-export-settings,.sim-hints{display:none!important}}

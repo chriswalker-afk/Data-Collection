@@ -9,7 +9,7 @@ export const MAX_TARGETS=40;
 
 export function integerInput(value){
   const text=String(value??'').trim().replace(/,/g,'');
-  if(!/^\+?\d+(?:\.0+)?$/.test(text))return null;
+  if(!/^\+?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.0+)?$/.test(String(value??'').trim()))return null;
   const number=Number(text);
   return Number.isSafeInteger(number)&&number>=0?number:null;
 }
@@ -20,11 +20,14 @@ export function allocationKey(question){
     throw new Error('Invalid stratified task');
   const N=groups.reduce((total,g)=>{
     if(!Number.isSafeInteger(g.size)||g.size<=0||!/^g\d+$/.test(g.id))throw new Error('Invalid stratum');
+    if(!Number.isSafeInteger(total+g.size))throw new Error('Population size exceeds safe-integer range');
     return total+g.size;
   },0);
   if(sampleSize>N)throw new Error('Sample cannot exceed population');
   const entries=groups.map(g=>{
-    const exact=g.size*sampleSize/N;
+    const product=g.size*sampleSize;
+    if(!Number.isSafeInteger(product))throw new Error('Allocation calculation exceeds safe-integer range');
+    const exact=product/N;
     if(!Number.isSafeInteger(exact))throw new Error('This numerical question needs exact whole-number allocations');
     return {id:g.id,label:g.label,population:g.size,expected:exact,working:`${g.size} / ${N} × ${sampleSize} = ${exact}`};
   });
@@ -59,12 +62,18 @@ export function gradeNumbers(question,answers){
   return {fields:results,valid:results.every(x=>x.valid),correct:results.every(x=>x.correct),
     correctParts:results.filter(x=>x.correct).length,totalParts:results.length};
 }
+export function procedureModelSteps(question,methods){
+  if(question.type!=='procedure')throw new Error('Not a procedural question');
+  const method=methods.find(x=>x.id===question.methodId);
+  if(!method)throw new Error('Unknown audited method '+question.methodId);
+  return question.modelSteps?.length?question.modelSteps:method.procedure;
+}
 export function writtenChecklist(question,methods){
   if(question.type==='evaluation')return question.checklist.map(p=>({id:p.id,text:p.text}));
   if(question.type!=='procedure')throw new Error('Not a written question');
   const method=methods.find(x=>x.id===question.methodId);
   if(!method)throw new Error('Unknown audited method '+question.methodId);
-  return [...method.procedure.map(p=>({id:'step-'+p.id,text:p.text})),...(question.extraPoints||[])];
+  return [...procedureModelSteps(question,methods).map(p=>({id:'step-'+p.id,text:p.text})),...(question.extraPoints||[])];
 }
 export function makePaper(questions,variant,random=Math.random){
   const size=PAPER_SIZES[variant];
@@ -73,7 +82,13 @@ export function makePaper(questions,variant,random=Math.random){
   const chosen=PAPER_TYPES.flatMap(type=>{
     const pool=shuffled(questions.filter(q=>q.type===type),random);
     if(pool.length<count)throw new Error('Insufficient '+type+' questions');
-    return pool.slice(0,count);
+    if(type!=='evaluation'||count<2)return pool.slice(0,count);
+    // A standard or full paper deliberately samples both inference/census and method critique.
+    const inference=pool.find(q=>q.coverageArea==='inference');
+    const methods=pool.find(q=>q.coverageArea==='methods');
+    if(!inference||!methods)throw new Error('Missing evaluation coverage groups');
+    const retained=[inference,methods];
+    return retained.concat(pool.filter(q=>!retained.includes(q)).slice(0,count-2));
   });
   return newPaper(variant,shuffled(chosen,random).map(q=>q.id));
 }
@@ -90,7 +105,7 @@ export function newPaper(variant,questionIds){
   return {variant,questionIds:[...questionIds],index:0,entries:{},complete:false};
 }
 export function paperEntry(paper,id){
-  return paper.entries[id]||{values:{},draft:'',stage:'answer',included:[],flag:false};
+  return paper.entries[id]||{values:{},draft:'',stage:'answer',included:[],flag:false,hintsUsed:0};
 }
 export function changeReviewTargets(ids,id,flag){
   const next=[id,...ids.filter(x=>x!==id)].slice(0,MAX_TARGETS);
@@ -99,11 +114,12 @@ export function changeReviewTargets(ids,id,flag){
 export function emptyExamStore(){return {version:1,reviewIds:[],paper:null};}
 const safeId=value=>typeof value==='string'&&/^[a-z][a-z0-9-]{1,70}$/.test(value);
 function sanitizeEntry(value,question,methods){
-  const entry={values:{},draft:'',stage:'answer',included:[],flag:false};
+  const entry={values:{},draft:'',stage:'answer',included:[],flag:false,hintsUsed:0};
   if(!value||typeof value!=='object'||Array.isArray(value))return entry;
   if(typeof value.draft==='string')entry.draft=value.draft.slice(0,2400);
   if(['answer','feedback','review','done'].includes(value.stage))entry.stage=value.stage;
   entry.flag=value.flag===true;
+  if(Number.isSafeInteger(value.hintsUsed)&&value.hintsUsed>=0&&value.hintsUsed<=2)entry.hintsUsed=value.hintsUsed;
   if(question.type==='allocation'||question.type==='systematic'){
     const keys=new Set(numericalKey(question).map(x=>x.id));
     if(value.values&&typeof value.values==='object'&&!Array.isArray(value.values))
@@ -163,13 +179,39 @@ export function paperSummary(paper,questions,methods){
       numberQuestions++;possibleParts+=length;correctParts+=score?.correctParts||0;
       if(score?.correct)fullyCorrect++;
       return {id,title:q.title,type:q.type,label:score?score.correctParts+' / '+length+' parts':'Not submitted',
-        needsReview:!score?.correct,draft:'',score};
+        needsReview:!score?.correct||entry.hintsUsed>0,draft:'',score,hintsUsed:entry.hintsUsed};
     }
     const points=writtenChecklist(q,methods),included=new Set(entry.included);
     writtenQuestions++;totalChecklist+=points.length;
     covered+=points.filter(x=>included.has(x.id)).length;
     return {id,title:q.title,type:q.type,label:entry.stage==='answer'?'Not reviewed':entry.included.length+' / '+points.length+' self-checked points',
-      needsReview:entry.stage==='answer'||entry.flag||entry.included.length<points.length,draft:entry.draft,score:null};
+      needsReview:entry.stage==='answer'||entry.flag||entry.included.length<points.length||entry.hintsUsed>0,
+      draft:entry.draft,score:null,hintsUsed:entry.hintsUsed};
   });
   return {rows,correctParts,possibleParts,fullyCorrect,numberQuestions,writtenQuestions,covered,totalChecklist};
+}
+
+/** A teacher-readable CSV, with neither student names nor drafts unless explicitly opted in. */
+export function reportCsv(paper,questions,methods,{includeDrafts=false}={}){
+  const byId=new Map(questions.map(q=>[q.id,q]));
+  const summary=paperSummary(paper,questions,methods);
+  const columns=['Question ID','Question','Skill','Level','Assessment','Numeric correct','Numeric possible',
+    'Self-checked points','Self-check total','Hint used','Revision recommended',...(includeDrafts?['Written draft']:[])];
+  function safeCell(value){
+    let cell=String(value??'');
+    // CSV files are often opened by spreadsheet programs. Prevent pasted text from becoming a formula.
+    if(/^\s*[=+@-]/.test(cell)||/^[\t\r\n]/.test(cell))cell="'"+cell;
+    return '"'+cell.replace(/"/g,'""')+'"';
+  }
+  const rows=summary.rows.map(row=>{
+    const q=byId.get(row.id),entry=paperEntry(paper,row.id),numerical=q.type==='allocation'||q.type==='systematic';
+    const points=numerical?null:writtenChecklist(q,methods);
+    return [q.id,q.title,q.type,q.level,numerical?'Numerical: automatically checked':'Written: student self-review',
+      numerical?row.score?.correctParts??'':'',
+      numerical?row.score?.totalParts??'':'',
+      numerical?'':entry.stage==='answer'?'':entry.included.length,
+      numerical?'':points.length,
+      row.hintsUsed?'Yes':'No',row.needsReview?'Yes':'No',...(includeDrafts?[numerical?'':row.draft]:[])];
+  });
+  return [columns,...rows].map(row=>row.map(safeCell).join(',')).join('\r\n')+'\r\n';
 }

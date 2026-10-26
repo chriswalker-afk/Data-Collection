@@ -44,20 +44,28 @@ assert(errors.length>=15&&reasoning.length>=9,'Incomplete exam skills bank');
 
 const {questions:examQuestions}=load('exam-practice');
 unique(ids(examQuestions),'exam practice');
-assert(examQuestions.length>=32,'Insufficient mixed exam questions');
+assert(examQuestions.length>=46,'Insufficient mixed exam questions');
+assert(examQuestions.filter(q=>q.type==='evaluation'&&q.coverageArea==='inference').length>=8,'Too little inference/census practice');
+assert(examQuestions.filter(q=>q.type==='evaluation'&&q.coverageArea==='methods').length>=8,'Too little method comparison practice');
 for(const type of ['allocation','systematic','procedure','evaluation'])
  assert(examQuestions.filter(q=>q.type===type).length>=8,'Unbalanced exam bank: '+type);
 for(const q of examQuestions){
  assert(['allocation','systematic','procedure','evaluation'].includes(q.type),'Unsupported exam type: '+q.id);
  assert(['foundation','develop','extend'].includes(q.level)&&q.title&&q.context&&q.task,'Incomplete exam prompt: '+q.id);
  assert(methodsById.has(q.methodId),'Unknown exam method: '+q.id);
+ assert(Array.isArray(q.hints)&&q.hints.length===2&&q.hints.every(h=>typeof h==='string'&&h.length>=30&&h.length<=350),'Invalid staged hints '+q.id);
  referenceSources(q);
  if(q.type==='allocation'){
   assert(conceptsById.has(q.conceptId)&&q.conceptId==='proportional-allocation','Allocation concept missing '+q.id);
   const {sampleSize,groups}=q.data||{};
   assert(Number.isSafeInteger(sampleSize)&&sampleSize>0&&groups?.length>=2,'Invalid allocation: '+q.id);
   unique(ids(groups),'group ID for '+q.id);
-  const N=groups.reduce((total,g)=>{assert(g.label&&Number.isSafeInteger(g.size)&&g.size>0,'Invalid group size '+q.id);return total+g.size},0);
+  const N=groups.reduce((total,g)=>{
+   assert(g.label&&Number.isSafeInteger(g.size)&&g.size>0,'Invalid group size '+q.id);
+   assert(Number.isSafeInteger(total+g.size),'Unsafe total population '+q.id);
+   assert(Number.isSafeInteger(g.size*sampleSize),'Unsafe allocation product '+q.id);
+   return total+g.size;
+  },0);
   assert(sampleSize<=N&&groups.every(g=>Number.isInteger(g.size*sampleSize/N)),'Non-integer numerical allocation '+q.id);
   assert(groups.reduce((total,g)=>total+g.size*sampleSize/N,0)===sampleSize,'Allocation total wrong '+q.id);
  }else if(q.type==='systematic'){
@@ -69,12 +77,22 @@ for(const q of examQuestions){
   assert(q.focus&&q.note&&Array.isArray(q.extraPoints)&&q.extraPoints.length>0,'Incomplete procedure rationale '+q.id);
   unique(ids(q.extraPoints),'procedure extra point '+q.id);
   for(const p of q.extraPoints)assert(p.text,'Missing procedure point '+q.id);
+  if(q.modelSteps){
+   assert(q.modelSteps.length>=4&&q.warning,'Incomplete context-specific procedure '+q.id);
+   unique(ids(q.modelSteps),'context-specific procedure steps '+q.id);
+   assert(q.modelSteps.every(p=>p.text&&p.text.length>=15),'Missing contextual model step '+q.id);
+  }
  }else{
   assert(q.model&&q.checklist?.length>=3&&q.sourceEvaluationIds?.length>0,'Incomplete evaluation '+q.id);
+  assert(['inference','methods'].includes(q.coverageArea),'Unclassified evaluation '+q.id);
   unique(ids(q.checklist),'evaluation point '+q.id);
   for(const p of q.checklist)assert(p.text,'Missing evaluation point '+q.id);
   for(const id of q.sourceEvaluationIds)assert(evalById.has(id),'Unknown evaluation source: '+q.id+'/'+id);
  }
 }
 
+const specialModels=new Map(examQuestions.filter(q=>q.modelSteps).map(q=>[q.id,q.modelSteps.map(s=>s.text).join(' ')]));
+assert(/000/.test(specialModels.get('proc-random-digits')||'')&&/181/.test(specialModels.get('proc-random-digits')||''),'Digit table model does not reject invalid labels');
+assert(/197/.test(specialModels.get('proc-systematic-fraction')||'')&&/40/.test(specialModels.get('proc-systematic-fraction')||''),'Noninteger systematic model fails required size');
+console.log('PASS: exam practice includes '+examQuestions.length+' tasks with contextual models, two-stage hints and inference coverage.');
 console.log('PASS: '+concepts.length+' concepts, '+methods.length+' methods, '+evaluations.length+' evaluations, '+scenarios.length+' scenarios, '+cloze.length+' cloze, '+rounds.length+' sort rounds; all references/answer keys valid.');

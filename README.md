@@ -2,7 +2,7 @@
 
 A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** revision games covering sampling definitions, procedures and introductory types of data.
 
-**Pass 5:** ten activities, including **Exam Lab** with 34 exam-style questions, automatically checked numerical tasks, self-reviewed writing, targeted revision, and printable reports. All games continue to use the audited Pass 0 terminology and the original v1 concept progress store.
+**Pass 6:** ten activities including an expanded **Exam Lab** bank of 46 original questions. This audit corrected context-specific model procedures, added population/census/inference questions, independent-versus-hinted progress, and an opt-in privacy-first CSV report. The original v1 concept progress format remains unchanged.
 
 **Website:** https://chriswalker-afk.github.io/Data-Collection/ (published from `main` once Pages is enabled).
 
@@ -16,7 +16,7 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 - **Speed Recall** asks for a term from its definition; choose untimed ten-term practice (eight for Types of Data) or 30-, 60- and 90-second timed challenges. The timer pauses during feedback and when the tab is hidden.
 - Typos can prompt one spelling correction, but are **never automatically credited**. Only curated mathematical synonyms are accepted.
 - **Sort It!**, **Which Method?**, **Build the Method**, **Spot the Error**, **Contextual Reasoning** and **Exam Lab** are sampling-only. The four recall games support Sampling, Types of data and Mixed revision.
-- **Exam Lab** offers balanced 4-, 8- or 12-question papers, numerical checking of exact proportional allocations and integer systematic intervals, written explanation self-review, a locally saved resume point, adaptive practice targets and printable reports. Writing is **never automatically marked or credited as mastered**.
+- **Exam Lab** offers balanced 4-, 8- or 12-question papers, exact proportional allocation and systematic checking, context-sensitive procedural models, staged hints, self-reviewed writing, local resume, adaptive revision and printable or CSV reports. Writing is **never automatically graded or credited as mastered**. Hinted numerical answers are correct practice, not independent mastery.
 - Local progress tracks practice attempts and mastery across games, requiring two consecutive successful responses per concept. Use Reset my progress to clear this browser's saved information.
 
 ## Run locally
@@ -41,6 +41,7 @@ npm run test:e2e
 GitHub Actions runs both unit/content validation and Chromium browser tests for PRs. **One-time publishing setup:** open Repository Settings → Pages → Build and deployment → Source: **GitHub Actions**. The `.github/workflows/deploy-pages.yml` workflow then publishes the site on the next push to `main` (or a manual workflow dispatch). The site's URL is not active until a deployment succeeds.
 
 ## Source & project notes
+- [Pass 6 examiner-scope, mathematical and UX quality audit](docs/PASS_6_AUDIT.md)
 - [Pass 5 Exam Lab mathematical grading, written self-review and storage safeguards](docs/PASS_5_SITE.md)
 - [Pass 4 exam skills](docs/PASS_4_SITE.md)
 - [Pass 3 typed recall, timer and answer policy](docs/PASS_3_SITE.md)
@@ -53,4 +54,4 @@ GitHub Actions runs both unit/content validation and Chromium browser tests for 
 
 All content is independently worded for teaching, rather than copied verbatim from textbooks. This site is not affiliated with or endorsed by Pearson.
 
-**Next: Pass 6 — an audit of the exam experience, expanded mathematical coverage and optional teacher-friendly reporting (without claiming official automatic essay grading).**
+**Next: Pass 7 — classroom trial and further improvements to the student revision journey, informed by actual student and teacher feedback.**

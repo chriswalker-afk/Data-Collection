@@ -1,9 +1,10 @@
 // DOM-only rendering and interaction for Pass 5; math and persistence live in exam-sim.js.
 import {PAPER_SIZES,PAPER_TYPES,makePaper,makeReviewPaper,numericalKey,gradeNumbers,
- writtenChecklist,paperEntry,changeReviewTargets,paperSummary,integerInput} from './exam-sim.js';
+ writtenChecklist,procedureModelSteps,paperEntry,changeReviewTargets,paperSummary,reportCsv} from './exam-sim.js';
 import {METHOD_LABELS} from './phase2.js';
 
 export function createExamSimulationUI(deps){
+ let exportDrafts=false;
  const {element,div,span,paragraph,heading,action,link,icon,activityTop,roundProgress}=deps;
  const get=()=>deps.getState();
  const currentQuestion=()=>{
@@ -70,6 +71,18 @@ export function createExamSimulationUI(deps){
   page.append(hero,div('sim-landing-bottom',resume,targets));return page;
  }
 
+ function hintsView(question,entry){
+  const wrap=element('div',{className:'sim-hints',id:'sim-hints',tabindex:'-1','aria-live':'polite'});
+  if(entry.hintsUsed){
+   const list=element('ol',{className:'sim-hint-list'});
+   question.hints.slice(0,entry.hintsUsed).forEach(hint=>list.append(element('li',{},hint)));
+   wrap.append(heading(4,'sim-hint-heading','Help to get started'),list,
+    paragraph('sim-help','Hints are useful practice, but a supported numerical answer will not count as independent mastery.'));
+  }
+  if(entry.hintsUsed<question.hints.length)
+   wrap.append(action(entry.hintsUsed?'Show another hint':'I need a hint','sim-hint',{},'btn btn-quiet sim-hint-button'));
+  return wrap;
+ }
  function numberInputs(question,entry){
   const fields=numericalKey(question);
   const form=element('form',{'data-form':'sim-numeric',className:'sim-numeric-form'});
@@ -92,7 +105,7 @@ export function createExamSimulationUI(deps){
     input);
    rows.append(group);
   }
-  form.append(rows,element('div',{className:'sim-validation','aria-live':'polite'}));
+  form.append(rows,hintsView(question,entry),element('div',{className:'sim-validation','aria-live':'polite'}));
   form.append(div('sim-form-actions',
     element('button',{type:'submit',className:'btn btn-primary'},'Check calculations'),
     action('Reveal worked solution','sim-reveal',{},'btn btn-quiet')));
@@ -100,11 +113,12 @@ export function createExamSimulationUI(deps){
  }
  function numericFeedback(question,entry){
   const marked=gradeNumbers(question,entry.values),wrap=div('sim-feedback');
+  const assisted=marked.correct&&entry.hintsUsed>0;
   const overall=div('inline-feedback typed-feedback'+(marked.correct?' correct':' incorrect'),
     icon(marked.correct?'✓':'!'),
-    div('',heading(3,'feedback-heading',marked.correct?'All calculations correct.':
+    div('',heading(3,'feedback-heading',assisted?'All calculations correct with support.':marked.correct?'All calculations correct.':
       'Compare each step with the worked solution.'),
-      paragraph('',marked.correctParts+' of '+marked.totalParts+' numerical parts correct.')));
+      paragraph('',marked.correctParts+' of '+marked.totalParts+' numerical parts correct.'+(assisted?' You used a hint, so this remains a practice target.':''))));
   overall.setAttribute('tabindex','-1');wrap.append(overall);
   const list=element('ol',{className:'sim-worked-list'});
   for(const row of marked.fields){
@@ -125,7 +139,7 @@ export function createExamSimulationUI(deps){
   return div('sim-written-work',
     element('label',{for:'sim-draft',className:'typed-label'},'Your written response'),
     paragraph('sim-help','Draft as you would in an examination. Your writing is saved locally so you can leave and resume this paper.'),
-    area,div('sim-form-actions',
+    area,hintsView(q,entry),div('sim-form-actions',
      action('Compare with model','sim-model',{},'btn btn-primary'),
      action('Reveal model without writing','sim-skip',{},'btn btn-quiet')));
  }
@@ -134,13 +148,14 @@ export function createExamSimulationUI(deps){
   wrap.append(div('inline-feedback typed-feedback',icon('✓'),div('',
    heading(3,'feedback-heading','Self-review your explanation'),
    paragraph('','Compare your writing with this model, then tick only points genuinely covered. These ticks are not marks from Pearson or from an automated examiner.'))));
+  wrap.querySelector('.typed-feedback')?.setAttribute('tabindex','-1');
   if(q.type==='procedure'){
    const method=data.methods.find(m=>m.id===q.methodId),steps=element('ol',{className:'sim-model-steps'});
-   method.procedure.forEach(s=>steps.append(element('li',{},s.text)));
+   procedureModelSteps(q,data.methods).forEach(s=>steps.append(element('li',{},s.text)));
    wrap.append(heading(3,'sim-panel-heading','Model method: '+METHOD_LABELS[q.methodId]),steps,
      paragraph('sim-model-extra',q.focus),paragraph('sim-help',q.note),
-     paragraph('sim-help','Important distinction: '+method.warning));
-   for(const cond of method.conditionalProcedure||[]){
+     paragraph('sim-help','Important distinction: '+(q.warning||method.warning)));
+   for(const cond of (q.modelSteps?[]:(method.conditionalProcedure||[]))){
     wrap.append(paragraph('sim-conditional','When '+cond.condition.charAt(0).toLowerCase()+cond.condition.slice(1)+': '+cond.text));
    }
   }else{
@@ -161,7 +176,10 @@ export function createExamSimulationUI(deps){
   check.append(element('label',{className:'sim-check-row sim-flag'},
     element('input',{type:'checkbox','data-sim-flag':'',checked:entry.flag}),
     span('','Flag this question for more practice, even if I covered every point.')));
-  wrap.append(check,paragraph('sim-help','Unticked points are added to your practice targets. Written work is never automatically credited as mastered.'),
+  wrap.append(check,
+   element('p',{id:'sim-check-count',className:'sim-check-count','aria-live':'polite'},
+    entry.included.length+' of '+writtenChecklist(q,data.methods).length+' ideas ticked (self-review, not a mark).'),
+   paragraph('sim-help','Unticked points and hints add practice targets. Writing is never automatically credited as mastered.'),
     div('next-row',action('Save self-review and continue →','sim-next',{},'btn btn-primary')));
   return wrap;
  }
@@ -213,14 +231,22 @@ export function createExamSimulationUI(deps){
       field.label+': '+(field.supplied||'(blank)')+' → '+field.expected+' ('+field.working+')'));
    }
    if(row.draft)card.append(paragraph('sim-preserved-text','Your writing: '+row.draft));
+   if(row.hintsUsed)card.append(paragraph('sim-help','Hints used: try this question independently in a later practice paper.'));
    if(!numberTask(q))card.append(paragraph('sim-help','Written answer was self-reviewed, not automatically assessed.'));
    if(row.needsReview)card.append(link('Targeted revision: '+(q.type==='evaluation'?'Contextual Reasoning':'Build the Method'),
      nextGame(q),'sim-revision-link'));
    section.append(card);
   }
   page.append(section);
-  page.append(div('sim-report-actions',
+  const exportSettings=div('sim-export-settings',
+   heading(3,'sim-panel-heading','Share a summary with your teacher'),
+   paragraph('sim-help','Download a CSV report to share yourself. No student name or cloud upload. Written drafts are excluded unless you opt in; self-reviews are not examination marks.'),
+   element('label',{className:'sim-export-choice'},
+    element('input',{id:'sim-export-drafts',type:'checkbox',checked:exportDrafts}),
+    span('','Include my written draft answers in the CSV (optional)')));
+  page.append(exportSettings,div('sim-report-actions',
     action('Print this report','sim-print',{},'btn btn-primary'),
+    action('Export CSV report','sim-export',{},'btn btn-quiet'),
     action('Back to paper choices','sim-menu',{},'btn btn-quiet'),
     ...(examState.reviewIds.length?[action('Practise saved targets','sim-review',{},'btn btn-quiet')]:[])));
   return page;
@@ -239,7 +265,7 @@ export function createExamSimulationUI(deps){
   }else paper=makePaper(data.examQuestions,variant);
   if(examState.paper&&!examState.paper.complete&&!window.confirm(
     'Replace your unfinished paper? Saved draft writing in that paper will be cleared.'))return;
-  deps.beginPaper(paper);persist();show('#sim-question-heading');deps.announce('Paper started.');
+  exportDrafts=false;deps.beginPaper(paper);persist();show('#sim-question-heading');deps.announce('Paper started.');
  }
  function submit(form){
   const {session,examState}=get(),q=currentQuestion(),entry=ensureEntry();
@@ -254,10 +280,11 @@ export function createExamSimulationUI(deps){
    error.setAttribute('role','alert');input?.focus();return;
   }
   entry.stage='feedback';
-  examState.reviewIds=changeReviewTargets(examState.reviewIds,q.id,!result.correct);
-  deps.recordNumerical(q.conceptId,result.correct);
+  const independent=result.correct&&entry.hintsUsed===0;
+  examState.reviewIds=changeReviewTargets(examState.reviewIds,q.id,!independent);
+  deps.recordNumerical(q.conceptId,independent);
   persist();show('.sim-feedback .typed-feedback');
-  deps.announce(result.correct?'Calculations correct.':'Worked solutions are available.');
+  deps.announce(result.correct?(independent?'Calculations correct.':'Correct with hints; practise independently next.'):'Worked solutions are available.');
  }
  function handle(command,button){
   if(command==='sim-start'){begin(button.dataset.variant);return;}
@@ -274,11 +301,30 @@ export function createExamSimulationUI(deps){
    if(!window.confirm('Clear every saved exam-practice target on this browser?'))return;
    get().examState.reviewIds=[];persist();show('#view-heading');return;
   }
-  if(command==='sim-menu'){deps.beginReady();show('#view-heading');return;}
+  if(command==='sim-menu'){exportDrafts=false;deps.beginReady();show('#view-heading');return;}
   if(command==='sim-print'){if(get().session?.complete)window.print();return;}
+  if(command==='sim-export'&&get().session?.complete){
+   const {session,data}=get();
+   try{
+    const csv='\uFEFF'+reportCsv(session,data.examQuestions,data.methods,{includeDrafts:exportDrafts});
+    const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+    const a=document.createElement('a');a.href=url;a.download='sampling-arcade-exam-report.csv';
+    document.body.append(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+    deps.announce('CSV report downloaded to this device.');
+   }catch(error){
+    console.error('Exam report export failed:',error);
+    deps.announce('Unable to export this report.');
+   }
+   return;
+  }
   const {session,examState}=get();
   if(session?.ready||session?.complete)return;
   const q=currentQuestion(),entry=ensureEntry();
+  if(command==='sim-hint'&&entry.stage==='answer'&&entry.hintsUsed<q.hints.length){
+   entry.hintsUsed++;persist();show('#sim-hints');
+   deps.announce('Hint '+entry.hintsUsed+' of '+q.hints.length+' shown.');return;
+  }
   if(command==='sim-reveal'&&numberTask(q)&&entry.stage==='answer'){
    entry.stage='feedback';
    examState.reviewIds=changeReviewTargets(examState.reviewIds,q.id,true);
@@ -299,7 +345,7 @@ export function createExamSimulationUI(deps){
    if(!numberTask(q)&&entry.stage!=='review')return;
    if(!numberTask(q)){
     const total=writtenChecklist(q,get().data.methods).length;
-    const needsReview=entry.flag||entry.included.length<total;
+    const needsReview=entry.flag||entry.included.length<total||entry.hintsUsed>0;
     examState.reviewIds=changeReviewTargets(examState.reviewIds,q.id,needsReview);
    }
    entry.stage='done';
@@ -322,6 +368,9 @@ export function createExamSimulationUI(deps){
  }
  function onChange(control){
   const {session}=get();
+  if(control.matches('#sim-export-drafts')&&session?.complete){
+   exportDrafts=control.checked;return;
+  }
   if(session?.ready||session?.complete||!session?.questionIds)return;
   const q=currentQuestion(),entry=ensureEntry();
   if(numberTask(q)||entry.stage!=='review')return;
@@ -331,6 +380,10 @@ export function createExamSimulationUI(deps){
    entry.included=control.checked?[...new Set([...entry.included,id])]:entry.included.filter(x=>x!==id);
   }else if(control.matches('input[data-sim-flag]'))entry.flag=control.checked;
   else return;
+  if(control.matches('input[data-sim-point]')){
+   const counter=document.getElementById('sim-check-count');
+   if(counter)counter.textContent=entry.included.length+' of '+writtenChecklist(q,get().data.methods).length+' ideas ticked (self-review, not a mark).';
+  }
   persist();
  }
  return {view,handle,submit,onInput,onChange};
