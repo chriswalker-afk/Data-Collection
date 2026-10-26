@@ -39,7 +39,7 @@
 .build-page .exam-buttons .btn-primary{background:#176b55;border-color:#176b55;color:#fff}
 .build-page .exam-buttons .btn-primary:hover{background:#12543f}
 .build-page .build-step.is-checked{background:#fafcfb;box-shadow:none}
-.build-page .build-step.build-needs-review{border-color:#d1a06a;background:#fff8ee}
+.build-page .build-step.build-needs-review{border-color:#d1a06a;background:#fff8ee;flex-wrap:wrap}
 .build-page .build-step-flag{display:block;flex-basis:100%;color:#80521d;font-size:.71rem;font-weight:770;line-height:1.4}
 .build-page .build-analysis{margin:18px 0 6px;background:#eff7f2;border:1px solid #b9d5c4;border-radius:16px;padding:clamp(15px,2.7vw,22px)}
 .build-page .build-analysis-top{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px 14px}
@@ -60,6 +60,7 @@
 .build-page .build-worked-example{margin:17px 0;border:1px solid #bed6c8;border-radius:12px;background:#f1f8f3}
 .build-page .build-worked-summary{font-size:.85rem;font-weight:840;color:#215e47;padding:13px 18px;cursor:pointer}
 .build-page .build-worked-text{border-top:1px solid #d0e2d6;margin:0;padding:13px 18px;color:#295e47;font-size:.86rem;line-height:1.7}
+.build-page .build-conditional-note{border-left:3px solid #90adbc;border-radius:8px;background:#f0f7fb;padding:12px 14px;color:#315e6a;margin:13px 0;line-height:1.65}
 .build-page .exam-warning{border-left-width:4px}
 .build-page .build-correction{margin:21px 0 17px;border:1px solid #b7d0c0;border-radius:13px;background:#f7fbf8;overflow:hidden}
 .build-page .build-correction-toggle{font-size:.85rem;line-height:1.55;font-weight:850;cursor:pointer;color:#1b6349;padding:14px 17px}
