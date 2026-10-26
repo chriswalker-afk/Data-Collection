@@ -30,6 +30,7 @@ import {
   matchLengthsForTopic,makeVariedMatchRound,makeVariedSpeedDeck,addRecallClues,validateRecallClues
 } from './retrieval-depth.js';
 import {clozePresentation} from './cloze-ui.js';
+import {BUILD_SCENARIO_LEVELS,makeBuildScenarioDeck,validateBuildScenarios} from './build-context.js';
 import {makePairSortRound,validatePairBank} from './sort-it.js';
 import {createSortItUI} from './sort-ui.js';
 import {speedClockPercent,speedRoundSummary,speedReviewDeck,SPEED_CAUTION_MS} from './speed-ui.js';
@@ -58,6 +59,8 @@ let previousRecallClues = new Map();
 let speedMode = 'untimed';
 let speedDuration = 60;
 let buildMethodId='simple-random';
+let buildLevel='mixed';
+let recentBuildCases=new Map();
 let examLevel='foundation';
 let errorRoundLength=5;
 let reasonRoundLength=3;
@@ -1151,9 +1154,18 @@ function examLevelPicker() {
  return wrap;
 }
 function buildPicker() {
- const wrap=div('game-settings'),select=element('select',{id:'build-method',className:'game-select','data-control':'build-method'});
+ const wrap=div('game-settings');
+ const select=element('select',{id:'build-method',className:'game-select','data-control':'build-method'});
  for(const method of data.methods)select.append(element('option',{value:method.id,selected:method.id===buildMethodId},METHOD_LABELS[method.id]));
- wrap.append(element('label',{for:'build-method',className:'game-settings-label'},'First method'),select);
+ const level=element('select',{id:'build-level',className:'game-select','data-control':'build-level'});
+ const labels={mixed:'Varied investigations',foundation:'Foundation · establish the method',
+   develop:'Develop · apply the numbers',extend:'Stretch · evaluate the design'};
+ for(const id of BUILD_SCENARIO_LEVELS)
+   level.append(element('option',{value:id,selected:id===buildLevel},labels[id]));
+ wrap.append(div('build-setting-group',
+    element('label',{for:'build-method',className:'game-settings-label'},'First method'),select),
+   div('build-setting-group',
+    element('label',{for:'build-level',className:'game-settings-label'},'Investigation level'),level));
  return wrap;
 }
 function buildView(){
@@ -1354,8 +1366,10 @@ function restartGame(){
       correct: 0, skipped: 0, complete: false, finishedReason: null,
       reviewMode:false,reviewIds:new Set() };
   } else if(mode==='build') {
-    const order=[buildMethodId,...data.methods.map(m=>m.id).filter(id=>id!==buildMethodId)];
-    session={methods:order.map(id=>({...procedureRound(data.methods,id),checked:false,correct:false})),index:0,correct:0,complete:false};
+    const selected=makeBuildScenarioDeck(data.methods,data.buildScenarios,buildMethodId,
+      buildLevel,Math.random,recentBuildCases);
+    recentBuildCases=selected.recentCases;
+    session={methods:selected.items,index:0,correct:0,complete:false};
   } else if(mode==='error') {
     session={items:makeErrorDeck(data.errors,examLevel,Math.random,errorRoundLength),index:0,correct:0,complete:false,answered:false,selectedLine:null,selectedRepair:null,selectedImpact:null,reviewMode:false,missed:[],errorStats:{located:0,repaired:0,explained:0}};
   } else if(mode==='reason') {
@@ -1880,6 +1894,8 @@ mount.addEventListener('change', event => {
   }
   if(control.dataset.control==='build-method'&&mode==='build'){
     if(!data.methods.some(m=>m.id===control.value))return;buildMethodId=control.value;
+  } else if(control.dataset.control==='build-level'&&mode==='build'){
+    if(!BUILD_SCENARIO_LEVELS.includes(control.value))return;buildLevel=control.value;
   } else if(control.dataset.control==='exam-level'&&(mode==='error'||mode==='reason')){
     if(!EXAM_LEVELS.includes(control.value))return;examLevel=control.value;
   } else if(control.dataset.control==='case-length'&&(mode==='error'||mode==='reason')){
@@ -1931,7 +1947,7 @@ async function loadData() {
   try {
     const sources = [
       ['concepts', 'concepts'], ['cloze', 'cloze'], ['recall-clues','clues'],
-      ['evaluations', 'evaluations'],
+      ['build-scenarios','buildScenarios'], ['evaluations', 'evaluations'],
       ['sort-rounds', 'rounds'], ['sort-pairs', 'pairs'], ['scenarios', 'scenarios'], ['methods', 'methods'],
       ['accepted-terms', 'terms'], ['exam-errors', 'errors'], ['exam-reasoning','reasoning'], ['exam-practice','questions']
     ];
@@ -1956,6 +1972,7 @@ async function loadData() {
     validateTermBank(data.concepts,data.acceptedTerms);
     validateClozeCoverage(data.cloze,data.concepts);
     validateRecallClues(data.concepts,data.recallClues);
+    validateBuildScenarios(data.methods,data.buildScenarios);
     validatePairBank(data.sortPairs,data.evaluations);
     if (data.rounds.length < 9 || data.scenarios.length < 20 || data.methods.length !== 5 || data.errors.length < 15 || data.reasoning.length < 9 || data.examQuestions.length < 32) {
       throw new Error('Incomplete sampling content.');
