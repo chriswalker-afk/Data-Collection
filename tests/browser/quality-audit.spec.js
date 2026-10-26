@@ -17,11 +17,13 @@ test('a corrected Match Up pair completes but cannot manufacture independent mas
  expect(saved.concepts[first]).toMatchObject({attempts:2,correct:0,streak:0});
  await page.locator('[data-action="match-term"][data-id="'+other+'"]').click();
  await page.locator('[data-action="match-def"][data-id="'+other+'"]').click();
+ await expect(page.locator('[data-action="match-term"][data-id="'+other+'"]')).toHaveCount(0);
  saved=await state(page);
  expect(saved.concepts[other]).toMatchObject({attempts:1,correct:0,streak:0});
  const fresh=await page.locator('[data-action="match-term"]').first().getAttribute('data-id');
  await page.locator('[data-action="match-term"][data-id="'+fresh+'"]').click();
  await page.locator('[data-action="match-def"][data-id="'+fresh+'"]').click();
+ await expect(page.locator('[data-action="match-term"][data-id="'+fresh+'"]')).toHaveCount(0);
  expect((await state(page)).concepts[fresh].correct).toBe(1,'unexposed pair still earns credit');
 });
 test('ungraded contextual writing is recorded as practice without removing a previously mastered concept',async({page})=>{
