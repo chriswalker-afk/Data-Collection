@@ -10,7 +10,7 @@ export function createSortItUI(deps){
  let pointerDrag=null;
  let dragGhost=null;
  let lastDropTarget=null;
- let preventFollowupClick=false;
+ let preventFollowupClickUntil=0;
  const state=()=>get().session;
  const isSort=()=>get().mode==='sort'&&!state()?.complete;
  const evaluation=()=>evaluateSortBoard(state().items,state().placements);
@@ -40,7 +40,7 @@ export function createSortItUI(deps){
   const status=checked?(correct?'correct':'incorrect'):'';
   const text=item.prompt;
   const card=action(text,'sort-select',{
-    'data-sort-card':item.id,draggable:true,'aria-pressed':selected,
+    'data-sort-card':item.id,draggable:!s.revealed,disabled:s.revealed,'aria-pressed':selected,
     'aria-label':text+(placed?' — currently in '+sortDestinationLabel(placed):' — unplaced')+
       (selected?' — selected':'')+(status?' — '+(correct?'correct':'needs review'):'')
   },'sort-card'+(selected?' is-selected':'')+(status?' is-'+status:''));
@@ -137,7 +137,6 @@ export function createSortItUI(deps){
       ...(trayCards.length?trayCards.map(tile):
         [paragraph('sort-tray-empty','Every statement has been placed. You can still move cards between destinations.')]))
   );
-  root.append(tray);
   const board=element('section',{className:'sort-board','aria-labelledby':'sort-board-title'});
   board.append(
     div('sort-board-heading',
@@ -147,7 +146,7 @@ export function createSortItUI(deps){
       paragraph('sort-board-subtitle','Two methods, each with advantages and disadvantages.')),
     div('sort-method-grid',...s.round.methods.map(methodColumn))
   );
-  root.append(board);
+  root.append(div('sort-workspace',tray,board));
   if(s.everChecked){
     const title=s.checked?
       (result.correct===result.total?'All placements are correct.':
@@ -164,7 +163,7 @@ export function createSortItUI(deps){
   }
   const actions=div('sort-board-actions',
     action(s.everChecked?'Check corrections':'Check sorting','sort-check',
-      {disabled:!result.ready||(s.checked&&!s.revealed)},
+      {disabled:!result.ready||s.checked},
       'btn btn-primary sort-check-button'),
     ...(s.checked&&!s.revealed?[
       action('Show explanations','sort-reveal',{},'btn btn-quiet')
@@ -203,6 +202,7 @@ export function createSortItUI(deps){
   if(!isSort())return false;
   const s=state();
   if(command==='sort-select'){
+    if(s.revealed)return true;
     const id=button.dataset.sortCard;
     if(!s.items.some(x=>x.id===id))return true;
     s.selectedSortId=s.selectedSortId===id?null:id;
@@ -226,7 +226,7 @@ export function createSortItUI(deps){
   }
   if(command==='sort-check'){
     const result=evaluation();
-    if(!result.ready||(s.checked&&!s.revealed))return true;
+    if(!result.ready||s.checked)return true;
     if(!s.everChecked){
       s.everChecked=true;s.firstCorrect=result.correct;s.correct=result.correct;
       for(const item of s.items){
@@ -337,16 +337,15 @@ export function createSortItUI(deps){
   const id=drag.id;
   clearDrag();
   if(wasActive){
-    preventFollowupClick=true;
-    queueMicrotask(()=>{preventFollowupClick=false;});
+    preventFollowupClickUntil=performance.now()+350;
     if(destination!==undefined)place(id,destination);
     else announce('No destination selected. The statement was not moved.');
   }
  });
  mount.addEventListener('pointercancel',()=>clearDrag());
  mount.addEventListener('click',event=>{
-  if(preventFollowupClick&&event.target.closest('[data-sort-card]')){
-    event.preventDefault();event.stopImmediatePropagation();preventFollowupClick=false;
+  if(performance.now()<preventFollowupClickUntil&&event.target.closest('[data-sort-card]')){
+    event.preventDefault();event.stopImmediatePropagation();preventFollowupClickUntil=0;
   }
  },true);
  return {view,handle,clearDrag};
