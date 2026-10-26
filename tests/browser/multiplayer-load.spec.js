@@ -48,6 +48,7 @@ test('45-student room: concurrent joins, WebSocket fanout, answers, reconnects a
   });
   const connectedAt=performance.now();
   let sockets=0;
+  const socketParticipantIds=[];
   // Ticket validity is only 30 seconds. Real students request their own tickets
   // just before connecting, so simulate that with batches rather than minting 45
   // tickets at once and accidentally testing the expiry window.
@@ -56,6 +57,7 @@ test('45-student room: concurrent joins, WebSocket fanout, answers, reconnects a
       const r=await post(request,'/rooms/'+code+'/socket-ticket',{},s.token);
       expect(r.status()).toBe(200);return r.json();
     }));
+    socketParticipantIds.push(...tickets.map(t=>t.participantId));
     sockets+=await page.evaluate(async({code,tickets})=>{
       const timeout=ms=>new Promise((_,reject)=>setTimeout(()=>reject(new Error('WebSocket connection timeout')),ms));
       async function connect(t){
@@ -112,8 +114,8 @@ test('45-student room: concurrent joins, WebSocket fanout, answers, reconnects a
     await expect.poll(async()=>page.evaluate(()=>
       Object.values(window.__stressStates).filter(s=>s?.status==='reveal').length
     ),{timeout:25000}).toBe(45);
-    const reconnecting=students.slice(0,6).map(s=>s.participantId);
-    await page.evaluate(ids=>ids.forEach(id=>window.__stressSockets[id].close(1000,'Reconnecting')),reconnecting);
+    const reconnecting=socketParticipantIds.slice(0,6);
+    await page.evaluate(ids=>ids.forEach(id=>window.__stressSockets[id]?.close(1000,'Reconnecting')),reconnecting);
     const newTickets=await Promise.all(students.slice(0,6).map(async student=>{
       const r=await post(request,'/rooms/'+code+'/socket-ticket',{},student.token);
       expect(r.status()).toBe(200);return r.json();
