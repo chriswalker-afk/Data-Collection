@@ -1,4 +1,5 @@
 import {ARENA_AWARDS} from './award-catalogue.js';
+import {teamStandings,classQuestSnapshot} from './team-rules.js';
 // Pass 5: entirely server-derived classroom achievements and a deterministic ceremony.
 // No individual achievement or point total is accepted from a browser request.
 const validScore=n=>Number.isSafeInteger(n)&&n>=0;
@@ -72,11 +73,28 @@ export function makeCeremony(room){
   const players=room.players||[];
   const slides=[
     {kind:'welcome',title:'The Grand Sampling Arcade Awards',
-      subtitle:'A celebration of mathematical thinking, accuracy and persistence.'},
-    {kind:'podium',title:'Our classroom podium',standings,
-      subtitle:standings.length?'Scores reflect checked mathematics, not participation clicks.':
-        'No positive scores this round. Celebrate the learning, not an invented winner.'}
+      subtitle:'A celebration of mathematical thinking, accuracy and persistence.'}
   ];
+  if(room.teamCount){
+    const teamResults=teamStandings(room);
+    slides.push({kind:'team-podium',title:'Our team league',
+      standings:teamResults,
+      subtitle:'Every team is ranked by average checked points per member, so larger groups have no scoring advantage.'});
+  }
+  if(room.goalTarget){
+    const goal=classQuestSnapshot(room);
+    slides.push({kind:'class-quest',
+      title:goal.achieved?'Class Quest achieved!':'Our Class Quest journey',
+      target:goal.target,achieved:goal.achieved,
+      accuracy:goal.accuracy,coverage:goal.coverage,
+      correct:goal.correct,checked:goal.checked,
+      subtitle:goal.achieved?
+        'Together, we reached our mathematical accuracy and participation goals.':
+        'A thoughtful class challenge takes participation and precision. See what we can improve next time.'});
+  }
+  slides.push({kind:'podium',title:'Our classroom podium',standings,
+    subtitle:standings.length?'Scores reflect checked mathematics, not participation clicks.':
+      'No positive scores this round. Celebrate the learning, not an invented winner.'});
   for(const award of ARENA_AWARDS){
     const recipients=players.filter(p=>earned[p.id]?.includes(award.id))
       .map(p=>({id:p.id,name:p.name}));
