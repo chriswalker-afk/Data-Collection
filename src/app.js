@@ -1173,8 +1173,17 @@ function buildView(){
  if(session.complete){root.append(showCompletion('build'));return root;}
  const current=session.methods[session.index],method=current.method;
  root.append(roundProgress(session.index+1,session.methods.length,'Method '+(session.index+1)+' of '+session.methods.length),practiceGuide('build'));
- const panel=element('section',{className:'exam-workspace','data-method-id':method.id,'aria-labelledby':'exam-heading'});
+ const caseStudy=current.scenario;
+ const panel=element('section',{className:'exam-workspace','data-method-id':method.id,
+  'data-build-case-id':caseStudy.id,'data-case-level':caseStudy.level,'aria-labelledby':'exam-heading'});
+ const caseNames={foundation:'FOUNDATION CASE',develop:'DEVELOP CASE',extend:'STRETCH CASE'};
+ const caseBrief=div('build-case-brief',
+   span('build-case-label',caseNames[caseStudy.level]),
+   heading(3,'build-case-title',caseStudy.title),
+   paragraph('build-case-context',caseStudy.context),
+   paragraph('build-case-task',caseStudy.task));
  panel.append(span('eyebrow','QUESTION · ORDER THE STEPS'),heading(2,'exam-heading',METHOD_LABELS[method.id],{id:'exam-heading',tabindex:'-1'}),
+  caseBrief,
   paragraph('exam-help','Move steps with the arrow buttons, using touch or keyboard. Equivalent valid orderings are accepted.'));
  const list=element('ol',{className:'exam-step-list'});
  current.steps.forEach((step,i)=>{
@@ -1197,6 +1206,7 @@ function buildView(){
     paragraph('exam-help','Exam details: '+method.examKeywords.join(' · ')),
     ...(method.conditionalProcedure||[]).map(x=>paragraph('exam-help','Only if '+x.condition.toLowerCase()+': '+x.text)),
     paragraph('exam-warning',method.warning),
+    paragraph('build-case-caution','In this investigation: '+caseStudy.caution),
     div('next-row',action(session.index===session.methods.length-1?'Finish round →':'Next method →','build-next')));
  }
  root.append(panel);return root;
