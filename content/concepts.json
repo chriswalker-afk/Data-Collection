@@ -1,0 +1,456 @@
+{
+  "version": 1,
+  "concepts": [
+    {
+      "id": "population",
+      "label": "Population",
+      "module": "sampling",
+      "definition": "The entire set of people or items that the investigation is concerned with.",
+      "keyPhrases": [
+        "entire set",
+        "of interest"
+      ],
+      "example": "Every student enrolled at a particular school, if the question concerns all its students.",
+      "misconception": "A population does not have to mean everyone in a country.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "census",
+      "label": "Census",
+      "module": "sampling",
+      "definition": "An investigation in which every member of the defined population is observed or measured.",
+      "keyPhrases": [
+        "every member",
+        "observed or measured"
+      ],
+      "example": "Recording the height of every student in Year 12.",
+      "misconception": "A census is not guaranteed error-free: measurements and responses can still be inaccurate.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sample",
+      "label": "Sample",
+      "module": "sampling",
+      "definition": "Observations taken from part of a population to learn about the population as a whole.",
+      "keyPhrases": [
+        "part of a population",
+        "inference about population"
+      ],
+      "example": "Recording the heights of 40 of the 200 students in Year 12.",
+      "misconception": "A sample is not the same as the whole population.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "raw-data",
+      "label": "Raw data",
+      "module": "sampling",
+      "definition": "Original observations or measurements before they have been processed or summarised.",
+      "keyPhrases": [
+        "original",
+        "unprocessed"
+      ],
+      "example": "A list of individually recorded travel times before calculating a mean.",
+      "misconception": "A calculated mean is a summary, not raw data.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sampling-unit",
+      "label": "Sampling unit",
+      "module": "sampling",
+      "definition": "One individual member or item of a population that could be selected for a sample.",
+      "keyPhrases": [
+        "individual member or item",
+        "population"
+      ],
+      "example": "One pupil when the population consists of pupils.",
+      "misconception": "A sampling unit is an item or person, not the list containing them.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sampling-frame",
+      "label": "Sampling frame",
+      "module": "sampling",
+      "definition": "A list or other identification system of the population's sampling units from which a sample can be selected.",
+      "keyPhrases": [
+        "list or identification system",
+        "sampling units"
+      ],
+      "example": "A numbered register containing all 240 eligible pupils.",
+      "misconception": "A frame may be incomplete or out of date; it is not the sample itself.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "random-sampling",
+      "label": "Random sampling",
+      "module": "sampling",
+      "definition": "Choosing sampling units by a chance-based procedure rather than the researcher's personal judgement.",
+      "keyPhrases": [
+        "chance-based",
+        "not researcher judgement"
+      ],
+      "example": "Selecting numbered pupils by a correctly used random number generator.",
+      "misconception": "Chance-based selection does not guarantee the result represents the population; equal chances of all units also depend on the design.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "simple-random-sampling",
+      "label": "Simple random sampling",
+      "module": "sampling",
+      "definition": "Selecting a sample so that every possible group of the required size has the same probability of selection.",
+      "keyPhrases": [
+        "every possible sample",
+        "required size",
+        "equal chance"
+      ],
+      "example": "Number all 120 pupils; generate 15 distinct random numbers from 1 to 120 and select those pupils.",
+      "misconception": "Equal chances for individuals alone do not fully define a simple random sample.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "systematic-sampling",
+      "label": "Systematic sampling",
+      "module": "sampling",
+      "definition": "Selecting units at regular intervals from an ordered list, using a random starting position.",
+      "keyPhrases": [
+        "regular intervals",
+        "ordered list",
+        "random start"
+      ],
+      "example": "From 100 numbered pupils, randomly start at 3 and then choose 3, 8, 13, ... for a sample of 20.",
+      "misconception": "Selecting every fifth pupil without randomising the starting position is an incomplete procedure.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "stratified-sampling",
+      "label": "Stratified sampling",
+      "module": "sampling",
+      "definition": "Dividing the population into non-overlapping groups (strata) and choosing a random sample within each group.",
+      "keyPhrases": [
+        "mutually exclusive strata",
+        "random within each"
+      ],
+      "example": "For a sample of 40 from 60% Year 12 and 40% Year 13, randomly choose 24 and 16 respectively.",
+      "misconception": "Dividing into groups does not make sampling stratified if people within them are not selected randomly.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "stratum",
+      "label": "Stratum",
+      "module": "sampling",
+      "definition": "One of the mutually exclusive groups into which a population is divided for stratified sampling.",
+      "keyPhrases": [
+        "one group",
+        "mutually exclusive"
+      ],
+      "example": "The Year 12 students, when year groups are used as the strata.",
+      "misconception": "A stratum is a group in the population, not a single sampling unit.",
+      "aliases": [
+        "strata (plural)"
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "quota-sampling",
+      "label": "Quota sampling",
+      "module": "sampling",
+      "definition": "Choosing people non-randomly to fill set numbers for particular population groups.",
+      "keyPhrases": [
+        "group targets/quotas",
+        "non-random selection"
+      ],
+      "example": "Approach available students until 30 Year 12 and 20 Year 13 responses have been collected.",
+      "misconception": "Matching group proportions does not make this stratified random sampling.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "opportunity-sampling",
+      "label": "Opportunity sampling",
+      "module": "sampling",
+      "definition": "Choosing eligible people or items that are readily available when the investigation takes place.",
+      "keyPhrases": [
+        "readily available",
+        "at the time"
+      ],
+      "example": "Question the first 20 shoppers who agree to participate near a supermarket entrance.",
+      "misconception": "Opportunity sampling is non-random, and its convenient group may not reflect the population.",
+      "aliases": [
+        "convenience sampling"
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "selection-bias",
+      "label": "Selection bias",
+      "module": "sampling",
+      "definition": "A systematic distortion caused when some members of the target population are more likely to be selected than others.",
+      "keyPhrases": [
+        "systematic distortion",
+        "selection"
+      ],
+      "example": "Only interviewing people using the school library at lunchtime to estimate everyone's reading habits.",
+      "misconception": "Random sampling reduces some selection bias but cannot correct an incomplete sampling frame.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "representativeness",
+      "label": "Representative sample",
+      "module": "sampling",
+      "definition": "A sample whose relevant characteristics resemble those of the population being studied.",
+      "keyPhrases": [
+        "relevant characteristics",
+        "population"
+      ],
+      "example": "The sample's proportions by year group match the school population's proportions.",
+      "misconception": "Matching one characteristic does not guarantee representativeness for every other characteristic.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sampling-variation",
+      "label": "Sampling variation",
+      "module": "sampling",
+      "definition": "Differences in sample results that occur because different subsets of the same population are selected.",
+      "keyPhrases": [
+        "different samples",
+        "different results"
+      ],
+      "example": "Two random samples from the same year group produce different mean journey times.",
+      "misconception": "A different sample mean does not automatically imply a mistake or bias.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sampling-interval",
+      "label": "Sampling interval",
+      "module": "sampling",
+      "definition": "The regular gap between successive selections in a systematic sample.",
+      "keyPhrases": [
+        "regular gap",
+        "systematic"
+      ],
+      "example": "For a population of 100 and sample of 20, the interval is 5.",
+      "misconception": "When N divided by n is not an integer, do not invent a universal rounding rule.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "proportional-allocation",
+      "label": "Proportional allocation",
+      "module": "sampling",
+      "definition": "Assigning each stratum a share of the sample proportional to its share of the population.",
+      "keyPhrases": [
+        "stratum size",
+        "sample share"
+      ],
+      "example": "A group containing 30% of the population gets 30% of the sample, subject to whole-number allocation.",
+      "misconception": "Proportions determine how many to sample, not who is selected inside each stratum.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "qualitative-data",
+      "label": "Qualitative data",
+      "module": "data",
+      "definition": "Data describing categories or qualities rather than numerical amounts.",
+      "keyPhrases": [
+        "categories",
+        "not numerical amounts"
+      ],
+      "example": "Eye colour or favourite subject.",
+      "misconception": "A category may be stored as a numerical code without becoming quantitative data.",
+      "aliases": [
+        "categorical data"
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "quantitative-data",
+      "label": "Quantitative data",
+      "module": "data",
+      "definition": "Data representing numerical amounts obtained by counting or measuring.",
+      "keyPhrases": [
+        "numerical amount",
+        "counting or measuring"
+      ],
+      "example": "Number of siblings or height in centimetres.",
+      "misconception": "A numeric label such as a bus route number is not necessarily quantitative.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "discrete-variable",
+      "label": "Discrete variable",
+      "module": "data",
+      "definition": "A variable that can take only separate, distinct values within its possible range.",
+      "keyPhrases": [
+        "separate values"
+      ],
+      "example": "The number of children in a household: 0, 1, 2, ...",
+      "misconception": "Discrete does not necessarily mean 'whole numbers' in every context.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "continuous-variable",
+      "label": "Continuous variable",
+      "module": "data",
+      "definition": "A variable that can take any value in a continuous interval (in the mathematical model).",
+      "keyPhrases": [
+        "any value",
+        "interval"
+      ],
+      "example": "Time to complete a race, even if the measuring instrument rounds it.",
+      "misconception": "Rounded measurements do not turn an inherently continuous variable into a discrete one.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "grouped-frequency-table",
+      "label": "Grouped frequency table",
+      "module": "data",
+      "definition": "A frequency table in which values are collected into intervals or classes rather than listed individually.",
+      "keyPhrases": [
+        "class intervals",
+        "frequencies"
+      ],
+      "example": "Times grouped into 0 <= t < 10, 10 <= t < 20 and 20 <= t < 30 seconds.",
+      "misconception": "The individual observations cannot normally be recovered exactly from grouped data.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "class-boundaries",
+      "label": "Class boundaries",
+      "module": "data",
+      "definition": "The lower and upper values that define a class interval.",
+      "keyPhrases": [
+        "lower and upper",
+        "interval"
+      ],
+      "example": "For 10 <= t < 20, the class boundaries are 10 and 20.",
+      "misconception": "Class boundaries are not always the same as printed class limits for rounded measurements.",
+      "aliases": [
+        "class boundary"
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "class-width",
+      "label": "Class width",
+      "module": "data",
+      "definition": "The difference between the upper and lower class boundaries.",
+      "keyPhrases": [
+        "upper boundary minus lower boundary"
+      ],
+      "example": "For a class 10 <= t < 20, class width = 20 - 10 = 10.",
+      "misconception": "Do not count the number of integers in an interval when calculating its width.",
+      "aliases": [],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "class-midpoint",
+      "label": "Class midpoint",
+      "module": "data",
+      "definition": "The mean of the lower and upper class boundaries.",
+      "keyPhrases": [
+        "mean of boundaries"
+      ],
+      "example": "For a class from 10 to 20, the midpoint is (10 + 20)/2 = 15.",
+      "misconception": "The class midpoint estimates values in the class; it need not be an actual observed value.",
+      "aliases": [
+        "midpoint"
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    }
+  ]
+}

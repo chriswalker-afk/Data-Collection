@@ -1,0 +1,401 @@
+{
+  "version": 1,
+  "evaluations": [
+    {
+      "id": "census-full",
+      "subject": "census",
+      "polarity": "advantage",
+      "claim": "Every member of the defined population is included.",
+      "explanation": "Useful when information about every member is genuinely required; complete coverage does not prevent measurement error.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "census-subgroup",
+      "subject": "census",
+      "polarity": "advantage",
+      "claim": "Includes even very small subgroups of the population.",
+      "explanation": "There is no risk of a subgroup being absent merely because it was not sampled.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "census-cost",
+      "subject": "census",
+      "polarity": "disadvantage",
+      "claim": "Measuring everyone can be expensive and time-consuming.",
+      "explanation": "The larger the population, the more resources may be needed.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "census-destructive",
+      "subject": "census",
+      "polarity": "disadvantage",
+      "claim": "Cannot be used when each test destroys the item being tested.",
+      "explanation": "Testing every manufactured safety harness to destruction would leave none to sell.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "census-process",
+      "subject": "census",
+      "polarity": "disadvantage",
+      "claim": "A large volume of data can be difficult to process.",
+      "explanation": "Full-population observations may require substantial handling and storage.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sample-speed",
+      "subject": "sample",
+      "polarity": "advantage",
+      "claim": "Collecting a sample is usually quicker and cheaper than a census.",
+      "explanation": "Fewer observations need to be collected.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sample-burden",
+      "subject": "sample",
+      "polarity": "advantage",
+      "claim": "Fewer members of the population need to respond.",
+      "explanation": "Especially useful where surveys take time.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sample-process",
+      "subject": "sample",
+      "polarity": "advantage",
+      "claim": "There are fewer observations to process.",
+      "explanation": "Reduces data-processing work.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sample-variation",
+      "subject": "sample",
+      "polarity": "disadvantage",
+      "claim": "Different samples may produce different estimates.",
+      "explanation": "Sampling variation means conclusions are not guaranteed to be identical.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sample-small-group",
+      "subject": "sample",
+      "polarity": "disadvantage",
+      "claim": "A sample might omit an important small subgroup.",
+      "explanation": "This is particularly relevant when the subgroup itself is being studied.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sample-bias",
+      "subject": "sample",
+      "polarity": "disadvantage",
+      "claim": "A poorly chosen sample can misrepresent the population.",
+      "explanation": "An incomplete frame or convenience selection may introduce systematic error.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "srs-objective",
+      "subject": "simple-random",
+      "polarity": "advantage",
+      "claim": "Randomly selected numbers remove deliberate interviewer choice from the selection stage.",
+      "explanation": "This reduces selection bias from personal preference but does not ensure perfect representativeness.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "srs-equal",
+      "subject": "simple-random",
+      "polarity": "advantage",
+      "claim": "Every possible sample of the chosen size has the same probability.",
+      "explanation": "The defining property of a simple random sample.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "srs-small",
+      "subject": "simple-random",
+      "polarity": "advantage",
+      "claim": "Straightforward to carry out for a small, numbered population.",
+      "explanation": "A complete frame and random-number generator make implementation practical.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "srs-frame",
+      "subject": "simple-random",
+      "polarity": "disadvantage",
+      "claim": "A complete sampling frame is needed.",
+      "explanation": "An incomplete or outdated list can exclude eligible units.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "srs-large",
+      "subject": "simple-random",
+      "polarity": "disadvantage",
+      "claim": "Can be cumbersome for a large, widely spread population.",
+      "explanation": "Obtaining the frame and contacting randomly selected units may be costly.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "srs-subgroups",
+      "subject": "simple-random",
+      "polarity": "disadvantage",
+      "claim": "Small subgroups may be underrepresented by chance.",
+      "explanation": "No fixed subgroup proportions are guaranteed in an ordinary simple random sample.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sys-speed",
+      "subject": "systematic",
+      "polarity": "advantage",
+      "claim": "Once the interval is set, selection is quick and simple.",
+      "explanation": "Only one random starting point is needed.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sys-scale",
+      "subject": "systematic",
+      "polarity": "advantage",
+      "claim": "Convenient for large ordered lists.",
+      "explanation": "Regular selection can be easier to administer than choosing many separate random numbers.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sys-frame",
+      "subject": "systematic",
+      "polarity": "disadvantage",
+      "claim": "An ordered sampling frame is required.",
+      "explanation": "The method needs a list with defined positions.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "sys-periodic",
+      "subject": "systematic",
+      "polarity": "disadvantage",
+      "claim": "A periodic pattern in the list can produce a distorted sample.",
+      "explanation": "For example, if every tenth entry belongs to a particular category, selecting every tenth unit can be unrepresentative.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "strata-proportions",
+      "subject": "stratified",
+      "polarity": "advantage",
+      "claim": "Ensures each specified stratum has the intended proportional representation.",
+      "explanation": "Helpful when group proportions matter to the investigation.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "strata-comparison",
+      "subject": "stratified",
+      "polarity": "advantage",
+      "claim": "Allows planned coverage of important population groups.",
+      "explanation": "Makes it less likely that an important group is missed by chance.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "strata-classify",
+      "subject": "stratified",
+      "polarity": "disadvantage",
+      "claim": "Population members must be classified into distinct strata.",
+      "explanation": "Classification can be difficult or costly if group information is incomplete.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "strata-random",
+      "subject": "stratified",
+      "polarity": "disadvantage",
+      "claim": "Random selection is still needed within each stratum.",
+      "explanation": "The method inherits framing and practical difficulties of simple random selection.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "quota-proportions",
+      "subject": "quota",
+      "polarity": "advantage",
+      "claim": "Chosen group proportions can be reflected in a relatively small sample.",
+      "explanation": "This only guarantees representation for the characteristics used to set quotas.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "quota-no-frame",
+      "subject": "quota",
+      "polarity": "advantage",
+      "claim": "No complete list of the population is required.",
+      "explanation": "People can be recruited directly into target groups.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "quota-fast",
+      "subject": "quota",
+      "polarity": "advantage",
+      "claim": "Recruitment is often quick, easy and inexpensive.",
+      "explanation": "No random selection from every group list is necessary.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "quota-comparison",
+      "subject": "quota",
+      "polarity": "advantage",
+      "claim": "Specified groups can be included for comparison.",
+      "explanation": "Only those grouping characteristics are controlled.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "quota-selection",
+      "subject": "quota",
+      "polarity": "disadvantage",
+      "claim": "Non-random recruitment can introduce selection bias.",
+      "explanation": "Convenient or approachable people may be overrepresented within each quota.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "quota-classify",
+      "subject": "quota",
+      "polarity": "disadvantage",
+      "claim": "Defining and checking many groups can be costly or inaccurate.",
+      "explanation": "More characteristics create more group combinations and administrative burden.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "quota-nonresponse",
+      "subject": "quota",
+      "polarity": "disadvantage",
+      "claim": "Refusals may not be recorded as non-responses.",
+      "explanation": "The replacement of non-respondents can hide participation problems.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "opp-easy",
+      "subject": "opportunity",
+      "polarity": "advantage",
+      "claim": "Easy to arrange with people already available.",
+      "explanation": "Does not require a full sampling frame.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "opp-cost",
+      "subject": "opportunity",
+      "polarity": "advantage",
+      "claim": "Usually inexpensive and fast to carry out.",
+      "explanation": "Convenient location and time reduce recruitment effort.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "opp-unrepresentative",
+      "subject": "opportunity",
+      "polarity": "disadvantage",
+      "claim": "People present in one place or time may not represent the wider population.",
+      "explanation": "E.g. morning shoppers may differ from evening shoppers.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    },
+    {
+      "id": "opp-researcher",
+      "subject": "opportunity",
+      "polarity": "disadvantage",
+      "claim": "Who is approached may depend heavily on the researcher.",
+      "explanation": "Personal choice and willingness to respond can distort the sample.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "teacher-screenshots"
+      ]
+    }
+  ]
+}

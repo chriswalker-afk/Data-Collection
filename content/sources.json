@@ -1,0 +1,31 @@
+{
+  "version": "1.0.0",
+  "checkedOn": "2026-10-26",
+  "sources": [
+    {
+      "id": "pearson-9ma0-guidance",
+      "kind": "official-specification-guidance",
+      "title": "Pearson Edexcel 9MA0 Enhanced Content Guidance, Issue 2 (January 2023)",
+      "url": "https://qualifications.pearson.com/content/dam/pdf/A%20Level/Mathematics/2017/specification-and-sample-assesment/pearson-edexcel-l3-advanced-gce-mathematics-9ma0-enhanced-content-guidance-issue-2.pdf",
+      "locator": "PDF printed pp.31-32, Statistical sampling 1.1",
+      "usage": "Scope, required five sampling methods, critique and sampling variation, non-integer systematic caveat."
+    },
+    {
+      "id": "pearson-textbook-ch1",
+      "kind": "pearson-textbook-extract",
+      "title": "Pearson Edexcel AS and A level Mathematics Year 1/AS Statistics and Mechanics, Chapter 1 Data collection (sample)",
+      "url": "https://www.pearson.com/content/dam/one-dot-com/one-dot-com/international-schools/pdfs/secondary-curriculum/uk-a-as-level-mathematics/A-Level-Maths-Statistics-and-Mechanics-Pupil-Book-sample.pdf",
+      "locator": "Chapter 1 pp.2-10 (PDF pp.3-11)",
+      "usage": "Terminology, examples, procedures, strengths/limitations and introductory data vocabulary; all model content is independently paraphrased."
+    },
+    {
+      "id": "teacher-screenshots",
+      "kind": "user-supplied-reference",
+      "title": "Teacher-provided screenshots of Edexcel Year 1 Data collection pages",
+      "url": null,
+      "locator": "Screenshots provided in the planning conversation on 2026-10-26",
+      "usage": "Requested terminology and topic boundaries; public repository does not reproduce screenshots."
+    }
+  ],
+  "editorialPolicy": "Source-aligned, independently worded teaching material. This site is not authored, endorsed or approved by Pearson. A model answer is not a fixed word-for-word mark scheme."
+}
