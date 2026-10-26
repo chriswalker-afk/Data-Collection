@@ -8,6 +8,7 @@ test('home has clear navigation, game cards, and topic switching', async ({ page
   await expect(page.getByRole('navigation', {name:'Main navigation'})).toBeVisible();
   await page.locator('#activities-menu > summary').click();
   await expect(page.getByRole('link', {name:'Flashcards',exact:true})).toBeVisible();
+  await page.keyboard.press('Escape'); // Close the disclosure (and the mobile Menu) before changing topics.
   await page.getByRole('button', { name: /Types of data/ }).click();
   await expect(page).toHaveURL(/#\/home\/data$/);
   await expect(page.getByRole('button', { name: /Types of data/ })).toHaveAttribute('aria-pressed','true');
