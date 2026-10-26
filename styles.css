@@ -616,3 +616,85 @@ progress::-moz-progress-bar { border-radius: 30px; background: #198775; }
 .sim-report-actions .btn{min-height:44px}
 @media(max-width:580px){.sim-hint-list{padding:12px 14px 12px 32px}.sim-export-settings{padding:18px 14px}}
 @media print{.sim-export-settings,.sim-hints{display:none!important}}
+
+
+/* Pass 7 — progressive learning journey and optional classroom feedback */
+.learning-journey{scroll-margin-top:20px}
+.journey-suggestion{display:flex;justify-content:space-between;align-items:center;gap:20px;
+  border:1px solid #bbd9c8;border-radius:19px;padding:24px 26px;background:#e9f6ee}
+.journey-suggestion-title{margin:7px 0 4px;font-size:1.25rem;letter-spacing:-.03em;color:#12483e}
+.journey-suggestion-text{margin:0;color:#3b6358;font-size:.87rem;line-height:1.65;max-width:650px}
+.journey-action{flex-shrink:0;min-height:46px;max-width:100%}
+.journey-steps{list-style:none;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:15px 0 0}
+.journey-step{min-width:0}
+.journey-step-link{height:100%;min-width:0;display:flex;flex-direction:column;gap:11px;border:1px solid var(--border);
+ background:#fff;border-radius:15px;padding:17px 16px;transition:border-color .15s,background .15s}
+.journey-step-link:hover{background:#f2faf6;border-color:#8ebfac}
+.journey-step-number{width:27px;height:27px;display:grid;place-items:center;border-radius:50%;
+ background:#e3f3e9;color:#146351;font-weight:800;font-size:.78rem}
+.journey-step-title{font-size:.94rem;line-height:1.35;letter-spacing:-.02em;margin:0;color:#204c43}
+.journey-step-detail{font-size:.79rem;line-height:1.6;color:var(--subtle);margin:6px 0}
+.journey-step-cta{font-size:.74rem;color:#17695d;font-weight:750;margin-top:auto;overflow-wrap:anywhere}
+.completion-next{max-width:600px;margin:25px auto 8px;padding:22px;border:1px solid #d2e6d9;
+ background:#f2f9f5;border-radius:16px}
+.completion-next-title{font-size:1.07rem;line-height:1.4;color:#1b5b4e;margin:7px 0}
+.completion-next-detail{font-size:.87rem;line-height:1.68;color:var(--subtle);margin:7px 0 16px}
+.completion-next .btn{max-width:100%;min-height:44px}
+.classroom-feedback{border:1px solid #d2e4dc;border-radius:21px;background:#fff;overflow:hidden}
+.classroom-feedback summary{min-height:72px;display:flex;justify-content:space-between;align-items:center;
+ gap:14px;cursor:pointer;padding:18px 24px;list-style:none}
+.classroom-feedback summary::-webkit-details-marker{display:none}
+.classroom-feedback summary::after{content:"+";font-weight:700;font-size:1.5rem;color:#1b6b5b}
+.classroom-feedback[open] summary::after{content:"−"}
+.classroom-feedback summary:hover{background:#f2f9f5}
+.classroom-feedback-label{font-weight:750;color:#1b4c42;font-size:1.01rem}
+.classroom-feedback-action{margin-left:auto;font-size:.79rem;color:#3e7464}
+.classroom-feedback-content{border-top:1px solid var(--border);padding:22px 25px 26px}
+.classroom-feedback-content>p{font-size:.87rem;color:var(--subtle);line-height:1.7;max-width:750px}
+.classroom-feedback-privacy{color:#755a30!important}
+.classroom-feedback-form{max-width:780px;margin-top:22px}
+.classroom-feedback-activity{display:flex;flex-direction:column;gap:7px;margin-bottom:25px}
+.classroom-feedback-activity label,.classroom-feedback-comment-label{font-weight:750;font-size:.87rem;color:#244c43}
+.classroom-feedback-activity select,.classroom-feedback-form textarea{width:100%;max-width:100%;border:1px solid #a7cbbd;border-radius:11px;
+ padding:12px 13px;min-height:48px;background:#fff;font:inherit;color:var(--ink)}
+.classroom-feedback-form textarea{display:block;resize:vertical;min-height:88px;line-height:1.65;margin:9px 0 0}
+.classroom-feedback-question{border:0;padding:0;margin:21px 0;min-width:0}
+.classroom-feedback-question legend{font-size:.89rem;font-weight:750;color:#244c43;margin-bottom:11px}
+.classroom-feedback-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.classroom-feedback-choice{display:flex;align-items:center;gap:10px;border:1px solid #d3e6dd;
+ padding:12px;background:#fbfefd;border-radius:11px;font-size:.82rem;line-height:1.55;cursor:pointer}
+.classroom-feedback-choice:has(input:checked){background:#e5f5ed;border-color:#559d83}
+.classroom-feedback-choice:focus-within{outline:3px solid #92ceb9;outline-offset:1px}
+.classroom-feedback-choice input{width:19px;height:19px;flex:none;margin:0;accent-color:#187963}
+.classroom-feedback-actions{display:flex;align-items:center;flex-wrap:wrap;gap:13px;margin-top:19px}
+.classroom-feedback-note,.classroom-feedback-result{color:var(--subtle);font-size:.82rem;line-height:1.65}
+.classroom-feedback-result:not(:empty){background:#edf8f2;border:1px solid #c5e1d2;border-radius:11px;padding:12px}
+.sim-level-picker{border:0;padding:0;margin:26px 0 0;min-width:0}
+.sim-level-picker legend{font-size:.93rem;font-weight:800;color:#205c4e;margin-bottom:12px}
+.sim-level-choice{display:flex;align-items:flex-start;gap:11px;padding:13px;border:1px solid #d4e4db;background:#fff;
+ border-radius:12px;cursor:pointer;min-width:0}
+.sim-level-choice:has(input:checked){border-color:#3f997c;background:#e8f6ee}
+.sim-level-choice:focus-within{outline:3px solid #89c9b4;outline-offset:2px}
+.sim-level-choice input{flex:0 0 19px;width:19px;height:19px;accent-color:#187d69;margin:2px 0 0}
+.sim-level-choice span{display:flex;flex-direction:column;gap:4px;min-width:0}
+.sim-level-choice strong{font-size:.86rem;color:#20584d}
+.sim-level-choice small{font-size:.73rem;color:#57736c;line-height:1.5}
+.sim-level-picker{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.sim-level-picker legend{grid-column:1/-1}
+.sim-report-coaching{margin-top:26px;padding:19px 21px;background:#f1f8f4;border:1px solid #cde3d5;border-radius:14px}
+@media(max-width:900px){.journey-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){
+ .journey-suggestion{flex-direction:column;align-items:stretch;padding:20px 17px}
+ .journey-action{width:100%}
+ .journey-steps,.classroom-feedback-options,.sim-level-picker{grid-template-columns:1fr}
+ .journey-step-link{gap:7px;padding:14px 15px}
+ .journey-step-cta{margin-top:2px}
+ .classroom-feedback summary{padding:18px 16px;gap:9px}
+ .classroom-feedback-action{display:none}
+ .classroom-feedback-content{padding:18px 15px 22px}
+ .classroom-feedback-actions .btn{width:100%}
+ .completion-next{padding:18px 14px}
+}
+@media print{
+ .learning-journey,.classroom-feedback-section,.completion-next,.sim-level-picker{display:none!important}
+}
