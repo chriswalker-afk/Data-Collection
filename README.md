@@ -8,14 +8,14 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 
 **UI Pass 2:** all ten activities now use consistent *Practising → What to do → Question* framing, shared controls and panel styling, and clear distinction between checked answers and self-reviewed writing. The mathematics and local student progress stores are unchanged.
 
-**Website:** https://chriswalker-afk.github.io/Data-Collection/ (published from `main` once Pages is enabled).
+**Website:** https://chriswalker-afk.github.io/Data-Collection/ (published from `main` through GitHub Pages Actions).
 
 ## Student features
 - Choose **Sampling**, **Types of data** or **Mixed revision**.
 - **Flashcards** support term→definition and definition→term recall, examples and common misconceptions.
 - **Match Up** offers tactile term–definition tiles with selected-state guidance, short success/retry animations, visible pair progress and accessible keyboard or touch interaction.
 - **Missing Words** now has three levels: **Recognise** (the original four choices), **Recall** (type a word with an optional first-letter hint) and **Independent** (type without choices or hints).
-- **Sort It!** classifies advantages and disadvantages for seven specific subjects, or distinguishes stratified from quota and simple random from systematic sampling.
+- **Sort It!** gives two sampling methods and mixed advantage/disadvantage statements. Place each statement in the correct method-and-category column; only the first complete check counts towards progress.
 - **Which Method?** uses balanced 5-, 10- or 20-scenario rounds to identify all five methods with contextual explanations.
 - **Speed Recall** asks for a term from its definition; choose untimed ten-term practice (eight for Types of Data) or 30-, 60- and 90-second timed challenges. The timer pauses during feedback and when the tab is hidden.
 - Typos can prompt one spelling correction, but are **never automatically credited**. Only curated mathematical synonyms are accepted.
