@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {GAMES} from '../src/core.js';
-import {completionHeading} from '../src/quality.js';
+import {completionHeading,completionCreditNote} from '../src/quality.js';
 
 test('all ten activities have honest, nonempty completion language',()=>{
  for(const {id} of GAMES){
@@ -23,4 +23,14 @@ test('unscored review is visibly distinguished from a standard completed round',
  for(const game of ['error','reason','speed'])
   assert.match(completionHeading(game,{reviewMode:true}),/Review complete/i);
  assert.match(completionHeading('flashcards',{isReview:true}),/Review complete/i);
+});
+
+test('every completion page explains the actual assessment contract',()=>{
+ for(const {id} of GAMES){
+  const note=completionCreditNote(id);
+  assert.ok(note.length>=60&&note.length<190,id);
+  assert.ok(/check|model|review|credit|practice|self-rating|record|answer|mastery/i.test(note),id);
+ }
+ assert.match(completionCreditNote('error',{reviewMode:true}),/unscored/);
+ assert.match(completionCreditNote('reason',{reviewMode:true}),/unscored/);
 });
