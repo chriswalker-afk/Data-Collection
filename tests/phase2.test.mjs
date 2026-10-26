@@ -17,7 +17,7 @@ test('Pass 2 references the audited bank with complete method and sorting labels
   assert.equal(METHOD_ORDER.length,5);
   assert.equal(rounds.length,9);
   assert.equal(evaluations.length,36);
-  assert.equal(scenarios.length,20);
+  assert.equal(scenarios.length,50);
   assert.ok(rounds.every(round => SORT_LABELS[round.id]));
   assert.ok(METHOD_ORDER.every(method => METHOD_LABELS[method]));
   assert.equal(categoryLabel('advantage'), 'Advantage');
