@@ -123,9 +123,11 @@ export class GameRoom extends DurableObject{
     return !person?{error:'Session not found'}:publicState(room,person,Date.now(),this.currentConnections());
   }
   async join(name,clientKey){
+    if(!await this.allowRate('join:'+String(clientKey).slice(0,24),75,60_000))return {error:'Too many join attempts; try again shortly',status:429};
+    // Re-read after the awaited limiter so simultaneous joins never overwrite
+    // one another's participants from an earlier room snapshot.
     const room=this.room();
     if(!room||room.status!=='lobby')return {error:'This classroom is unavailable'};
-    if(!await this.allowRate('join:'+String(clientKey).slice(0,24),75,60_000))return {error:'Too many join attempts; try again shortly',status:429};
     const nickname=cleanNickname(name);
     if(!nickname)return {error:'Choose a nickname of 2–20 letters or numbers'};
     if(room.players.length>=MAX_PLAYERS)return {error:'This classroom is full'};
