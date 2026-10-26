@@ -5,10 +5,10 @@ export const ACTIVITY_GUIDANCE=Object.freeze({
     practice:'Recall terminology and the advantages and disadvantages of sampling methods.',
     task:'Try the answer, flip the card to check, then rate your recall. For evaluation cards, recall the main strengths or limitations. Browse all cards whenever you want.'}),
   match:Object.freeze({
-    practice:'Connect mathematical terms with precise definitions or equivalent descriptions.'
+    practice:'Connect mathematical terms with precise definitions or equivalent descriptions.',
     task:'Choose five, seven or a full topic round, then connect each term to its description. Different descriptions support deeper recall.'}),
   cloze:Object.freeze({
-    practice:'Retrieve precise mathematical vocabulary from definitions, examples and important distinctions.'
+    practice:'Retrieve precise mathematical vocabulary from definitions, examples and important distinctions.',
     task:'Complete the mathematical sentence. Choose a focused round or review the full question bank.'}),
   sort:Object.freeze({
     practice:'Compare the strengths and limitations of two sampling methods.',
@@ -17,7 +17,7 @@ export const ACTIVITY_GUIDANCE=Object.freeze({
     practice:'Recognise a sampling method from how participants or items are selected.',
     task:'Read how the sample was selected, then choose the method. After checking, study the decisive clue and the contrasting alternatives.'}),
   speed:Object.freeze({
-    practice:'Recall mathematical terms from differently worded but mathematically equivalent clues.'
+    practice:'Recall mathematical terms from differently worded but mathematically equivalent clues.',
     task:'Read the clue, retrieve the precise term and check your answer. Repeat rounds to practise new wording.'}),
   build:Object.freeze({
     practice:'Sequence a defensible sampling procedure and justify its steps.',
