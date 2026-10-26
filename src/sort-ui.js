@@ -74,7 +74,7 @@ export function createSortItUI(deps){
     'data-sort-drop':key,'aria-label':sortDestinationLabel(key)
   });
   const titleId='sort-'+method+'-'+polarity+'-heading';
-  zone.setAttribute('aria-labelledby',titleId);
+  zone.setAttribute('aria-labelledby','sort-method-'+method+'-title '+titleId);
   zone.append(
     div('sort-zone-head',
       heading(4,'sort-zone-name',positive?'Advantages':'Disadvantages',{id:titleId}),
@@ -89,7 +89,7 @@ export function createSortItUI(deps){
   const root=element('section',{className:'sort-method','data-sort-method':method});
   root.append(div('sort-method-header',
     span('sort-method-eyebrow','SAMPLING METHOD'),
-    heading(3,'sort-method-title',METHOD_LABELS[method]),
+    heading(3,'sort-method-title',METHOD_LABELS[method],{id:'sort-method-'+method+'-title'}),
     span('sort-method-count',count+' placed')
   ));
   const bins=div('sort-method-bins',
