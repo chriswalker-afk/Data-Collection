@@ -1,0 +1,903 @@
+{
+  "version": 1,
+  "editorialNote": "Original Edexcel-aligned practice prompts, not Pearson examination questions or official mark schemes. Numerical answers only are auto-checked; written responses are self-reviewed.",
+  "questions": [
+    {
+      "id": "alloc-year-groups",
+      "type": "allocation",
+      "level": "foundation",
+      "title": "College year groups",
+      "context": "A college has 300 Year 12 and 200 Year 13 students. A proportional stratified sample of 50 students is needed.",
+      "task": "Calculate the number randomly selected from each year group.",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "data": {
+        "sampleSize": 50,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Year 12",
+            "size": 300
+          },
+          {
+            "id": "g1",
+            "label": "Year 13",
+            "size": 200
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum."
+    },
+    {
+      "id": "alloc-boarders",
+      "type": "allocation",
+      "level": "foundation",
+      "title": "Boarding and day pupils",
+      "context": "A school has 180 boarders and 420 day pupils. A proportional stratified sample of 60 pupils is required.",
+      "task": "Find the whole-number sample sizes in each group.",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "data": {
+        "sampleSize": 60,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Boarders",
+            "size": 180
+          },
+          {
+            "id": "g1",
+            "label": "Day pupils",
+            "size": 420
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum."
+    },
+    {
+      "id": "alloc-urban",
+      "type": "allocation",
+      "level": "foundation",
+      "title": "Urban and rural schools",
+      "context": "A study covers 240 pupils at urban schools and 160 at rural schools. Select 40 pupils proportionally.",
+      "task": "Calculate the number selected from each group.",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "data": {
+        "sampleSize": 40,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Urban",
+            "size": 240
+          },
+          {
+            "id": "g1",
+            "label": "Rural",
+            "size": 160
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum."
+    },
+    {
+      "id": "alloc-departments",
+      "type": "allocation",
+      "level": "develop",
+      "title": "Workplace departments",
+      "context": "A company has 150, 250 and 100 employees in its three departments. It needs a proportional sample of 50.",
+      "task": "Allocate the sample between all three departments.",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "data": {
+        "sampleSize": 50,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "North",
+            "size": 150
+          },
+          {
+            "id": "g1",
+            "label": "Central",
+            "size": 250
+          },
+          {
+            "id": "g2",
+            "label": "South",
+            "size": 100
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum."
+    },
+    {
+      "id": "alloc-school-sites",
+      "type": "allocation",
+      "level": "develop",
+      "title": "Three school sites",
+      "context": "School sites A, B and C contain 72, 108 and 180 pupils. A stratified sample of 30 is planned.",
+      "task": "Calculate the sample allocation for each site.",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "data": {
+        "sampleSize": 30,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Site A",
+            "size": 72
+          },
+          {
+            "id": "g1",
+            "label": "Site B",
+            "size": 108
+          },
+          {
+            "id": "g2",
+            "label": "Site C",
+            "size": 180
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum."
+    },
+    {
+      "id": "alloc-age",
+      "type": "allocation",
+      "level": "develop",
+      "title": "Community age groups",
+      "context": "Community records split residents into groups of sizes 120, 160 and 120. A proportional sample of 50 is requested.",
+      "task": "Find how many from each age group to select randomly.",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "data": {
+        "sampleSize": 50,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "16–29",
+            "size": 120
+          },
+          {
+            "id": "g1",
+            "label": "30–49",
+            "size": 160
+          },
+          {
+            "id": "g2",
+            "label": "50+",
+            "size": 120
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum."
+    },
+    {
+      "id": "alloc-clubs",
+      "type": "allocation",
+      "level": "extend",
+      "title": "Club participation",
+      "context": "Participation records identify three non-overlapping groups containing 96, 144 and 240 students. A proportional stratified sample of 40 is required.",
+      "task": "Compute each group's allocation. Check the total.",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "data": {
+        "sampleSize": 40,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Sport clubs",
+            "size": 96
+          },
+          {
+            "id": "g1",
+            "label": "Music clubs",
+            "size": 144
+          },
+          {
+            "id": "g2",
+            "label": "Other clubs",
+            "size": 240
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum."
+    },
+    {
+      "id": "alloc-library",
+      "type": "allocation",
+      "level": "extend",
+      "title": "Library membership",
+      "context": "Library membership is split between three mutually exclusive categories with 220, 110 and 110 members. Choose 40 members proportionally.",
+      "task": "Allocate places to the three categories.",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "data": {
+        "sampleSize": 40,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Students",
+            "size": 220
+          },
+          {
+            "id": "g1",
+            "label": "Staff",
+            "size": 110
+          },
+          {
+            "id": "g2",
+            "label": "Community",
+            "size": 110
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Calculate each (group size / total population) × sample size. Choose the required number randomly and without repeats within each stratum."
+    },
+    {
+      "id": "sys-warehouse",
+      "type": "systematic",
+      "level": "foundation",
+      "title": "Warehouse inspection",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A complete ordered list contains 200 eligible units. A systematic sample of 20 units is planned. A random starting position of 4 has already been chosen.",
+      "task": "Calculate the sampling interval and the final selected position.",
+      "data": {
+        "populationSize": 200,
+        "sampleSize": 20,
+        "randomStart": 4
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame."
+    },
+    {
+      "id": "sys-pupils",
+      "type": "systematic",
+      "level": "foundation",
+      "title": "Student register",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A complete ordered list contains 120 eligible units. A systematic sample of 15 units is planned. A random starting position of 3 has already been chosen.",
+      "task": "Calculate the sampling interval and the final selected position.",
+      "data": {
+        "populationSize": 120,
+        "sampleSize": 15,
+        "randomStart": 3
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame."
+    },
+    {
+      "id": "sys-products",
+      "type": "systematic",
+      "level": "develop",
+      "title": "Production line",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A complete ordered list contains 450 eligible units. A systematic sample of 30 units is planned. A random starting position of 12 has already been chosen.",
+      "task": "Calculate the sampling interval and the final selected position.",
+      "data": {
+        "populationSize": 450,
+        "sampleSize": 30,
+        "randomStart": 12
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame."
+    },
+    {
+      "id": "sys-records",
+      "type": "systematic",
+      "level": "develop",
+      "title": "Ordered records",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A complete ordered list contains 96 eligible units. A systematic sample of 12 units is planned. A random starting position of 7 has already been chosen.",
+      "task": "Calculate the sampling interval and the final selected position.",
+      "data": {
+        "populationSize": 96,
+        "sampleSize": 12,
+        "randomStart": 7
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame."
+    },
+    {
+      "id": "sys-package",
+      "type": "systematic",
+      "level": "develop",
+      "title": "Packed parcels",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A complete ordered list contains 360 eligible units. A systematic sample of 24 units is planned. A random starting position of 5 has already been chosen.",
+      "task": "Calculate the sampling interval and the final selected position.",
+      "data": {
+        "populationSize": 360,
+        "sampleSize": 24,
+        "randomStart": 5
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame."
+    },
+    {
+      "id": "sys-cards",
+      "type": "systematic",
+      "level": "extend",
+      "title": "Library cards",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A complete ordered list contains 500 eligible units. A systematic sample of 50 units is planned. A random starting position of 9 has already been chosen.",
+      "task": "Calculate the sampling interval and the final selected position.",
+      "data": {
+        "populationSize": 500,
+        "sampleSize": 50,
+        "randomStart": 9
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame."
+    },
+    {
+      "id": "sys-files",
+      "type": "systematic",
+      "level": "extend",
+      "title": "Archive files",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A complete ordered list contains 150 eligible units. A systematic sample of 25 units is planned. A random starting position of 4 has already been chosen.",
+      "task": "Calculate the sampling interval and the final selected position.",
+      "data": {
+        "populationSize": 150,
+        "sampleSize": 25,
+        "randomStart": 4
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame."
+    },
+    {
+      "id": "sys-inspect",
+      "type": "systematic",
+      "level": "extend",
+      "title": "Long inspection list",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A complete ordered list contains 840 eligible units. A systematic sample of 40 units is planned. A random starting position of 18 has already been chosen.",
+      "task": "Calculate the sampling interval and the final selected position.",
+      "data": {
+        "populationSize": 840,
+        "sampleSize": 40,
+        "randomStart": 18
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For an exact integer N/n, k = N/n; select the random starting position and every kth unit. Check the final position is within the frame."
+    },
+    {
+      "id": "proc-random-1",
+      "type": "procedure",
+      "level": "foundation",
+      "title": "Explain a sampling procedure",
+      "methodId": "simple-random",
+      "context": "A school has a complete list of 120 pupils and needs 15 distinct pupils for an unbiased survey.",
+      "task": "Describe a simple random selection procedure that another student could follow.",
+      "focus": "State exactly how repeated random numbers will be handled.",
+      "note": "Use a generator constrained to integers 1–120; rejecting out-of-range values is not needed.",
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Apply the numbering and selection specifically to 120 pupils and a sample of 15."
+        }
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "proc-systematic-1",
+      "type": "procedure",
+      "level": "foundation",
+      "title": "Explain a sampling procedure",
+      "methodId": "systematic",
+      "context": "A researcher needs 20 records from a complete ordered list of 100 records.",
+      "task": "Describe a systematic sampling procedure, including the random start.",
+      "focus": "Use the sampling interval 5, with a random start between 1 and 5.",
+      "note": "A random start is essential.",
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Give the interval k = 100 / 20 = 5 and the valid starting positions 1–5."
+        }
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "proc-quota-1",
+      "type": "procedure",
+      "level": "foundation",
+      "title": "Explain a sampling procedure",
+      "methodId": "quota",
+      "context": "Interviewers need 30 commuters and 20 non-commuters. They can approach people leaving a transport hub.",
+      "task": "Explain a quota sampling procedure clearly enough to distinguish it from stratified sampling.",
+      "focus": "Targets can be proportional, but recruitment within the groups is non-random.",
+      "note": "Do not claim each eligible individual was randomly chosen.",
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Set the quotas at 30 commuters and 20 non-commuters."
+        }
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "proc-stratified-1",
+      "type": "procedure",
+      "level": "develop",
+      "title": "Explain a sampling procedure",
+      "methodId": "stratified",
+      "context": "There are 300 Year 12 and 200 Year 13 pupils on full year-group registers. A proportional sample of 50 is required.",
+      "task": "Describe how to carry out stratified random sampling in this school.",
+      "focus": "Allocate 30 Year 12 and 20 Year 13 places.",
+      "note": "Random selection from separate registers is essential.",
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Allocate 30 to Year 12 and 20 to Year 13, then randomly select within each."
+        }
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "proc-opportunity-1",
+      "type": "procedure",
+      "level": "develop",
+      "title": "Explain a sampling procedure",
+      "methodId": "opportunity",
+      "context": "A student has fifteen minutes outside the school library and wants 20 quick responses from eligible students.",
+      "task": "Describe an opportunity sampling procedure and identify what the resulting data can and cannot represent.",
+      "focus": "Recruit only available eligible respondents at the stated place and time.",
+      "note": "Make the practical limitation clear.",
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Recruit 20 available eligible students at the library; do not claim school-wide representativeness."
+        }
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "proc-random-digits",
+      "type": "procedure",
+      "level": "develop",
+      "title": "Explain a sampling procedure",
+      "methodId": "simple-random",
+      "context": "A club has 180 eligible members listed as 001–180. A researcher uses an unrestricted three-digit random-digit table to choose 20 members.",
+      "task": "Explain how to select exactly 20 different members using the digit table.",
+      "focus": "Discard 000, any 181–999, and repeated valid numbers.",
+      "note": "The source can generate invalid values, so the conditional procedure applies.",
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Read three-digit groups, reject 000 and 181–999, and ignore repeats until 20 distinct numbers remain."
+        }
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "proc-systematic-cycle",
+      "type": "procedure",
+      "level": "extend",
+      "title": "Explain a sampling procedure",
+      "methodId": "systematic",
+      "context": "An inspector plans every tenth product from a list of 300. The order has a possible 10-item repeating production cycle.",
+      "task": "Describe the systematic selection process and explain one practical risk before applying it.",
+      "focus": "For 30 from 300, k = 10, with a random start 1–10.",
+      "note": "The repeating order may align with interval 10.",
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Explain why a 10-item cycle can make every tenth product unrepresentative despite a random start."
+        }
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "proc-strat-rounding",
+      "type": "procedure",
+      "level": "extend",
+      "title": "Explain a sampling procedure",
+      "methodId": "stratified",
+      "context": "Three year groups contain 205, 190 and 155 pupils. The investigator needs a stratified sample of 55. The unrounded allocations are 20.5, 19 and 15.5.",
+      "task": "Explain a defensible procedure when proportional allocations are not whole numbers.",
+      "focus": "Allocations must be whole numbers totalling 55; either defensible tie resolution is acceptable.",
+      "note": "Do not say all allocations should simply be rounded up.",
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "A defensible allocation is (21,19,15) or (20,19,16); then choose randomly within each stratum."
+        }
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "proc-systematic-fraction",
+      "type": "procedure",
+      "level": "extend",
+      "title": "Explain a sampling procedure",
+      "methodId": "systematic",
+      "context": "A school needs 40 students from 197 ordered records. The ratio N/n is 197/40 = 4.925.",
+      "task": "Explain how you would plan systematic sampling without inventing a universal rounding rule.",
+      "focus": "Describe the chosen systematic pattern, random starting point and how to ensure 40 selections.",
+      "note": "Do not claim 'round N/n' automatically works in every case.",
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Check that the systematic pattern actually yields 40 selected units when N/n is non-integer."
+        }
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "eval-srs-bias",
+      "type": "evaluation",
+      "level": "foundation",
+      "title": "Evaluate a sampling decision",
+      "methodId": "simple-random",
+      "context": "A school uses random numbers to choose 30 pupils from a complete register, then concludes the sample must perfectly represent the whole school.",
+      "task": "Explain why that conclusion is too strong and how to improve the study.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Random selection does not guarantee a representative realised sample."
+        },
+        {
+          "id": "point-2",
+          "text": "Even with a complete frame, chance imbalance and nonresponse are possible."
+        },
+        {
+          "id": "point-3",
+          "text": "Check response patterns or follow up nonrespondents; acknowledge sampling variation."
+        }
+      ],
+      "model": "Using a complete register and a genuine random-number method reduces selection bias, but the realised 30 could be unbalanced by chance. Some pupils may not respond, so I would follow up the chosen pupils and report the limitation.",
+      "sourceEvaluationIds": [
+        "srs-frame",
+        "srs-representative"
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "eval-quota-strat",
+      "type": "evaluation",
+      "level": "foundation",
+      "title": "Evaluate a sampling decision",
+      "methodId": "quota",
+      "context": "Street interviewers set targets of 30 teenagers and 20 adults. They recruit whoever agrees until the targets are met.",
+      "task": "Evaluate why this is quota rather than stratified random sampling.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Group targets are fixed in advance."
+        },
+        {
+          "id": "point-2",
+          "text": "Individuals within groups are recruited non-randomly, unlike stratified random sampling."
+        },
+        {
+          "id": "point-3",
+          "text": "Convenience/nonresponse bias may remain; vary venues and times or use frames for random selection."
+        }
+      ],
+      "model": "The interviewer fills two quotas but does not randomly select people within each age group. This is quota sampling, not stratified random sampling. The time and place may bias responses, so recruiting at varied venues or using separate random lists would strengthen the design.",
+      "sourceEvaluationIds": [
+        "quota-recruit",
+        "stratified-random"
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "eval-census",
+      "type": "evaluation",
+      "level": "develop",
+      "title": "Evaluate a sampling decision",
+      "methodId": "simple-random",
+      "context": "A factory tests each helmet to destruction. A manager proposes testing every helmet to avoid sampling error.",
+      "task": "Explain why a census is unsuitable and propose a more realistic design.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Destructive testing every helmet would destroy all stock."
+        },
+        {
+          "id": "point-2",
+          "text": "A sample can be tested instead, saving remaining production."
+        },
+        {
+          "id": "point-3",
+          "text": "An appropriate probability selection, such as random numbers from a full production list, can reduce selection bias."
+        }
+      ],
+      "model": "A census would destroy every helmet so none could be used. I would draw a sample from a complete production list using distinct random numbers and test those helmets, while explaining that a sample may not reveal every defect.",
+      "sourceEvaluationIds": [
+        "census-destructive",
+        "sample-speed"
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "eval-periodic",
+      "type": "evaluation",
+      "level": "develop",
+      "title": "Evaluate a sampling decision",
+      "methodId": "systematic",
+      "context": "On a list of 500 products, defects recur every tenth item. An inspector plans systematic sampling with interval 10 and a random start.",
+      "task": "Explain the specific weakness and recommend a better approach.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The interval coincides with the production cycle."
+        },
+        {
+          "id": "point-2",
+          "text": "Even with a random start, the sample may repeatedly select one cycle position."
+        },
+        {
+          "id": "point-3",
+          "text": "Investigate the ordering; simple random selection across the full list or stratification by cycle position may be better."
+        }
+      ],
+      "model": "With k = 10, a sample might repeatedly hit the same phase of the ten-item cycle. A random start does not eliminate this risk. I would inspect the ordering and consider simple random selection from the entire numbered list.",
+      "sourceEvaluationIds": [
+        "systematic-period"
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "eval-opportunity",
+      "type": "evaluation",
+      "level": "develop",
+      "title": "Evaluate a sampling decision",
+      "methodId": "opportunity",
+      "context": "To study the town's transport habits, students survey willing people at one bus stop at 7:30 a.m.",
+      "task": "Evaluate the suitability and suggest a practical improvement.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "People at one bus stop at one time are readily available but unrepresentative of all transport users."
+        },
+        {
+          "id": "point-2",
+          "text": "The survey could systematically miss drivers, walkers and later travellers."
+        },
+        {
+          "id": "point-3",
+          "text": "Survey more sites/times, broaden the frame or limit the claim to these bus-stop users."
+        }
+      ],
+      "model": "The sample is convenient but may overrepresent morning bus users. Drivers and people travelling later are unlikely to be included. I would collect responses from different locations and times, or limit the conclusion to the actual group surveyed.",
+      "sourceEvaluationIds": [
+        "opportunity-availability"
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "eval-strat-allocate",
+      "type": "evaluation",
+      "level": "extend",
+      "title": "Evaluate a sampling decision",
+      "methodId": "stratified",
+      "context": "A college with 400 day and 100 boarding pupils intends to choose 25 from each group for a 50-person sample, describing the design as 'proportional stratified'.",
+      "task": "Critique the allocation and explain what else makes the design stratified random.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Equal allocation is not proportional when the strata sizes differ."
+        },
+        {
+          "id": "point-2",
+          "text": "Proportional allocation is 40 day pupils and 10 boarders."
+        },
+        {
+          "id": "point-3",
+          "text": "Individuals must be selected randomly and without repeats within the two strata."
+        }
+      ],
+      "model": "The allocation 25/25 is not proportional: 400/500 × 50 = 40 day pupils, and 100/500 × 50 = 10 boarders. To claim stratified random sampling, the correct numbers must then be chosen at random from separate complete registers.",
+      "sourceEvaluationIds": [
+        "stratified-allocation"
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "eval-frame",
+      "type": "evaluation",
+      "level": "extend",
+      "title": "Evaluate a sampling decision",
+      "methodId": "simple-random",
+      "context": "A researcher randomly selects 100 names from a club register that omits everyone who joined in the past month.",
+      "task": "Explain why increasing the sample to 200 cannot solve the main problem.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The register is an incomplete sampling frame."
+        },
+        {
+          "id": "point-2",
+          "text": "Missing members have zero chance of selection, regardless of sample size."
+        },
+        {
+          "id": "point-3",
+          "text": "Update and verify the frame first, then select distinct units randomly."
+        }
+      ],
+      "model": "New members are absent from the list and therefore cannot be chosen at all. A larger sample of old members does not repair this coverage error. I would update the full register and then draw a simple random sample, ignoring repeated random numbers.",
+      "sourceEvaluationIds": [
+        "srs-frame"
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "eval-noninteger",
+      "type": "evaluation",
+      "level": "extend",
+      "title": "Evaluate a sampling decision",
+      "methodId": "systematic",
+      "context": "A student wants 40 of 197 ordered names. They divide 197 by 40, round to 5 and claim this is the only correct procedure.",
+      "task": "Explain what must be checked and why the claim is not justified.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "197/40 is non-integer, so a universal rounding rule is not established."
+        },
+        {
+          "id": "point-2",
+          "text": "A defensible systematic rule needs a random start and a selection pattern that produces the intended count."
+        },
+        {
+          "id": "point-3",
+          "text": "State and check the chosen procedure rather than assuming one rounded interval works for all cases."
+        }
+      ],
+      "model": "Because 197/40 = 4.925, simply rounding to 5 is not a universal sampling rule. I would specify a systematic scheme with a random start, check how many different positions it selects, and make any necessary design adjustment transparently.",
+      "sourceEvaluationIds": [
+        "systematic-period"
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    },
+    {
+      "id": "eval-quota-generalise",
+      "type": "evaluation",
+      "level": "extend",
+      "title": "Evaluate a sampling decision",
+      "methodId": "quota",
+      "context": "A survey sets proportional age-group quotas but recruits volunteers only from one shopping centre on Saturday afternoon. The authors claim the quotas guarantee the results represent every resident.",
+      "task": "Explain why the quotas are insufficient and describe a stronger approach.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Group proportions alone do not remove within-group selection bias."
+        },
+        {
+          "id": "point-2",
+          "text": "Volunteers at one place and time may differ from other residents in each age group."
+        },
+        {
+          "id": "point-3",
+          "text": "Use broader recruitment or a suitable frame for stratified random selection and report limitations."
+        }
+      ],
+      "model": "Proportional quotas control only the group counts, not how people within those groups are selected. Shopping-centre volunteers may differ from other residents. I would recruit across places and times, or obtain complete age-group frames and randomly draw from each stratum.",
+      "sourceEvaluationIds": [
+        "quota-recruit",
+        "stratified-random"
+      ],
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ]
+    }
+  ]
+}
