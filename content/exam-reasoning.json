@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "reasoning": [
     {
       "id": "cr-01",
@@ -35,7 +35,45 @@
         "improvement": 0
       },
       "model": "I would use stratified random sampling: split pupils by year group, allocate 30 and 20 places, and randomly select different pupils within each register. This matches the study's focus on comparing years. Nonresponse could still distort the results, so I would follow up and report response rates by year.",
-      "tradeoff": "A census would also supply both groups, but it may not be practical with limited time."
+      "tradeoff": "A census would also supply both groups, but it may not be practical with limited time.",
+      "evidence": [
+        {
+          "label": "Aim",
+          "text": "Compare study time between Year 12 and Year 13."
+        },
+        {
+          "label": "Frame",
+          "text": "Complete registers for 300 Year 12 and 200 Year 13 pupils."
+        },
+        {
+          "label": "Capacity",
+          "text": "The team can survey 50 pupils."
+        }
+      ],
+      "coaching": {
+        "method": "Separate year groups, then choose pupils randomly within each to avoid convenience-based selection.",
+        "reason": "The population split is 60:40, so 30 from Year 12 and 20 from Year 13 gives proportional allocation.",
+        "limitation": "Group proportions in the selection design do not guarantee response; nonrespondents can affect the final data.",
+        "improvement": "Following up selected nonrespondents and checking year-specific response rates addresses this concrete risk."
+      },
+      "misconceptions": {
+        "method": {
+          "quota": "Quota targets do not require random choice within groups; complete registers permit stratified random selection.",
+          "opportunity": "An available group may omit a year or skew its share, despite the complete registers."
+        },
+        "reason": {
+          "1": "The library queue is a convenience group, with no guarantee of coverage across both year groups.",
+          "2": "Separate registers make proportional sampling easier, not impossible."
+        },
+        "limitation": {
+          "1": "With a correctly implemented proportional random sample, individual inclusion probabilities can be equal; this is not the principal limitation here.",
+          "2": "Random selection does not make pupils respond to a questionnaire."
+        },
+        "improvement": {
+          "1": "Replacing nonrespondents with friends changes the random selection process and adds potential bias.",
+          "2": "Selecting volunteers is not equivalent to drawing names randomly from each year-group list."
+        }
+      }
     },
     {
       "id": "cr-02",
@@ -71,7 +109,45 @@
         "improvement": 0
       },
       "model": "I would use systematic sampling with interval 200/20=10 and a random start from 1 to 10, then take every tenth item. It is efficient and covers the ordered batch. A hidden ten-item production cycle could bias selection, so I would first inspect how items are ordered.",
-      "tradeoff": "Simple random selection could also be defensible if the complete frame is easy to number."
+      "tradeoff": "Simple random selection could also be defensible if the complete frame is easy to number.",
+      "evidence": [
+        {
+          "label": "Population",
+          "text": "An ordered register contains 200 items."
+        },
+        {
+          "label": "Target",
+          "text": "The inspector needs 20 items."
+        },
+        {
+          "label": "Ordering",
+          "text": "No repeating production pattern is currently known."
+        }
+      ],
+      "coaching": {
+        "method": "A systematic design uses the existing ordered list, with a random starting position.",
+        "reason": "The interval is 200 ÷ 20 = 10; randomly start at 1–10 and then take every tenth item.",
+        "limitation": "A hidden ten-item cycle could align with the interval and repeatedly select one phase.",
+        "improvement": "Checking the sequence for periodicity directly addresses the risk created by the selection interval."
+      },
+      "misconceptions": {
+        "method": {
+          "opportunity": "Picking readily available items is not a systematic, evenly spread draw from the list.",
+          "quota": "Group targets are unnecessary; the study concerns items from one complete ordered register."
+        },
+        "reason": {
+          "1": "The first 20 entries are a fixed block rather than a randomised systematic draw.",
+          "2": "Quota sampling does not guarantee equal individual selection probabilities."
+        },
+        "limitation": {
+          "1": "A random starting point does not remove periodicity when the interval matches the cycle.",
+          "2": "Inspecting stored parts does not involve recruiting volunteer survey participants."
+        },
+        "improvement": {
+          "1": "Removing the random start destroys the probability element of this systematic procedure.",
+          "2": "Sampling one box only risks leaving the rest of the batch uncovered."
+        }
+      }
     },
     {
       "id": "cr-03",
@@ -107,7 +183,45 @@
         "improvement": 0
       },
       "model": "For quick exploratory feedback I would use opportunity sampling, asking eligible attendees who are available. The responses may overrepresent people at that entrance and time, so I would visit several locations and make the limitation explicit.",
-      "tradeoff": "If a full list became available and generalisation mattered, a probability-based method would be preferable."
+      "tradeoff": "If a full list became available and generalisation mattered, a probability-based method would be preferable.",
+      "evidence": [
+        {
+          "label": "Purpose",
+          "text": "Quick exploratory feedback at a sports event."
+        },
+        {
+          "label": "Access",
+          "text": "No complete attendee register exists."
+        },
+        {
+          "label": "Time",
+          "text": "The student has 20 minutes."
+        }
+      ],
+      "coaching": {
+        "method": "Opportunity sampling is workable for exploratory impressions when only available attendees can be reached.",
+        "reason": "Recruiting available eligible attendees fits the short time limit and does not pretend to be random.",
+        "limitation": "Only attendees passing the location at that time can respond, so views may be systematically different.",
+        "improvement": "Covering several entrances and times improves variety, but it still does not create a random sample."
+      },
+      "misconceptions": {
+        "method": {
+          "simple-random": "Simple random sampling would need an eligible frame and random selection, neither of which is available.",
+          "stratified": "Stratified random sampling requires defined strata and random selections within them."
+        },
+        "reason": {
+          "1": "A single entrance is a selective location; it does not guarantee representation of spectators.",
+          "2": "Friends are a convenience group, not a proportional random selection from strata."
+        },
+        "limitation": {
+          "1": "Respondents may decline, regardless of whether recruitment is convenient.",
+          "2": "Random starting positions belong to systematic sampling, not opportunity sampling."
+        },
+        "improvement": {
+          "1": "The attendees do not support an inference to all residents of the area.",
+          "2": "Ignoring who was absent hides the most important limitation of the design."
+        }
+      }
     },
     {
       "id": "cr-04",
@@ -143,7 +257,45 @@
         "improvement": 0
       },
       "model": "Quota sampling fits the fieldwork constraint. I would set targets of 40 commuters and 60 non-commuters and recruit eligible respondents until each quota is filled. Selection within groups is non-random, which may bias the results; I would vary locations and times and report this limitation.",
-      "tradeoff": "Stratified random sampling would usually be stronger for generalisation, but needs usable frames within strata."
+      "tradeoff": "Stratified random sampling would usually be stronger for generalisation, but needs usable frames within strata.",
+      "evidence": [
+        {
+          "label": "Targets",
+          "text": "40 commuters and 60 non-commuters."
+        },
+        {
+          "label": "Time",
+          "text": "All fieldwork must be completed this week."
+        },
+        {
+          "label": "Frame",
+          "text": "No complete list exists; multiple recruitment sites are available."
+        }
+      ],
+      "coaching": {
+        "method": "Quota sampling can meet category totals through non-random recruitment without a population list.",
+        "reason": "The interviewer can approach eligible people until each preset group total is filled.",
+        "limitation": "Within-group convenience recruitment can distort opinions even if the quotas are met.",
+        "improvement": "Varying site and time broadens coverage while honestly retaining the non-random limitation."
+      },
+      "misconceptions": {
+        "method": {
+          "systematic": "Without a complete ordered frame, a systematic interval cannot be applied to the target population.",
+          "simple-random": "Generating numbers cannot identify people equally from a missing population frame."
+        },
+        "reason": {
+          "1": "The first 100 volunteers need not meet either quota.",
+          "2": "Random numbers alone are not a procedure without defined sampling units and a complete frame."
+        },
+        "limitation": {
+          "1": "Group totals are not evidence that individuals within groups were randomly chosen.",
+          "2": "A regular interval cannot remove bias caused by nonresponse."
+        },
+        "improvement": {
+          "1": "Changing the name does not turn non-random quota recruitment into stratified random sampling.",
+          "2": "A single commuter station at rush hour undercovers non-commuters and other times."
+        }
+      }
     },
     {
       "id": "cr-05",
@@ -179,7 +331,45 @@
         "improvement": 0
       },
       "model": "A simple random sample is suitable with this complete register: number members 1–120 and generate random integers, ignoring repeats until 15 members are chosen. The realised sample may still be unbalanced or have nonresponse, so I would follow up and acknowledge these limits.",
-      "tradeoff": "If subgroup comparisons became important, stratified random sampling could be preferable."
+      "tradeoff": "If subgroup comparisons became important, stratified random sampling could be preferable.",
+      "evidence": [
+        {
+          "label": "Frame",
+          "text": "A complete, up-to-date register of 120 club members."
+        },
+        {
+          "label": "Target",
+          "text": "The club wants 15 responses."
+        },
+        {
+          "label": "Aim",
+          "text": "No subgroup is the focus."
+        }
+      ],
+      "coaching": {
+        "method": "With a complete member register and no subgroup requirement, simple random selection is straightforward.",
+        "reason": "Unique labels from 1 to 120 and ignoring repeated random draws produce 15 distinct members.",
+        "limitation": "A random sample can still contain an atypical mix by chance, and some people may not respond.",
+        "improvement": "Checking responses and following up selected members helps address nonresponse without replacing random draws with friends."
+      },
+      "misconceptions": {
+        "method": {
+          "quota": "Quota sampling is unnecessary without meaningful categories and gives no random-selection guarantee.",
+          "opportunity": "The next arrivals are conveniently accessible, not a random draw of all 120 members."
+        },
+        "reason": {
+          "1": "Who arrives next depends on availability rather than a valid random selection procedure.",
+          "2": "Artificial equal quotas do not help when no subgroup comparison is required."
+        },
+        "limitation": {
+          "1": "Random selection cannot prevent nonresponse or incorrect measurements.",
+          "2": "A list identifies potential respondents; it does not force them to take part."
+        },
+        "improvement": {
+          "1": "Friends are a non-random replacement and can create selection bias.",
+          "2": "Keeping repeated labels gives fewer than 15 distinct members."
+        }
+      }
     },
     {
       "id": "cr-06",
@@ -198,7 +388,7 @@
           "Use every kth name from a list sorted by boarding status without checking its ordering."
         ],
         "limitation": [
-          "The proportional allocation needs whole numbers that total the requested sample size.",
+          "Whole-number proportional allocations may need adjustment to total n, and selected pupils can still fail to respond.",
           "A complete register guarantees everyone will complete the questionnaire.",
           "Random sampling guarantees the sample's realised proportions in every other characteristic."
         ],
@@ -214,8 +404,46 @@
         "limitation": 0,
         "improvement": 0
       },
-      "model": "I would use stratified random sampling: divide the complete register into boarding and day pupils, allocate proportional whole-number sample sizes, then draw distinct names randomly within each group. Rounding may affect the total, so I would verify allocations add to n and follow up nonrespondents.",
-      "tradeoff": "Quota sampling can meet targets, but selection within the categories would not be random."
+      "model": "I would use stratified random sampling: divide the full register into boarding and day pupils, allocate proportional whole-number sample sizes, then draw distinct pupils randomly within each category. Rounding needs to preserve the total n and some selected pupils might not respond, so I would check allocations and plan follow-up contacts.",
+      "tradeoff": "Quota sampling can meet targets, but selection within the categories would not be random.",
+      "evidence": [
+        {
+          "label": "Groups",
+          "text": "The study compares boarding and day pupils."
+        },
+        {
+          "label": "Frame",
+          "text": "The complete register identifies each category."
+        },
+        {
+          "label": "Design",
+          "text": "Both groups should appear approximately in their population proportions."
+        }
+      ],
+      "coaching": {
+        "method": "A complete category-labelled frame makes random sampling within boarding/day strata possible.",
+        "reason": "Allocate in proportion to group sizes, ensure the whole-number allocations total n, and sample randomly within each.",
+        "limitation": "Rounding to whole units may require adjustment, and proportional allocation does not remove nonresponse risk.",
+        "improvement": "Check the allocations add to n and plan contacts in each group to address coverage of selected pupils."
+      },
+      "misconceptions": {
+        "method": {
+          "quota": "Quotas can match group totals but generally recruit non-randomly within groups.",
+          "systematic": "A list grouped by boarding status can make a fixed-interval draw risky without checking ordering."
+        },
+        "reason": {
+          "1": "Recruiting at a dormitory or gate is not random selection from complete category registers.",
+          "2": "A fixed interval across a category-sorted list does not guarantee proportional or unbiased selection."
+        },
+        "limitation": {
+          "1": "A full register does not guarantee that chosen pupils respond.",
+          "2": "Correct proportions for boarding status do not guarantee correct proportions for every other characteristic."
+        },
+        "improvement": {
+          "1": "Independent upward rounding can make the total exceed the requested sample size.",
+          "2": "The first people available within a category are not the same as random draws."
+        }
+      }
     },
     {
       "id": "cr-07",
@@ -251,7 +479,45 @@
         "improvement": 0
       },
       "model": "I would use a simple random sample of 30 distinct numbered parts from the full set of 300. Taking every tenth item could repeatedly select one phase of the production cycle. Random selection avoids fixing the sample to that phase, although chance variation remains; I would ensure the frame is complete and every selected part can be inspected.",
-      "tradeoff": "A specially designed stratified sample across cycle positions might be stronger if each position needs representation."
+      "tradeoff": "A specially designed stratified sample across cycle positions might be stronger if each position needs representation.",
+      "evidence": [
+        {
+          "label": "Order",
+          "text": "Production repeats every ten records."
+        },
+        {
+          "label": "Risk",
+          "text": "One position in each cycle has already been operator-checked."
+        },
+        {
+          "label": "Target",
+          "text": "Inspect 30 of 300 parts."
+        }
+      ],
+      "coaching": {
+        "method": "A simple random draw from all 300 items avoids fixing the selection to one cycle position.",
+        "reason": "Number all parts and select 30 unique labels; a systematic k = 10 scheme risks phase locking.",
+        "limitation": "Random draws reduce the cycle-alignment problem, but they do not guarantee exact balance across cycle positions.",
+        "improvement": "Verify every part is in the frame and inspect all randomly selected labels to preserve the design."
+      },
+      "misconceptions": {
+        "method": {
+          "systematic": "With interval 10, even a random start can lock every selected unit to one cycle position.",
+          "opportunity": "Surveying packers is not sampling the physical parts whose defects are being studied."
+        },
+        "reason": {
+          "1": "Starting at item 1 makes the sample even more tightly tied to one cycle position.",
+          "2": "Interviews with packers do not constitute inspection of the requested parts."
+        },
+        "limitation": {
+          "1": "Sampling every tenth from a ten-position cycle captures one repeated phase, not all ten.",
+          "2": "Random sampling does not force exactly three parts from each cycle position."
+        },
+        "improvement": {
+          "1": "Matching the interval to the known cycle recreates the selection risk.",
+          "2": "Taking end-of-cycle parts only provides no balanced or random coverage."
+        }
+      }
     },
     {
       "id": "cr-08",
@@ -287,13 +553,51 @@
         "improvement": 0
       },
       "model": "I would first construct a full sampling frame covering campus and off-site students, then take a simple random sample using distinct valid numbers. The existing register excludes part of the population, so a random draw from it would not solve coverage bias. I would verify the frame and plan suitable follow-up contact.",
-      "tradeoff": "The design only becomes a genuine random sample of all students after the frame has been repaired."
+      "tradeoff": "The design only becomes a genuine random sample of all students after the frame has been repaired.",
+      "evidence": [
+        {
+          "label": "Population",
+          "text": "The target includes campus and off-site students."
+        },
+        {
+          "label": "Available frame",
+          "text": "The only current register covers campus students."
+        },
+        {
+          "label": "Priority",
+          "text": "Coverage must be repaired before generalising."
+        }
+      ],
+      "coaching": {
+        "method": "Random selection is defensible only after constructing a complete frame including off-site students.",
+        "reason": "Expanding the list first gives eligible off-site pupils a non-zero chance of selection.",
+        "limitation": "Missing frame units have zero chance of selection however random the draw among listed units is.",
+        "improvement": "Verify the population register and plan contact for off-site selected students before drawing conclusions."
+      },
+      "misconceptions": {
+        "method": {
+          "opportunity": "Selecting available campus students would exclude off-site students without random inclusion.",
+          "quota": "Quotas would not by themselves repair the missing frame or give off-site students probability of selection."
+        },
+        "reason": {
+          "1": "Off-site students absent from the list cannot be chosen by its random labels.",
+          "2": "Increasing the sample drawn from an incomplete register leaves the excluded group at zero inclusion probability."
+        },
+        "limitation": {
+          "1": "A larger sample from the same incomplete frame does not resolve missing units.",
+          "2": "Sampling with replacement does not bring omitted members into the frame."
+        },
+        "improvement": {
+          "1": "A campus-only sample cannot stand for all students without substantial qualification.",
+          "2": "Changing the stated target after seeing a missing group conceals the intended study population."
+        }
+      }
     },
     {
       "id": "cr-09",
       "level": "extend",
       "scenario": "A town wants to estimate how often residents use parks. Interviewers can work in several parks but cannot obtain a list of every resident. The study must report limitations carefully.",
-      "priority": "Prioritise a practical initial survey without pretending the sampled people are all residents.",
+      "priority": "Prioritise a practical exploratory survey, without pretending park visitors represent all town residents.",
       "options": {
         "method": [
           "stratified",
@@ -323,7 +627,45 @@
         "improvement": 0
       },
       "model": "An opportunity sample of available park users could provide exploratory information quickly, but it cannot reliably estimate behaviour for every resident because non-users may be excluded. I would sample across several parks and times and clearly label the coverage limitation. A proper resident-wide estimate needs a better sampling design.",
-      "tradeoff": "This is not a strong design for a representative town-wide estimate; feasibility does not justify unwarranted generalisation."
+      "tradeoff": "This is not a strong design for a representative town-wide estimate; feasibility does not justify unwarranted generalisation.",
+      "evidence": [
+        {
+          "label": "Aim",
+          "text": "Explore park usage across residents of the town."
+        },
+        {
+          "label": "Access",
+          "text": "Interviewers can visit several parks but have no resident-wide list."
+        },
+        {
+          "label": "Missing group",
+          "text": "Some residents may never use parks."
+        }
+      ],
+      "coaching": {
+        "method": "Opportunity recruitment at parks is practical for exploratory park-user opinions, not a representative town estimate.",
+        "reason": "Recruit reachable park users and restrict claims to what this non-random sample can support.",
+        "limitation": "Residents who never visit parks may be entirely absent, making a town-wide estimate unreliable.",
+        "improvement": "Different parks and times improve variety, but resident-wide inference needs a better sampling design and frame."
+      },
+      "misconceptions": {
+        "method": {
+          "stratified": "There is no resident-wide frame from which to select random units within defined strata.",
+          "simple-random": "Choosing random park visitors is not a simple random sample of all town residents."
+        },
+        "reason": {
+          "1": "One entrance does not provide a resident-wide probability frame.",
+          "2": "Park attendance varies; many residents cannot be reached there at all."
+        },
+        "limitation": {
+          "1": "Volunteering at a park does not remove the exclusion of non-visitors.",
+          "2": "Interviewing available park users is not a census of town residents."
+        },
+        "improvement": {
+          "1": "A park-user sample cannot support an unqualified town-wide estimate.",
+          "2": "Only interviewing runners would further narrow the groups represented."
+        }
+      }
     }
   ]
 }

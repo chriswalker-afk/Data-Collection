@@ -1,6 +1,7 @@
 // Node.js 20+; no external dependencies.
 import {readFileSync} from 'node:fs';
 import {validatePairBank} from '../src/sort-it.js';
+import {validateReasonBank} from '../src/reasoning.js';
 const load = file => JSON.parse(readFileSync(new URL('../content/'+file+'.json',import.meta.url),'utf8'));
 const {concepts}=load('concepts'),{sources}=load('sources'),{methods}=load('methods'),{evaluations}=load('evaluations');
 const {scenarios}=load('scenarios'),{cloze}=load('cloze'),{rounds}=load('sort-rounds'),{pairs}=load('sort-pairs');
@@ -31,6 +32,7 @@ const sy=methods.find(m=>m.id==='systematic');assert(sy.conditionalProcedure.som
 assert(concepts.find(c=>c.id==='simple-random-sampling').definition.includes('every possible group'),'SRS definition must concern whole samples');
 const {errors}=load('exam-errors'),{reasoning}=load('exam-reasoning');
 unique(ids(errors),'exam error');unique(ids(reasoning),'exam reasoning');
+validateReasonBank(reasoning);
 for(const q of errors){
  assert(['foundation','develop','extend'].includes(q.level)&&methodsById.has(q.methodId),'Invalid error level or method: '+q.id);
  assert(q.lines.length>=3&&Number.isInteger(q.errorLine)&&q.errorLine>=0&&q.errorLine<q.lines.length,'Invalid error line: '+q.id);

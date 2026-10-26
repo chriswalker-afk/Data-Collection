@@ -26,8 +26,8 @@ export const ACTIVITY_GUIDANCE=Object.freeze({
     practice:'Locate, repair and explain flawed sampling investigations.',
     task:'Select the numbered error, choose a defensible correction, then diagnose its consequence. All three decisions are checked together; missed cases can be revisited without new mastery credit.'}),
   reason:Object.freeze({
-    practice:'Justify a method in context, recognise a limitation and suggest an improvement.',
-    task:'Choose the four elements of a defensible explanation. Your optional writing is for reflection, not automatic grading.'}),
+    practice:'Build a contextual argument: choose a method, justify it, evaluate a limitation and propose a targeted improvement.',
+    task:'Write an explanation independently or build it through four guided decisions. Compare with a model, self-check your writing (not automatic grading) and revisit difficult cases without mastery credit.'}),
   exam:Object.freeze({
     practice:'Combine sampling calculations, method descriptions and evaluation.',
     task:'Answer independently where possible, then use the worked model to review your answer.'})
