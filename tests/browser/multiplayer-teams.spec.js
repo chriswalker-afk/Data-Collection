@@ -40,7 +40,7 @@ test('teacher creates balanced optional teams and a meaningful class quest, shar
       const p=await browser.newPage({viewport:{width:i===0?320:i===1?390:768,height:820},
         isMobile:true,hasTouch:true});
       students.push(p);await join(p,code,'Team Player '+(i+1));
-      await expect(p.locator('.team-lobby-note')).toContainText('Your team');
+      await expect(p.locator('.team-lobby-note').first()).toContainText('Your team');
       expect(await p.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(1);
     }
     const lobby=await getState(request,code,host);
