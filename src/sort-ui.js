@@ -40,7 +40,7 @@ export function createSortItUI(deps){
   const status=checked?(correct?'correct':'incorrect'):'';
   const text=item.prompt;
   const card=action(text,'sort-select',{
-    'data-sort-card':item.id,draggable:!s.revealed,disabled:s.revealed,'aria-pressed':selected,
+    'data-sort-card':item.id,draggable:s.revealed?'false':'true',disabled:s.revealed,'aria-pressed':selected,
     'aria-label':text+(placed?' — currently in '+sortDestinationLabel(placed):' — unplaced')+
       (selected?' — selected':'')+(status?' — '+(correct?'correct':'needs review'):'')
   },'sort-card'+(selected?' is-selected':'')+(status?' is-'+status:''));
