@@ -17,7 +17,7 @@
 .sort-page .sort-selection-bar:has([data-action="sort-deselect"]) .sort-selection-label{color:#aee6ca}
 .sort-page .sort-selection-bar:has([data-action="sort-deselect"]) .sort-selection-message{color:#fff}
 .sort-page .sort-selection-bar .btn{font-size:.75rem;min-height:42px;padding:8px 12px}
-.sort-page .sort-workspace{display:grid;grid-template-columns:minmax(240px,.34fr) minmax(0,.66fr);gap:17px;align-items:start}
+.sort-page .sort-workspace{display:grid;grid-template-columns:minmax(240px,.30fr) minmax(0,.70fr);gap:17px;align-items:start}
 .sort-page .sort-tray,.sort-page .sort-board{min-width:0;border:1px solid #bad4c5;background:white;border-radius:19px;box-shadow:0 5px 18px rgba(20,60,49,.05)}
 .sort-page .sort-tray{position:sticky;top:16px;padding:19px;max-height:calc(100vh - 35px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:#9ab9a7 transparent}
 .sort-page .sort-tray-header,.sort-page .sort-board-heading{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:9px}
@@ -75,8 +75,7 @@
 .sort-page .sort-scoring-note{font-size:.78rem;color:#4d695c;line-height:1.55;margin:10px 4px}
 .sort-drag-ghost{position:fixed;z-index:9999;pointer-events:none;max-width:min(270px,72vw);min-width:140px;padding:12px 14px;background:#164f47;border:2px solid #79c3a6;border-radius:13px;box-shadow:0 15px 35px rgba(7,50,39,.25);color:#fff;font-size:.82rem;font-weight:700;line-height:1.45;transform:rotate(-2deg)}
 @keyframes sort-enter{from{opacity:.67;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-@media(min-width:1250px){.sort-page .sort-method-bins{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:1030px){
+ @media(max-width:1030px){
  .sort-page .sort-workspace{grid-template-columns:minmax(210px,.35fr) minmax(0,.65fr)}
  .sort-page .sort-method-grid{grid-template-columns:1fr}
  .sort-page .sort-method-bins{grid-template-columns:repeat(2,minmax(0,1fr))}
