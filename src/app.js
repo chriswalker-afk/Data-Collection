@@ -849,9 +849,9 @@ function examRadio(name,value,text,checked,disabled,attribute) {
 function errorView(){
  const root=div('page activity-page');root.append(activityTop('error'),examLevelPicker());
  if(session.complete){root.append(showCompletion('error'));return root;}
- const q=session.items[session.index];root.append(roundProgress(session.index+1,session.items.length,'Case '+(session.index+1)+' of '+session.items.length));
+ const q=session.items[session.index];root.append(roundProgress(session.index+1,session.items.length,'Case '+(session.index+1)+' of '+session.items.length),practiceGuide('error'));
  const panel=element('section',{className:'exam-workspace','data-error-id':q.id});
- panel.append(span('eyebrow','DIAGNOSE AND REPAIR'),heading(2,'exam-heading','Find the flawed line',{id:'exam-heading',tabindex:'-1'}),
+ panel.append(span('eyebrow','QUESTION · DIAGNOSE AND REPAIR'),heading(2,'exam-heading','Find the flawed line',{id:'exam-heading',tabindex:'-1'}),
   paragraph('exam-scenario',q.context));
  const lines=element('fieldset',{className:'exam-fieldset'});lines.append(element('legend',{},'1. Which line is flawed?'));
  q.lines.forEach((line,i)=>lines.append(examRadio('error-line',String(i),String(i+1)+'. '+line,session.selectedLine===i,session.answered,'data-error-line')));
@@ -861,21 +861,21 @@ function errorView(){
  if(!session.answered)panel.append(div('exam-buttons',action('Check my diagnosis','error-check',{disabled:session.selectedLine===null||!session.selectedRepair})));
  else{
   const result=gradeError(q,session.selectedLine,session.selectedRepair);
-  const feedback=div('inline-feedback typed-feedback'+(result.correct?' correct':' incorrect'),icon(result.correct?'✓':'!'),
-   div('',heading(3,'feedback-heading',result.correct?'Both choices correct.':'Here is the accurate correction.'),
-   paragraph('',(result.lineCorrect?'You identified the faulty line. ':'The flawed line is '+(q.errorLine+1)+'. ')+
-    (result.repairCorrect?'Your repair was correct.':'Correct repair: '+q.repairs.find(x=>x.id===q.repair).text)),
-   paragraph('',q.explanation)));
-  feedback.setAttribute('tabindex','-1');panel.append(feedback,div('next-row',action(session.index===session.items.length-1?'Finish round →':'Next case →','error-next')));
+  const feedback=feedbackBanner(result.correct?'correct':'incorrect',
+     result.correct?'Both choices correct.':'Here is the accurate correction.',[
+       paragraph('',(result.lineCorrect?'You identified the faulty line. ':'The flawed line is '+(q.errorLine+1)+'. ')+
+         (result.repairCorrect?'Your repair was correct.':'Correct repair: '+q.repairs.find(x=>x.id===q.repair).text)),
+       paragraph('',q.explanation)
+     ]);panel.append(feedback,div('next-row',action(session.index===session.items.length-1?'Finish round →':'Next case →','error-next')));
  }
  root.append(panel);return root;
 }
 function reasoningView(){
  const root=div('page activity-page');root.append(activityTop('reason'),examLevelPicker());
  if(session.complete){root.append(showCompletion('reason'));return root;}
- const q=session.items[session.index];root.append(roundProgress(session.index+1,session.items.length,'Investigation '+(session.index+1)+' of '+session.items.length));
+ const q=session.items[session.index];root.append(roundProgress(session.index+1,session.items.length,'Investigation '+(session.index+1)+' of '+session.items.length),practiceGuide('reason'));
  const panel=element('section',{className:'exam-workspace','data-reason-id':q.id});
- panel.append(span('eyebrow','EXAM REASONING'),heading(2,'exam-heading','Build a justified answer',{id:'exam-heading',tabindex:'-1'}),
+ panel.append(span('eyebrow','QUESTION · EXAM REASONING'),heading(2,'exam-heading','Build a justified answer',{id:'exam-heading',tabindex:'-1'}),
  paragraph('exam-scenario',q.scenario),paragraph('exam-help','Priority: '+q.priority),
  paragraph('exam-help','Compare your choices with one defensible model. Alternative well-justified methods may also be valid.'));
  for(const [part,title] of [['method','Method'],['reason','Contextual justification'],['limitation','Limitation'],['improvement','Improvement']]){
@@ -893,10 +893,9 @@ function reasoningView(){
    {disabled:['method','reason','limitation','improvement'].some(k=>session.selections[k]===undefined)})));
  else{
   const result=assessReasoning(q,session.selections);
-  const feedback=div('inline-feedback typed-feedback'+(result.complete?' correct':' incorrect'),
-    icon(result.complete?'✓':'!'),div('',heading(3,'feedback-heading',result.met.length+' of 4 model points matched'),
-      paragraph('','This formative checklist is not an official Edexcel mark scheme or a grade for your written answer.')));
-  feedback.setAttribute('tabindex','-1');
+  const feedback=feedbackBanner('review',result.met.length+' of 4 model points matched',[
+     paragraph('','This formative checklist is not an official Edexcel mark scheme or a grade for your written answer.')
+   ]);
   const list=element('ul',{className:'exam-checklist'});
   for(const [part,title] of [['method','Method'],['reason','Justification'],['limitation','Limitation'],['improvement','Improvement']])
    list.append(element('li',{},(result.met.includes(part)?'✓ ':'○ ')+title+': '+
@@ -956,7 +955,7 @@ const examSimulator=createExamSimulationUI({
   beginReady:()=>{session={ready:true,complete:false};},
   persist:()=>{if(!saveExamStore(examStore,data.examQuestions,data.methods))persistenceAvailable=false;},
   recordNumerical:remember,finish:finishRound,render,announce,
-  openFeedback:experience.openFeedback
+  practiceGuide,feedbackBanner,openFeedback:experience.openFeedback
 });
 function render(focusTarget) {
   if (!data) return;
