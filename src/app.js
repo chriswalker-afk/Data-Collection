@@ -23,6 +23,7 @@ import {guideForActivity} from './activity-guidance.js';
 import {makeFlashSession,rateFlashSession,skipFlashSession,makeFlashReviewSession,flashCardLabel} from './flashcards.js';
 import {chooseMatch,matchNextStep,matchStatus,MATCH_MOTION_MS} from './match-up.js';
 import {clozePresentation} from './cloze-ui.js';
+import {speedClockPercent,speedRoundSummary,speedReviewDeck,SPEED_CAUTION_MS} from './speed-ui.js';
 
 const mount = document.getElementById('app');
 const announcer = document.getElementById('announcer');
@@ -281,6 +282,20 @@ function roundProgress(current, total, label) {
     element('progress', { value: current, max: total || 1, 'aria-label': label })
   );
 }
+function speedCompletionPanel(){
+  const stats=speedRoundSummary(session);
+  return div('speed-summary',
+    div('speed-summary-stats',
+      div('speed-summary-stat',span('speed-summary-number',stats.accuracyLabel),span('speed-summary-label','Correct of submitted')),
+      div('speed-summary-stat',span('speed-summary-number',String(stats.attempted)),span('speed-summary-label','Submitted')),
+      div('speed-summary-stat',span('speed-summary-number',String(stats.skipped)),span('speed-summary-label','Skipped'))
+    ),
+    paragraph('speed-summary-explainer','Accuracy is based on submitted answers, not an examination grade.'),
+    paragraph('speed-summary-next',stats.takeaway),
+    ...(stats.reviewCount?[action('Review '+stats.reviewCount+' tricky term'+
+      (stats.reviewCount===1?'':'s')+' →','speed-review',{},'btn btn-primary speed-review-button')]:[])
+  );
+}
 function showCompletion(game) {
   const next=nextAfterRound(game,topic);
   const gameTitle = GAMES.find(g => g.id === game).title;
@@ -301,6 +316,7 @@ function showCompletion(game) {
     heading(2, 'completion-title', 'Nicely done. Keep it going.', { tabindex: '-1' }),
     paragraph('completion-description', gameTitle + ' · ' + topicLabel(topic)),
     paragraph('completion-score', scoreLine),
+    ...(game==='speed'?[speedCompletionPanel()]:[]),
     div('completion-next',
       span('eyebrow','A USEFUL NEXT STEP'),
       heading(3,'completion-next-title',next.label),
@@ -515,6 +531,8 @@ function typedForm(kind, labelText, value) {
   });
   if(kind==='cloze')input.setAttribute('aria-describedby','cloze-sentence'+
     (session.hintUsed?' cloze-hint-text':'')+(session.typoRetry?' cloze-near-miss':''));
+  if(kind==='speed')input.setAttribute('aria-describedby','speed-definition speed-answer-note'+
+    (session.typoRetry?' speed-typo-note':''));
   form.append(
     element('label',{for:fieldId,className:'typed-label'},labelText),
     div('typed-input-row',input,element('button',{type:'submit',className:'btn btn-primary'},'Check answer'))
