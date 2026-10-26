@@ -2,6 +2,7 @@ import {DurableObject} from 'cloudflare:workers';
 import {SCENARIOS} from './scenarios.js';
 import {ROUND_LENGTHS,cleanNickname,secureIndex} from './rules.js';
 import {GAME_MODES,validLength,questionTimeMs,makeGameDeck,safeGameQuestion,revealGameAnswer,gradeGameAnswer} from './modes.js';
+import {makeCeremony,ceremonySnapshot,collectableReceipt} from './ceremony-rules.js';
 
 // A separate, short-lived classroom service; no student identities or logins.
 const LIVE_ORIGIN='https://chriswalker-afk.github.io';
@@ -81,7 +82,10 @@ function publicState(room,participant,now,connections){
         id:a.id,points:a.points,correctCount:a.correctCount,total:a.total,
         ...(game==='which'?{method:a.method}:{})
       }))}:null,
-    finished:room.status==='finished'?{total:room.deck.length}:null
+    finished:room.status==='finished'?{total:room.deck.length,
+      ceremonyAvailable:room.players.length>0,ceremonyCompleted:Boolean(room.ceremony?.completed)}:null,
+    ceremony:ceremonySnapshot(room,participant),
+    myMultiplayerAwards:collectableReceipt(room,participant)
   };
 }
 export class GameRoom extends DurableObject{
@@ -106,7 +110,7 @@ export class GameRoom extends DurableObject{
     if(this.room()||this.ctx.storage.kv.get('room'))return {error:'Room code already in use'};
     if(!validLength(game,roundLength))return {error:'Invalid game or round length'};
     const room={code,status:'lobby',created:Date.now(),game,roundLength,locked:false,
-      hostToken:crypto.randomUUID(),players:[],deck:[],index:0,deadline:0,answers:[]};
+      hostToken:crypto.randomUUID(),ceremonyId:crypto.randomUUID(),players:[],deck:[],index:0,deadline:0,answers:[],results:[],ceremony:null};
     this.save(room);
     await this.ctx.storage.setAlarm(room.created+ROOM_TTL_MS);
     return {code,token:room.hostToken};
@@ -160,24 +164,27 @@ export class GameRoom extends DurableObject{
       room.locked=true;
     }else if(command.type==='unlock'&&person.host&&room.status==='lobby'){
       room.locked=false;
-    }else if(command.type==='remove'&&person.host&&room.status!=='finished'){
+    }else if(command.type==='remove'&&person.host&&room.status!=='finished'&&room.status!=='ceremony'){
       if(typeof command.targetId!=='string'||!UUID.test(command.targetId))return {error:'Invalid participant'};
       const index=room.players.findIndex(p=>p.id===command.targetId);
       if(index<0)return {error:'Participant not found'};
       room.players.splice(index,1);
       room.answers=room.answers.filter(a=>a.id!==command.targetId);
+      room.results=(room.results||[]).filter(a=>a.playerId!==command.targetId);
       for(const ws of this.ctx.getWebSockets()){
         if(ws.deserializeAttachment()?.id===command.targetId){try{ws.close(4003,'Removed by host');}catch{}}
       }
     }else if(command.type==='leave'&&!person.host){
       room.players=room.players.filter(p=>p.id!==person.id);
       room.answers=room.answers.filter(a=>a.id!==person.id);
+      room.results=(room.results||[]).filter(a=>a.playerId!==person.id);
       for(const ws of this.ctx.getWebSockets()){
         if(ws.deserializeAttachment()?.id===person.id){try{ws.close(4000,'Left classroom');}catch{}}
       }
     }else if(command.type==='start'&&person.host&&room.status==='lobby'){
       if(room.players.length===0)return {error:'At least one student must join'};
       room.deck=makeGameDeck(room.game||'which',room.roundLength,SCENARIOS);room.index=0;room.answers=[];
+      room.results=[];room.ceremony=null;
       room.status='playing';room.deadline=Date.now()+questionTimeMs(room.game||'which');
     }else if(command.type==='answer'&&!person.host&&room.status==='playing'){
       if(Date.now()>=room.deadline)return {error:'Time is up'};
@@ -187,6 +194,16 @@ export class GameRoom extends DurableObject{
       const graded=gradeGameAnswer(game,room.deck[room.index],command,elapsed,duration);
       if(graded.error)return {error:graded.error};
       room.answers.push({id:person.id,...graded});
+      // Verified, immutable evidence of the first accepted submission only.
+      // Never record client-supplied grades, achievements, deadlines or nicknames.
+      if(!Array.isArray(room.results))room.results=[];
+      const question=room.deck[room.index];
+      room.results.push({
+        playerId:person.id,index:room.index,questionId:question.id,
+        correctCount:graded.correctCount,total:graded.total,points:graded.points,
+        ...(game==='which'&&graded.correctCount===graded.total?{method:question.correctMethod}:{}),
+        ...(game==='speed'&&graded.correctCount===graded.total?{termId:question.id}:{})
+      });
       const player=room.players.find(p=>p.id===person.id);
       player.score+=graded.points;
     }else if(command.type==='reveal'&&person.host&&room.status==='playing'){
@@ -197,7 +214,23 @@ export class GameRoom extends DurableObject{
       room.index+=1;room.answers=[];
       room.status=room.index>=room.deck.length?'finished':'playing';
       room.deadline=room.status==='playing'?Date.now()+questionTimeMs(room.game||'which'):0;
+    }else if(command.type==='ceremony-start'&&person.host&&room.status==='finished'){
+      if(!room.players.length)return {error:'No participants to celebrate'};
+      const prepared=room.ceremony||makeCeremony(room);
+      room.ceremony={...prepared,step:0,run:(room.ceremony?.run||0)+1,completed:false};
+      room.status='ceremony';room.deadline=0;
+    }else if(command.type==='ceremony-next'&&person.host&&room.status==='ceremony'){
+      if(room.ceremony.step>=room.ceremony.slides.length-1)return {error:'Already at the finale'};
+      room.ceremony.step++;
+    }else if(command.type==='ceremony-prev'&&person.host&&room.status==='ceremony'){
+      if(room.ceremony.step<=0)return {error:'Already at the beginning'};
+      room.ceremony.step--;
+    }else if(command.type==='ceremony-finale'&&person.host&&room.status==='ceremony'){
+      room.ceremony.step=room.ceremony.slides.length-1;
+    }else if(command.type==='ceremony-end'&&person.host&&room.status==='ceremony'){
+      room.ceremony.completed=true;room.status='finished';
     }else if(command.type==='close'&&person.host&&room.status!=='finished'){
+      if(room.status==='ceremony'&&room.ceremony)room.ceremony.completed=true;
       room.status='finished';room.deadline=0;
     }else{return {error:'Action not available'};}
     this.save(room);this.broadcast();return {ok:true};
@@ -263,7 +296,7 @@ export default {
     }
     const url=new URL(request.url);
     if(url.pathname==='/health'&&request.method==='GET')
-      return json(request,{ok:true,service:'sampling-arcade-multiplayer',version:4,transport:'websocket',games:Object.keys(GAME_MODES)});
+      return json(request,{ok:true,service:'sampling-arcade-multiplayer',version:5,transport:'websocket',games:Object.keys(GAME_MODES)});
     if(url.pathname==='/rooms'&&request.method==='POST'){
       let body;try{body=await smallJSON(request);}catch(e){return fail(request,e.message==='Request too large'?e.message:'Invalid JSON',e.message==='Request too large'?413:400);}
       const roundLength=Number(body.roundLength),game=body.game===undefined?'which':body.game;
