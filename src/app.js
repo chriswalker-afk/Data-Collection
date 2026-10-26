@@ -440,10 +440,19 @@ function matchView(){
   );
   info.querySelector('.match-progress-markers').setAttribute('aria-hidden','true');
   const step=matchNextStep(session);
+  const selectedItem=session.selectedTerm
+    ? session.terms.find(item=>item.id===session.selectedTerm)
+    : session.selectedDefinition
+      ? session.definitions.find(item=>item.id===session.selectedDefinition)
+      : null;
+  const selectedCopy=selectedItem
+    ?(session.selectedTerm?selectedItem.label:selectedItem.definition):null;
   const selection=div('match-instruction-bar',
     div('match-instruction-main',
-      span('match-instruction-icon',session.selectedTerm||session.selectedDefinition?'↗':'◎'),
-      paragraph('match-instruction-text',step)),
+      span('match-instruction-icon',selectedItem?'↗':'◎'),
+      div('match-instruction-copy',
+        paragraph('match-instruction-text',step),
+        ...(selectedCopy?[span('match-selected-name',selectedCopy)]:[]))),
     span('match-pairs-remaining',summary.remaining)
   );
   selection.querySelector('.match-instruction-text').id='match-instruction-text';
@@ -456,12 +465,12 @@ function matchView(){
   defCol.append(heading(3,'match-column-label','Definitions',{id:'match-definitions-label'}));
   for(const item of session.terms.filter(c=>!session.matched.has(c.id)))termCol.append(matchTile(item,'term'));
   for(const item of session.definitions.filter(c=>!session.matched.has(c.id)))defCol.append(matchTile(item,'definition'));
-  board.append(info,selection,div('match-columns',termCol,defCol));
-  root.append(board);
+  board.append(info,selection);
   if(session.feedback){
-    const feedback=feedbackBanner(session.feedbackGood?'correct':'incorrect',session.feedback,[],'match-feedback');
-    root.append(feedback);
+    board.append(feedbackBanner(session.feedbackGood?'correct':'incorrect',session.feedback,[],'match-feedback'));
   }
+  board.append(div('match-columns',termCol,defCol));
+  root.append(board);
   return root;
 }
 
