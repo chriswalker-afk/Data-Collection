@@ -112,7 +112,7 @@ test('reasoning round difficulty change resets the case without overwriting save
 });
 test('native keyboard radios, focus and mobile layouts remain navigable at five widths',async({page})=>{
  for(const width of [320,390,768,1024,1280]){
-  await page.setViewportSize({width,height:900});await page.goto('/#/reason/sampling');
+  await page.setViewportSize({width,height:900});await page.goto('/#/reason/sampling');await page.reload();
   const q=await current(page);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width+1);
   const choice=page.locator('input[name="reason-method"]').first();await choice.focus();await page.keyboard.press('Space');
