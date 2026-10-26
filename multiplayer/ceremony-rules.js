@@ -100,7 +100,12 @@ export function ceremonySnapshot(room,person){
     slide:active?c.slides[step]:null,completed:Boolean(c.completed)};
 }
 export function collectableReceipt(room,person){
-  if(person.host||!room.ceremony?.completed)return null;
+  const c=room.ceremony;
+  if(person.host||!c)return null;
+  // The finale counts as reveal. Students can collect even if the teacher
+  // closes the tab without pressing the final End button.
+  if(!c.completed&&!(room.status==='ceremony'&&c.step===c.slides.length-1))return null;
+  if(!room.ceremonyId||typeof room.ceremonyId!=='string')return null;
   return {
     // ID is created by the Worker, not supplied by an HTTP request.
     roomId:room.ceremonyId,
