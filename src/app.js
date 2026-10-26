@@ -22,6 +22,7 @@ import {nextAfterRound} from './journey.js';
 import {guideForActivity} from './activity-guidance.js';
 import {makeFlashSession,rateFlashSession,skipFlashSession,makeFlashReviewSession,flashCardLabel} from './flashcards.js';
 import {chooseMatch,matchNextStep,matchStatus,MATCH_MOTION_MS} from './match-up.js';
+import {clozePresentation} from './cloze-ui.js';
 
 const mount = document.getElementById('app');
 const announcer = document.getElementById('announcer');
@@ -243,10 +244,10 @@ function practiceGuide(id,options={}){
 }
 // These states distinguish checked answers from written work requiring human judgement.
 function feedbackBanner(status,title,body=[],extraClass=''){
-  const kind=['correct','incorrect','review'].includes(status)?status:'review';
-  const badge=kind==='correct'?'Checked answer':kind==='incorrect'?'Review answer':'Self-review';
+  const kind=['correct','incorrect','review','assisted'].includes(status)?status:'review';
+  const badge=kind==='assisted'?'Checked with a hint':kind==='correct'?'Checked answer':kind==='incorrect'?'Review answer':'Self-review';
   const feedback=div('inline-feedback typed-feedback ui-feedback '+kind+(extraClass?' '+extraClass:''),
-    icon(kind==='correct'?'✓':kind==='incorrect'?'!':'i'),
+    icon(kind==='correct'?'✓':kind==='assisted'?'↗':kind==='incorrect'?'!':'i'),
     div('ui-feedback-body',
       span('ui-feedback-badge',badge),
       heading(3,'feedback-heading',title),
@@ -475,13 +476,32 @@ function matchView(){
 }
 
 function clozeModePicker() {
-  const wrap = div('game-settings recall-settings');
+  const wrap = div('game-settings recall-settings cloze-level-settings');
   const label = element('label', {for:'cloze-level',className:'game-settings-label'}, 'Choose your level');
   const select = element('select', {id:'cloze-level',className:'game-select','data-control':'cloze-level'});
   for (const level of CLOZE_LEVELS) {
     select.append(element('option',{value:level.id,selected:level.id===clozeLevel},level.label));
   }
-  wrap.append(label,select,paragraph('settings-hint', CLOZE_LEVELS.find(l=>l.id===clozeLevel).description));
+  const path=element('div',{className:'cloze-level-track',role:'list','aria-label':'Three practice levels'});
+  const purposes=['Choose a word','Type with a hint','Type from memory'];
+  for(const [index,level] of CLOZE_LEVELS.entries()){
+    path.append(element('div',{
+      role:'listitem',className:'cloze-stage'+(level.id===clozeLevel?' is-current':''),
+      ...(level.id===clozeLevel?{'aria-current':'step'}:{})
+    },
+      span('cloze-stage-number',String(index+1)),
+      span('cloze-stage-title',level.label),
+      span('cloze-stage-caption',purposes[index])));
+  }
+  wrap.append(
+    div('cloze-level-choice',label,select),
+    path,
+    paragraph('settings-hint cloze-stage-explain',
+      CLOZE_LEVELS.find(level=>level.id===clozeLevel).description+
+      (clozeLevel==='choices'?' Build familiarity before practising recall.':
+       clozeLevel==='guided'?' A correct answer after a hint is practice, not independent recall.':
+       ' This is your strongest check of unaided recall.'))
+  );
   return wrap;
 }
 function typedForm(kind, labelText, value) {
@@ -493,6 +513,8 @@ function typedForm(kind, labelText, value) {
     placeholder:kind==='cloze'?'Enter the missing word':'Enter the mathematical term',
     autocomplete:'off',autocapitalize:'off',spellcheck:'false',maxlength:'100',required:true
   });
+  if(kind==='cloze')input.setAttribute('aria-describedby','cloze-sentence'+
+    (session.hintUsed?' cloze-hint-text':'')+(session.typoRetry?' cloze-near-miss':''));
   form.append(
     element('label',{for:fieldId,className:'typed-label'},labelText),
     div('typed-input-row',input,element('button',{type:'submit',className:'btn btn-primary'},'Check answer'))
@@ -500,75 +522,103 @@ function typedForm(kind, labelText, value) {
   return form;
 }
 function clozeView() {
-  const root = div('page activity-page');
+  const root = div('page activity-page cloze-page');
   root.append(activityTop('cloze'),clozeModePicker());
   if (session.complete) { root.append(showCompletion('cloze')); return root; }
   const current=session.items[session.index];
   const parts=splitCloze(current.prompt);
   const number=session.index+1;
   const typed=clozeLevel!=='choices';
+  const presentation=clozePresentation(clozeLevel,session,current.answer);
   root.append(
     div('round-controls',
       roundProgress(number,session.items.length,'Question '+number+' of '+session.items.length),
-      span('quiet-tag',session.correct+' correct without help')
+      span('quiet-tag',session.correct+' correct answers')
     ),
     practiceGuide('cloze',{level:clozeLevel})
   );
   const question=element('section',{
-    className:'cloze-panel',
+    className:'cloze-panel'+(session.answered?' is-answered':''),
     'data-question-id':current.id,
+    'data-answer-state':presentation.outcome,
     'aria-labelledby':'cloze-title'
   });
   question.append(
     span('eyebrow',typed?'QUESTION · RECALL THE MISSING WORD':'QUESTION · COMPLETE THE DEFINITION'),
     heading(2,'cloze-title',typed?'Type the word that belongs in the gap.':'Which word belongs in the gap?',{id:'cloze-title'}),
-    div('cloze-sentence',parts[0],
-      span('cloze-blank',session.answered?current.answer:'________'),parts[1])
+    element('div',{className:'cloze-sentence',id:'cloze-sentence'},
+      parts[0],
+      element('span',{
+        className:'cloze-blank'+(presentation.preview?' is-preview':'')+(session.answered?' is-revealed':''),
+        'aria-hidden':'true'
+      },presentation.display),
+      span('sr-only',session.answered?current.answer:'blank'),
+      parts[1])
   );
   if (!typed) {
-    question.append(paragraph('choose-note','Choose one answer.'));
+    question.append(paragraph('choose-note','Select the missing word.'));
     const options=div('cloze-options');
-    for (const choice of session.options[current.id]) {
+    for (const [index,choice] of session.options[current.id].entries()) {
       const selected=session.choice===choice;
       const correct=clozeCorrect(current,choice);
-      const stateClass=session.answered&&correct?' is-correct':session.answered&&selected?' is-incorrect':'';
-      options.append(action(choice,'cloze-option',{
+      const stateClass=session.answered&&correct?' is-correct':session.answered&&selected?' is-incorrect':
+        session.answered?' is-muted':'';
+      const option=action(choice,'cloze-option',{
         'data-choice':choice,disabled:session.answered
-      },'option-button'+stateClass));
+      },'option-button cloze-choice'+stateClass);
+      option.replaceChildren(
+        element('span',{className:'cloze-choice-key','aria-hidden':'true'},String.fromCharCode(65+index)),
+        span('cloze-choice-word',choice)
+      );
+      if(session.answered){
+        option.append(icon(correct?'✓':selected?'!':'','cloze-choice-mark'));
+        option.setAttribute('aria-label',choice+
+          (correct?', correct answer':selected?', your answer':''));
+      }
+      options.append(option);
     }
     question.append(options);
   } else if (!session.answered) {
     question.append(
-      paragraph('choose-note',clozeLevel==='guided'?'Recall the exact word. You can reveal its first letter if needed.':'No word bank or hints: try to retrieve the exact mathematical word.'),
+      paragraph('choose-note',clozeLevel==='guided'?
+        'Read the sentence, then type only the missing word.':'Retrieve the missing word without any hints.'),
       typedForm('cloze','Your missing word',session.draft)
     );
+    if (session.typoRetry) {
+      question.append(element('p',{id:'cloze-near-miss',className:'typed-near-miss'},
+        'Almost — check your spelling and try once more. No answer has been recorded.'));
+    }
     if (clozeLevel==='guided') {
       const assistance=div('hint-area',
         action(session.hintUsed?'Hint revealed':'Show first-letter hint','cloze-hint',
           {disabled:session.hintUsed},'btn btn-quiet btn-small')
       );
-      if (session.hintUsed) assistance.append(span('hint-text','First letter: '+current.answer.charAt(0).toUpperCase()+' · A hinted answer is practice, not mastery.'));
+      if (session.hintUsed) assistance.append(element('span',{
+        id:'cloze-hint-text',className:'hint-text'
+      },'First letter: '+current.answer.charAt(0).toUpperCase()+
+        ' · A hinted answer is practice, not mastery.'));
       question.append(assistance);
     }
-    question.append(div('typed-tools',action('Show answer and move on','cloze-reveal',{},'text-button')));
-    if (session.typoRetry) {
-      question.append(paragraph('typed-near-miss','Almost — check your spelling, then submit once more. No answer has been recorded yet.'));
-    }
+    question.append(div('typed-tools',
+      action('Show answer and move on','cloze-reveal',{},'text-button')));
   }
   if (session.answered) {
     let title;
     if (!typed) {
-      const correct=clozeCorrect(current,session.choice);
-      title=correct?'Exactly right.':'Not quite — '+current.answer+' is correct.';
+      title=presentation.outcome==='correct'?'Exactly right.':'Not quite — '+current.answer+' is correct.';
     } else {
       title=session.status==='correct'?'Exactly right.'
         :session.status==='assisted'?'Correct with help — try again without a hint to build mastery.'
         :session.status==='skipped'?'Here is the model word: '+current.answer
         :'Not quite — '+current.answer+' is correct.';
     }
-    const positive=session.status==='correct' || (!typed&&clozeCorrect(current,session.choice));
-    question.append(feedbackBanner(positive?'correct':'incorrect',title,
-      [paragraph('',current.explanation)]));
+    const details=[
+      ...(typed&&session.status==='wrong'&&session.choice?.trim()?
+        [paragraph('cloze-attempt','Your entry: '+session.choice)]:[]),
+      paragraph('cloze-reason-label','WHY THIS WORD FITS'),
+      paragraph('cloze-reason',current.explanation)
+    ];
+    question.append(feedbackBanner(presentation.outcome,title,details,'cloze-feedback'));
     question.append(div('next-row',
       action(number===session.items.length?'Finish round →':'Next question →',
         'cloze-next',{},'btn btn-primary')));
@@ -1364,6 +1414,7 @@ function onAction(button) {
     session.choice = button.dataset.choice;
     session.answered = true;
     const correct = clozeCorrect(current, session.choice);
+    session.status=correct?'correct':'wrong';
     if (correct) session.correct += 1;
     remember(current.conceptId, correct);
     render('[data-action="cloze-next"]');
@@ -1462,6 +1513,15 @@ mount.addEventListener('change',event=>{
 });
 mount.addEventListener('input',event=>{
   if(mode==='exam')examSimulator.onInput(event.target);
+  if(mode==='cloze'&&!session?.answered&&event.target.id==='cloze-answer'){
+    session.draft=event.target.value;
+    const blank=mount.querySelector('.cloze-blank');
+    if(blank){
+      const visual=clozePresentation(clozeLevel,session,session.items[session.index].answer);
+      blank.textContent=visual.display;
+      blank.classList.toggle('is-preview',visual.preview);
+    }
+  }
 });
 mount.addEventListener('submit', event => {
   const form=event.target.closest('form[data-form]');

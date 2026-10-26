@@ -1,0 +1,36 @@
+/* Missing Words: a quiet, focused three-step retrieval experience. */
+.cloze-page .cloze-level-settings{display:grid;grid-template-columns:minmax(155px,.35fr) minmax(0,1fr);align-items:center;gap:10px 20px}
+.cloze-page .cloze-level-choice{display:flex;flex-direction:column;gap:8px;min-width:0}
+.cloze-page .cloze-level-track{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;min-width:0}
+.cloze-page .cloze-stage{position:relative;min-width:0;display:grid;grid-template-columns:27px minmax(0,1fr);grid-template-rows:auto auto;align-items:center;gap:2px 7px;padding:9px;border:1px solid #d1ded5;border-radius:11px;background:#f6f9f7;color:#577267}
+.cloze-page .cloze-stage.is-current{border-color:#277f66;background:#e4f3ec;color:#154f40;box-shadow:inset 0 0 0 1px #277f66}
+.cloze-page .cloze-stage-number{grid-row:1/3;display:grid;place-items:center;width:26px;height:26px;border-radius:8px;background:#e4ebe7;font-weight:850;font-size:.75rem}
+.cloze-page .is-current .cloze-stage-number{background:#1d7559;color:white}
+.cloze-page .cloze-stage-title{font-size:.78rem;font-weight:830;overflow-wrap:anywhere}
+.cloze-page .cloze-stage-caption{font-size:.69rem;line-height:1.35}
+.cloze-page .cloze-stage-explain{grid-column:1/-1;margin:0!important;font-size:.77rem!important}
+.cloze-page .cloze-panel{background:linear-gradient(150deg,#fff 68%,#f9fcfa);padding:clamp(20px,3vw,34px)}
+.cloze-page .cloze-sentence{font-size:clamp(1.06rem,2.25vw,1.4rem);line-height:2.05;background:#eff7f2;border-left-color:#207a61}
+.cloze-page .cloze-blank{display:inline;overflow-wrap:anywhere;box-decoration-break:clone;-webkit-box-decoration-break:clone;background:#d9eee3;border:1px solid #a4ceba;border-bottom:3px solid #287d66;border-radius:5px;padding:3px 8px;color:#14563e;transition:background-color .16s,border-color .16s}
+.cloze-page .cloze-blank.is-preview{background:#eaf1fa;border-color:#9fb7d6;border-bottom-color:#376c9b;color:#254e75}
+.cloze-page .is-answered[data-answer-state="incorrect"] .cloze-blank{background:#e4f5ec;border-color:#88c8aa}
+.cloze-page .cloze-options{gap:11px}
+.cloze-page .cloze-choice{display:flex;align-items:center;gap:13px;min-height:68px;box-shadow:0 3px 0 rgba(34,85,65,.065);transition:transform .15s,background-color .15s,border-color .15s,box-shadow .15s}
+.cloze-page .cloze-choice-key{flex:0 0 29px;display:grid;place-items:center;width:29px;height:29px;border-radius:8px;background:#e4f0e8;color:#24614b;font-weight:850;font-size:.76rem}
+.cloze-page .cloze-choice-word{flex:1;min-width:0;overflow-wrap:anywhere}
+.cloze-page .cloze-choice-mark{font-weight:900;font-size:1.15rem}
+.cloze-page .cloze-choice.is-muted{opacity:.65}
+.cloze-page .cloze-choice.is-correct{background:#def4e8;color:#145b43;border-color:#55a67f}
+.cloze-page .cloze-choice.is-incorrect{background:#fff0e8;color:#84472b;border-color:#d39b7f}
+.cloze-page .cloze-feedback{margin-top:20px}
+.cloze-page .cloze-reason-label{font-weight:850;font-size:.69rem!important;letter-spacing:.09em;margin-top:12px!important}
+.cloze-page .cloze-reason{font-size:.89rem!important}
+.cloze-page .cloze-attempt{font-weight:650;overflow-wrap:anywhere}
+.cloze-page .ui-feedback.assisted{background:#eaf3fb;color:#305671;border-color:#b8d4e9}
+.cloze-page .typed-near-miss{border-left:4px solid #b98036}
+.cloze-page .typed-input-row .btn{min-height:52px}
+@media(hover:hover) and (pointer:fine){.cloze-page .cloze-choice:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 6px 13px rgba(34,85,65,.1)}}
+@media(max-width:760px){.cloze-page .cloze-level-settings{grid-template-columns:1fr}.cloze-page .cloze-level-choice{max-width:280px}}
+@media(max-width:390px){.cloze-page .cloze-stage{display:flex;flex-direction:column;align-items:flex-start;padding:8px;gap:4px}.cloze-page .cloze-stage-caption{font-size:.64rem}.cloze-page .cloze-choice{min-height:60px;padding:11px 12px}}
+@media(prefers-reduced-motion:reduce){.cloze-page .cloze-choice,.cloze-page .cloze-blank{transition:none!important;transform:none!important}}
+@media print{.cloze-page .cloze-panel{box-shadow:none}.cloze-page .cloze-blank{background:#fff;border-color:#555}}
