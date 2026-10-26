@@ -1,0 +1,83 @@
+/* Shared Solo / Multiplayer / My Awards design language, independent of activity code. */
+:root{
+  --arcade-navy:#103b44;
+  --arcade-forest:#146953;
+  --arcade-mint:#a7e9d0;
+  --arcade-gold:#f1c782;
+  --arcade-violet:#7c638c;
+}
+.arcade-paths{margin:25px 0 38px;}
+.arcade-paths-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:13px}
+.arcade-paths-title{font-size:clamp(1.15rem,2vw,1.44rem);letter-spacing:-.04em;margin:5px 0 0}
+.arcade-paths-kicker{font-size:.68rem;font-weight:850;letter-spacing:.13em;color:#376b5a;text-transform:uppercase}
+.arcade-paths-note{margin:0;color:#4d6760;font-size:.82rem;max-width:30rem;line-height:1.5;text-align:right}
+.arcade-path-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.arcade-path-card{
+  text-decoration:none;display:flex;flex-direction:column;position:relative;gap:8px;
+  min-width:0;min-height:182px;padding:21px 23px;border-radius:19px;
+  background:#fff;border:1px solid #b8d1c5;box-shadow:0 4px 15px rgba(20,52,43,.06);
+  text-align:left;cursor:pointer;font:inherit;color:#183b34;
+  transition:transform .17s ease,box-shadow .17s ease,border-color .17s ease
+}
+.arcade-path-card:hover{transform:translateY(-3px);box-shadow:0 14px 26px rgba(20,52,43,.14);border-color:#4d9378}
+.arcade-path-card:focus-visible{outline:3px solid #c38830;outline-offset:4px}
+.arcade-path-card.is-solo{background:#edf7ef;border-color:#bbd9c8}
+.arcade-path-card.is-multi{background:#eef3fa;border-color:#c0cfdf}
+.arcade-path-card.is-awards{background:#f7f1fb;border-color:#d8cbe2}
+.arcade-path-icon{display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:13px;font-size:1.35rem;background:#d4ecdd;color:#145d4b}
+.is-multi .arcade-path-icon{background:#dae8f6;color:#3a678d}
+.is-awards .arcade-path-icon{background:#e8dbf0;color:#705384}
+.arcade-path-name{font-size:1.16rem;font-weight:850;letter-spacing:-.035em;margin-top:1px}
+.arcade-path-desc{font-size:.81rem;line-height:1.55;color:#486159;max-width:35ch}
+.arcade-path-foot{font-size:.72rem;font-weight:820;letter-spacing:.015em;color:#27654d;margin-top:auto;padding-top:9px}
+.is-multi .arcade-path-foot{color:#3b6391}
+.is-awards .arcade-path-foot{color:#705384}
+.arcade-path-spark{position:absolute;right:19px;top:22px;font-size:.82rem;color:#607d72}
+.arcade-external-nav{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.arcade-external-nav a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border-radius:12px;padding:10px 15px;font-size:.85rem;font-weight:780;color:#415e58;text-decoration:none}
+.arcade-external-nav a:hover{background:#edf6f1;color:#164d3f}
+.arcade-external-nav a[aria-current="page"]{background:#e0f3e8;color:#145c46}
+.arcade-page-hero{position:relative;isolation:isolate;overflow:hidden;padding:clamp(28px,5vw,60px);border-radius:29px;background:#123f48;color:#fff}
+.arcade-page-hero::before{content:"";position:absolute;z-index:-1;width:440px;height:440px;right:-110px;top:-270px;border-radius:50%;border:1px solid #ffffff29;box-shadow:0 0 0 64px #ffffff08,0 0 0 130px #ffffff06}
+.arcade-page-hero .arcade-hero-kicker{display:block;font-size:.72rem;font-weight:850;letter-spacing:.16em;color:#acebd5;text-transform:uppercase}
+.arcade-page-hero h1{font-size:clamp(2.08rem,4.2vw,3.7rem);font-weight:850;letter-spacing:-.06em;line-height:1.12;margin:14px 0}
+.arcade-page-hero p{max-width:63ch;color:#e0f2eb;line-height:1.65;margin:0}
+.arcade-page-hero .arcade-hero-facts{display:flex;gap:9px;flex-wrap:wrap;margin-top:24px}
+.arcade-hero-facts span{border:1px solid #ffffff3d;background:#ffffff12;border-radius:30px;padding:7px 12px;font-size:.74rem;font-weight:750}
+.arcade-section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:30px 0 13px}
+.arcade-section-head h2{font-size:clamp(1.27rem,2vw,1.55rem);margin:4px 0 0;letter-spacing:-.035em}
+.arcade-section-head p{margin:0;color:#537066;font-size:.81rem}
+.arcade-subtle-link{color:#245e50;font-weight:800;font-size:.84rem}
+.arcade-awards-preview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.arcade-award-card{border:1px solid #d7d0df;background:#fff;border-radius:20px;display:flex;align-items:center;gap:18px;padding:25px}
+.arcade-award-coin{width:60px;height:60px;border-radius:50%;border:4px solid #d2b6eb;background:radial-gradient(circle at 30% 24%,#fff,#ede4f2 50%,#d8c8e5);box-shadow:0 5px 10px #28332918;display:grid;place-items:center;color:#876ba4;font-size:1.7rem;flex-shrink:0}
+.arcade-award-title{font-size:1rem;font-weight:850;margin:0 0 5px}
+.arcade-award-hint{font-size:.78rem;line-height:1.55;color:#546761;margin:0}
+.arcade-award-caption{font-size:.69rem;font-weight:820;color:#765e85;margin:8px 0 0;text-transform:uppercase;letter-spacing:.09em}
+.arcade-future-note{margin-top:23px;background:#ecf4ef;border:1px solid #bbd8c8;border-radius:18px;padding:21px 23px;color:#285547;font-size:.88rem;line-height:1.6}
+.arcade-future-note strong{display:block;font-size:1rem;margin-bottom:5px}
+.arcade-cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:25px}
+.arcade-cta-row a{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 18px;background:#175e4d;color:#fff;border-radius:12px;font-weight:800;text-decoration:none}
+.arcade-cta-row a:nth-child(2){background:#e5efe8;color:#17483a;border:1px solid #bbd8c7}
+.arcade-cta-row a:focus-visible{outline:3px solid #be8637;outline-offset:3px}
+.site-nav .nav-awards-link{color:#705387}
+@media(max-width:1000px){
+  .arcade-path-grid{grid-template-columns:1fr 1fr}
+  .arcade-path-card.is-awards{grid-column:span 2;min-height:120px}
+  .arcade-awards-preview{grid-template-columns:1fr}
+  .site-nav{gap:2px}
+  .site-nav > a,.site-nav .activities-trigger{padding-inline:10px}
+}
+@media(max-width:760px){
+  .arcade-external-nav{flex-basis:100%;width:100%;justify-content:center;background:#eff6f1;border-radius:12px}
+  .arcade-external-nav a{flex:1;min-width:80px;font-size:.78rem;padding-inline:7px}
+  .arcade-path-grid{grid-template-columns:1fr}
+  .arcade-path-card.is-awards{grid-column:auto}
+  .arcade-path-card{min-height:135px;padding:18px}
+  .arcade-paths-head{align-items:start;flex-direction:column;gap:7px}
+  .arcade-paths-note{text-align:left}
+  .arcade-page-hero{border-radius:21px;padding:27px 23px}
+  .arcade-section-head{align-items:start;flex-direction:column}
+}
+@media(prefers-reduced-motion:reduce){.arcade-path-card{transition:none}.arcade-path-card:hover{transform:none}}
+@media print{.arcade-paths,.arcade-external-nav,.arcade-cta-row{display:none!important}}
