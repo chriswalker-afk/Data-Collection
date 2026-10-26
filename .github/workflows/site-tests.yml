@@ -28,6 +28,14 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+      # A small set of synthetic-data layout captures for human visual review.
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sampling-arcade-ui-pass3-layouts
+          path: test-results/**/ui-pass3-*.png
+          if-no-files-found: ignore
+          retention-days: 7
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
