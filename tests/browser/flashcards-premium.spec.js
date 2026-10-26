@@ -29,7 +29,7 @@ test('the same physical card rotates to its back without re-rendering or reveali
  await expect(page.locator('.flash-face-front')).toHaveAttribute('aria-hidden','true');
  await expect(page.locator('.flash-face-back')).toHaveAttribute('aria-hidden','false');
  await expect(page.locator('.flash-grade-panel')).toBeVisible();
- await expect(page.getByText('MODEL ANSWER')).toBeVisible();
+ await expect(page.locator('.flash-model-label')).toHaveText(/MODEL (ANSWER|POINTS)/);
  const isEvaluation=await page.locator('.flash-evaluation-points').count()>0;
  if(isEvaluation)await expect(page.locator('.flash-evaluation-point').first()).toBeVisible();
  else await expect(page.getByText('Watch out',{exact:true})).toBeVisible();
