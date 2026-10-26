@@ -6,7 +6,7 @@ const SCENARIOS=JSON.parse(readFileSync(new URL('../../content/scenarios.json',i
 async function openGame(page){
   await page.addInitScript(url=>{window.__SAMPLING_MULTIPLAYER_API__=url;},BACKEND);
   await page.goto('/multiplayer.html');
-  await expect(page.getByRole('heading',{name:/Learn together/})).toBeVisible();
+  await expect(page.locator('#arena-heading')).toContainText('One class.');
 }
 async function createRoom(page,length=5){
   await openGame(page);
