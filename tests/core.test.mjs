@@ -10,8 +10,8 @@ const read = name => JSON.parse(readFileSync(new URL('../content/' + name + '.js
 const {concepts} = read('concepts');
 const {cloze} = read('cloze');
 
-test('all three games and topic filters are available', () => {
-  assert.deepEqual(GAMES.map(g => g.id), ['flashcards','match','cloze']);
+test('all five games and topic filters are available', () => {
+  assert.deepEqual(GAMES.map(g => g.id), ['flashcards','match','cloze','sort','identify']);
   assert.deepEqual(TOPICS.map(t => t.id), ['sampling','data','all']);
   assert.equal(conceptsInTopic(concepts, 'sampling').length, 18);
   assert.equal(conceptsInTopic(concepts, 'data').length, 8);
@@ -66,4 +66,8 @@ test('hash routes support GitHub Pages subpaths and safe topic fallbacks', () =>
   assert.deepEqual(routeFromHash('#/invalid/unknown'), {mode:'home',topic:'sampling'});
   assert.equal(hashFor('match','data'), '#/match/data');
   assert.equal(hashFor('not-a-game','oops'), '#/home/sampling');
+  assert.equal(hashFor('sort','data'), '#/sort/sampling');
+  assert.equal(hashFor('identify','all'), '#/identify/sampling');
+  assert.deepEqual(routeFromHash('#/identify/data'), {mode:'identify',topic:'sampling'});
+  assert.deepEqual(routeFromHash('#/sort/all'), {mode:'sort',topic:'sampling'});
 });

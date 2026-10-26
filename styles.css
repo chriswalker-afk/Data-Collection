@@ -281,3 +281,112 @@ progress::-moz-progress-bar { border-radius: 30px; background: #198775; }
   .shell { width: 95%; }
   .hero, .panel, .game-card { box-shadow: none; break-inside: avoid; }
 }
+
+/* Pass 2: accessible choice-based classification and scenario games */
+.game-card:nth-child(4) .game-icon { color: #815126; background: #fcf0df; }
+.game-card:nth-child(5) .game-icon { color: #4a658f; background: #eaf0fc; }
+.activity-scope {
+  border: 1px solid #d2e8df;
+  background: #e9f5ef;
+  color: #355f52;
+  padding: 12px 16px;
+  border-radius: 13px;
+  font-size: .81rem;
+  line-height: 1.55;
+  font-weight: 650;
+}
+.game-settings {
+  display: flex;
+  gap: 17px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 22px;
+  padding: 17px 20px;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 17px;
+}
+.game-settings-label {
+  color: #385c58;
+  font-size: .89rem;
+  font-weight: 750;
+}
+.game-select {
+  font: inherit;
+  font-size: .88rem;
+  font-weight: 650;
+  color: var(--ink);
+  background: #f5f9f7;
+  border: 1px solid #c4d8d0;
+  border-radius: 11px;
+  padding: 12px 38px 12px 14px;
+  min-width: 220px;
+  min-height: 46px;
+  max-width: 100%;
+}
+.game-select:hover { border-color: #5c9f8d; }
+.classification-panel {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: clamp(22px, 4vw, 38px);
+}
+.classification-title {
+  margin: 9px 0 24px;
+  font-size: clamp(1.35rem, 2.5vw, 1.7rem);
+  letter-spacing: -.04em;
+  line-height: 1.3;
+}
+.classification-statement {
+  background: #edf6f1;
+  border-left: 5px solid #27897a;
+  border-radius: 12px;
+  padding: clamp(20px, 3vw, 28px);
+  color: #153b37;
+  font-size: clamp(1.05rem, 2vw, 1.27rem);
+  line-height: 1.65;
+  font-weight: 670;
+  overflow-wrap: anywhere;
+}
+.classification-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 12px;
+}
+.classification-choice {
+  min-height: 61px;
+  padding: 14px 16px;
+  text-align: center;
+  line-height: 1.42;
+  overflow-wrap: anywhere;
+}
+.classification-choice:not(:disabled):focus-visible { position: relative; z-index: 1; }
+.method-options { grid-template-columns: repeat(2, minmax(0,1fr)); }
+.method-options .classification-choice:last-child { grid-column: 1 / -1; }
+.classification-feedback {
+  margin-top: 24px;
+  scroll-margin-top: 25px;
+}
+.classification-feedback .feedback-heading { font-size: 1.02rem; }
+.classification-feedback p { font-size: .88rem; line-height: 1.65; margin: 8px 0 0; }
+.classification-feedback .feedback-contrast {
+  border-top: 1px solid rgba(48,81,70,.15);
+  margin-top: 13px;
+  padding-top: 13px;
+  color: inherit;
+}
+@media (max-width: 580px) {
+  .game-settings { align-items: stretch; flex-direction: column; gap: 8px; padding: 14px; }
+  .game-select { width: 100%; min-width: 0; }
+  .classification-panel { padding: 21px 16px; }
+  .classification-statement { padding: 18px 15px; }
+  .classification-options { gap: 9px; }
+  .classification-choice { min-height: 62px; font-size: .81rem; padding: 12px 9px; }
+  .method-options { grid-template-columns: 1fr; }
+  .method-options .classification-choice:last-child { grid-column: auto; }
+  .classification-feedback { padding: 14px; }
+}
+@media (max-width: 350px) {
+  .classification-options { grid-template-columns: 1fr; }
+}
