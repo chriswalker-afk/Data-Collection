@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f6f8f5">
-  <meta name="description" content="Live Sampling Arcade: join a teacher-led sampling methods challenge by room code, without sign-in.">
+  <meta name="description" content="Live Sampling Arcade: choose Which Method?, Speed Recall, Match Up or Sort It! and play with your class without accounts.">
   <title>Multiplayer Arena · Sampling Arcade</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./styles.css">
@@ -30,10 +30,10 @@
     <section class="arcade-page-hero multiplayer-hero" aria-labelledby="arena-heading">
       <div class="multiplayer-hero-content">
         <span class="arcade-hero-kicker"><span class="arena-live-dot" aria-hidden="true"></span> THE MULTIPLAYER ARENA</span>
-        <h1 id="arena-heading">One class.<br>Five methods.<br><em>Brilliant thinking.</em></h1>
+        <h1 id="arena-heading">One class.<br>Four game modes.<br><em>Brilliant thinking.</em></h1>
         <p>Challenge your sampling knowledge together. Create a classroom game or join one with a six-digit code. Everyone plays on their own device; nobody needs an account.</p>
         <div class="arcade-hero-facts">
-          <span>Which Method? Live</span><span>Accuracy first</span><span>Cross-device play</span>
+          <span>Four live games</span><span>Accuracy first</span><span>Cross-device play</span>
         </div>
       </div>
       <div class="multiplayer-hero-preview" aria-hidden="true">
@@ -56,15 +56,22 @@
             <span class="entry-mode-icon" aria-hidden="true">▣</span>
             <div><span class="entry-mode-tag">01 / TEACHER</span><h3 id="host-heading">Host a classroom</h3></div>
           </div>
-          <p>Choose a short starter or a full round. You'll control when questions begin, answers appear and the next round starts.</p>
+          <p>Choose a game and the challenge length. You control the start, answer reviews and every transition.</p>
           <div class="entry-inputs">
+            <label for="game-mode">Choose a game</label>
+            <select id="game-mode">
+              <option value="which" selected>Which Method? · Apply sampling methods</option>
+              <option value="speed">Speed Recall · Type from memory</option>
+              <option value="match">Match Up · Connect precise definitions</option>
+              <option value="sort">Sort It! · Compare methods and evaluate</option>
+            </select>
             <label for="length">Challenge length</label>
             <select id="length">
               <option value="5">5 questions · Quick starter</option>
               <option selected value="10">10 questions · Class challenge</option>
               <option value="20">20 questions · Extended revision</option>
             </select>
-            <p class="entry-field-tip">All five sampling methods appear in every round. 20 seconds per question.</p>
+            <p id="mode-description" class="entry-field-tip">Five sampling methods are balanced across the challenge. 20 seconds per question.</p>
           </div>
           <button class="btn btn-primary entry-submit" type="button" id="create">Create room <span aria-hidden="true">↗</span></button>
         </section>
@@ -95,7 +102,7 @@
           <div class="room-chip-line">
             <span id="connection" role="status" class="connection-status">Connecting…</span>
             <span id="room-lock" class="room-lock-chip">Joining open</span>
-            <span id="room-meta" class="room-meta-chip">Which Method? Live</span>
+            <span id="room-meta" class="room-meta-chip">Multiplayer challenge</span>
           </div>
         </div>
         <div class="room-share-actions">
@@ -117,7 +124,7 @@
           <ol id="players" aria-label="Players and scores"></ol>
           <div class="roster-explainer">
             <strong>Accuracy wins.</strong>
-            <p>Correct responses earn 1,000 points plus a small speed bonus. Explanations follow each question.</p>
+            <p>Each question or board is worth up to 1,000 accuracy points, with a small speed bonus for fully correct work. Mathematical explanations follow each reveal.</p>
           </div>
         </aside>
       </div>
