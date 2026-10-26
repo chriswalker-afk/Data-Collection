@@ -507,3 +507,96 @@ progress::-moz-progress-bar { border-radius: 30px; background: #198775; }
 .header-inner{min-width:0}
 .site-nav{min-width:0;max-width:100%;overflow-x:auto;scrollbar-width:thin;overscroll-behavior-x:contain}
 .site-nav a{flex-shrink:0}
+
+
+/* Pass 5 — Exam Lab: exam practice without intrusive gamification. */
+.game-card:nth-child(10) .game-icon{color:#215f74;background:#e4f3f6}
+.sim-page{max-width:990px}
+.sim-landing{border:1px solid #d3e6dd;border-radius:24px;background:linear-gradient(140deg,#fff 52%,#eaf6ef);padding:clamp(22px,4.5vw,43px);margin-top:25px}
+.sim-landing-title{font-size:clamp(1.8rem,4vw,2.55rem);letter-spacing:-.045em;margin:10px 0}
+.sim-lead{max-width:750px;color:#365d55;font-size:1rem;line-height:1.7}
+.sim-honesty{font-size:.86rem;color:#4a6a60;line-height:1.6;max-width:750px}
+.sim-paper-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:28px}
+.sim-choice{background:#fff;border:1px solid #d8e7e0;border-radius:17px;padding:20px 17px;min-width:0;display:flex;flex-direction:column;align-items:flex-start}
+.sim-choice-count{font-size:.67rem;letter-spacing:.1em;color:#277260;font-weight:800}
+.sim-choice-title{font-size:1.15rem;letter-spacing:-.025em;margin:12px 0 6px}
+.sim-choice p{font-size:.84rem;line-height:1.65;color:var(--subtle);flex:1;margin:0 0 20px}
+.sim-choice .btn{min-height:47px;width:100%;font-size:.82rem;padding:11px 8px}
+.sim-landing-bottom{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:18px}
+.sim-resume,.sim-target-panel{min-width:0;background:#fff;border:1px solid var(--border);border-radius:20px;padding:25px}
+.sim-panel-heading{font-size:1.08rem;letter-spacing:-.025em;margin:6px 0 13px}
+.sim-resume p,.sim-target-panel p{font-size:.85rem;color:var(--subtle);line-height:1.65}
+.sim-inline-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:15px}
+.sim-target-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.sim-target-tag{font-size:.7rem;color:#386459;background:#e9f5ed;border:1px solid #d4e6d9;border-radius:9px;padding:6px 10px}
+.sim-question{background:#fff;border:1px solid var(--border);border-radius:22px;padding:clamp(21px,4vw,43px);margin-top:20px}
+.sim-question-title{font-size:clamp(1.4rem,2.8vw,2rem);letter-spacing:-.04em;margin:10px 0 22px;line-height:1.35}
+.sim-context{color:#193e3a;background:#edf7f1;border-left:4px solid #288a77;border-radius:12px;padding:clamp(16px,2.8vw,22px);font-size:1.02rem;line-height:1.75;font-weight:650}
+.sim-task{font-weight:760;color:#24514a;line-height:1.66;margin:18px 0 23px}
+.sim-data-line{font-size:.9rem;color:#4b6762;font-weight:750;margin:16px 0}
+.sim-number-rows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:15px 0}
+.sim-number-row{border:1px solid #d6e5dd;border-radius:14px;padding:15px 17px;min-width:0;background:#fcfefd}
+.sim-field-label{display:block;color:#245346;font-weight:760;font-size:.92rem}
+.sim-field-help{font-size:.78rem;color:#657b75;margin:6px 0 12px;line-height:1.5}
+.sim-number-input{display:block;width:100%;max-width:100%;border:1px solid #a7ccbc;border-radius:11px;padding:12px 14px;font-size:1rem;font-family:inherit;color:var(--ink);background:#fff;min-height:50px}
+.sim-number-input:focus,.sim-draft-input:focus{outline:3px solid #b5dfd1;outline-offset:1px;border-color:#18846d}
+.sim-form-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:21px}
+.sim-validation:not(:empty){color:#874023;background:#fff3e5;border:1px solid #efd1a4;padding:11px 14px;border-radius:9px;margin:12px 0;font-size:.9rem}
+.sim-help{font-size:.85rem;color:var(--subtle);line-height:1.7}
+.sim-feedback .inline-feedback{margin-top:24px}
+.sim-worked-list{list-style:none;padding:0;display:grid;gap:10px}
+.sim-worked-row{display:flex;align-items:flex-start;gap:15px;border:1px solid #e1e9e5;border-radius:12px;padding:14px;line-height:1.6}
+.sim-worked-row p{font-size:.87rem;color:#46625a;margin:6px 0}
+.sim-worked-title{font-size:.96rem;margin:0}
+.sim-worked-status{flex:0 0 94px;font-weight:760;color:#35745e;font-size:.75rem;padding-top:4px}
+.sim-written-work{margin-top:23px}
+.sim-draft-input{width:100%;max-width:100%;min-height:175px;padding:15px;border:1px solid #a8cabc;border-radius:13px;font:inherit;line-height:1.75;resize:vertical;display:block}
+.sim-written-review .inline-feedback{margin-bottom:23px}
+.sim-model-steps{line-height:1.75;display:grid;gap:12px;padding-left:24px;color:#284e47;font-size:.9rem}
+.sim-model-text{line-height:1.85;color:#2b574b;white-space:pre-wrap}
+.sim-model-extra,.sim-related,.sim-conditional{font-size:.87rem;line-height:1.7;border-left:3px solid #8db9a7;background:#f2f8f4;border-radius:8px;padding:12px 15px}
+.sim-conditional{background:#fff8ea;border-color:#cda76a}
+.sim-draft-compare{border:1px solid #d8e4de;border-radius:12px;padding:16px 18px;margin:18px 0}
+.sim-preserved-text{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.86rem;line-height:1.7}
+.sim-checklist{margin:22px 0;border:0;padding:0;min-width:0}
+.sim-checklist legend{font-weight:800;color:#1c5c50;font-size:.98rem;margin-bottom:13px}
+.sim-check-row{display:flex;align-items:flex-start;gap:12px;padding:12px 15px;border:1px solid #dce8e1;border-radius:11px;background:#fcfdfc;font-size:.86rem;line-height:1.62;margin:8px 0;cursor:pointer}
+.sim-check-row:has(input:checked){background:#ebf6ef;border-color:#a3ceba}
+.sim-check-row input{accent-color:#187e69;flex:0 0 20px;width:20px;height:20px;margin:2px 0 0}
+.sim-flag{margin-top:16px;background:#fff9ed!important;border-color:#e8d7b5!important}
+.sim-paper-bottom{margin-top:21px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.sim-report-head{background:#fff;border:1px solid var(--border);border-radius:22px;padding:clamp(22px,4vw,40px);margin-top:20px}
+.sim-report-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:25px}
+.sim-metric{background:#f1f7f4;border:1px solid #d9e7df;border-radius:14px;padding:18px 12px;display:flex;flex-direction:column;gap:10px}
+.sim-metric-value{font-variant-numeric:tabular-nums;font-size:clamp(1.4rem,2.6vw,2rem);font-weight:840;color:#176b59}
+.sim-metric-label{font-size:.75rem;line-height:1.55;color:#496e61}
+.sim-report-detail{margin-top:25px}
+.sim-report-row{background:#fff;border:1px solid var(--border);border-radius:15px;padding:20px;margin:12px 0;overflow-wrap:anywhere}
+.sim-report-row-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.sim-report-question{font-size:1rem;margin:0}
+.sim-report-row p{font-size:.86rem;line-height:1.6;color:var(--subtle)}
+.sim-report-result{font-weight:800!important;color:#236b5a!important}
+.sim-report-key{margin:5px 0;font-variant-numeric:tabular-nums}
+.sim-revision-link{display:inline-flex;color:#116c60;text-decoration:underline;text-underline-offset:3px;font-weight:750;font-size:.86rem;min-height:40px;align-items:center}
+.sim-report-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}
+@media(max-width:800px){.sim-paper-choices{grid-template-columns:1fr 1fr}.sim-paper-choices>.sim-choice:last-child{grid-column:1/-1}}
+@media(max-width:580px){
+ .sim-landing{padding:21px 16px}
+ .sim-paper-choices,.sim-landing-bottom,.sim-number-rows,.sim-report-metrics{grid-template-columns:1fr}
+ .sim-paper-choices>.sim-choice:last-child{grid-column:auto}
+ .sim-choice{padding:17px}.sim-resume,.sim-target-panel{padding:20px 16px}
+ .sim-question{padding:20px 15px}.sim-context{padding:16px 14px}
+ .sim-form-actions{flex-direction:column}.sim-form-actions .btn{width:100%}
+ .sim-worked-row{flex-direction:column;gap:4px}.sim-worked-status{flex:auto}
+ .sim-metric{padding:14px}.sim-report-actions{flex-direction:column}.sim-report-actions .btn{width:100%}
+}
+@media print{
+ @page{margin:14mm}
+ body{color:#000;background:#fff}
+ .site-header,.site-footer,.activity-top,.sim-report-actions,.sim-revision-link,.sim-paper-bottom{display:none!important}
+ .sim-report-head,.sim-report-row{box-shadow:none;border-color:#ccc}
+ .sim-report-row{break-inside:avoid}
+ .main-shell{padding-top:0;padding-bottom:0}
+ .sim-page,.shell{max-width:none!important;width:100%!important}
+ .sim-report-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
