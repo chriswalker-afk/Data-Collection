@@ -23,8 +23,8 @@ export const ACTIVITY_GUIDANCE=Object.freeze({
     practice:'Sequence a defensible sampling procedure and justify its steps.',
     task:'Drag steps or use the arrow buttons to make a valid sequence. Check the prerequisites, then review why each step matters. Different valid orders are accepted.'}),
   error:Object.freeze({
-    practice:'Identify and repair errors in sampling procedures.',
-    task:'Find the flawed line and select the appropriate repair before checking.'}),
+    practice:'Locate, repair and explain flawed sampling investigations.',
+    task:'Select the numbered error, choose a defensible correction, then diagnose its consequence. All three decisions are checked together; missed cases can be revisited without new mastery credit.'}),
   reason:Object.freeze({
     practice:'Justify a method in context, recognise a limitation and suggest an improvement.',
     task:'Choose the four elements of a defensible explanation. Your optional writing is for reflection, not automatic grading.'}),

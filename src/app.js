@@ -14,7 +14,7 @@ import {
   CLOZE_LEVELS, SPEED_MODES, SPEED_DURATIONS, gradeCloze, gradeTerm,
   speedDeck, formatClock, validateTermBank
 } from './recall.js';
-import {EXAM_LEVELS,procedureRound,checkProcedure,moveStep,makeErrorDeck,gradeError,makeReasoningDeck,assessReasoning} from './exam.js';
+import {EXAM_LEVELS,procedureRound,checkProcedure,moveStep,makeErrorDeck,gradeError,gradeErrorDiagnosis,validateErrorBank,makeReasoningDeck,assessReasoning} from './exam.js';
 import {emptyExamStore,loadExamStore,saveExamStore,clearExamStore} from './exam-sim.js';
 import {createExamSimulationUI} from './exam-sim-ui.js';
 import {createExperienceUI} from './experience-ui.js';
@@ -310,7 +310,7 @@ function showCompletion(game) {
     : game === 'sort' ? session.correct + ' of ' + session.items.length + ' statements placed correctly on the first check'
     : game === 'identify' ? session.correct + ' of ' + session.items.length + ' scenarios identified correctly'
     : game === 'build' ? session.correct + ' of ' + session.methods.length + ' procedures correct on first check'
-    : game === 'error' ? session.correct + ' of ' + session.items.length + ' errors diagnosed and repaired'
+    : game === 'error' ? session.correct + ' of ' + session.items.length + ' complete diagnoses'
     : game === 'reason' ? session.correct + ' of ' + session.items.length + ' complete model checklists'
     : session.correct + ' correct answers out of ' + session.items.length;
   return div('completed-screen',
@@ -319,6 +319,9 @@ function showCompletion(game) {
     paragraph('completion-description', gameTitle + ' · ' + topicLabel(topic)),
     paragraph('completion-score', scoreLine),
     ...(game==='speed'?[speedCompletionPanel()]:[]),
+    ...(game==='error'?[div('error-summary',...[['Located',session.errorStats.located],['Repaired',session.errorStats.repaired],['Explained',session.errorStats.explained]].map(([label,n])=>div('error-metric',span('error-metric-value',String(n)),span('',label)))),
+      paragraph('error-note',session.reviewMode?'Unscored practice: progress unchanged.':'Only the first attempt contributes to mastery.'),
+      ...(!session.reviewMode&&session.missed.length?[action('Review missed cases →','error-review')]:[])]:[]),
     div('completion-next',
       span('eyebrow','A USEFUL NEXT STEP'),
       heading(3,'completion-next-title',next.label),
@@ -1021,26 +1024,42 @@ function examRadio(name,value,text,checked,disabled,attribute) {
  return element('label',{className:'exam-choice'},input,span('',text));
 }
 function errorView(){
- const root=div('page activity-page');root.append(activityTop('error'),examLevelPicker());
+ const root=div('page activity-page error-page');root.append(activityTop('error'));
+ if(!session.reviewMode)root.append(examLevelPicker());
  if(session.complete){root.append(showCompletion('error'));return root;}
- const q=session.items[session.index];root.append(roundProgress(session.index+1,session.items.length,'Case '+(session.index+1)+' of '+session.items.length),practiceGuide('error'));
- const panel=element('section',{className:'exam-workspace','data-error-id':q.id,'aria-labelledby':'exam-heading'});
- panel.append(span('eyebrow','QUESTION · DIAGNOSE AND REPAIR'),heading(2,'exam-heading','Find the flawed line',{id:'exam-heading',tabindex:'-1'}),
-  paragraph('exam-scenario',q.context));
- const lines=element('fieldset',{className:'exam-fieldset'});lines.append(element('legend',{},'1. Which line is flawed?'));
- q.lines.forEach((line,i)=>lines.append(examRadio('error-line',String(i),String(i+1)+'. '+line,session.selectedLine===i,session.answered,'data-error-line')));
- const fixes=element('fieldset',{className:'exam-fieldset'});fixes.append(element('legend',{},'2. Which repair is correct?'));
- q.repairs.forEach(fix=>fixes.append(examRadio('error-repair',fix.id,fix.text,session.selectedRepair===fix.id,session.answered,'data-error-repair')));
- panel.append(lines,fixes);
- if(!session.answered)panel.append(div('exam-buttons',action('Check my diagnosis','error-check',{disabled:session.selectedLine===null||!session.selectedRepair})));
+ const q=session.items[session.index];
+ root.append(roundProgress(session.index+1,session.items.length,(session.reviewMode?'Review ':'Case ')+(session.index+1)+' of '+session.items.length),practiceGuide('error'));
+ const panel=element('section',{className:'exam-workspace error-workspace','data-error-id':q.id,'aria-labelledby':'exam-heading'});
+ panel.append(div('error-head',div('',span('eyebrow',session.reviewMode?'QUESTION · UNSCORED REVIEW':'QUESTION · SAMPLING CASE FILE'),heading(2,'exam-heading','Inspect the procedure',{id:'exam-heading',tabindex:'-1'})),span('error-method',METHOD_LABELS[q.methodId])),
+ paragraph('exam-scenario',q.context),paragraph('error-note','Identify the flawed step, choose a correction and diagnose its mathematical consequence.'));
+ const steps=element('fieldset',{className:'error-steps'});
+ steps.append(element('legend',{className:'error-legend'},'01 · Locate the error'));
+ q.lines.forEach((line,i)=>steps.append(element('label',{className:'error-step'+(session.answered&&i===q.errorLine?' is-key':'')},
+ element('input',{type:'radio',name:'error-line',value:String(i),'data-error-line':'',checked:session.selectedLine===i,disabled:session.answered}),
+ span('error-step-num',String(i+1).padStart(2,'0')),span('',line))));
+ panel.append(steps);
+ const choices=(name,headingText,items,selected,attr)=>{
+  const group=element('fieldset',{className:'error-choices'});
+  group.append(element('legend',{className:'error-legend'},headingText));
+  items.forEach((option,i)=>group.append(element('label',{className:'error-option'},
+   element('input',{type:'radio',name,value:option.id,[attr]:'',checked:selected===option.id,disabled:session.answered}),
+   span('error-choice-letter',String.fromCharCode(65+i)),span('',option.text))));
+  return group;
+ };
+ panel.append(choices('error-repair','02 · Repair the instruction',q.repairs,session.selectedRepair,'data-error-repair'),
+ choices('error-impact','03 · Diagnose the consequence',q.impact.options,session.selectedImpact,'data-error-impact'));
+ if(!session.answered)panel.append(div('exam-buttons',action('Check all three decisions','error-check',{disabled:session.selectedLine===null||!session.selectedRepair||!session.selectedImpact})));
  else{
-  const result=gradeError(q,session.selectedLine,session.selectedRepair);
-  const feedback=feedbackBanner(result.correct?'correct':'incorrect',
-     result.correct?'Both choices correct.':'Here is the accurate correction.',[
-       paragraph('',(result.lineCorrect?'You identified the faulty line. ':'The flawed line is '+(q.errorLine+1)+'. ')+
-         (result.repairCorrect?'Your repair was correct.':'Correct repair: '+q.repairs.find(x=>x.id===q.repair).text)),
-       paragraph('',q.explanation)
-     ]);panel.append(feedback,div('next-row',action(session.index===session.items.length-1?'Finish round →':'Next case →','error-next')));
+  const mark=gradeErrorDiagnosis(q,session.selectedLine,session.selectedRepair,session.selectedImpact);
+  const fix=q.repairs.find(x=>x.id===q.repair),impact=q.impact.options.find(x=>x.id===q.impact.answer);
+  panel.append(div('error-analysis',span('eyebrow','YOUR DIAGNOSIS'),heading(3,'error-analysis-title',mark.correct?'All three decisions correct':'Review the mathematics'),
+   div('error-summary',...[['Locate',mark.lineCorrect],['Repair',mark.repairCorrect],['Consequence',mark.impactCorrect]].map(([label,ok])=>div('error-metric',span('error-metric-value',ok?'✓':'↺'),span('',label),span('',ok?'Correct':'Review')))),
+   feedbackBanner(mark.correct?'correct':'incorrect',mark.correct?'Complete diagnosis.':'The mathematical explanation',[
+    paragraph('','Flawed step '+(q.errorLine+1)+': '+q.lines[q.errorLine]),
+    paragraph('','Correction: '+fix.text),paragraph('','Consequence: '+impact.text),
+    paragraph('','Why: '+q.explanation+' '+q.impact.explanation)
+   ]),...(session.reviewMode?[paragraph('error-note','Review mode does not change saved progress.')]:[])),
+   div('next-row',action(session.index===session.items.length-1?'Finish round →':'Next case →','error-next')));
  }
  root.append(panel);return root;
 }
@@ -1085,7 +1104,7 @@ function examAdvance(){
  if(mode==='build'){
   if(session.index===session.methods.length-1){finishRound();return;}
  }else if(session.index===session.items.length-1){finishRound();return;}
- session.index++;session.answered=false;session.selectedLine=null;session.selectedRepair=null;session.selections={};session.draft='';
+ session.index++;session.answered=false;session.selectedLine=null;session.selectedRepair=null;session.selectedImpact=null;session.selections={};session.draft='';
  render('#exam-heading');
 }
 function examAction(command,button){
@@ -1103,11 +1122,13 @@ function examAction(command,button){
  }
  if(command==='build-next'&&mode==='build'&&session.methods[session.index].checked){examAdvance();return;}
  if(command==='error-check'&&mode==='error'&&!session.answered){
-  if(session.selectedLine===null||!session.selectedRepair)return;
-  const q=session.items[session.index],result=gradeError(q,session.selectedLine,session.selectedRepair);
-  session.answered=true;if(result.correct)session.correct++;
-  remember(conceptIdForSubject(q.methodId,data.methods),result.correct);
-  render('.exam-workspace .typed-feedback');announce(result.correct?'Correct diagnosis.':'Read the model repair.');return;
+  if(session.selectedLine===null||!session.selectedRepair||!session.selectedImpact)return;
+  const q=session.items[session.index],mark=gradeErrorDiagnosis(q,session.selectedLine,session.selectedRepair,session.selectedImpact);
+  session.answered=true;if(mark.correct)session.correct++;
+  session.errorStats.located+=mark.identified;session.errorStats.repaired+=mark.repaired;session.errorStats.explained+=mark.explained;
+  if(!mark.correct&&!session.reviewMode)session.missed.push(q.id);
+  if(!session.reviewMode)remember(conceptIdForSubject(q.methodId,data.methods),mark.correct);
+  render('.error-analysis');announce(mark.correct?'All three decisions correct.':'Review the mathematical explanation.');return;
  }
  if(command==='reason-check'&&mode==='reason'&&!session.answered){
   if(['method','reason','limitation','improvement'].some(k=>session.selections[k]===undefined))return;
@@ -1194,7 +1215,7 @@ function restartGame(){
     const order=[buildMethodId,...data.methods.map(m=>m.id).filter(id=>id!==buildMethodId)];
     session={methods:order.map(id=>({...procedureRound(data.methods,id),checked:false,correct:false})),index:0,correct:0,complete:false};
   } else if(mode==='error'||mode==='reason') {
-    session={items:mode==='error'?makeErrorDeck(data.errors,examLevel):makeReasoningDeck(data.reasoning,examLevel),index:0,correct:0,complete:false,answered:false,selectedLine:null,selectedRepair:null,selections:{},draft:''};
+    session={items:mode==='error'?makeErrorDeck(data.errors,examLevel):makeReasoningDeck(data.reasoning,examLevel),index:0,correct:0,complete:false,answered:false,selectedLine:null,selectedRepair:null,selectedImpact:null,reviewMode:false,missed:[],errorStats:{located:0,repaired:0,explained:0},selections:{},draft:''};
   } else if(mode==='exam'){
     session={ready:true,complete:false};
   } else session = null;
@@ -1220,6 +1241,7 @@ function remember(conceptId, correct) {
 function finishRound() {
   if (session.complete) return;
   session.complete = true;
+  if(mode==='error'&&session.reviewMode){render('.completion-title');return;}
   if (mode === 'speed') stopClock();
   progress = recordSession(progress);
   if (!saveProgress(progress)) persistenceAvailable = false;
@@ -1358,7 +1380,10 @@ function resolveCloze(value, skipped=false) {
 
 function onAction(button) {
   const command = button.dataset.action;
-  if(command.startsWith('sort-')&&mode==='sort'){sortUI.handle(command,button);return;}
+  if(command==='error-review'&&mode==='error'&&session?.complete&&!session.reviewMode&&session.missed.length){
+  session={items:session.missed.map(id=>data.errors.find(q=>q.id===id)),index:0,correct:0,complete:false,answered:false,reviewMode:true,missed:[],errorStats:{located:0,repaired:0,explained:0},selectedLine:null,selectedRepair:null,selectedImpact:null};render('#exam-heading');return;
+ }
+ if(command.startsWith('sort-')&&mode==='sort'){sortUI.handle(command,button);return;}
   if(command.startsWith('sim-')){examSimulator.handle(command,button);return;}
   if(['build-move','build-check','build-reveal','build-next','error-check','error-next','reason-check','reason-next'].includes(command)){examAction(command,button);return;}
   if(command==='open-feedback'){experience.openFeedback();return;}
@@ -1571,9 +1596,10 @@ mount.addEventListener('click', event => {
 mount.addEventListener('change',event=>{
  if(mode==='exam')examSimulator.onChange(event.target);
  const control=event.target;
- if(mode==='error'&&!session?.answered&&control.matches('input[data-error-line],input[data-error-repair]')){
+ if(mode==='error'&&!session?.answered&&control.matches('input[data-error-line],input[data-error-repair],input[data-error-impact]')){
    if(control.dataset.errorLine!==undefined)session.selectedLine=Number(control.value);
-   else session.selectedRepair=control.value;
+   else if(control.dataset.errorRepair!==undefined)session.selectedRepair=control.value;
+    else session.selectedImpact=control.value;
    render('input[name="'+control.name+'"]:checked');
  }
  if(mode==='reason'&&!session?.answered&&control.matches('input[data-reason-field]')){
@@ -1674,6 +1700,7 @@ async function loadData() {
     if (data.rounds.length < 9 || data.scenarios.length < 20 || data.methods.length !== 5 || data.errors.length < 15 || data.reasoning.length < 9 || data.examQuestions.length < 32) {
       throw new Error('Incomplete sampling content.');
     }
+    validateErrorBank(data.errors);
     examStore=loadExamStore(data.examQuestions,data.methods);
     setRoute();
   } catch (error) {
