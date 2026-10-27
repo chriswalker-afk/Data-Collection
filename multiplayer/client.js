@@ -497,6 +497,13 @@ function render(){
         'Discover, Evaluate and Improve each contribute a verified piece. All three roles are needed for one tile. Reconnecting keeps the same piece and team.'));
       if(isHost)stage.append(button('Shuffle balanced teams',()=>command('teams-shuffle'),'btn btn-quiet'));
     }else teamUI.setup(room,isHost,stage);
+  }else if(room.status==='playing'&&isMosaic(room.objective)){
+    relayUI.render(room,isHost,stage);
+    const timer=make('p','','mosaic-clock');timer.id='mosaic-clock';
+    timer.setAttribute('aria-label','Class mosaic countdown');
+    timer.setAttribute('aria-live','off');
+    stage.prepend(timer);
+    updateClock();
   }else if(room.status==='playing'&&isPaced(room.objective)){
     if(room.objective==='class')questUI.render(room,stage);
     blitzUI.render(room,isHost,stage);
@@ -558,6 +565,22 @@ function render(){
     }
   }else if(room.status==='ceremony'&&room.ceremony?.slide){
     ceremonyUI.render(room,isHost,stage);
+  }else if(room.status==='finished'&&isMosaic(room.objective)){
+    relayUI.render(room,isHost,stage);
+    stage.append(make('p',room.mosaic?.achieved?
+      'Every team contributed genuine mathematical thinking to this collective achievement.':
+      'The class made progress, but the target was not reached before time or an early finish. No winner has been invented.','small-note'));
+    if(isHost){
+      const actions=actionRow();
+      const ceremony=button(room.finished?.ceremonyCompleted?'Replay class celebration':'Begin class celebration',
+        ()=>void command('ceremony-start'));
+      ceremony.id='ceremony-start';ceremony.disabled=!room.finished?.ceremonyAvailable;
+      actions.append(ceremony,
+        button('Create another room',()=>{leave();$('length').focus();window.scrollTo({top:0,behavior:'smooth'});}));
+      stage.append(actions);
+    }else if(room.finished?.ceremonyCompleted){
+      const link=make('a','See My Awards','ceremony-awards-link');link.href='./awards.html';stage.append(link);
+    }
   }else if(room.status==='finished'){
     stage.append(stageKicker('ROUND COMPLETE'));
     const race=room.blitz?.race;
@@ -619,8 +642,10 @@ function render(){
       stage.append(actions);
     }
   }
-  teamUI.review(room,isHost,stage);
-  teamUI.finished(room,stage);
+  if(!isMosaic(room.objective)){
+    teamUI.review(room,isHost,stage);
+    teamUI.finished(room,stage);
+  }
   if(focused)stage.querySelector('[data-method="'+focused+'"]')?.focus({preventScroll:true});
   if(activeFeedback){
     const input=stage.querySelector('#teacher-feedback-text');
