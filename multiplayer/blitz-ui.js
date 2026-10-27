@@ -4,6 +4,8 @@ const METHODS={
   'simple-random':'Simple random sampling',systematic:'Systematic sampling',
   stratified:'Stratified sampling',quota:'Quota sampling',opportunity:'Opportunity sampling'
 };
+const PACED_NAMES=Object.freeze({blitz:'BLITZ',bullseye:'BULLSEYE',perfect:'PERFECT RUN'});
+const isRace=room=>room.objective==='bullseye'||room.objective==='perfect';
 const create=(name,cls,text)=>{
   const el=document.createElement(name);if(cls)el.className=cls;
   if(text!==undefined)el.textContent=text;return el;
@@ -24,13 +26,26 @@ export function createBlitzUI({button,command,refreshStage,stageKicker}){
   }
   function appendHeading(stage,room){
     const stats=room.blitz?.me;
-    stage.append(stageKicker('BLITZ · LIVE CLASSROOM CHALLENGE'));
-    const title=create('h2','blitz-heading','Think accurately. Keep moving.');
+    stage.append(stageKicker(PACED_NAMES[room.objective]+' · LIVE CLASSROOM CHALLENGE'));
+    const title=create('h2','blitz-heading',isRace(room)?
+      (room.objective==='bullseye'?'Aim for accuracy. Keep improving.':
+        'Build your perfect run.'):'Think accurately. Keep moving.');
     title.tabIndex=-1;stage.append(title);
     const progress=create('div','blitz-live-summary');
     progress.append(create('span','blitz-summary-value',String(stats?.correct??0)+' correct'),
       create('span','',String(stats?.attempts??0)+' attempts'),
       create('span','',String(stats?.accuracy??0)+'% accuracy'));
+    if(isRace(room)){
+      const race=stats?.race;
+      const goal=room.blitz.race;
+      const value=room.objective==='bullseye'?
+        (race?.windowAnswered||0)+' / '+goal.accuracyWindow+' tasks · '+
+        (race?.windowAccuracy||0)+'% rolling accuracy':
+        'Streak '+(race?.currentStreak||0)+' of '+goal.streakTarget;
+      progress.append(create('span','blitz-race-progress',value));
+      if(room.objective==='bullseye'&&!race?.ready)
+        progress.append(create('span','', 'Accuracy target begins after the full window.'));
+    }
     stage.append(progress);
   }
   function submitChoice(stage,room,q){
@@ -108,7 +123,7 @@ export function createBlitzUI({button,command,refreshStage,stageKicker}){
     });
     ready();stage.append(counter,board,send);
   }
-  function renderFeedback(stage,room){
+  function renderFeedback(stage,room,canContinue=true){
     const f=room.blitz.feedback;
     if(!f)return;
     const complete=f.correctCount===f.total;
@@ -145,8 +160,25 @@ export function createBlitzUI({button,command,refreshStage,stageKicker}){
       }
     }
     stage.append(review);
-    const next=button('Next question →',()=>waitingAction('blitz-next'), 'btn btn-primary blitz-next');
-    next.disabled=pending;stage.append(next);
+    if(isRace(room)){
+      const p=room.blitz?.me?.race;
+      if(room.objective==='bullseye'){
+        const target=room.blitz.race.target;
+        stage.append(hint(
+          'Rolling window: '+(p?.windowCorrect||0)+' correct of '+(p?.windowAnswered||0)+
+          ' tasks · '+(p?.windowAccuracy||0)+'% shown · target '+target+'%.'+
+          (p?.ready?'':' The full window must be completed before a target can be reached.')
+        ));
+      }else{
+        stage.append(hint('Current perfect run: '+(p?.currentStreak||0)+
+          ' / '+room.blitz.race.target+
+          ' fully correct tasks. A partially correct board resets the streak.'));
+      }
+    }
+    if(canContinue){
+      const next=button('Next question →',()=>waitingAction('blitz-next'), 'btn btn-primary blitz-next');
+      next.disabled=pending;stage.append(next);
+    }
   }
   function render(room,isHost,stage){
     const state=room.blitz;if(!state)return;
@@ -155,16 +187,25 @@ export function createBlitzUI({button,command,refreshStage,stageKicker}){
     timer.id='blitz-clock';timer.setAttribute('aria-live','off');
     stage.append(timer);
     if(isHost){
-      stage.append(stageKicker('BLITZ · TEACHER VIEW'));
-      const heading=create('h2','', 'Your class is in full flow');
+      stage.append(stageKicker(PACED_NAMES[room.objective]+' · TEACHER VIEW'));
+      const heading=create('h2','',isRace(room)?
+        'The race is on — first to the target wins':'Your class is in full flow');
       heading.tabIndex=-1;stage.append(heading);
-      stage.append(hint('Each student gets an independent question and instant private feedback. The server controls the shared deadline and final ranks.'));
+      stage.append(hint(isRace(room)?
+        (room.objective==='bullseye'?
+          'Goal: '+room.blitz.race.target+'% accuracy across the most recent '+
+            room.blitz.race.accuracyWindow+
+            ' fully marked tasks. A complete board must be entirely correct.':
+          'Goal: '+room.blitz.race.target+
+            ' consecutive fully correct tasks. A wrong or partly correct board resets progress.')+
+          ' Students progress independently; the Worker decides who reaches the goal first.':
+        'Each student gets an independent question and instant private feedback. The server controls the shared deadline and final ranks.'));
       const all=state.standings||[];
       stage.append(create('p','blitz-teacher-pulse',
         all.reduce((n,s)=>n+s.correct,0)+' checked decisions correct · '+
         all.reduce((n,s)=>n+s.attempts,0)+' submissions'));
-      stage.append(button('End Blitz early',()=>{
-        if(confirm('End Blitz now and publish final standings for everyone?'))
+      stage.append(button('End '+(room.objective==='blitz'?'Blitz':PACED_NAMES[room.objective])+' early',()=>{
+        if(confirm('End this challenge now? A mathematical winner will only be named if someone has met the target.'))
           void command('close');
       },'btn btn-danger'));
       return;
@@ -187,5 +228,9 @@ export function createBlitzUI({button,command,refreshStage,stageKicker}){
   function focusFor(room){
     keyFor(room.blitz?.question);
   }
-  return {render,focusFor};
+  function renderResultFeedback(room,stage){
+    stage.append(hint('Your most recent checked answer is available for review.'));
+    renderFeedback(stage,room,false);
+  }
+  return {render,focusFor,renderResultFeedback};
 }
