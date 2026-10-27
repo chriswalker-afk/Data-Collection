@@ -131,7 +131,9 @@ test('least recently practised questions are preferred after all options have be
 
 test('recent-question history is bounded, deduplicated and optional in the legacy store',()=>{
  const all=questions.map(x=>x.id);
- const saved=updateRecentQuestionIds(all.slice(0,55),all.slice(55,67));
+ const selected=all.slice(55,67),before=[...selected];
+ const saved=updateRecentQuestionIds(all.slice(0,55),selected);
+ assert.deepEqual(selected,before,'Recording question history must not reverse the current paper');
  assert.equal(saved.length,MAX_RECENT_QUESTIONS);
  assert.equal(new Set(saved).size,saved.length);
  const restored=sanitizeExamStore({version:1,reviewIds:[],paper:null,
