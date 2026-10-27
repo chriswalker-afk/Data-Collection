@@ -91,7 +91,7 @@ export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
     const outer=node('div',undefined,'ceremony-card is-'+slide.kind);
     outer.setAttribute('data-ceremony-step',String(c.step));
     outer.setAttribute('data-ceremony-run',String(c.run));
-    outer.append(stageKicker('THE GRAND AWARDS CEREMONY · '+(c.step+1)+' / '+c.total));
+    outer.append(stageKicker((room.objective==='mosaic'?'OUR CLASS MOSAIC CELEBRATION':'THE GRAND AWARDS CEREMONY')+' · '+(c.step+1)+' / '+c.total));
     const steps=node('progress');steps.max=c.total;steps.value=c.step+1;
     steps.className='ceremony-progress';steps.setAttribute('aria-label','Ceremony reveal '+(c.step+1)+' of '+c.total);
     outer.append(steps);
@@ -126,6 +126,24 @@ export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
         board.append(card);
       }
       outer.append(board,node('p',slide.subtitle,'ceremony-footnote'));
+    }else if(slide.kind==='mosaic'){
+      outer.append(node('div',slide.achieved?'✦   🎉   ✧':'✦   🤝   ✧','ceremony-welcome-icons'),
+        h(slide.title),node('p',slide.subtitle,'ceremony-subtitle'));
+      const count=slide.completedTiles+' / '+slide.targetTiles+' tiles completed';
+      const coverage=slide.contributingTeams+' of '+slide.totalTeams+' teams contributed';
+      outer.append(node('p',count+' · '+coverage,'ceremony-finale-count'));
+      const grid=node('div',undefined,'mosaic-grid mosaic-ceremony-grid');
+      grid.style.setProperty('--mosaic-columns',String(slide.targetTiles===6?3:5));
+      grid.setAttribute('role','group');
+      grid.setAttribute('aria-label',count);
+      for(let i=0;i<slide.targetTiles;i++){
+        const won=slide.tiles.find(tile=>tile.index===i);
+        const el=node('span',won?'✦':'◇','mosaic-tile'+(won?' is-revealed':''));
+        el.setAttribute('aria-label',won?'Tile '+(i+1)+' unlocked':'Tile '+(i+1)+' locked');
+        if(won)el.dataset.teamId=won.teamId;
+        grid.append(el);
+      }
+      outer.append(grid);
     }else if(slide.kind==='class-quest'){
       outer.append(node('div',slide.achieved?'✦   🎉   ✧':'✦   🤝   ✧','ceremony-welcome-icons'),
         h(slide.title));
@@ -173,7 +191,9 @@ export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
     }
     stage.append(outer);
     if(isHost)controls(c,stage);
-    else stage.append(node('p',c.step===c.total-1?
+    else stage.append(node('p',room.objective==='mosaic'?
+      'Your teacher reveals each stage of the shared class celebration. All contributions count.':
+      c.step===c.total-1?
       'You can view earned Multiplayer keepsakes in My Awards after the teacher completes the ceremony.':
       'Your teacher controls each reveal. Enjoy the celebration together.','ceremony-student-note'));
   }

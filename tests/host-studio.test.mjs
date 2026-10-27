@@ -7,7 +7,7 @@ import {
 } from '../multiplayer/host-studio.js';
 
 test('every defined objective, collaboration format and class metric has a label',()=>{
- assert.deepEqual(Object.keys(OBJECTIVES),['classic','blitz','bullseye','perfect','class']);
+ assert.deepEqual(Object.keys(OBJECTIVES),['classic','blitz','bullseye','perfect','class','mosaic']);
  assert.deepEqual(Object.keys(FORMATS),['individual','squad','relay']);
  assert.deepEqual(Object.keys(CLASS_METRICS),['accuracy','correct','mastery','everyone']);
 });
@@ -28,7 +28,7 @@ test('quick, balanced and stretch presets use valid lengths for all four mathema
   }
  }
 });
-test('Classic, Blitz, races and Class Quest live while Puzzle Relay remains preview-only',()=>{
+test('Classic, Blitz, races, Class Quest and Class Mosaic validate their supported configurations',()=>{
  const cooperative=presetStudioDraft(DEFAULT_DRAFT,'balanced','class');
  assert.equal(validateStudioDraft(cooperative).playable,true);
  assert.match(describeStudioDraft(cooperative).availability,/Ready to host/);
@@ -39,7 +39,17 @@ test('Classic, Blitz, races and Class Quest live while Puzzle Relay remains prev
  assert.throws(()=>legacyRoomSettings(blitz),/not a Classic/);
  const relay={...DEFAULT_DRAFT,format:'relay',teamCount:4};
  assert.equal(validateStudioDraft(relay).playable,false);
- assert.throws(()=>liveRoomSettings(relay),/preview/);
+ assert.throws(()=>liveRoomSettings(relay),/requires the Class Mosaic/);
+ const mosaic=presetStudioDraft(DEFAULT_DRAFT,'balanced','mosaic');
+ assert.equal(validateStudioDraft(mosaic).playable,true);
+ assert.deepEqual(liveRoomSettings(mosaic),{objective:'mosaic',game:'which',
+   roundLength:5,minutes:5,teamCount:2,mosaicTiles:10,goalTarget:0});
+ assert.match(describeStudioDraft(mosaic).description,/three complementary/i);
+ for(const [preset,tiles] of [['quick',6],['balanced',10],['stretch',15]]){
+   const d=presetStudioDraft(DEFAULT_DRAFT,preset,'mosaic');
+   assert.equal(d.mosaicTiles,tiles);
+   assert.equal(validateStudioDraft(d).playable,true);
+ }
 });
 test('Bullseye preview describes rolling window, not single-question accuracy',()=>{
  const d={...DEFAULT_DRAFT,objective:'bullseye',accuracyTarget:90,accuracyWindow:12};
@@ -106,7 +116,7 @@ test('presets preserve the subject and participation while resetting only target
 test('snapshot never implies a planned objective is live',()=>{
  for(const objective of Object.keys(OBJECTIVES)){
   const d=presetStudioDraft(DEFAULT_DRAFT,'balanced',objective);
-  assert.equal(describeStudioDraft(d).playable,['classic','blitz','bullseye','perfect','class'].includes(objective));
+  assert.equal(describeStudioDraft(d).playable,true,objective);
  }
 });
 
@@ -162,4 +172,21 @@ test('Class Quest settings are live only when validated and cannot enable planne
    assert.equal(validateStudioDraft({...d,...change}).playable,false);
   }
  }
+});
+
+test('Class Mosaic rejects unverified or incompatible configuration',()=>{
+ const base=presetStudioDraft(DEFAULT_DRAFT,'balanced','mosaic');
+ for(const invalid of [
+   {mosaicTiles:7},{mosaicTiles:0},{minutes:0},{minutes:16},
+   {format:'squad'},{showLeaderboard:true},{game:'sort'},
+   {length:10},{difficulty:'advanced'},{questionOrder:'same'},
+   {goalTarget:80},{teamCount:1},{teamCount:5}
+ ]){
+   const d={...base,...invalid};
+   assert.equal(validateStudioDraft(d).playable,false,JSON.stringify(invalid));
+   assert.throws(()=>liveRoomSettings(d));
+ }
+ const corrupted=cleanStudioDraft({...base,mosaicTiles:500});
+ assert.equal(corrupted.mosaicTiles,10);
+ assert.equal(validateStudioDraft(corrupted).playable,true);
 });

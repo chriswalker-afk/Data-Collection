@@ -6,12 +6,13 @@ export const OBJECTIVES = Object.freeze({
   blitz: {label:'Blitz',short:'Most correct before the clock ends',availability:'live'},
   bullseye: {label:'Bullseye',short:'Reach a rolling accuracy target',availability:'live'},
   perfect: {label:'Perfect Run',short:'Build a consecutive-correct streak',availability:'live'},
-  class: {label:'Class Quest',short:'A shared mathematical target',availability:'live'}
+  class: {label:'Class Quest',short:'A shared mathematical target',availability:'live'},
+  mosaic: {label:'Class Mosaic',short:'Solve team puzzles to reveal a shared picture',availability:'live'}
 });
 export const FORMATS = Object.freeze({
   individual:{label:'Free-for-All',description:'Everyone answers on their own screen.'},
   squad:{label:'Squad League',description:'Players answer individually and contribute to balanced teams.'},
-  relay:{label:'Puzzle Relay',description:'Teammates receive different parts of a challenge (planned).'}
+  relay:{label:'Puzzle Relay',description:'Teammates solve complementary sampling puzzles to reveal a class mosaic.'}
 });
 export const GAMES = Object.freeze({
   which:{label:'Which Method?',lengths:[5,10,20],unit:'questions',seconds:20},
@@ -30,7 +31,7 @@ export const DEFAULT_DRAFT = Object.freeze({
   game:'which',length:10,teamCount:2,goalTarget:0,
   minutes:5,accuracyTarget:80,accuracyWindow:10,streakTarget:5,
   classMetric:'accuracy',classAccuracy:80,classCorrect:150,
-  classParticipation:80,classPerStudent:5,
+  classParticipation:80,classPerStudent:5,mosaicTiles:10,
   difficulty:'mixed',questionOrder:'varied',showLeaderboard:true
 });
 const includes = (values,value)=>values.includes(value);
@@ -41,7 +42,7 @@ export function cleanStudioDraft(raw) {
     if(typeof valid[id]==='string')cleaned[id]=valid[id];
   }
   for(const id of ['length','teamCount','goalTarget','minutes','accuracyTarget','accuracyWindow',
-    'streakTarget','classAccuracy','classCorrect','classParticipation','classPerStudent']){
+    'streakTarget','classAccuracy','classCorrect','classParticipation','classPerStudent','mosaicTiles']){
     if(Number.isInteger(valid[id]))cleaned[id]=valid[id];
   }
   if(typeof valid.showLeaderboard==='boolean')cleaned.showLeaderboard=valid.showLeaderboard;
@@ -64,6 +65,12 @@ export function cleanStudioDraft(raw) {
       cleaned[id]=DEFAULT_DRAFT[id];
   }
   if(![0,70,80,90].includes(cleaned.goalTarget))cleaned.goalTarget=0;
+  if(![6,10,15].includes(cleaned.mosaicTiles))cleaned.mosaicTiles=10;
+  if(cleaned.objective==='mosaic'){
+    cleaned.format='relay';cleaned.game='which';cleaned.length=5;
+    cleaned.goalTarget=0;cleaned.difficulty='mixed';
+    cleaned.questionOrder='varied';cleaned.showLeaderboard=false;
+  }else if(cleaned.format==='relay')cleaned.format='individual';
   return cleaned;
 }
 export function presetStudioDraft(raw,preset='balanced',objective=raw?.objective||'classic') {
@@ -74,7 +81,12 @@ export function presetStudioDraft(raw,preset='balanced',objective=raw?.objective
   const lengths=GAMES[draft.game].lengths;
   return {
     ...draft,objective,preset,
-    length:lengths[Math.min(index,lengths.length-1)],
+    format:objective==='mosaic'?'relay':draft.objective==='mosaic'?'individual':draft.format,
+    game:objective==='mosaic'?'which':draft.game,
+    goalTarget:objective==='mosaic'?0:draft.goalTarget,
+    showLeaderboard:objective==='mosaic'?false:true,
+    mosaicTiles:[6,10,15][index],
+    length:objective==='mosaic'?5:lengths[Math.min(index,lengths.length-1)],
     minutes:[3,5,10][index],
     accuracyTarget:[70,80,90][index],
     accuracyWindow:[5,10,15][index],
@@ -99,6 +111,7 @@ export function validateStudioDraft(draft) {
   if(!includes(['quick','balanced','stretch'],draft.preset))
     errors.push('Choose a recognised preset.');
   if(!integerIn(draft,'teamCount',2,4))errors.push('Choose 2, 3 or 4 balanced teams.');
+  if(![6,10,15].includes(draft.mosaicTiles))errors.push('Choose 6, 10 or 15 mosaic tiles.');
   if(!includes([0,70,80,90],draft.goalTarget))
     errors.push('Choose an available classic class-goal target.');
   if(!integerIn(draft,'minutes',1,15))errors.push('Set a time between 1 and 15 minutes.');
@@ -121,11 +134,17 @@ export function validateStudioDraft(draft) {
     errors.push('Choose a recognised question distribution.');
   if(typeof draft.showLeaderboard!=='boolean')
     errors.push('Choose whether the leaderboard is visible.');
+  const mosaic=draft.objective==='mosaic';
+  if(mosaic&&draft.format!=='relay')errors.push('Class Mosaic requires Puzzle Relay format.');
+  if(!mosaic&&draft.format==='relay')errors.push('Puzzle Relay requires the Class Mosaic objective.');
   const valid=errors.length===0;
   const paced=['blitz','bullseye','perfect','class'].includes(draft.objective);
-  const playable=valid&&(draft.objective==='classic'||paced)&&draft.format!=='relay'&&
+  const playable=valid&&(mosaic?
+    (draft.difficulty==='mixed'&&draft.questionOrder==='varied'&&draft.showLeaderboard===false&&
+      draft.game==='which'&&draft.length===5&&draft.goalTarget===0):
+    (draft.objective==='classic'||paced)&&draft.format!=='relay'&&
     (!paced||(draft.difficulty==='mixed'&&
-      draft.questionOrder==='varied'&&draft.showLeaderboard===true));
+      draft.questionOrder==='varied'&&draft.showLeaderboard===true)));
   return {valid,playable,errors};
 }
 export function legacyRoomSettings(draft) {
@@ -143,6 +162,10 @@ export function liveRoomSettings(draft){
     'This challenge is a preview or has planned settings not supported by this engine.');
   if(draft.objective==='classic')
     return {...legacyRoomSettings(draft),objective:'classic',minutes:0};
+  if(draft.objective==='mosaic')
+    return {objective:'mosaic',game:'which',roundLength:5,
+      minutes:draft.minutes,teamCount:draft.teamCount,
+      mosaicTiles:draft.mosaicTiles,goalTarget:0};
   return {
     game:draft.game,roundLength:draft.length,
     objective:draft.objective,minutes:draft.minutes,
@@ -163,7 +186,7 @@ export function describeStudioDraft(draft) {
   const check=validateStudioDraft(draft);
   if(!check.valid)return {title:'Check your settings',description:check.errors[0],availability:'Invalid settings',playable:false};
   const objective=OBJECTIVES[draft.objective].label,format=FORMATS[draft.format].label;
-  const game=GAMES[draft.game].label;
+  const game=draft.objective==='mosaic'?'Puzzle Relay':GAMES[draft.game].label;
   let outcome;
   switch(draft.objective){
     case 'classic':
@@ -178,6 +201,9 @@ export function describeStudioDraft(draft) {
     case 'perfect':
       outcome=`First to complete ${draft.streakTarget} fully correct tasks in a row; an incorrect or partially correct task resets the streak. Safety limit: ${draft.minutes} minutes.`;
       break;
+    case 'mosaic':
+      outcome=`Complete ${draft.mosaicTiles} tiles by solving three complementary mathematical roles per puzzle. ${draft.teamCount} balanced teams, at least two students per team, ${draft.minutes}-minute safety clock. Every team must contribute.`;
+      break;
     default:
       outcome=draft.classMetric==='accuracy'?
         `Aim for ${draft.classAccuracy}% mean student accuracy; at least ${draft.classParticipation}% must complete two checked tasks. Safety limit: ${draft.minutes} minutes.`:
@@ -189,11 +215,11 @@ export function describeStudioDraft(draft) {
   }
   if(draft.objective==='class')outcome+=' At least three students are needed to start. Everybody shares the result.';
   if(draft.format==='squad')outcome+=` ${draft.teamCount} balanced teams.`;
-  if(draft.format==='relay')outcome+=' Different parts of a task appear on teammates\' screens.';
+  if(draft.format==='relay')outcome+=' Different parts of a task appear on teammates\' screens. Each verified three-piece puzzle unlocks a tile, without a competitive podium.';
   if(draft.objective==='classic'&&draft.goalTarget)
     outcome+=` Optional existing class goal: ${draft.goalTarget}% accuracy.`;
   const availability=check.playable?'Ready to host now':
-    draft.format==='relay'?'Preview only — Puzzle Relay needs the distributed-question engine (Pass 5).':
+    draft.format==='relay'?'Preview only — incompatible relay settings.':
     draft.objective==='blitz'?'Preview only — advanced modifiers require a later engine.':
     ['bullseye','perfect','blitz','class'].includes(draft.objective)?
       'Preview only — advanced difficulty and leaderboard modifiers require a later engine.':

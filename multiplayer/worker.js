@@ -10,6 +10,8 @@ import {isPaced,isRace,validRaceSettings,initialRaceProgress,recordRaceTask,
 import {validClassQuestSettings,initialClassQuest,classQuestProgress,
   questMethodEvidence,classQuestStandings,isClassQuest,QUEST_MIN_PLAYERS,
   QUEST_MAX_CORRECT_CREDIT} from './class-quest-rules.js';
+import {isMosaic,validMosaicSettings,startMosaic,handleMosaicCommand,
+  expireMosaicRoom,closeMosaicRoom,mosaicPublicState} from './relay-adapter.js';
 import {makeCeremony,ceremonySnapshot,collectableReceipt} from './ceremony-rules.js';
 import {
   TEAM_DEFINITIONS,TEAM_COUNTS,CLASS_TARGETS,balanceTeams,nextTeamId,
@@ -81,7 +83,7 @@ function preparedView(room){
     visibleScores.set(result.playerId,(visibleScores.get(result.playerId)||0)+result.points);
   return {
     visibleScores,answered:new Set(room.answers.map(a=>a.id)),
-    teams:teamStandings(room,isPaced(room.objective)||room.status!=='playing'),
+    teams:isMosaic(room.objective)?[]:teamStandings(room,isPaced(room.objective)||room.status!=='playing'),
     classQuest:classQuestSnapshot(room),
     teacherFeedback:classroomFeedbackSnapshot(room),
     questionPulse:questionPulse(room)
@@ -123,12 +125,17 @@ function pacedPublicState(room,participant,now){
 }
 function publicState(room,participant,now,connections,prepared=preparedView(room)){
   const game=room.game||'which'; // Pass 1/2 rooms remain compatible.
-  const classic=!isPaced(room.objective);
+  const classic=!isPaced(room.objective)&&!isMosaic(room.objective);
   const question=classic&&room.status==='playing'?room.deck[room.index]:null;
   const revealed=classic&&room.status==='reveal'?room.deck[room.index]:null;
   return {
     code:room.code,status:room.status,game,roundLength:room.roundLength,
     objective:room.objective||'classic',blitz:pacedPublicState(room,participant,now),
+    mosaic:mosaicPublicState(room,participant),
+    mosaicSetup:isMosaic(room.objective)?{
+      tiles:room.mosaicSettings.mosaicTiles,minutes:room.mosaicSettings.minutes,
+      teamCount:room.mosaicSettings.teamCount
+    }:null,serverNow:now,
     quest:classQuestProgress(room),
     questSetup:isClassQuest(room.objective)?{
       metric:room.questSettings.classMetric,
@@ -143,9 +150,9 @@ function publicState(room,participant,now,connections,prepared=preparedView(room
     questionSeconds:questionTimeMs(game)/1000,locked:Boolean(room.locked),
     players:room.players.map(p=>({
       id:p.id,name:p.name,avatar:safeAvatar(p.avatar),
-      score:isClassQuest(room.objective)?0:(prepared.visibleScores.get(p.id)||0),
+      score:isClassQuest(room.objective)||isMosaic(room.objective)?0:(prepared.visibleScores.get(p.id)||0),
       teamId:p.teamId||null,online:connections.has(p.id),
-      answered:classic?prepared.answered.has(p.id):Boolean(p.blitz?.feedback),
+      answered:classic?prepared.answered.has(p.id):isMosaic(room.objective)?false:Boolean(p.blitz?.feedback),
       ...(classic?{}:isClassQuest(room.objective)?{
         contributed:(p.blitz?.attempts||0)>=2
       }:{
@@ -164,7 +171,7 @@ function publicState(room,participant,now,connections,prepared=preparedView(room
         id:a.id,points:a.points,correctCount:a.correctCount,total:a.total,
         ...(game==='which'?{method:a.method}:{})
       }))}:null,
-    finished:room.status==='finished'?{total:classic?room.deck.length:room.results.length,
+    finished:room.status==='finished'?{total:isMosaic(room.objective)?room.mosaic?.tiles.length||0:classic?room.deck.length:room.results.length,
       ceremonyAvailable:room.players.length>0,ceremonyCompleted:Boolean(room.ceremony?.completed)}:null,
     ceremony:ceremonySnapshot(room,participant),
     myMultiplayerAwards:collectableReceipt(room,participant)
@@ -191,7 +198,7 @@ export class GameRoom extends DurableObject{
   async create(code,roundLength,game='which',objective='classic',minutes=0,raceSettings={}){
     if(this.room()||this.ctx.storage.kv.get('room'))return {error:'Room code already in use'};
     if(!validLength(game,roundLength))return {error:'Invalid game or round length'};
-    if(!['classic','blitz','bullseye','perfect','class'].includes(objective))
+    if(!['classic','blitz','bullseye','perfect','class','mosaic'].includes(objective))
       return {error:'Unsupported challenge objective'};
     if(objective==='blitz'&&!validBlitzSettings(game,roundLength,minutes))
       return {error:'Choose a Blitz time between 1 and 15 minutes'};
@@ -201,6 +208,10 @@ export class GameRoom extends DurableObject{
     if(isClassQuest(objective)&&!validClassQuestSettings({
       objective,game,roundLength,minutes,...raceSettings
     }))return {error:'Choose valid Class Quest and participation targets'};
+    if(isMosaic(objective)&&!validMosaicSettings({
+      objective,game,roundLength,minutes,teamCount:raceSettings.teamCount,
+      mosaicTiles:raceSettings.mosaicTiles
+    }))return {error:'Choose 2–4 teams, 6/10/15 tiles and a 1–15 minute limit'};
     if(objective==='classic'&&minutes!==0)return {error:'Unexpected Classic timer'};
     const race=isRace(objective)?{
       ...(objective==='bullseye'?{
@@ -214,10 +225,13 @@ export class GameRoom extends DurableObject{
       classCorrect:raceSettings.classCorrect,classParticipation:raceSettings.classParticipation,
       classPerStudent:raceSettings.classPerStudent
     }:null;
+    const mosaicSettings=isMosaic(objective)?{
+      teamCount:raceSettings.teamCount,mosaicTiles:raceSettings.mosaicTiles,minutes
+    }:null;
     const room={code,status:'lobby',created:Date.now(),game,roundLength,objective,race,
-      questSettings,quest:null,
+      questSettings,quest:null,mosaicSettings,mosaic:null,
       blitzMinutes:isPaced(objective)?minutes:0,blitzEnd:0,locked:false,
-      hostToken:crypto.randomUUID(),ceremonyId:crypto.randomUUID(),players:[],deck:[],index:0,deadline:0,answers:[],results:[],ceremony:null,teamCount:0,goalTarget:0,feedback:null,feedbackUpdates:0};
+      hostToken:crypto.randomUUID(),ceremonyId:crypto.randomUUID(),players:[],deck:[],index:0,deadline:0,answers:[],results:[],ceremony:null,teamCount:mosaicSettings?.teamCount||0,goalTarget:0,feedback:null,feedbackUpdates:0};
     this.save(room);
     await this.ctx.storage.setAlarm(room.created+ROOM_TTL_MS);
     return {code,token:room.hostToken};
@@ -245,6 +259,10 @@ export class GameRoom extends DurableObject{
       if(isClassQuest(room.objective)&&room.quest){
         room.quest.finishReason='time';room.quest.endedAt=Date.now();
       }
+      this.save(room);this.broadcast();
+      return true;
+    }
+    if(expireMosaicRoom(room,Date.now())){
       this.save(room);this.broadcast();
       return true;
     }
@@ -287,8 +305,18 @@ export class GameRoom extends DurableObject{
     if(!person)return {error:'Session not found',status:401};
     if(!command||typeof command.type!=='string')return {error:'Invalid action'};
     const expiredPaced=this.finishExpiredPaced(room);
-    if(expiredPaced&&['blitz-answer','blitz-next'].includes(command.type))
+    if(expiredPaced&&['blitz-answer','blitz-next','mosaic-answer','mosaic-reopen'].includes(command.type))
       return {error:'The shared countdown has finished'};
+    if(isMosaic(room.objective)&&['mosaic-answer','mosaic-reopen'].includes(command.type)){
+      const handled=handleMosaicCommand(room,person,command,Date.now());
+      if(handled.recognized){
+        this.save(room);this.broadcast();
+        return handled.error?{error:handled.error}:{ok:true};
+      }
+    }
+    if(isMosaic(room.objective)&&room.status==='playing'&&
+      ['remove','leave'].includes(command.type))
+      return {error:'Active relay roles are frozen; reconnect or end the class mosaic'};
     if(command.type==='avatar-set'&&!person.host&&room.status==='lobby'){
       if(!validAvatar(command.avatar))return {error:'Invalid critter configuration'};
       const player=room.players.find(p=>p.id===person.id);
@@ -322,6 +350,8 @@ export class GameRoom extends DurableObject{
     }else if(command.type==='teams-set'&&person.host&&room.status==='lobby'){
       if(!Number.isInteger(command.count)||!TEAM_COUNTS.includes(command.count))
         return {error:'Choose Solo or 2–4 teams'};
+      if(isMosaic(room.objective)&&command.count!==room.mosaicSettings.teamCount)
+        return {error:'The Mosaic team count is set in Host Studio'};
       room.teamCount=command.count;
       room.players=balanceTeams(room.players,room.teamCount);
     }else if(command.type==='teams-shuffle'&&person.host&&room.status==='lobby'&&(room.teamCount||0)){
@@ -333,13 +363,19 @@ export class GameRoom extends DurableObject{
       const assignment=new Map(balanceTeams(shuffled,room.teamCount).map(p=>[p.id,p.teamId]));
       room.players=room.players.map(p=>({...p,teamId:assignment.get(p.id)}));
     }else if(command.type==='goal-set'&&person.host&&room.status==='lobby'){
-      if(isPaced(room.objective)&&command.target!==0)
+      if((isPaced(room.objective)||isMosaic(room.objective))&&command.target!==0)
         return {error:'Cooperative goals become available for Blitz in a later pass'};
       if(!Number.isInteger(command.target)||!CLASS_TARGETS.includes(command.target))
         return {error:'Choose no class goal or 70%, 80%, 90%'};
       room.goalTarget=command.target;
     }else if(command.type==='start'&&person.host&&room.status==='lobby'){
       if(room.players.length===0)return {error:'At least one student must join'};
+      const now=Date.now();
+      if(isMosaic(room.objective)){
+        const started=startMosaic(room,now,secureIndex);
+        if(started.error)return {error:started.error};
+        await this.ctx.storage.setAlarm(room.deadline);
+      }else{
       if(isClassQuest(room.objective)&&room.players.length<QUEST_MIN_PLAYERS)
         return {error:'Class Quest needs at least three students to share the goal'};
       if(isClassQuest(room.objective)&&room.questSettings.classMetric==='correct'&&
@@ -347,7 +383,6 @@ export class GameRoom extends DurableObject{
         return {error:'This class cannot reach that Knowledge Quest target. Add students or lower the target.'};
       if((room.teamCount||0)>room.players.length)
         return {error:'Each team needs at least one student before starting'};
-      const now=Date.now();
       if(isClassQuest(room.objective))
         room.quest=initialClassQuest({...room.questSettings,game:room.game,
           roundLength:room.roundLength,minutes:room.blitzMinutes},room.players);
@@ -364,6 +399,7 @@ export class GameRoom extends DurableObject{
         }
         await this.ctx.storage.setAlarm(room.blitzEnd);
       }else room.deadline=now+questionTimeMs(room.game||'which');
+      }
     }else if(command.type==='blitz-answer'&&!person.host&&room.status==='playing'&&isPaced(room.objective)){
       const now=Date.now(),player=room.players.find(p=>p.id===person.id);
       const progress=player?.blitz;
@@ -424,7 +460,7 @@ export class GameRoom extends DurableObject{
       if(!player?.blitz?.feedback)return {error:'Complete and review the current answer first'};
       if(player.blitz.attempts>=BLITZ_MAX_ATTEMPTS)return {error:'Maximum verified attempts reached'};
       advanceBlitzQuestion(player,room.deck.length,Date.now());
-    }else if(command.type==='answer'&&!person.host&&room.status==='playing'&&!isPaced(room.objective)){
+    }else if(command.type==='answer'&&!person.host&&room.status==='playing'&&!isPaced(room.objective)&&!isMosaic(room.objective)){
       if(Date.now()>=room.deadline)return {error:'Time is up'};
       if(room.answers.some(a=>a.id===person.id))return {error:'Answer already submitted'};
       const game=room.game||'which',duration=questionTimeMs(game);
@@ -444,11 +480,11 @@ export class GameRoom extends DurableObject{
       });
       const player=room.players.find(p=>p.id===person.id);
       player.score+=graded.points;
-    }else if(command.type==='reveal'&&person.host&&room.status==='playing'&&!isPaced(room.objective)){
+    }else if(command.type==='reveal'&&person.host&&room.status==='playing'&&!isPaced(room.objective)&&!isMosaic(room.objective)){
       if(Date.now()<room.deadline&&room.answers.length<room.players.length)
         return {error:'Wait until everyone has answered or the timer finishes'};
       room.status='reveal';room.feedback=null;room.feedbackUpdates=0;
-    }else if(command.type==='next'&&person.host&&room.status==='reveal'&&!isPaced(room.objective)){
+    }else if(command.type==='next'&&person.host&&room.status==='reveal'&&!isPaced(room.objective)&&!isMosaic(room.objective)){
       room.index+=1;room.answers=[];room.feedback=null;room.feedbackUpdates=0;
       room.status=room.index>=room.deck.length?'finished':'playing';
       room.deadline=room.status==='playing'?Date.now()+questionTimeMs(room.game||'which'):0;
@@ -475,6 +511,7 @@ export class GameRoom extends DurableObject{
       room.ceremony.completed=true;room.status='finished';
     }else if(command.type==='close'&&person.host&&room.status!=='finished'){
       if(room.status==='ceremony'&&room.ceremony)room.ceremony.completed=true;
+      closeMosaicRoom(room,Date.now());
       if(isRace(room.objective)&&!room.race.finishReason){
         room.race.finishReason='host';room.race.endedAt=Date.now();
       }
@@ -530,6 +567,14 @@ export class GameRoom extends DurableObject{
   async alarm(){
     const room=this.ctx.storage.kv.get('room');
     if(room&&Date.now()<room.created+ROOM_TTL_MS){
+      if(isMosaic(room.objective)&&room.status==='playing'){
+        if(expireMosaicRoom(room,Date.now())){
+          this.save(room);this.broadcast();
+        }else{
+          await this.ctx.storage.setAlarm(room.deadline);
+          return;
+        }
+      }
       if(isPaced(room.objective)&&room.status==='playing'){
         if(blitzDeadlineReached(room.deadline,Date.now())){
           room.status='finished';room.finishedReason='time';
@@ -563,7 +608,7 @@ export default {
     }
     const url=new URL(request.url);
     if(url.pathname==='/health'&&request.method==='GET')
-      return json(request,{ok:true,service:'sampling-arcade-multiplayer',version:10,transport:'websocket',features:['teams','class-goals','teacher-feedback','ceremony','avatars','blitz','bullseye','perfect-run','class-quest'],
+      return json(request,{ok:true,service:'sampling-arcade-multiplayer',version:11,transport:'websocket',features:['teams','class-goals','teacher-feedback','ceremony','avatars','blitz','bullseye','perfect-run','class-quest','puzzle-relay','class-mosaic'],
         games:Object.keys(GAME_MODES),buildSha:env.BUILD_SHA||null});
     if(url.pathname==='/rooms'&&request.method==='POST'){
       let body;try{body=await smallJSON(request);}catch(e){return fail(request,e.message==='Request too large'?e.message:'Invalid JSON',e.message==='Request too large'?413:400);}
@@ -571,7 +616,7 @@ export default {
       const objective=body.objective===undefined?'classic':body.objective;
       const minutes=body.minutes===undefined?0:body.minutes;
       if(!validLength(game,roundLength))return fail(request,'Choose a valid game and round length');
-      if(!['classic','blitz','bullseye','perfect','class'].includes(objective))
+      if(!['classic','blitz','bullseye','perfect','class','mosaic'].includes(objective))
         return fail(request,'Unsupported challenge objective');
       if(objective==='blitz'&&!validBlitzSettings(game,roundLength,minutes))
         return fail(request,'Choose a Blitz time between 1 and 15 minutes');
@@ -580,7 +625,8 @@ export default {
         streakTarget:body.streakTarget,
         classMetric:body.classMetric,classAccuracy:body.classAccuracy,
         classCorrect:body.classCorrect,classParticipation:body.classParticipation,
-        classPerStudent:body.classPerStudent
+        classPerStudent:body.classPerStudent,
+        teamCount:body.teamCount,mosaicTiles:body.mosaicTiles
       };
       if(isRace(objective)&&!validRaceSettings({
         objective,game,roundLength,minutes,...raceSettings
@@ -588,6 +634,10 @@ export default {
       if(isClassQuest(objective)&&!validClassQuestSettings({
         objective,game,roundLength,minutes,...raceSettings
       }))return fail(request,'Choose valid Class Quest and participation targets');
+      if(isMosaic(objective)&&!validMosaicSettings({
+        objective,game,roundLength,minutes,teamCount:body.teamCount,
+        mosaicTiles:body.mosaicTiles
+      }))return fail(request,'Choose 2–4 teams, 6/10/15 tiles and a 1–15 minute limit');
       if(objective==='classic'&&minutes!==0)return fail(request,'Classic rooms do not accept a Blitz timer');
       const key=await fingerprint(request);
       const limit=roomCreationRateLimits(env,request.url);

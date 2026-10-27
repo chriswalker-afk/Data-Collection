@@ -49,8 +49,10 @@ test('objective presets and previews never create unfinished gameplay rooms',asy
  await selectObjective(page,'classic');
  await expect(page.locator('#create')).toBeEnabled();
  await selectFormat(page,'relay');
- await expect(page.locator('#create')).toBeDisabled();
- await expect(page.locator('#studio-preview-availability')).toContainText('Puzzle Relay');
+ await expect(page.locator('#create')).toBeEnabled();
+ await expect(page.locator('#studio-preview-title')).toContainText('Class Mosaic');
+ await expect(page.locator('#studio-mosaic-tiles')).toBeVisible();
+ await expect(page.locator('#studio-mosaic-tiles')).toHaveValue('10');
  await selectFormat(page,'individual');
  await expect(page.locator('#create')).toBeEnabled();
 });
@@ -100,8 +102,9 @@ test('advanced settings are honestly labelled preview-only',async({page})=>{
  await expect(page.locator('#studio-advanced-future-fields')).toBeHidden();
  await expect(page.locator('#create')).toBeEnabled();
  await selectFormat(page,'relay');
- await expect(page.locator('#create')).toBeDisabled();
- await expect(page.locator('#studio-preview-availability')).toContainText('Puzzle Relay');
+ await expect(page.locator('#create')).toBeEnabled();
+ await expect(page.locator('#studio-advanced-live-note')).toContainText('no individual ranking');
+ await expect(page.locator('#studio-advanced-future-fields')).toBeHidden();
 });
 test('Classic squad and optional goal are applied using existing Worker lobby commands',async({page,request,isMobile})=>{
  test.skip(isMobile,'Parallel mobile join and team tests already cover 320px and 390px; avoid duplicate local Worker load.');
@@ -139,4 +142,29 @@ test('Host Studio fits 320px/mobile and does not stretch the student join card',
  const host=await page.locator('.host-entry').boundingBox();
  const student=await page.locator('.student-entry').boundingBox();
  expect(student.height).toBeLessThan(host.height);
+});
+
+test('Class Mosaic is a live configurable cooperative room that survives refresh',async({page})=>{
+ await open(page);
+ await selectObjective(page,'mosaic');
+ await expect(page.locator('input[name="studio-format"][value="relay"]')).toBeChecked();
+ await expect(page.locator('#game-mode')).toBeHidden();
+ await expect(page.locator('#studio-mosaic-tiles')).toBeVisible();
+ await expect(page.locator('#create')).toBeEnabled();
+ await page.locator('#studio-mosaic-tiles').selectOption('15');
+ await page.locator('#studio-team-count').selectOption('4');
+ await page.locator('#studio-minutes').fill('12');
+ await expect(page.locator('#studio-preview-detail')).toContainText('15 tiles');
+ await expect(page.locator('#studio-preview-detail')).toContainText('4 balanced teams');
+ await expect(page.locator('#studio-preview-detail')).toContainText('12-minute');
+ await page.reload();
+ await expect(page.locator('input[name="studio-objective"][value="mosaic"]')).toBeChecked();
+ await expect(page.locator('#studio-mosaic-tiles')).toHaveValue('15');
+ await expect(page.locator('#studio-team-count')).toHaveValue('4');
+ await expect(page.locator('#studio-minutes')).toHaveValue('12');
+ await expect(page.locator('#create')).toBeEnabled();
+ await page.locator('#create').click();
+ await expect(page.locator('#connection')).toHaveText('Live connection',{timeout:15000});
+ await expect(page.locator('#room-meta')).toContainText('15 tiles');
+ await expect(page.locator('#room-meta')).toContainText('4 teams');
 });

@@ -145,6 +145,27 @@ jobs:
           retention-days: 7
 
 
+  mosaic-staging-revision:
+    name: Exact-revision Puzzle Relay Cloudflare staging smoke
+    if: github.event_name == 'pull_request' && github.head_ref == 'feature/multiplayer-puzzle-relay-mosaic-pass5'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    needs: unit-and-content
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact Worker SHA and complete the six-tile cooperative mosaic
+        env:
+          MULTIPLAYER_API: https://sampling-arcade-multiplayer-stage.chris-walker-d8b.workers.dev
+          EXPECTED_BUILD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node scripts/multiplayer-mosaic-smoke.mjs
+      - name: Protect original classroom protocol on upgraded staging
+        env:
+          MULTIPLAYER_API: https://sampling-arcade-multiplayer-stage.chris-walker-d8b.workers.dev
+        run: node scripts/multiplayer-smoke.mjs
+
   class-quest-staging-revision:
     name: Exact-revision Class Quest Cloudflare staging smoke
     if: github.event_name == 'pull_request' && github.head_ref == 'feature/multiplayer-class-quest-pass4'
