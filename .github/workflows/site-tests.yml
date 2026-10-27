@@ -139,3 +139,21 @@ jobs:
           MULTIPLAYER_API: https://sampling-arcade-blitz-pass2-test.chris-walker-d8b.workers.dev
           EXPECTED_BUILD_SHA: ${{ github.event.pull_request.head.sha }}
         run: node scripts/multiplayer-blitz-smoke.mjs
+
+
+  race-staging-revision:
+    name: Exact-revision Bullseye and Perfect Run staging smoke
+    if: github.event_name == 'pull_request' && github.head_ref == 'feature/multiplayer-bullseye-perfect-run-pass3'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    needs: unit-and-content
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove deployed race Worker matches this pull request SHA
+        env:
+          MULTIPLAYER_API: https://sampling-arcade-races-pass3-test.chris-walker-d8b.workers.dev
+          EXPECTED_BUILD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node scripts/multiplayer-race-smoke.mjs
