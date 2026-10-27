@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="./styles/arcade-hub.css">
   <link rel="stylesheet" href="./styles/critter-lab-promo.css">
   <link rel="stylesheet" href="./styles/multiplayer.css">
+  <link rel="stylesheet" href="./styles/multiplayer-studio.css">
   <link rel="stylesheet" href="./styles/multiplayer-critters.css">
 </head>
 <body>
@@ -58,24 +59,173 @@
             <span class="entry-mode-icon" aria-hidden="true">▣</span>
             <div><span class="entry-mode-tag">01 / TEACHER</span><h3 id="host-heading">Host a classroom</h3></div>
           </div>
-          <p>Choose a game and length, then optionally organise balanced teams or set a Class Quest. You control the start, teaching feedback and answer reviews.</p>
-          <div class="entry-inputs">
-            <label for="game-mode">Choose a game</label>
-            <select id="game-mode">
-              <option value="which" selected>Which Method? · Apply sampling methods</option>
-              <option value="speed">Speed Recall · Type from memory</option>
-              <option value="match">Match Up · Connect precise definitions</option>
-              <option value="sort">Sort It! · Compare methods and evaluate</option>
-            </select>
-            <label for="length">Challenge length</label>
-            <select id="length">
-              <option value="5">5 questions · Quick starter</option>
-              <option selected value="10">10 questions · Class challenge</option>
-              <option value="20">20 questions · Extended revision</option>
-            </select>
-            <p id="mode-description" class="entry-field-tip">Five sampling methods are balanced across the challenge. 20 seconds per question.</p>
+          <p>Choose a challenge and how your class will participate. Classic games are ready now; explore the new challenges in preview before their engines arrive.</p>
+          <div id="host-studio" class="host-studio">
+            <fieldset class="studio-step studio-fieldset">
+              <legend><span class="studio-step-number">01</span> Choose a challenge</legend>
+              <div class="studio-choice-grid studio-objectives" id="studio-objectives">
+                <label class="studio-choice is-selected">
+                  <input type="radio" name="studio-objective" value="classic" checked>
+                  <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">▣</span><strong>Classic Challenge</strong><span class="studio-status is-live">LIVE</span></span>
+                  <small>Teacher-paced questions and explanations.</small>
+                </label>
+                <label class="studio-choice">
+                  <input type="radio" name="studio-objective" value="blitz">
+                  <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">⚡</span><strong>Blitz</strong><span class="studio-status">PREVIEW</span></span>
+                  <small>Race to answer accurately before time runs out.</small>
+                </label>
+                <label class="studio-choice">
+                  <input type="radio" name="studio-objective" value="bullseye">
+                  <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">◎</span><strong>Bullseye</strong><span class="studio-status">PREVIEW</span></span>
+                  <small>Reach a rolling accuracy target.</small>
+                </label>
+                <label class="studio-choice">
+                  <input type="radio" name="studio-objective" value="perfect">
+                  <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">✦</span><strong>Perfect Run</strong><span class="studio-status">PREVIEW</span></span>
+                  <small>Build a streak of consecutive correct answers.</small>
+                </label>
+                <label class="studio-choice studio-choice-wide">
+                  <input type="radio" name="studio-objective" value="class">
+                  <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">✳</span><strong>Class Quest</strong><span class="studio-status">PREVIEW</span></span>
+                  <small>Everyone contributes to a shared class achievement.</small>
+                </label>
+              </div>
+            </fieldset>
+            <fieldset class="studio-step studio-fieldset">
+              <legend><span class="studio-step-number">02</span> How will students work?</legend>
+              <div class="studio-choice-grid studio-format-grid" id="studio-formats">
+                <label class="studio-choice is-selected">
+                  <input type="radio" name="studio-format" value="individual" checked>
+                  <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">◉</span><strong>Free-for-All</strong></span>
+                  <small>Every student answers on their own device.</small>
+                </label>
+                <label class="studio-choice">
+                  <input type="radio" name="studio-format" value="squad">
+                  <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">♧</span><strong>Squad League</strong></span>
+                  <small>Individual answers contribute to balanced teams.</small>
+                </label>
+                <label class="studio-choice studio-choice-wide">
+                  <input type="radio" name="studio-format" value="relay">
+                  <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">◇</span><strong>Puzzle Relay</strong><span class="studio-status">PREVIEW</span></span>
+                  <small>Split the mathematical challenge across teammates' screens.</small>
+                </label>
+              </div>
+              <div id="studio-team-count-row" class="studio-inline-field" hidden>
+                <label for="studio-team-count">Number of teams</label>
+                <select id="studio-team-count">
+                  <option value="2">2 balanced teams</option><option value="3">3 balanced teams</option>
+                  <option value="4">4 balanced teams</option>
+                </select>
+              </div>
+            </fieldset>
+            <section class="studio-step" aria-labelledby="studio-settings-heading">
+              <div class="studio-step-heading">
+                <h4 id="studio-settings-heading"><span class="studio-step-number">03</span> Shape the challenge</h4>
+                <div class="studio-preset-row" role="group" aria-label="Suggested challenge presets">
+                  <button type="button" data-studio-preset="quick" aria-pressed="false">Quick</button>
+                  <button type="button" data-studio-preset="balanced" class="is-selected" aria-pressed="true">Balanced</button>
+                  <button type="button" data-studio-preset="stretch" aria-pressed="false">Stretch</button>
+                </div>
+              </div>
+              <div class="entry-inputs studio-fields">
+                <label for="game-mode">Mathematical activity</label>
+                <select id="game-mode">
+                  <option value="which" selected>Which Method? · Apply sampling methods</option>
+                  <option value="speed">Speed Recall · Type from memory</option>
+                  <option value="match">Match Up · Connect precise definitions</option>
+                  <option value="sort">Sort It! · Compare methods and evaluate</option>
+                </select>
+                <div id="studio-length-row" class="studio-field-row">
+                  <label for="length">Challenge length</label>
+                  <select id="length">
+                    <option value="5">5 questions · Quick starter</option>
+                    <option selected value="10">10 questions · Class challenge</option>
+                    <option value="20">20 questions · Extended revision</option>
+                  </select>
+                </div>
+                <p id="mode-description" class="entry-field-tip">Five sampling methods are balanced across the challenge. 20 seconds per question.</p>
+                <div id="studio-class-goal-row" class="studio-field-row">
+                  <label for="studio-goal-target">Optional existing class accuracy goal</label>
+                  <select id="studio-goal-target">
+                    <option value="0">No added class goal</option><option value="70">70% accuracy</option>
+                    <option value="80">80% accuracy</option><option value="90">90% accuracy</option>
+                  </select>
+                  <small class="studio-field-note">This is an extra goal in Classic, not the planned full Class Quest game.</small>
+                </div>
+                <div id="studio-future-settings" class="studio-future-fields" hidden>
+                  <p class="studio-future-note">Try out the proposed settings. These objectives are previews; no unimplemented game can create a live room.</p>
+                  <div id="studio-minutes-row" class="studio-field-row" hidden>
+                    <label for="studio-minutes">Blitz time limit (minutes)</label>
+                    <input type="number" id="studio-minutes" min="1" max="15" step="1" value="5">
+                  </div>
+                  <div id="studio-accuracy-target-row" class="studio-field-row" hidden>
+                    <label for="studio-accuracy-target">Bullseye accuracy target (%)</label>
+                    <input type="number" id="studio-accuracy-target" min="60" max="100" step="5" value="80">
+                  </div>
+                  <div id="studio-accuracy-window-row" class="studio-field-row" hidden>
+                    <label for="studio-accuracy-window">Number of recent answers</label>
+                    <input type="number" id="studio-accuracy-window" min="5" max="20" step="1" value="10">
+                  </div>
+                  <div id="studio-streak-target-row" class="studio-field-row" hidden>
+                    <label for="studio-streak-target">Consecutive correct answers required</label>
+                    <input type="number" id="studio-streak-target" min="3" max="20" step="1" value="5">
+                  </div>
+                  <div id="studio-class-metric-row" class="studio-field-row" hidden>
+                    <label for="studio-class-metric">Class cooperation goal</label>
+                    <select id="studio-class-metric">
+                      <option value="accuracy">Accuracy Quest</option>
+                      <option value="correct">Knowledge Quest</option>
+                      <option value="mastery">Mastery Quest</option>
+                      <option value="everyone">Everyone Counts</option>
+                    </select>
+                  </div>
+                  <div id="studio-class-accuracy-row" class="studio-field-row" hidden>
+                    <label for="studio-class-accuracy">Class accuracy target (%)</label>
+                    <input type="number" id="studio-class-accuracy" min="60" max="100" step="5" value="80">
+                  </div>
+                  <div id="studio-class-correct-row" class="studio-field-row" hidden>
+                    <label for="studio-class-correct">Correct answers across the class</label>
+                    <input type="number" id="studio-class-correct" min="20" max="300" step="5" value="150">
+                  </div>
+                  <div id="studio-class-per-student-row" class="studio-field-row" hidden>
+                    <label for="studio-class-per-student">Correct answers per participating student</label>
+                    <input type="number" id="studio-class-per-student" min="1" max="10" step="1" value="5">
+                  </div>
+                  <p id="studio-class-mastery-row" class="studio-field-note" hidden>Students will need to demonstrate understanding of all five sampling methods.</p>
+                  <div id="studio-participation-row" class="studio-field-row" hidden>
+                    <label for="studio-class-participation">Minimum meaningful participation (%)</label>
+                    <input type="number" id="studio-class-participation" min="50" max="100" step="5" value="80">
+                  </div>
+                </div>
+              </div>
+            </section>
+            <details class="studio-advanced" id="studio-advanced">
+              <summary>Advanced settings <span aria-hidden="true">⌄</span></summary>
+              <p id="studio-advanced-live-note" class="studio-field-note">Classic uses the current accuracy-first scoring, full checked question bank and live leaderboard. Additional modifiers arrive with the new engines.</p>
+              <div id="studio-advanced-future-fields" class="entry-inputs" hidden>
+                <label for="studio-difficulty">Difficulty (planned)</label>
+                <select id="studio-difficulty">
+                  <option value="core">Core understanding</option><option value="mixed">Mixed challenge</option>
+                  <option value="advanced">Advanced application</option>
+                </select>
+                <label for="studio-question-order">Question distribution (planned)</label>
+                <select id="studio-question-order">
+                  <option value="varied">Equivalent but varied questions</option>
+                  <option value="same">Same questions in different orders</option>
+                </select>
+                <label class="studio-checkbox-label"><input id="studio-leaderboard" type="checkbox" checked> Show leaderboard during play (planned)</label>
+                <p class="studio-field-note">These options are previews and do not change live Classic gameplay.</p>
+              </div>
+            </details>
+            <section class="studio-preview" id="studio-preview" aria-labelledby="studio-preview-title" data-availability="live">
+              <div class="studio-preview-top"><span>YOUR CHALLENGE</span><span id="studio-preview-availability" class="studio-availability is-ready" role="status">Ready to host now</span></div>
+              <h4 id="studio-preview-title">Classic Challenge · Free-for-All</h4>
+              <p id="studio-preview-detail">Which Method? · 10 questions with teacher-led review.</p>
+            </section>
+            <p id="studio-validation" role="alert" class="studio-validation" hidden></p>
+            <button class="btn btn-primary entry-submit" type="button" id="create">Create room ↗</button>
+            <p class="studio-footer-note">New objectives are safe configuration previews until their gameplay engines pass release checks.</p>
           </div>
-          <button class="btn btn-primary entry-submit" type="button" id="create">Create room <span aria-hidden="true">↗</span></button>
         </section>
         <section class="multiplayer-panel student-entry" aria-labelledby="join-heading">
           <div class="entry-card-heading">
