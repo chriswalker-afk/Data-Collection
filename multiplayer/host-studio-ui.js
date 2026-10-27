@@ -74,7 +74,10 @@ export function createHostStudio(root) {
     show('studio-class-goal-row',draft.objective==='classic');
     show('studio-team-count-row',draft.format==='squad'||draft.format==='relay');
     show('studio-future-settings',draft.objective!=='classic');
-    show('studio-minutes-row',draft.objective==='blitz');
+    show('studio-minutes-row',['blitz','bullseye','perfect'].includes(draft.objective));
+    find('studio-minutes-label').textContent=draft.objective==='blitz'?
+      'Blitz time limit (minutes)':'Race safety limit (minutes)';
+    show('studio-future-note',draft.objective==='class');
     show('studio-accuracy-target-row',draft.objective==='bullseye');
     show('studio-accuracy-window-row',draft.objective==='bullseye');
     show('studio-streak-target-row',draft.objective==='perfect');
@@ -87,11 +90,12 @@ export function createHostStudio(root) {
     for(const [id,key] of Object.entries(numericFields))find(id).value=String(draft[key]);
     for(const [id,key] of Object.entries(stringFields))find(id).value=draft[key];
     find('studio-leaderboard').checked=draft.showLeaderboard;
-    find('studio-advanced-live-note').hidden=!['classic','blitz'].includes(draft.objective);
-    find('studio-advanced-live-note').textContent=draft.objective==='blitz'?
-      'Blitz is live with accuracy-first scoring, a varied audited question bank and an always-visible leaderboard. Additional modifiers arrive in later passes.':
-      'Classic uses the current accuracy-first scoring, full checked question bank and live leaderboard. Additional modifiers arrive with the new engines.';
-    find('studio-advanced-future-fields').hidden=['classic','blitz'].includes(draft.objective);
+    const isPaced=['blitz','bullseye','perfect'].includes(draft.objective);
+    find('studio-advanced-live-note').hidden=!(draft.objective==='classic'||isPaced);
+    find('studio-advanced-live-note').textContent=isPaced?
+      'These modes use the vetted, varied question bank, checked answers and a visible leaderboard. Custom difficulty and hidden leaderboards are not yet supported.':
+      'Classic uses the current checked question bank, class controls and leaderboard.';
+    find('studio-advanced-future-fields').hidden=draft.objective==='classic'||isPaced;
     renderPreview();
   }
   function renderPreview(){
@@ -106,7 +110,9 @@ export function createHostStudio(root) {
     find('studio-validation').hidden=!message;
     create.disabled=!validation.playable;
     create.textContent=validation.playable?
-      (draft.objective==='blitz'?'Create Blitz room ↗':'Create room ↗'):
+      (draft.objective==='blitz'?'Create Blitz room ↗':
+        draft.objective==='bullseye'?'Create Bullseye room ↗':
+        draft.objective==='perfect'?'Create Perfect Run room ↗':'Create room ↗'):
       'Preview only · Not yet playable';
     find('studio-preview').dataset.availability=validation.playable?'live':'preview';
   }
@@ -114,7 +120,7 @@ export function createHostStudio(root) {
     const field=event.target;
     if(field.name==='studio-objective'&&Object.hasOwn(OBJECTIVES,field.value)){
       draft=presetStudioDraft(draft,draft.preset,field.value);
-      if(draft.objective==='blitz'){
+      if(['blitz','bullseye','perfect'].includes(draft.objective)){
         draft.difficulty='mixed';draft.questionOrder='varied';draft.showLeaderboard=true;
       }
     }else if(field.name==='studio-format'&&Object.hasOwn(FORMATS,field.value)){
