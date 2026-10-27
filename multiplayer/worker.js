@@ -1,7 +1,7 @@
 import {DurableObject} from 'cloudflare:workers';
 import {safeAvatar,validAvatar} from './avatar.js';
 import {SCENARIOS} from './scenarios.js';
-import {ROUND_LENGTHS,cleanNickname,secureIndex} from './rules.js';
+import {ROUND_LENGTHS,cleanNickname,secureIndex,roomCreationRateLimits} from './rules.js';
 import {GAME_MODES,validLength,questionTimeMs,makeGameDeck,safeGameQuestion,revealGameAnswer,gradeGameAnswer} from './modes.js';
 import {makeBlitzDeck,validBlitzSettings,BLITZ_MAX_ATTEMPTS,initialBlitzPlayer,
   currentBlitzItem,advanceBlitzQuestion,blitzQuestionKey,blitzStandings,blitzDeadlineReached} from './blitz-rules.js';
@@ -532,10 +532,13 @@ export default {
       }))return fail(request,'Choose valid accuracy, streak and safety time targets');
       if(objective==='classic'&&minutes!==0)return fail(request,'Classic rooms do not accept a Blitz timer');
       const key=await fingerprint(request);
+      const limit=roomCreationRateLimits(env,request.url);
       const limiter=env.ROOMS.getByName('limiter:rooms:'+key);
-      if(!await limiter.allowRate('create',24,5*60_000))return fail(request,'Room creation limit reached; try again later',429);
+      if(!await limiter.allowRate('create',limit.perClient,5*60_000))
+        return fail(request,'Room creation limit reached; try again later',429);
       const global=env.ROOMS.getByName('limiter:global');
-      if(!await global.allowRate('create',120,60_000))return fail(request,'Classroom service is busy',429);
+      if(!await global.allowRate('create',limit.global,60_000))
+        return fail(request,'Classroom service is busy',429);
       for(let attempt=0;attempt<10;attempt++){
         const code=pickCode();
         const result=await env.ROOMS.getByName('room-'+code)
