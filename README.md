@@ -15,8 +15,9 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 - **Flashcards** support term→definition and definition→term recall, plus separate advantage and disadvantage cards for each of five sampling methods, census and sample. Browse every card with search and filters or start a full, unscored review. Model points use the same audited evaluation bank as Sort It!.
 - **Match Up** uses tactile term–definition tiles and alternate description wording, with 5-, 7- or 10-pair options (up to eight for Types of Data), visible progress, first-try credit and accessible keyboard/touch interaction.
 - **Missing Words** now contains **53 audited prompts**, at least two for every concept. Choose a focused 10-question round, 20 questions or the full topic bank, then practise at **Recognise**, **Recall** (optional first-letter hint) or **Independent** (no hints) level.
-- **Sort It!** gives two sampling methods and mixed advantage/disadvantage statements. Place each statement in the correct method-and-category column; only the first complete check counts towards progress.
+- **Sort It!** now covers **all ten possible pairs** of the five sampling methods, with ten or twelve advantage/disadvantage statements on most boards and four clearly labelled destinations. Use **Try the next comparison** to continue; only the first complete check awards progress.
 - **Which Method?** uses balanced 5-, 10- or 20-scenario rounds to identify all five methods with contextual explanations.
+- **Build the Method** now contains **15 contextual investigations** (three per sampling method, at Foundation, Develop and Stretch levels). Arrange authentic steps, check their required dependencies and study mathematical workings, caveats and unscored corrections. Varied rounds change the case on replay.
 - **Speed Recall** now draws from **three precise clues per term** (78 descriptions across 26 concepts), rotating wording to deepen recall. Choose untimed ten-term practice (eight for Types of Data) or 30-, 60- and 90-second timed challenges; feedback pauses the timer.
 - Typos can prompt one spelling correction, but are **never automatically credited**. Only curated mathematical synonyms are accepted.
 - **Sort It!**, **Which Method?**, **Build the Method**, **Spot the Error**, **Contextual Reasoning** and **Exam Lab** are sampling-only. The four recall games support Sampling, Types of data and Mixed revision.
@@ -56,6 +57,7 @@ npm run test:e2e
 GitHub Actions runs unit/content validation, desktop/mobile Chromium browser tests and Cloudflare staging multiplayer smoke tests. The published site is available at the URL above through the successful `.github/workflows/deploy-pages.yml` workflow. `node scripts/build-pages.mjs` validates the static publish artifact and keeps Cloudflare Worker backend files out of GitHub Pages.
 
 ## Source & project notes
+- [Pass C Practical Method Fluency: 15 contextual procedure cases and all ten Sort It! comparisons](docs/PASS_C_PRACTICAL_METHOD_FLUENCY.md)
 - [Pass B Retrieval Depth: 53 Missing Words prompts, 52 new clues and flexible Match Up rounds](docs/PASS_B_RETRIEVAL_DEPTH.md)
 - [Pass 6 Team Challenges: balanced groups, Class Quests, teacher feedback and 45-client stress testing](docs/PASS_6_TEAM_CHALLENGES.md)
 - [Pass 5 Grand Multiplayer Awards Ceremony: verified character awards, podium, synchronized reveals and privacy](docs/PASS_5_GRAND_AWARDS_CEREMONY.md)
