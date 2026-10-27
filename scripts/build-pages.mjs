@@ -16,7 +16,7 @@ for(const name of ['src','styles','content','critter-lab']){
 mkdirSync(join(output,'multiplayer'),{recursive:true});
 copyFileSync(join(root,'multiplayer/client.js'),join(output,'multiplayer/client.js'));
 copyFileSync(join(root,'multiplayer/mode-ui.js'),join(output,'multiplayer/mode-ui.js'));
-for(const file of ['ceremony-ui.js','keepsakes.js','award-catalogue.js','team-ui.js']){
+for(const file of ['ceremony-ui.js','keepsakes.js','award-catalogue.js','team-ui.js','avatar.js','avatar-ui.js']){
   copyFileSync(join(root,'multiplayer',file),join(output,'multiplayer',file));
 }
 if(!readFileSync(join(output,'multiplayer/client.js'),'utf8').includes("from './mode-ui.js'")){

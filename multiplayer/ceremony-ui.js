@@ -1,5 +1,6 @@
 // One projected ceremony step, supplied entirely by the Durable Object.
 // No client-side winner selection, award inference or timer-driven auto-advances.
+import {critterPortrait} from './avatar-ui.js';
 const MEDALS={1:{label:'Gold',emoji:'🥇',tone:'gold'},
   2:{label:'Silver',emoji:'🥈',tone:'silver'},3:{label:'Bronze',emoji:'🥉',tone:'bronze'}};
 export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
@@ -20,6 +21,11 @@ export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
     stage.append(actions);
     stage.append(node('p','Teacher controls: all connected devices see the same reveal. You can go back or skip ahead.','ceremony-control-note'));
   }
+  function personWithCritter(person,scale='medium'){
+    const row=node('span',undefined,'ceremony-person-with-critter');
+    row.append(critterPortrait(person.avatar,scale),node('strong',person.name));
+    return row;
+  }
   function podium(slide,container){
     const stand=node('ol',undefined,'ceremony-podium');
     stand.setAttribute('aria-label','Classroom top scores');
@@ -34,7 +40,7 @@ export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
           node('span',medal.label+' · '+(group.rows.length>1?'Joint ':'')+(group.rank===1?'1st':group.rank===2?'2nd':'3rd')+' place',
             'ceremony-podium-rank'));
         const names=node('div',undefined,'ceremony-podium-names');
-        for(const person of group.rows)names.append(node('strong',person.name));
+        for(const person of group.rows)names.append(personWithCritter(person,'large'));
         item.append(names,node('span',group.rows[0].score.toLocaleString('en-GB')+' points','ceremony-podium-score'));
         stand.append(item);
       }
@@ -49,7 +55,7 @@ export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
       'ceremony-recipients-kicker'));
     const names=node('ul');
     for(const person of slide.recipients){
-      const li=node('li');li.append(node('span','✦','ceremony-name-spark'),node('strong',person.name));names.append(li);
+      const li=node('li');li.append(node('span','✦','ceremony-name-spark'),personWithCritter(person));names.append(li);
     }
     nameBox.append(names);container.append(detail,nameBox);
   }

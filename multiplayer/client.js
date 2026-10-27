@@ -2,6 +2,8 @@ import {ARENA_MODES,createModeUI} from './mode-ui.js';
 import {createCeremonyUI} from './ceremony-ui.js';
 import {createTeamUI} from './team-ui.js';
 import {saveKeepsake} from './keepsakes.js';
+import {safeAvatar,validAvatar,AVATAR_STORAGE_KEY} from './avatar.js';
+import {critterPortrait} from './avatar-ui.js';
 // Multiplayer networking is independent of the solo practice/progress store.
 // Requests that change scores are authenticated HTTPS actions; room updates
 // arrive on a hibernatable WebSocket (with slow polling only during reconnect).
@@ -16,7 +18,7 @@ const modeName=game=>ARENA_MODES[game||'which']?.label||'Which Method?';
 const $=id=>document.getElementById(id);
 let roomCode=null,token=null,isHost=false,room=null,websocket=null;
 let generation=0,retryTimer=null,pollTimer=null,clockTimer=null,backoff=750;
-let clockOffset=0,pendingAnswer=false;
+let clockOffset=0,pendingAnswer=false,avatarUpdateInFlight=null;
 const make=(tag,text,className)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(className)el.className=className;return el;};
 function button(label,callback,className='btn btn-primary'){
   const el=make('button',label,className);el.type='button';el.onclick=callback;return el;
@@ -34,6 +36,9 @@ async function api(path,body,requiresToken=false){
   let result;try{result=await response.json();}catch{throw new Error('Unable to reach the classroom service');}
   if(!response.ok)throw new Error(result.error||'Classroom request failed');
   return result;
+}
+function savedCritter(){
+  try{return safeAvatar(JSON.parse(localStorage.getItem(AVATAR_STORAGE_KEY)));}catch{return safeAvatar(null);}
 }
 function store(){sessionStorage.setItem(STORAGE_KEY,JSON.stringify({roomCode,token,isHost}));}
 function stopConnections(){
@@ -60,7 +65,7 @@ async function joinRoom(){
     const typed=$('room-code').value.replace(/\s/g,'');
     if(!/^\d{6}$/.test(typed))throw new Error('Enter the six-digit room code');
     notice('Joining the classroom…');
-    const response=await api('/rooms/'+typed+'/join',{name:$('nickname').value});
+    const response=await api('/rooms/'+typed+'/join',{name:$('nickname').value,avatar:savedCritter()});
     roomCode=response.code;token=response.token;isHost=false;store();notice('');
     connect();
   }catch(e){notice(e.message);}
@@ -71,6 +76,17 @@ function receiveState(data){
   const previous=room?.status+'|'+(room?.question?.id||room?.reveal?.question?.id||'')+
     '|'+(room?.ceremony?.run||0)+'|'+(room?.ceremony?.step??'-');
   room=data;
+  // On returning from the standalone creator, resynchronise an authenticated
+  // student's saved choice while the room is still in the lobby.
+  if(!isHost && room.status==='lobby'){
+    const mine=room.players?.find(p=>p.id===room.me?.id);
+    const local=savedCritter();
+    if(mine && JSON.stringify(safeAvatar(mine.avatar))!==JSON.stringify(local) &&
+      (!avatarUpdateInFlight || avatarUpdateInFlight!==JSON.stringify(local))){
+      avatarUpdateInFlight=JSON.stringify(local);
+      void command('avatar-set',{avatar:local}).finally(()=>{avatarUpdateInFlight=null;});
+    }
+  }
   if(data.myMultiplayerAwards?.completed&&data.myMultiplayerAwards.awarded?.length){
     saveKeepsake(data.myMultiplayerAwards);
   }
@@ -248,7 +264,8 @@ function render(){
       const team=room.teams?.find(x=>x.id===player.teamId);
       if(team)details.append(make('span',team.icon+' '+team.name,'player-team-label'));
     }
-    item.append(details,make('span',player.score+' points','player-score'));
+    item.append(critterPortrait(player.avatar),details,make('span',player.score+' points','player-score'));
+    item.querySelector('.player-score').setAttribute('aria-label',player.score+' points');
     if(isHost&&room.status==='lobby'){
       const remove=button('Remove',()=>{
         if(window.confirm('Remove '+player.name+' from this room?'))void command('remove',undefined,player.id);
