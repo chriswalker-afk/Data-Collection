@@ -303,6 +303,7 @@ function render(){
   $('room').classList.toggle('is-ceremony',room.status==='ceremony');
   $('room').classList.toggle('is-blitz',isPaced(room.objective));
   $('room').classList.toggle('is-class-quest',room.objective==='class');
+  $('room').classList.toggle('is-class-mosaic',isMosaic(room.objective));
   $('room').dataset.phase=room.status;
   if(displayedRoomCode!==roomCode){displayedScores.clear();displayedRoomCode=roomCode;}
 
@@ -310,24 +311,28 @@ function render(){
   $('room-id').textContent=roomCode;
   $('room-status').textContent={
     lobby:'Lobby · waiting for players',
-    playing:isPaced(room.objective)?
+    playing:isMosaic(room.objective)?
+      'Puzzle Relay · '+(room.mosaic?.completedTiles||0)+' / '+room.mosaicSetup?.tiles+' tiles':isPaced(room.objective)?
       PACE_NAMES[room.objective]+' · independent questions':
       'Question '+room.question?.index+' of '+room.question?.total,
     reveal:'Answer review · discuss the mathematics',
-    finished:room.objective==='class'?'Class Quest · shared result':'Challenge complete · final standings',
+    finished:isMosaic(room.objective)?'Class Mosaic · shared result':room.objective==='class'?'Class Quest · shared result':'Challenge complete · final standings',
     ceremony:'Grand Awards Ceremony · reveal '+(room.ceremony?.step+1)+' of '+room.ceremony?.total
   }[room.status]||'Classroom';
   const closed=room.status!=='lobby'||room.locked;
   $('room-lock').textContent=closed?'Joining closed':'Joining open';
   $('room-lock').classList.toggle('is-locked',closed);
-  $('room-meta').textContent=isPaced(room.objective)?
+  $('room-meta').textContent=isMosaic(room.objective)?
+    'Class Mosaic · '+room.mosaicSetup?.tiles+' tiles · '+room.mosaicSetup?.minutes+' minutes · '+room.teamCount+' teams':isPaced(room.objective)?
     PACE_NAMES[room.objective]+' · '+room.blitz?.minutes+' minutes · '+modeName(room.game):
     modeName(room.game)+' · '+room.roundLength+' '+(ARENA_MODES[room.game||'which']?.unit||'questions');
   $('player-count').textContent=room.players.length+' / 45';
-  teamUI.sidebar(room,$('class-pulse'));
-  $('players-heading').textContent=room.objective==='class'?'Our class crew':
+  if(isMosaic(room.objective))$('class-pulse').replaceChildren();
+  else teamUI.sidebar(room,$('class-pulse'));
+  $('players-heading').textContent=isMosaic(room.objective)?'Our relay crew':room.objective==='class'?'Our class crew':
     room.status==='lobby'?'Classroom roster':'Live leaderboard';
-  $('roster-help').textContent=room.objective==='class'?
+  $('roster-help').textContent=isMosaic(room.objective)?
+    'Every checked puzzle piece helps reveal the shared mosaic. No individual rankings.':room.objective==='class'?
     'No individual rankings. Every classmate contributes to one mathematical achievement.':
     isPaced(room.objective)&&room.status!=='lobby'?
     (isRace(room.objective)?
@@ -342,7 +347,7 @@ function render(){
   playerList.classList.toggle('is-crowded',room.players.length>24);
   const blitzRank=new Map((room.blitz?.standings||[]).map((x,i)=>[x.id,i]));
   const raceProgress=new Map((room.blitz?.standings||[]).map(x=>[x.id,x]));
-  const list=[...room.players].sort((a,b)=>room.objective==='class'?
+  const list=[...room.players].sort((a,b)=>room.objective==='class'||isMosaic(room.objective)?
     a.name.localeCompare(b.name):
     isPaced(room.objective)?
     (blitzRank.get(a.id)??999)-(blitzRank.get(b.id)??999)||a.name.localeCompare(b.name):
@@ -361,6 +366,8 @@ function render(){
     const details=make('div',undefined,'player-details');
     const name=make('span',player.name,'player-name');
     const state=make('span',
+      isMosaic(room.objective)&&room.status!=='lobby'?
+        (player.online?'Working with teammates':'Offline · role saved for reconnection'):
       room.objective==='class'&&room.status!=='lobby'?
         (player.contributed?'Contributed · 2+ checked tasks':
           player.online?'Working towards our goal':'Not currently connected'):
@@ -374,7 +381,9 @@ function render(){
       if(team)details.append(make('span',team.icon+' '+team.name,'player-team-label'));
     }
     const ranking=raceProgress.get(player.id);
-    const scoreLabel=room.objective==='class'&&room.status!=='lobby'?
+    const scoreLabel=isMosaic(room.objective)?
+      (room.status==='lobby'?'Ready to help':'Team contributor'):
+      room.objective==='class'&&room.status!=='lobby'?
       (player.contributed?'✓ Contributing':'Ready to help'):
       isRace(room.objective)&&room.status!=='lobby'?
       (room.objective==='bullseye'?
@@ -417,7 +426,11 @@ function render(){
       'The teacher will start the round. Keep this tab open for live questions and feedback.'));
     const stats=make('div',undefined,'lobby-stat-row');
     stats.append(statusChip(room.players.length+' joined'),
-      ...(isPaced(room.objective)?[
+      ...(isMosaic(room.objective)?[
+        statusChip(room.mosaicSetup.tiles+' mosaic tiles'),
+        statusChip(room.mosaicSetup.minutes+' minute limit'),
+        statusChip(room.teamCount+' teams · at least two pupils per team')
+      ]:isPaced(room.objective)?[
         statusChip(room.blitz.minutes+' minute safety limit'),
         statusChip(room.objective==='class'?
           ({accuracy:'Shared accuracy',correct:'Shared correct decisions',
@@ -431,16 +444,18 @@ function render(){
         statusChip(room.roundLength+' '+(ARENA_MODES[room.game||'which']?.unit||'questions')),
         statusChip((room.questionSeconds||20)+' seconds each')
       ]));
-    stage.append(make('p',modeName(room.game)+' · '+(ARENA_MODES[room.game||'which']?.label==='Speed Recall'?'Type exact mathematical terms.':ARENA_MODES[room.game||'which']?.label==='Match Up'?'Pair terms with precise definitions.':ARENA_MODES[room.game||'which']?.label==='Sort It!'?'Sort advantages and disadvantages across two methods.':'Identify the sampling method from its context.'),'arena-mode-intro'));
+    if(isMosaic(room.objective))
+      stage.append(make('p','Puzzle Relay · Three different mathematical roles unlock each team tile. When all teams contribute and the target is reached, the class celebrates together.','arena-mode-intro'));
+    else stage.append(make('p',modeName(room.game)+' · '+(ARENA_MODES[room.game||'which']?.label==='Speed Recall'?'Type exact mathematical terms.':ARENA_MODES[room.game||'which']?.label==='Match Up'?'Pair terms with precise definitions.':ARENA_MODES[room.game||'which']?.label==='Sort It!'?'Sort advantages and disadvantages across two methods.':'Identify the sampling method from its context.'),'arena-mode-intro'));
     stage.append(stats);
     if(isHost){
       stage.append(supportBox(room.locked?'Joining is locked':'Joining is open',
         room.locked?'New participants cannot join until you unlock the lobby.':
           'New students can join using the six-digit code. Lock joining when the class is ready.'));
       const actions=actionRow();
-      const start=button(isPaced(room.objective)?
+      const start=button(isMosaic(room.objective)?'Start Class Mosaic':isPaced(room.objective)?
         'Start '+PACE_NAMES[room.objective]:'Start challenge',()=>command('start'));
-      start.disabled=room.players.length<(room.objective==='class'?3:1)||
+      start.disabled=room.players.length<(isMosaic(room.objective)?room.teamCount*2:room.objective==='class'?3:1)||
         (room.teamCount>room.players.length)||
         (room.objective==='class'&&room.questSetup?.metric==='correct'&&
           room.questSetup.correct>room.players.length*20);
@@ -450,7 +465,9 @@ function render(){
       actions.append(start,lock,
         button('Close classroom',()=>{if(window.confirm('End this classroom for everyone?'))void command('close');},'btn btn-danger'));
       stage.append(actions);
-      if(room.objective==='class'&&room.players.length<3)
+      if(isMosaic(room.objective)&&room.players.length<room.teamCount*2)
+        stage.append(make('p','Each team needs at least two students. Ask more pupils to join before starting.','small-note'));
+      else if(room.objective==='class'&&room.players.length<3)
         stage.append(make('p','At least three students must join before Class Quest can begin.','small-note'));
       else if(room.objective==='class'&&room.questSetup?.metric==='correct'&&
         room.questSetup.correct>room.players.length*20)
@@ -475,7 +492,11 @@ function render(){
         stage.append(card);
       }
     }
-    teamUI.setup(room,isHost,stage);
+    if(isMosaic(room.objective)){
+      stage.append(supportBox('Complementary roles · one shared mosaic',
+        'Discover, Evaluate and Improve each contribute a verified piece. All three roles are needed for one tile. Reconnecting keeps the same piece and team.'));
+      if(isHost)stage.append(button('Shuffle balanced teams',()=>command('teams-shuffle'),'btn btn-quiet'));
+    }else teamUI.setup(room,isHost,stage);
   }else if(room.status==='playing'&&isPaced(room.objective)){
     if(room.objective==='class')questUI.render(room,stage);
     blitzUI.render(room,isHost,stage);
