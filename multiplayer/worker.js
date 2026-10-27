@@ -460,7 +460,8 @@ export default {
     }
     const url=new URL(request.url);
     if(url.pathname==='/health'&&request.method==='GET')
-      return json(request,{ok:true,service:'sampling-arcade-multiplayer',version:8,transport:'websocket',features:['teams','class-goals','teacher-feedback','ceremony','avatars','blitz'],games:Object.keys(GAME_MODES)});
+      return json(request,{ok:true,service:'sampling-arcade-multiplayer',version:8,transport:'websocket',features:['teams','class-goals','teacher-feedback','ceremony','avatars','blitz'],
+        games:Object.keys(GAME_MODES),buildSha:env.BUILD_SHA||null});
     if(url.pathname==='/rooms'&&request.method==='POST'){
       let body;try{body=await smallJSON(request);}catch(e){return fail(request,e.message==='Request too large'?e.message:'Invalid JSON',e.message==='Request too large'?413:400);}
       const roundLength=Number(body.roundLength),game=body.game===undefined?'which':body.game;
