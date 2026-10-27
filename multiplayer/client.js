@@ -2,6 +2,7 @@ import {createHostStudio} from './host-studio-ui.js';
 import {createBlitzUI} from './blitz-ui.js';
 import {createClassQuestUI} from './class-quest-ui.js';
 import {createRelayUI} from './relay-ui.js';
+import {MOSAIC_TEAM_NAMES,MOSAIC_TEAM_ICONS} from './mosaic-art.js';
 import {ARENA_MODES,createModeUI} from './mode-ui.js';
 import {createCeremonyUI} from './ceremony-ui.js';
 import {createTeamUI} from './team-ui.js';
@@ -111,6 +112,8 @@ async function joinRoom(){
 }
 function receiveState(data){
   if(!data||data.code!==roomCode)return;
+  const previousMosaicTiles=room?.objective==='mosaic'&&room.code===data.code?
+    room.mosaic?.completedTiles:null;
   if(room?.question?.id!==data.question?.id)pendingAnswer=false;
   const previous=room?.status+'|'+(room?.question?.id||room?.reveal?.question?.id||'')+
     '|'+(room?.ceremony?.run||0)+'|'+(room?.ceremony?.step??'-');
@@ -132,6 +135,14 @@ function receiveState(data){
   if(room.serverNow||room.question?.serverNow||room.blitz?.serverNow)
     clockOffset=(room.serverNow||room.question?.serverNow||room.blitz?.serverNow)-Date.now();
   render();
+  if(room.objective==='mosaic'&&room.status==='playing'&&
+    previousMosaicTiles!==null&&room.mosaic?.completedTiles>previousMosaicTiles){
+    const count=room.mosaic.completedTiles,total=room.mosaic.targetTiles;
+    const latest=room.mosaic.mosaic.at(-1);
+    $('game-announcer').textContent='Class Mosaic: '+count+' of '+total+
+      ' tiles revealed. '+(MOSAIC_TEAM_NAMES[latest?.teamId]||'A team')+
+      ' contributed another verified puzzle.';
+  }
   const current=room.status+'|'+(room.question?.id||room.reveal?.question?.id||'')+
     '|'+(room.ceremony?.run||0)+'|'+(room.ceremony?.step??'-');
   if(previous!=='undefined|'&&previous!==current){
@@ -317,7 +328,7 @@ function render(){
       'Question '+room.question?.index+' of '+room.question?.total,
     reveal:'Answer review · discuss the mathematics',
     finished:isMosaic(room.objective)?'Class Mosaic · shared result':room.objective==='class'?'Class Quest · shared result':'Challenge complete · final standings',
-    ceremony:'Grand Awards Ceremony · reveal '+(room.ceremony?.step+1)+' of '+room.ceremony?.total
+    ceremony:(isMosaic(room.objective)?'Class Mosaic celebration':'Grand Awards Ceremony')+' · reveal '+(room.ceremony?.step+1)+' of '+room.ceremony?.total
   }[room.status]||'Classroom';
   const closed=room.status!=='lobby'||room.locked;
   $('room-lock').textContent=closed?'Joining closed':'Joining open';
@@ -379,10 +390,13 @@ function render(){
     if(room.teamCount&&player.teamId){
       const team=room.teams?.find(x=>x.id===player.teamId);
       if(team)details.append(make('span',team.icon+' '+team.name,'player-team-label'));
+      else if(isMosaic(room.objective)&&MOSAIC_TEAM_NAMES[player.teamId])
+        details.append(make('span',(MOSAIC_TEAM_ICONS[player.teamId]||'✳')+' '+
+          MOSAIC_TEAM_NAMES[player.teamId],'player-team-label'));
     }
     const ranking=raceProgress.get(player.id);
     const scoreLabel=isMosaic(room.objective)?
-      (room.status==='lobby'?'Ready to help':'Team contributor'):
+      (room.status==='lobby'?'Ready to help':player.online?'Collaborating':'Role saved'):
       room.objective==='class'&&room.status!=='lobby'?
       (player.contributed?'✓ Contributing':'Ready to help'):
       isRace(room.objective)&&room.status!=='lobby'?
@@ -405,6 +419,8 @@ function render(){
     playerList.append(item);
   }
 
+  const activeMosaicOption=document.activeElement?.dataset?.mosaicOption;
+  const activeMosaicRound=room.mosaic?.me?.task?.roundId||null;
   const focused=document.activeElement?.dataset?.method;
   const activeInput=document.activeElement?.id==='arena-speed-answer';
   const cursor=activeInput?document.activeElement.selectionStart:null;
@@ -495,7 +511,7 @@ function render(){
     if(isMosaic(room.objective)){
       stage.append(supportBox('Complementary roles · one shared mosaic',
         'Discover, Evaluate and Improve each contribute a verified piece. All three roles are needed for one tile. Reconnecting keeps the same piece and team.'));
-      if(isHost)stage.append(button('Shuffle balanced teams',()=>command('teams-shuffle'),'btn btn-quiet'));
+      relayUI.renderLobby(room,isHost,stage);
     }else teamUI.setup(room,isHost,stage);
   }else if(room.status==='playing'&&isMosaic(room.objective)){
     relayUI.render(room,isHost,stage);
@@ -645,6 +661,11 @@ function render(){
   if(!isMosaic(room.objective)){
     teamUI.review(room,isHost,stage);
     teamUI.finished(room,stage);
+  }
+  if(activeMosaicOption&&activeMosaicRound===room.mosaic?.me?.task?.roundId){
+    const control=[...stage.querySelectorAll('[data-mosaic-option]')].find(
+      item=>item.dataset.mosaicOption===activeMosaicOption);
+    if(control&&!control.disabled)control.focus({preventScroll:true});
   }
   if(focused)stage.querySelector('[data-method="'+focused+'"]')?.focus({preventScroll:true});
   if(activeFeedback){
