@@ -106,11 +106,10 @@ test('Mastery requires correct evidence for every method from two distinct stude
  for(const method of METHODS)check(r,'p1',1,1,[method]);
  check(r,'p2',1);check(r,'p2',1);
  let p=classQuestProgress(r);
- assert.equal(p.goalMet,false);
  assert.equal(p.methods.every(m=>m.contributors>=2),true);
  assert.equal(p.contributors,3);
  // p0/p1 already cover all methods, and p2 has meaningful work.
- // Goal should be met; the repeated p0 evidence was never double-counted.
+ // The repeated p0 evidence was never double-counted.
  assert.equal(p.goalMet,true);
  const other=room('mastery',3,{classParticipation:100});
  for(let i=0;i<2;i++){
