@@ -11,7 +11,7 @@ export const ACTIVITY_GUIDANCE=Object.freeze({
     practice:'Retrieve precise mathematical vocabulary from definitions, examples and important distinctions.',
     task:'Complete the mathematical sentence. Choose a focused round or review the full question bank.'}),
   sort:Object.freeze({
-    practice:'Compare the strengths and limitations of two sampling methods.',
+    practice:'Compare strengths and limitations in all ten pairs of the five sampling methods.',
     task:'Drag each statement to the correct method’s advantages or disadvantages. You can also select a card and choose its destination. Check the full board, then correct any mistakes.'}),
   identify:Object.freeze({
     practice:'Recognise a sampling method from how participants or items are selected.',
@@ -20,7 +20,7 @@ export const ACTIVITY_GUIDANCE=Object.freeze({
     practice:'Recall mathematical terms from differently worded but mathematically equivalent clues.',
     task:'Read the clue, retrieve the precise term and check your answer. Repeat rounds to practise new wording.'}),
   build:Object.freeze({
-    practice:'Sequence a defensible sampling procedure and justify its steps.',
+    practice:'Sequence a valid sampling procedure in realistic, numerically accurate investigations.',
     task:'Drag steps or use the arrow buttons to make a valid sequence. Check the prerequisites, then review why each step matters. Different valid orders are accepted.'}),
   error:Object.freeze({
     practice:'Locate, repair and explain flawed sampling investigations.',
