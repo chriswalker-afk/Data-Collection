@@ -1,5 +1,5 @@
 // DOM-only rendering and interaction for Pass 5; math and persistence live in exam-sim.js.
-import {PAPER_SIZES,PAPER_TYPES,PAPER_LEVELS,makePaper,makeReviewPaper,numericalKey,gradeNumbers,
+import {PAPER_SIZES,PAPER_TYPES,PAPER_LEVELS,makePaper,makeReviewPaper,updateRecentQuestionIds,numericalKey,gradeNumbers,
  writtenChecklist,procedureModelSteps,paperEntry,changeReviewTargets,paperSummary,reportCsv} from './exam-sim.js';
 import {METHOD_LABELS} from './phase2.js';
 
@@ -31,7 +31,8 @@ export function createExamSimulationUI(deps){
    span('eyebrow','EXAM PRACTICE / SAMPLING'),
    heading(2,'sim-landing-title','Put it all together.'),
    paragraph('sim-lead','Mix proportional allocations, systematic sampling calculations, full procedures and method evaluation in one paper.'),
-   paragraph('sim-honesty','Calculations are checked automatically. Written explanations are compared with a model and self-reviewed — not graded by a computer.'));
+   paragraph('sim-honesty','Calculations are checked automatically. Written explanations are compared with a model and self-reviewed — not graded by a computer.'),
+   paragraph('sim-variety-note','100 authored questions · New papers favour questions you have not recently practised while keeping all four skill areas.'));
   const levels=element('fieldset',{className:'sim-level-picker'});
   levels.append(element('legend',{},'Choose your starting level'));
   const levelDescriptions=[
@@ -285,9 +286,11 @@ export function createExamSimulationUI(deps){
   if(variant==='review'){
    if(!examState.reviewIds.length)return;
    paper=makeReviewPaper(data.examQuestions,examState.reviewIds);
-  }else paper=makePaper(data.examQuestions,variant,Math.random,paperDifficulty);
+  }else paper=makePaper(data.examQuestions,variant,Math.random,paperDifficulty,
+    examState.recentQuestionIds||[]);
   if(examState.paper&&!examState.paper.complete&&!window.confirm(
     'Replace your unfinished paper? Saved draft writing in that paper will be cleared.'))return;
+  examState.recentQuestionIds=updateRecentQuestionIds(examState.recentQuestionIds,paper.questionIds);
   exportDrafts=false;deps.beginPaper(paper);persist();show('#sim-question-heading');deps.announce('Paper started.');
  }
  function submit(form){
