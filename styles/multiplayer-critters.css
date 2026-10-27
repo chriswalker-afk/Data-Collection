@@ -1,0 +1,21 @@
+
+/* Critters decorate mathematical results but never replace scores or names. */
+.critter-portrait{position:relative;display:inline-block;width:47px;height:53px;flex:none;vertical-align:middle;isolation:isolate}
+.critter-portrait-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.critter-portrait--medium{width:80px;height:90px}
+.critter-portrait--large{width:116px;height:131px}
+.multiplayer-players li{grid-template-columns:26px 47px minmax(0,1fr) auto}
+.multiplayer-players li>.critter-portrait{grid-column:2}
+.multiplayer-players li>.player-details{grid-column:3}
+.multiplayer-players li>.player-score{grid-column:4}
+.multiplayer-players li>.player-remove{grid-column:3/5}
+.ceremony-person-with-critter{display:inline-flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap}
+.ceremony-person-with-critter strong{overflow-wrap:anywhere}
+.ceremony-podium-names .ceremony-person-with-critter{display:flex}
+.ceremony-recipients .ceremony-person-with-critter{justify-content:flex-start}
+@media(max-width:390px){
+ .multiplayer-players li{gap:6px;padding:8px;grid-template-columns:18px 37px minmax(0,1fr) auto}
+ .multiplayer-players li>.critter-portrait{width:37px;height:43px}
+ .critter-portrait--large{width:83px;height:94px}
+}
+@media print{.critter-portrait{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
