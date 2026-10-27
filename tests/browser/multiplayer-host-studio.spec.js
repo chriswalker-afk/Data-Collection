@@ -99,7 +99,7 @@ test('advanced settings are honestly labelled preview-only',async({page})=>{
  await page.locator('#studio-advanced summary').click();
  await expect(page.locator('#studio-advanced-live-note')).toBeVisible();
  await expect(page.locator('#studio-advanced-future-fields')).toBeHidden();
- await selectObjective(page,'bullseye');
+ await selectObjective(page,'class');
  await expect(page.locator('#studio-advanced-future-fields')).toBeVisible();
  await page.locator('#studio-difficulty').selectOption('advanced');
  await page.locator('#studio-question-order').selectOption('same');
