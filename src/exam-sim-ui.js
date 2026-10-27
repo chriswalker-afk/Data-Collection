@@ -279,10 +279,10 @@ export function createExamSimulationUI(deps){
       : 'Your current paper has no saved practice targets. Try a longer paper or the next challenge level, and explain each result in full sentences.')));
   const exportSettings=div('sim-export-settings',
    heading(3,'sim-panel-heading','Share a summary with your teacher'),
-   paragraph('sim-help','Download a CSV report to share yourself. No student name or cloud upload. Written drafts are excluded unless you opt in; self-reviews are not examination marks.'),
+   paragraph('sim-help','Download a CSV report to share yourself. No student name or cloud upload. Written drafts and improvement notes are excluded unless you opt in; self-reviews are not examination marks.'),
    element('label',{className:'sim-export-choice'},
     element('input',{id:'sim-export-drafts',type:'checkbox',checked:exportDrafts}),
-    span('','Include my written draft answers in the CSV (optional)')));
+    span('','Include my written draft answers and improvement notes in the CSV (optional)')));
   page.append(exportSettings,div('sim-report-actions',
     action('Print this report','sim-print',{},'btn btn-primary'),
     action('Export CSV report','sim-export',{},'btn btn-quiet'),
