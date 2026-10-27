@@ -1,0 +1,34 @@
+/* Class Mosaic / Puzzle Relay: high-contrast, responsive, accessible surface */
+.mosaic-shell{--mosaic-ink:#173d38;--mosaic-soft:#e9f8f4;--mosaic-edge:#b7d8cd;color:var(--mosaic-ink);max-width:100%;padding:clamp(15px,3vw,28px);border:1px solid var(--mosaic-edge);border-radius:22px;background:linear-gradient(145deg,#f7fefb,#e6f3ef);box-shadow:0 12px 36px rgba(18,67,52,.07)}
+.mosaic-shell h2{font-size:clamp(1.18rem,2.5vw,1.7rem);line-height:1.25;margin:6px 0}
+.mosaic-shell h3{font-size:clamp(.98rem,2.2vw,1.28rem);margin:8px 0 12px}
+.mosaic-intro{line-height:1.6;color:#41675c;font-size:.9rem;margin:8px 0 19px}
+.mosaic-progress-group{display:grid;gap:8px;margin:14px 0 20px}
+.mosaic-progress-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.86rem;font-variant-numeric:tabular-nums}
+.mosaic-progress-group progress{height:12px;width:100%;accent-color:#277c66}
+.mosaic-grid{display:grid;grid-template-columns:repeat(var(--mosaic-columns,5),minmax(0,1fr));gap:clamp(5px,1.2vw,12px);max-width:580px;margin:16px auto 27px;aspect-ratio:1.6}
+.mosaic-tile{display:grid;place-items:center;border-radius:12px;border:1px dashed #9abcb0;background:repeating-linear-gradient(45deg,#f7fffb,#f7fffb 10px,#edf7f2 10px,#edf7f2 20px);color:#81a394;font-size:clamp(1.1rem,3.3vw,2.2rem);font-weight:850;min-width:0;min-height:35px}
+.mosaic-tile.is-revealed{border:1px solid #40826d;color:#fafff9;background:linear-gradient(135deg,#328369,#215f57);box-shadow:0 3px 9px rgba(22,93,75,.13)}
+.mosaic-tile.is-revealed[data-team-id="sigma"]{background:linear-gradient(135deg,#355d94,#1e446f)}
+.mosaic-tile.is-revealed[data-team-id="delta"]{background:linear-gradient(135deg,#8760a8,#59407f)}
+.mosaic-tile.is-revealed[data-team-id="pi"]{background:linear-gradient(135deg,#966c33,#735021)}
+.mosaic-team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,205px),1fr));gap:11px;margin-bottom:22px}
+.mosaic-team-card{background:#fff;border:1px solid #c3dbd2;border-radius:14px;padding:13px 14px}
+.mosaic-team-heading{display:flex;gap:8px;align-items:center;font-size:.87rem}
+.mosaic-team-heading span{font-size:1.35rem}.mosaic-team-progress{font-size:.74rem;color:#496e60;margin:7px 0}
+.mosaic-part-row{display:flex;gap:6px;flex-wrap:wrap}.mosaic-part{font-size:.68rem;border:1px solid #cfdfd7;padding:5px 7px;border-radius:999px;color:#4a665b}.mosaic-part.is-solved{background:#dceee4;color:#235b3a;border-color:#9bc2a8}
+.mosaic-my-task{background:#fff;border:1px solid #aecfc2;border-radius:16px;padding:clamp(13px,2.3vw,21px)}
+.mosaic-my-label{letter-spacing:.13em;font-weight:850;color:#31735b;font-size:.65rem}
+.mosaic-my-task h3{line-height:1.45;color:#1d493c}
+.mosaic-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.mosaic-option{background:#f4fbf7;border:1px solid #a9c7bc;color:#21523e;text-align:left;font:inherit;font-size:.81rem;line-height:1.5;border-radius:12px;padding:11px 12px;cursor:pointer;min-width:0}
+.mosaic-option:hover,.mosaic-option:focus-visible{background:#daeee5;border-color:#2d7b61;outline:2px solid transparent;box-shadow:0 0 0 2px #2c8b6b}
+.mosaic-option:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}
+.mosaic-feedback{border-radius:10px;background:#fff3dd;color:#6b4b24;padding:11px;font-size:.84rem;line-height:1.5}
+.mosaic-feedback.is-correct{background:#dceee4;color:#205b3e}
+.mosaic-small-note,.mosaic-host-note{font-size:.78rem;line-height:1.5;color:#456d5d}.mosaic-warning{font-size:.78rem;color:#884c27}
+.mosaic-outcome{background:#dceee5;border-radius:12px;padding:13px;font-weight:820;text-align:center;color:#1b6844}
+@media(max-width:420px){.mosaic-options{grid-template-columns:1fr}.mosaic-team-grid{grid-template-columns:1fr}.mosaic-shell{padding:13px}.mosaic-grid{gap:5px}.mosaic-tile{border-radius:7px}}
+@media(prefers-reduced-motion:reduce){.mosaic-shell *{animation:none!important;transition:none!important}}
+
+.mosaic-puzzle-name{font-size:.73rem;color:#315b4d;margin:6px 0 12px;font-weight:700}.mosaic-scenario{background:#eef8f2;border-left:3px solid #358369;border-radius:8px;padding:12px;margin:8px 0 15px;line-height:1.6;color:#294f40;font-size:.81rem}
