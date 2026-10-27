@@ -449,7 +449,7 @@ export class GameRoom extends DurableObject{
   async fetch(request){
     const room=this.room();
     if(!room)return fail(request,'Room expired or unavailable',404);
-    this.finishExpiredBlitz(room);
+    this.finishExpiredPaced(room);
     if(request.headers.get('Upgrade')!=='websocket')return fail(request,'WebSocket upgrade required',426);
     const url=new URL(request.url);
     const id=url.searchParams.get('id'),ticket=url.searchParams.get('ticket');
