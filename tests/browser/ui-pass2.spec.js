@@ -103,7 +103,7 @@ test('Exam Lab numerical and written question views share wording without losing
  await page.getByRole('button',{name:'Compare with model'}).click();
  const feedback=page.locator('.sim-written-review .ui-feedback');
  await expect(feedback).toHaveClass(/review/);
- await expect(feedback).toContainText('not marks from Pearson');
+ await expect(feedback).toContainText('not examination marking');
  await expect(page.locator('#sim-draft')).toHaveCount(0);
  await expect(page.locator('.sim-preserved-text')).toContainText('My own words');
 });
