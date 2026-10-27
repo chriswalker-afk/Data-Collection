@@ -11,6 +11,12 @@ const MODE_DESCRIPTIONS={
   match:'Connect six term–definition pairs per board. 75 seconds per board.',
   sort:'Sort 8–12 statements into four destinations. 90 seconds per board.'
 };
+const PACED_DESCRIPTIONS={
+  which:'Identify sampling methods from audited scenarios. Progress independently; the shared safety clock controls the race.',
+  speed:'Type mathematical terms from memory. Each completely correct response counts as a successful task.',
+  match:'Complete six accurate term–definition pairs. A board counts towards a streak or accuracy only if all six pairs are correct.',
+  sort:'Classify every advantage or disadvantage accurately. Partial credit earns points, but only an entirely correct board counts as a successful task.'
+};
 const numericFields={
   'studio-team-count':'teamCount','studio-goal-target':'goalTarget',
   'studio-minutes':'minutes','studio-accuracy-target':'accuracyTarget',
@@ -51,7 +57,8 @@ export function createHostStudio(root) {
       draft.length=game.lengths[Math.min(['quick','balanced','stretch'].indexOf(draft.preset),game.lengths.length-1)];
     }
     picker.value=String(draft.length);
-    find('mode-description').textContent=MODE_DESCRIPTIONS[draft.game];
+    find('mode-description').textContent=draft.objective==='classic'?
+      MODE_DESCRIPTIONS[draft.game]:PACED_DESCRIPTIONS[draft.game];
   }
   function show(id,visible){find(id).hidden=!visible;}
   function render(){
