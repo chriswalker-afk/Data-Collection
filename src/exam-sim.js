@@ -96,7 +96,7 @@ export function preferUnseenQuestions(pool,recentIds=[],random=Math.random){
   });
 }
 export function updateRecentQuestionIds(prior,newIds){
-  const ids=[...(Array.isArray(newIds)?newIds:[]).reverse(),
+  const ids=[...(Array.isArray(newIds)?[...newIds].reverse():[]),
     ...(Array.isArray(prior)?prior:[])];
   return [...new Set(ids.filter(id=>typeof id==='string'&&id.length<=72))]
     .slice(0,MAX_RECENT_QUESTIONS);
