@@ -1,6 +1,7 @@
 import {ARENA_AWARDS} from './award-catalogue.js';
 import {safeAvatar} from './avatar.js';
 import {teamStandings,classQuestSnapshot} from './team-rules.js';
+import {blitzStandings} from './blitz-rules.js';
 // Pass 5: entirely server-derived classroom achievements and a deterministic ceremony.
 // No individual achievement or point total is accepted from a browser request.
 const validScore=n=>Number.isSafeInteger(n)&&n>=0;
@@ -24,16 +25,24 @@ function longestFullStreak(rows){
 }
 export function roomAwards(room){
   const game=room.game||'which';
-  const podium=[...(room.players||[])].filter(p=>validScore(p.score)&&p.score>0)
-    .sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name,'en-GB'))
-    .map((p,index,arr)=>({
-      id:p.id,name:p.name,avatar:safeAvatar(p.avatar),score:p.score,
-      rank:index>0&&arr[index-1].score===p.score?null:index+1
-    }));
-  let lastRank=0;
-  for(const row of podium){
-    if(row.rank===null)row.rank=lastRank;
-    else lastRank=row.rank;
+  const podium=room.objective==='blitz'?
+    blitzStandings(room).filter(row=>row.rank!==null).map(row=>{
+      const p=room.players.find(person=>person.id===row.id);
+      return {id:p.id,name:p.name,avatar:safeAvatar(p.avatar),
+        score:p.score,rank:row.rank,correct:row.correct,accuracy:row.accuracy};
+    }):
+    [...(room.players||[])].filter(p=>validScore(p.score)&&p.score>0)
+      .sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name,'en-GB'))
+      .map((p,index,arr)=>({
+        id:p.id,name:p.name,avatar:safeAvatar(p.avatar),score:p.score,
+        rank:index>0&&arr[index-1].score===p.score?null:index+1
+      }));
+  if(room.objective!=='blitz'){
+    let lastRank=0;
+    for(const row of podium){
+      if(row.rank===null)row.rank=lastRank;
+      else lastRank=row.rank;
+    }
   }
   const standings=podium.filter(p=>p.rank<=3);
   const earned={};
@@ -94,7 +103,9 @@ export function makeCeremony(room){
         'A thoughtful class challenge takes participation and precision. See what we can improve next time.'});
   }
   slides.push({kind:'podium',title:'Our classroom podium',standings,
-    subtitle:standings.length?'Scores reflect checked mathematics, not participation clicks.':
+    subtitle:standings.length?(room.objective==='blitz'?
+      'Blitz ranking prioritises correct decisions, then accuracy, then points.':
+      'Scores reflect checked mathematics, not participation clicks.'):
       'No positive scores this round. Celebrate the learning, not an invented winner.'});
   for(const award of ARENA_AWARDS){
     const recipients=players.filter(p=>earned[p.id]?.includes(award.id))
