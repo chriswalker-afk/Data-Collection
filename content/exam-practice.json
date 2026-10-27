@@ -1521,6 +1521,762 @@
         "Define the population and identify the group actually observed before deciding what the result means.",
         "Think about sampling variation, who may have been missed and whether the conclusion goes beyond the evidence."
       ]
+    },
+    {
+      "id": "alloc-d-stage-production",
+      "type": "allocation",
+      "level": "foundation",
+      "title": "Theatre production teams",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A theatre has 96 stage crew and 144 performers. The director wants a proportional stratified sample of 30 people to discuss rehearsal times.",
+      "task": "Calculate the whole-number sample size for each group.",
+      "data": {
+        "sampleSize": 30,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Stage crew",
+            "size": 96
+          },
+          {
+            "id": "g1",
+            "label": "Performers",
+            "size": 144
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 30 for each group. Verify the whole numbers add to 30; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 2 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 240 × 30. Check that your final group counts add to 30 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-boarding-menus",
+      "type": "allocation",
+      "level": "foundation",
+      "title": "School dining feedback",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A college has 225 boarding students and 375 day students. A proportional stratified survey of 40 students will inform its lunch menu.",
+      "task": "Calculate the number to select randomly from each group.",
+      "data": {
+        "sampleSize": 40,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Boarding students",
+            "size": 225
+          },
+          {
+            "id": "g1",
+            "label": "Day students",
+            "size": 375
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 40 for each group. Verify the whole numbers add to 40; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 2 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 600 × 40. Check that your final group counts add to 40 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-cycling-club",
+      "type": "allocation",
+      "level": "foundation",
+      "title": "Community cycling survey",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A sports club has 360 junior and 240 adult members. It plans a proportional stratified survey of 50 members.",
+      "task": "Find how many junior and adult members should be selected.",
+      "data": {
+        "sampleSize": 50,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Juniors",
+            "size": 360
+          },
+          {
+            "id": "g1",
+            "label": "Adults",
+            "size": 240
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 50 for each group. Verify the whole numbers add to 50; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 2 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 600 × 50. Check that your final group counts add to 50 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-school-support",
+      "type": "allocation",
+      "level": "foundation",
+      "title": "Training session survey",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A school employs 192 teachers and 128 support staff. It needs a proportional random sample of 40 staff for feedback on training.",
+      "task": "Calculate the allocation to each staff group.",
+      "data": {
+        "sampleSize": 40,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Teachers",
+            "size": 192
+          },
+          {
+            "id": "g1",
+            "label": "Support staff",
+            "size": 128
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 40 for each group. Verify the whole numbers add to 40; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 2 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 320 × 40. Check that your final group counts add to 40 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-school-year-10-12",
+      "type": "allocation",
+      "level": "develop",
+      "title": "Three-year-group survey",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A school has 200 Year 10, 180 Year 11 and 120 Year 12 students. It needs a proportional stratified sample of 50 pupils.",
+      "task": "Work out the number selected randomly from each year group.",
+      "data": {
+        "sampleSize": 50,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Year 10",
+            "size": 200
+          },
+          {
+            "id": "g1",
+            "label": "Year 11",
+            "size": 180
+          },
+          {
+            "id": "g2",
+            "label": "Year 12",
+            "size": 120
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 50 for each group. Verify the whole numbers add to 50; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 3 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 500 × 50. Check that your final group counts add to 50 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-sports-sessions",
+      "type": "allocation",
+      "level": "develop",
+      "title": "Sports centre sessions",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A leisure centre has 400 morning, 250 afternoon and 150 evening members in a defined sampling frame. It plans 80 proportional stratified selections.",
+      "task": "Calculate the sample size for each session group.",
+      "data": {
+        "sampleSize": 80,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Morning",
+            "size": 400
+          },
+          {
+            "id": "g1",
+            "label": "Afternoon",
+            "size": 250
+          },
+          {
+            "id": "g2",
+            "label": "Evening",
+            "size": 150
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 80 for each group. Verify the whole numbers add to 80; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 3 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 800 × 80. Check that your final group counts add to 80 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-library-sections",
+      "type": "allocation",
+      "level": "develop",
+      "title": "Library stock review",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A library has 90 fiction, 150 non-fiction and 60 reference books eligible for inspection. It will randomly sample 30 books proportionally.",
+      "task": "Determine the number from each section.",
+      "data": {
+        "sampleSize": 30,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Fiction",
+            "size": 90
+          },
+          {
+            "id": "g1",
+            "label": "Non-fiction",
+            "size": 150
+          },
+          {
+            "id": "g2",
+            "label": "Reference",
+            "size": 60
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 30 for each group. Verify the whole numbers add to 30; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 3 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 300 × 30. Check that your final group counts add to 30 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-regional-trips",
+      "type": "allocation",
+      "level": "develop",
+      "title": "Regional school journeys",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A travel company has records of 240 west, 160 east and 100 central region trips. It needs a proportional sample of 50 recorded trips.",
+      "task": "Calculate the planned random selection from each region.",
+      "data": {
+        "sampleSize": 50,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "West",
+            "size": 240
+          },
+          {
+            "id": "g1",
+            "label": "East",
+            "size": 160
+          },
+          {
+            "id": "g2",
+            "label": "Central",
+            "size": 100
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 50 for each group. Verify the whole numbers add to 50; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 3 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 500 × 50. Check that your final group counts add to 50 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-reef-zones",
+      "type": "allocation",
+      "level": "extend",
+      "title": "Four reef habitats",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "Marine researchers have 216 sheltered, 144 open-water, 120 sandy and 60 rocky eligible reef plots. A proportional random sample of 45 plots is required.",
+      "task": "Find the four exact whole-number allocations.",
+      "data": {
+        "sampleSize": 45,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Sheltered",
+            "size": 216
+          },
+          {
+            "id": "g1",
+            "label": "Open-water",
+            "size": 144
+          },
+          {
+            "id": "g2",
+            "label": "Sandy",
+            "size": 120
+          },
+          {
+            "id": "g3",
+            "label": "Rocky",
+            "size": 60
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 45 for each group. Verify the whole numbers add to 45; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 4 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 540 × 45. Check that your final group counts add to 45 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-transport-routes",
+      "type": "allocation",
+      "level": "extend",
+      "title": "Transport route usage",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A city transport survey covers 270 rail users, 180 bus users, 90 cyclists and 60 walkers, with each resident assigned to one main travel group. A sample of 60 is planned.",
+      "task": "Allocate the 60 random selections proportionally across four groups.",
+      "data": {
+        "sampleSize": 60,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Rail",
+            "size": 270
+          },
+          {
+            "id": "g1",
+            "label": "Bus",
+            "size": 180
+          },
+          {
+            "id": "g2",
+            "label": "Cycle",
+            "size": 90
+          },
+          {
+            "id": "g3",
+            "label": "Walk",
+            "size": 60
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 60 for each group. Verify the whole numbers add to 60; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 4 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 600 × 60. Check that your final group counts add to 60 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-study-spaces",
+      "type": "allocation",
+      "level": "extend",
+      "title": "Four study environments",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "There are 420 home, 280 classroom, 210 library and 140 cafe users in four mutually exclusive recorded main-study groups. The target is a proportional sample of 105.",
+      "task": "Calculate each group's number of randomly selected participants.",
+      "data": {
+        "sampleSize": 105,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Home",
+            "size": 420
+          },
+          {
+            "id": "g1",
+            "label": "Classroom",
+            "size": 280
+          },
+          {
+            "id": "g2",
+            "label": "Library",
+            "size": 210
+          },
+          {
+            "id": "g3",
+            "label": "Cafe",
+            "size": 140
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 105 for each group. Verify the whole numbers add to 105; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 4 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 1050 × 105. Check that your final group counts add to 105 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-device-groups",
+      "type": "allocation",
+      "level": "extend",
+      "title": "Primary devices",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "In a technology study, 350 people principally use phones, 250 tablets, 200 laptops and 100 desktops. Each person belongs to one primary-device category. The survey takes 90 proportionally.",
+      "task": "Find the four sample allocations that add to exactly 90.",
+      "data": {
+        "sampleSize": 90,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Phone",
+            "size": 350
+          },
+          {
+            "id": "g1",
+            "label": "Tablet",
+            "size": 250
+          },
+          {
+            "id": "g2",
+            "label": "Laptop",
+            "size": 200
+          },
+          {
+            "id": "g3",
+            "label": "Desktop",
+            "size": 100
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 90 for each group. Verify the whole numbers add to 90; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 4 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 900 × 90. Check that your final group counts add to 90 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "sys-d-warehouse-boxes",
+      "type": "systematic",
+      "level": "foundation",
+      "title": "Warehouse box checks",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A warehouse has 300 cartons recorded in a fixed order. An officer plans to inspect 30 systematically, starting at a randomly selected position of 7.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 300,
+        "sampleSize": 30,
+        "randomStart": 7
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 300 ÷ 30 = 10. There are 29 jumps after the first selected position, so the last position is 7 + (30 − 1) × 10 = 297. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 7 and add (n − 1) intervals, not n intervals. The result must stay within 300."
+      ]
+    },
+    {
+      "id": "sys-d-clinic-tickets",
+      "type": "systematic",
+      "level": "foundation",
+      "title": "Queue ticket audit",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A public service centre has a complete ordered list of 96 numbered tickets. It plans to check 12 and has randomly chosen starting ticket position 6.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 96,
+        "sampleSize": 12,
+        "randomStart": 6
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 96 ÷ 12 = 8. There are 11 jumps after the first selected position, so the last position is 6 + (12 − 1) × 8 = 94. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 6 and add (n − 1) intervals, not n intervals. The result must stay within 96."
+      ]
+    },
+    {
+      "id": "sys-d-museum-entries",
+      "type": "systematic",
+      "level": "foundation",
+      "title": "Museum visitor records",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A museum's chronological records list 160 eligible entries. A systematic check will inspect 20 records with a random starting position of 5.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 160,
+        "sampleSize": 20,
+        "randomStart": 5
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 160 ÷ 20 = 8. There are 19 jumps after the first selected position, so the last position is 5 + (20 − 1) × 8 = 157. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 5 and add (n − 1) intervals, not n intervals. The result must stay within 160."
+      ]
+    },
+    {
+      "id": "sys-d-magazine-copies",
+      "type": "systematic",
+      "level": "foundation",
+      "title": "Magazine production",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A publisher has 540 consecutively numbered eligible magazines in a production list. It samples 45 using a random first position of 8.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 540,
+        "sampleSize": 45,
+        "randomStart": 8
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 540 ÷ 45 = 12. There are 44 jumps after the first selected position, so the last position is 8 + (45 − 1) × 12 = 536. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 8 and add (n − 1) intervals, not n intervals. The result must stay within 540."
+      ]
+    },
+    {
+      "id": "sys-d-rail-passenger",
+      "type": "systematic",
+      "level": "develop",
+      "title": "Rail travel tickets",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "An ordered ticket database holds 1,050 eligible journeys. The transport team will take a systematic sample of 50, after randomly selecting starting position 13.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 1050,
+        "sampleSize": 50,
+        "randomStart": 13
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 1050 ÷ 50 = 21. There are 49 jumps after the first selected position, so the last position is 13 + (50 − 1) × 21 = 1042. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 13 and add (n − 1) intervals, not n intervals. The result must stay within 1050."
+      ]
+    },
+    {
+      "id": "sys-d-course-register",
+      "type": "systematic",
+      "level": "develop",
+      "title": "Online course register",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "There are 576 eligible students in an ordered course register. A systematic sample of 36 will be drawn from a randomly chosen first position of 11.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 576,
+        "sampleSize": 36,
+        "randomStart": 11
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 576 ÷ 36 = 16. There are 35 jumps after the first selected position, so the last position is 11 + (36 − 1) × 16 = 571. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 11 and add (n − 1) intervals, not n intervals. The result must stay within 576."
+      ]
+    },
+    {
+      "id": "sys-d-music-archive",
+      "type": "systematic",
+      "level": "develop",
+      "title": "Music archive audit",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "An archive contains 1,320 consecutively numbered recordings eligible for review. Inspect 60, starting randomly at position 18.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 1320,
+        "sampleSize": 60,
+        "randomStart": 18
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 1320 ÷ 60 = 22. There are 59 jumps after the first selected position, so the last position is 18 + (60 − 1) × 22 = 1316. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 18 and add (n − 1) intervals, not n intervals. The result must stay within 1320."
+      ]
+    },
+    {
+      "id": "sys-d-delivery-sheets",
+      "type": "systematic",
+      "level": "develop",
+      "title": "Delivery tracking sheets",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A courier firm has a complete ordered list of 840 delivery sheets. It samples 56 systematically, with randomly selected first position 10.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 840,
+        "sampleSize": 56,
+        "randomStart": 10
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 840 ÷ 56 = 15. There are 55 jumps after the first selected position, so the last position is 10 + (56 − 1) × 15 = 835. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 10 and add (n − 1) intervals, not n intervals. The result must stay within 840."
+      ]
+    },
+    {
+      "id": "sys-d-machine-readings",
+      "type": "systematic",
+      "level": "extend",
+      "title": "Machine monitoring",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A laboratory records 2,025 observations in time order. A systematic sample of 75 begins at random position 19; the team will later check for repeating time patterns.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 2025,
+        "sampleSize": 75,
+        "randomStart": 19
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 2025 ÷ 75 = 27. There are 74 jumps after the first selected position, so the last position is 19 + (75 − 1) × 27 = 2017. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 19 and add (n − 1) intervals, not n intervals. The result must stay within 2025."
+      ]
+    },
+    {
+      "id": "sys-d-ticket-transactions",
+      "type": "systematic",
+      "level": "extend",
+      "title": "Transaction quality check",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A stadium maintains 2,448 ordered ticket transaction records. Auditors take 72 systematically, with an independent random start of position 31.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 2448,
+        "sampleSize": 72,
+        "randomStart": 31
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 2448 ÷ 72 = 34. There are 71 jumps after the first selected position, so the last position is 31 + (72 − 1) × 34 = 2445. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 31 and add (n − 1) intervals, not n intervals. The result must stay within 2448."
+      ]
+    },
+    {
+      "id": "sys-d-urban-counts",
+      "type": "systematic",
+      "level": "extend",
+      "title": "Traffic observation log",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A traffic study has 1,512 eligible time-ordered observations. Researchers plan to select 54 at a constant interval with random start 23.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 1512,
+        "sampleSize": 54,
+        "randomStart": 23
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 1512 ÷ 54 = 28. There are 53 jumps after the first selected position, so the last position is 23 + (54 − 1) × 28 = 1507. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 23 and add (n − 1) intervals, not n intervals. The result must stay within 1512."
+      ]
+    },
+    {
+      "id": "sys-d-sensor-sample",
+      "type": "systematic",
+      "level": "extend",
+      "title": "Sensor readings over time",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "An environmental sensor stores 3,000 consecutive valid readings. Researchers plan to analyse 120 systematically, starting at random position 24.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 3000,
+        "sampleSize": 120,
+        "randomStart": 24
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 3000 ÷ 120 = 25. There are 119 jumps after the first selected position, so the last position is 24 + (120 − 1) × 25 = 2999. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 24 and add (n − 1) intervals, not n intervals. The result must stay within 3000."
+      ]
     }
   ]
 }
