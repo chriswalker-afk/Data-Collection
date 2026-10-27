@@ -54,10 +54,11 @@ for(const page of ['index.html','multiplayer.html','awards.html','critter-lab/in
     }
   }
 }
-for(const sitePage of ['index.html','multiplayer.html']){
-  if(!readFileSync(join(output,sitePage),'utf8').includes('./critter-lab/index.html')){
-    throw new Error(sitePage+' is missing its Critter Lab invitation');
-  }
+if(!readFileSync(join(output,'src/app.js'),'utf8').includes("'./critter-lab/index.html'")){
+  throw new Error('Homepage is missing its Critter Lab invitation');
+}
+if(!readFileSync(join(output,'multiplayer.html'),'utf8').includes('href="./critter-lab/index.html"')){
+  throw new Error('Multiplayer join screen is missing its Critter Lab link');
 }
 for(const name of ['multiplayer/worker.js','multiplayer/rules.js','multiplayer/scenarios.js','multiplayer/modes.js','multiplayer/game-bank.js','multiplayer/ceremony-rules.js','multiplayer/team-rules.js']){
   if(existsSync(join(output,name)))throw new Error('Worker backend must not be deployed to Pages: '+name);
