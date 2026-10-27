@@ -16,6 +16,10 @@ Student avatars are small cosmetic allowlisted configurations, not raw image upl
 6. Once complete, the teacher may launch the **Grand Awards Ceremony**. All devices see the same Welcome, Podium, earned character awards and Finale, at the teacher's chosen pace. Replays and backwards navigation are available.
 7. Individual students reaching the finale can retain their verified classroom character achievements as **nickname-free local keepsakes** in My Awards, separate from Solo trophies.
 
+## Host Customisation Studio (Arena 2.0, Pass 1)
+
+The teacher entry now offers **Classic Challenge** (playable now) alongside safe planning previews for **Blitz**, **Bullseye**, **Perfect Run**, and the full cooperative **Class Quest**. Teachers can experiment with Quick / Balanced / Stretch presets, meaningful targets and three participation formats, including a **Puzzle Relay** preview. Unsupported objectives disable room creation and are never sent to the current Worker. Free-for-All and 2–4 team **Squad League** work immediately using existing team commands, with optional Classic class-goal setup. [Scope and tests](../docs/PASS_1_MULTIPLAYER_HOST_STUDIO.md).
+
 ## Four distinct mathematical modes
 
 | Mode | Content | Choice | Time |
