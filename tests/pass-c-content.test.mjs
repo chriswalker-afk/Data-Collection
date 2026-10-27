@@ -138,8 +138,14 @@ test('all ten unique two-method comparisons are covered, balanced and correctly 
  assert.equal(combinations.size,10);
  for(let i=0;i<METHOD_ORDER.length;i++)for(let j=i+1;j<METHOD_ORDER.length;j++)
    assert.ok(combinations.has([METHOD_ORDER[i],METHOD_ORDER[j]].sort().join('|')));
- assert.ok(evaluations.every(item=>allUsed.has(item.id)||['census','sample'].includes(item.subject)),
-   'Every sampling-method evaluation should be used by at least one comparison');
+ const originalUsed=new Set(get('sort-rounds').rounds
+   .filter(item=>item.type==='polarity').flatMap(item=>item.evaluationIds));
+ assert.ok(evaluations.every(item=>allUsed.has(item.id)||originalUsed.has(item.id)),
+   'Every evaluation statement must be exercised by either the original or paired Sort It! activities');
+ const newIds=evaluations.filter(item=>!originalUsed.has(item.id));
+ assert.equal(newIds.length,10);
+ assert.ok(newIds.every(item=>allUsed.has(item.id)),
+   'Every new evaluation point must appear on a contextual two-method comparison');
  const duplicate=structuredClone(pairs);
  duplicate[9].methods=[...pairs[8].methods];
  assert.throws(()=>validatePairBank(duplicate,evaluations),/outside its pair|Repeated Sort It!/);
