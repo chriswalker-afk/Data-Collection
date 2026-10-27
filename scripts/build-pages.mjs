@@ -10,7 +10,7 @@ mkdirSync(output,{recursive:true});
 for(const name of ['index.html','multiplayer.html','awards.html','styles.css','favicon.svg']){
   copyFileSync(join(root,name),join(output,name));
 }
-for(const name of ['src','styles','content']){
+for(const name of ['src','styles','content','critter-lab']){
   cpSync(join(root,name),join(output,name),{recursive:true});
 }
 mkdirSync(join(output,'multiplayer'),{recursive:true});
@@ -31,12 +31,17 @@ if(!readFileSync(join(output,'multiplayer/client.js'),'utf8').includes("from './
 // Keep Pages publishing independent of the backend; never publish Worker internals.
 
 // Validate navigation and local assets against the actual publish artifact.
-for(const page of ['index.html','multiplayer.html','awards.html']){
+for(const page of ['index.html','multiplayer.html','awards.html','critter-lab/index.html']){
   const html=readFileSync(join(output,page),'utf8');
-  for(const required of ['index.html','multiplayer.html','awards.html']){
-    if(!html.includes(required) && !(page==='index.html'&&required==='index.html')){
-      throw new Error(page+' is missing a navigation route to '+required);
+  if(page!=='critter-lab/index.html'){
+    for(const required of ['index.html','multiplayer.html','awards.html']){
+      if(!html.includes(required) && !(page==='index.html'&&required==='index.html')){
+        throw new Error(page+' is missing a navigation route to '+required);
+      }
     }
+  }
+  if(page==='critter-lab/index.html' && (!html.includes('../index.html') || !html.includes('../multiplayer.html'))){
+    throw new Error('Critter Lab must have links back to the Arcade and Multiplayer');
   }
   for(const match of html.matchAll(/\b(?:src|href)="([^"]+)"/g)){
     const raw=match[1];
@@ -49,7 +54,13 @@ for(const page of ['index.html','multiplayer.html','awards.html']){
     }
   }
 }
+if(!readFileSync(join(output,'src/app.js'),'utf8').includes("'./critter-lab/index.html'")){
+  throw new Error('Homepage is missing its Critter Lab invitation');
+}
+if(!readFileSync(join(output,'multiplayer.html'),'utf8').includes('href="./critter-lab/index.html"')){
+  throw new Error('Multiplayer join screen is missing its Critter Lab link');
+}
 for(const name of ['multiplayer/worker.js','multiplayer/rules.js','multiplayer/scenarios.js','multiplayer/modes.js','multiplayer/game-bank.js','multiplayer/ceremony-rules.js','multiplayer/team-rules.js']){
   if(existsSync(join(output,name)))throw new Error('Worker backend must not be deployed to Pages: '+name);
 }
-console.log('Pages publish artifact verified: all three modes, styles, scripts and content exist.');
+console.log('Pages publish artifact verified: three Arcade modes plus Critter Lab, styles, scripts and content exist.');

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f6f0">
+  <meta name="description" content="Make a one-of-a-kind animal avatar for the Sampling Arcade multiplayer arena. No account required.">
+  <title>Critter Lab · Sampling Arcade</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="./src/creator.css">
+  <script type="module" src="./src/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#builder">Skip to character builder</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="../index.html#/home/sampling" aria-label="Back to Sampling Arcade">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 42 42"><path d="M15 5h12M18 5v10L8 32a4 4 0 0 0 3.5 6h19a4 4 0 0 0 3.5-6L24 15V5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17" cy="29" r="2" fill="currentColor"/><circle cx="25" cy="29" r="2" fill="currentColor"/><circle cx="21" cy="24" r="2.2" fill="currentColor"/><path d="M16 34q5-6 10 0" fill="currentColor"/></svg></span>
+        <span class="brand-text">Critter <span>Lab</span><small>THE CHARACTER WORKSHOP</small></span>
+      </a>
+      <nav class="lab-arcade-nav" aria-label="Sampling Arcade navigation"><a href="../index.html#/home/sampling">Solo Arcade</a><a href="../multiplayer.html">Multiplayer Arena ↗</a></nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="intro wrap">
+      <div class="intro-copy">
+        <p class="eyebrow"><span class="eyebrow-line" aria-hidden="true"></span> MAKE SOMETHING MARVELLOUS</p>
+        <h1>Build your <em>brilliant beast.</em></h1>
+        <p class="intro-subtitle">One head. One body. One very questionable pair of legs. Mix your own mascot before your next classroom challenge.</p>
+      </div>
+      <div class="intro-counter" aria-label="288 animal combinations available"><span class="counter-stars" aria-hidden="true">✳ ✷</span><strong>288</strong><small>animal combinations<br>before colours</small></div>
+    </div>
+
+    <div class="workspace wrap" id="builder">
+      <section class="preview-card" aria-labelledby="preview-heading">
+        <div class="preview-heading"><div><p class="eyebrow">THE REVEAL</p><h2 id="preview-heading">Meet your critter</h2></div><span class="live-chip"><span class="live-dot" aria-hidden="true"></span> LIVE PREVIEW</span></div>
+        <div class="critter-showcase" id="showcase">
+          <span class="showcase-orbit orbit-one" aria-hidden="true"></span>
+          <span class="showcase-orbit orbit-two" aria-hidden="true"></span>
+          <span class="showcase-spark spark-one" aria-hidden="true">✦</span>
+          <span class="showcase-spark spark-two" aria-hidden="true">✳</span>
+          <span class="showcase-spark spark-three" aria-hidden="true">✧</span>
+          <div class="showcase-label">THE ONE AND ONLY</div>
+          <div id="critter-picture" class="critter-picture" role="img" aria-label="Fox head, Penguin body and Frog legs"><div class="critter-silhouette" aria-hidden="true"></div></div>
+          <div class="showcase-floor" aria-hidden="true"></div>
+        </div>
+        <div class="critter-identity">
+          <span class="identity-kicker">YOUR MASTERPIECE</span>
+          <h3 id="critter-name">Foxy Waddler</h3>
+          <p id="critter-description">Fox head · Penguin body · Frog legs</p>
+        </div>
+        <div class="preview-buttons">
+          <button id="surprise" class="button button-main" type="button" disabled><span aria-hidden="true">✳</span> Surprise me!</button>
+          <button id="reset" class="button button-outline" type="button" disabled><span aria-hidden="true">↺</span> Start again</button>
+        </div>
+        <div class="utility-row"><p class="save-line" id="save-line"><span class="save-icon" aria-hidden="true">✓</span><span id="save-message">Getting the workshop ready...</span></p><button type="button" class="download-link" id="download" disabled><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v3h16v-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg> Save artwork</button></div>
+      </section>
+
+      <section class="builder-card" aria-labelledby="choose-heading">
+        <div class="builder-heading"><div><p class="eyebrow">THE MIXING DESK</p><h2 id="choose-heading">Make it yours.</h2></div><span class="step-count">3 simple steps</span></div>
+        <p class="builder-intro">Choose your animal parts, then give each one its own colour. All combinations fit together.</p>
+        <div id="loading" class="loading-message" role="status"><span class="loading-dots" aria-hidden="true">● ● ●</span> Preparing your creature parts...</div>
+        <div id="loading-error" class="error-message" role="alert" hidden><strong>We couldn't load the character pieces.</strong><p>Check your connection, then try again. No changes to your saved critter have been made.</p><button type="button" class="button button-outline" id="retry">Try again</button></div>
+        <div id="creator-controls" hidden>
+          <section class="part-panel" aria-labelledby="head-title">
+            <div class="part-heading"><span class="step-index step-head">01</span><div><h3 id="head-title">Choose a head</h3><p>Who’s leading the charge?</p></div><span class="selected-part" id="head-selected">Fox</span></div>
+            <div id="head-options" class="part-options head-options" role="group" aria-label="Animal heads"></div>
+            <div class="colour-picker"><div class="colour-caption"><span>HEAD COLOUR</span><output id="head-colour-name">Original</output></div><div id="head-colours" class="colour-options" role="group" aria-label="Head colour"></div></div>
+          </section>
+          <section class="part-panel" aria-labelledby="body-title">
+            <div class="part-heading"><span class="step-index step-body">02</span><div><h3 id="body-title">Pick a body</h3><p>Built for greatness. Or waddling.</p></div><span class="selected-part" id="body-selected">Penguin</span></div>
+            <div id="body-options" class="part-options" role="group" aria-label="Animal bodies"></div>
+            <div class="colour-picker"><div class="colour-caption"><span>BODY COLOUR</span><output id="body-colour-name">Original</output></div><div id="body-colours" class="colour-options" role="group" aria-label="Body colour"></div></div>
+          </section>
+          <section class="part-panel" aria-labelledby="legs-title">
+            <div class="part-heading"><span class="step-index step-legs">03</span><div><h3 id="legs-title">Find your feet</h3><p>The finishing touch. Probably.</p></div><span class="selected-part" id="legs-selected">Frog</span></div>
+            <div id="legs-options" class="part-options" role="group" aria-label="Animal legs"></div>
+            <div class="colour-picker"><div class="colour-caption"><span>LEG COLOUR</span><output id="legs-colour-name">Original</output></div><div id="legs-colours" class="colour-options" role="group" aria-label="Leg colour"></div></div>
+          </section>
+        </div>
+      </section>
+    </div>
+    <p class="privacy-note wrap"><span aria-hidden="true">✧</span> <strong>Made for the classroom.</strong> No sign-in or uploads. Your critter is saved on this device. Showing critters to other players in live rooms is planned for a later update.</p>
+  </main>
+  <footer class="footer wrap"><span>Critter Lab · Sampling Arcade</span><span>Build your critter here · Classroom display coming in a later update</span></footer>
+  <div class="visually-hidden" id="announcer" role="status" aria-live="polite" aria-atomic="true"></div>
+  <noscript><div class="noscript">Critter Lab needs JavaScript to mix and colour animal parts. Please turn on JavaScript or view the source artwork in this repository.</div></noscript>
+</body>
+</html>

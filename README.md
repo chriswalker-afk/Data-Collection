@@ -10,6 +10,8 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 
 **Website:** https://chriswalker-afk.github.io/Data-Collection/ (published from `main` through GitHub Pages Actions).
 
+**Critter Lab (new):** Students can build and independently colour an original animal avatar at [Critter Lab](./critter-lab/index.html), accessed from the Sampling homepage or the Multiplayer join screen. The builder runs entirely on the same GitHub Pages origin, saves only a versioned, allowlisted configuration in local storage, and needs no login. **Room-wide avatar visibility is not yet enabled**: no changes have been made to the Cloudflare Worker, scores or ceremonies. See [integration handover](docs/CRITTER_LAB_INTEGRATION.md).
+
 ## Student features
 - Choose **Sampling**, **Types of data** or **Mixed revision**.
 - **Flashcards** support term→definition and definition→term recall, plus separate advantage and disadvantage cards for each of five sampling methods, census and sample. Browse every card with search and filters or start a full, unscored review. Model points use the same audited evaluation bank as Sort It!.
