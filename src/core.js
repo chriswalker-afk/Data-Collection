@@ -7,10 +7,10 @@ export const GAMES = Object.freeze([
   { id: 'flashcards', title: 'Flashcards', subtitle: 'Recall & evaluate', description: 'Flip cards for definitions, advantages and disadvantages; browse the full collection.', number: '01' },
   { id: 'match', title: 'Match Up', subtitle: 'Connect the pairs', description: 'Match terms to their definitions, one pair at a time.', number: '02' },
   { id: 'cloze', title: 'Missing Words', subtitle: 'Fill the gaps', description: 'Identify the essential word in an Edexcel-aligned sentence.', number: '03' },
-  { id: 'sort', title: 'Sort It!', subtitle: 'Compare two methods', description: 'Drag mixed advantages and disadvantages into the correct column for each of two sampling methods.', number: '04' },
+  { id: 'sort', title: 'Sort It!', subtitle: 'Compare two methods', description: 'Compare any two sampling methods: place their strengths and limitations in four distinct destinations.', number: '04' },
   { id: 'identify', title: 'Which Method?', subtitle: 'Find the decisive clue', description: 'Identify the sampling rule in a real scenario and learn why plausible alternatives are wrong.', number: '05' },
   { id: 'speed', title: 'Speed Recall', subtitle: 'Type from memory', description: 'Type the mathematical term from its definition, with or without a timer.', number: '06' },
-  { id: 'build', title: 'Build the Method', subtitle: 'Construct a valid procedure', description: 'Drag sampling steps into a defensible order and discover why each prerequisite matters.', number: '07' },
+  { id: 'build', title: 'Build the Method', subtitle: 'Construct a valid procedure', description: 'Arrange the steps of 15 contextual investigations, then explain prerequisites and method limitations.', number: '07' },
   { id: 'error', title: 'Spot the Error', subtitle: 'Find and correct it', description: 'Diagnose inaccurate sampling instructions and choose the correct repair.', number: '08' },
   { id: 'reason', title: 'Contextual Reasoning', subtitle: 'Make a defensible choice', description: 'Build a justified response with a limitation and an improvement.', number: '09' },
   { id: 'exam', title: 'Exam Lab', subtitle: 'Mixed examination practice', description: 'Combine numerical calculations, full methods and contextual evaluation.', number: '10' }
