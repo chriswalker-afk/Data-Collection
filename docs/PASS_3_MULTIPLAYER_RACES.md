@@ -33,5 +33,16 @@ Both races have a **1–15-minute teacher-configurable safety countdown** (Quick
 - The staging script requires `EXPECTED_BUILD_SHA` and verifies the actual separate test Worker health before calling its room endpoints.
 - **No production Worker deployment or merge** before the dependency Pass 2 and the entire Pass 3 release gate pass.
 
+
+## Browser-test traffic isolation
+The full Playwright suite now starts a separate local Wrangler configuration
+(`multiplayer/wrangler.test.jsonc`) containing an explicit `LOCAL_TEST_MODE`
+binding. Only requests reaching **127.0.0.1** with that binding receive a higher
+room-creation allowance, preventing unrelated parallel browser tests from
+exhausting the 24-room production quota. Real production and staging Workers
+continue to enforce **24 rooms per client per five minutes and 120 globally per
+minute**. Unit tests prove both safeguards. The public Pages build does not
+publish either the backend or its test configuration.
+
 ## Next milestone
 **Pass 4 — Class Quest**, with configurable collective accuracy, number of correct answers, mastery of all five sampling methods, and meaningful participation safeguards.
