@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {
  DEFAULT_DRAFT,GAMES,OBJECTIVES,FORMATS,CLASS_METRICS,
  cleanStudioDraft,presetStudioDraft,validateStudioDraft,
- legacyRoomSettings,describeStudioDraft
+ legacyRoomSettings,liveRoomSettings,describeStudioDraft
 } from '../multiplayer/host-studio.js';
 
 test('every defined objective, collaboration format and class metric has a label',()=>{
@@ -28,16 +28,21 @@ test('quick, balanced and stretch presets use valid lengths for all four mathema
   }
  }
 });
-test('all future challenges and distributed Puzzle Relay remain preview-only',()=>{
- for(const objective of ['blitz','bullseye','perfect','class']){
+test('Blitz is live while future challenges and Puzzle Relay remain preview-only',()=>{
+ for(const objective of ['bullseye','perfect','class']){
   const d=presetStudioDraft(DEFAULT_DRAFT,'balanced',objective);
   assert.equal(validateStudioDraft(d).playable,false);
   assert.throws(()=>legacyRoomSettings(d),/preview/);
   assert.match(describeStudioDraft(d).availability,/Preview only/);
  }
+ const blitz=presetStudioDraft(DEFAULT_DRAFT,'balanced','blitz');
+ assert.equal(validateStudioDraft(blitz).playable,true);
+ assert.deepEqual(liveRoomSettings(blitz),{game:'which',roundLength:10,
+   objective:'blitz',minutes:5,teamCount:0,goalTarget:0});
+ assert.throws(()=>legacyRoomSettings(blitz),/not a Classic/);
  const relay={...DEFAULT_DRAFT,format:'relay',teamCount:4};
  assert.equal(validateStudioDraft(relay).playable,false);
- assert.throws(()=>legacyRoomSettings(relay),/preview/);
+ assert.throws(()=>liveRoomSettings(relay),/preview/);
 });
 test('Bullseye preview describes rolling window, not single-question accuracy',()=>{
  const d={...DEFAULT_DRAFT,objective:'bullseye',accuracyTarget:90,accuracyWindow:12};
@@ -104,6 +109,21 @@ test('presets preserve the subject and participation while resetting only target
 test('snapshot never implies a planned objective is live',()=>{
  for(const objective of Object.keys(OBJECTIVES)){
   const d=presetStudioDraft(DEFAULT_DRAFT,'balanced',objective);
-  assert.equal(describeStudioDraft(d).playable,objective==='classic');
+  assert.equal(describeStudioDraft(d).playable,['classic','blitz'].includes(objective));
  }
+});
+
+test('Blitz cannot activate proposed difficulty or hidden leaderboard modifiers',()=>{
+ const base=presetStudioDraft(DEFAULT_DRAFT,'balanced','blitz');
+ for(const change of [{difficulty:'advanced'},{questionOrder:'same'},{showLeaderboard:false}]){
+  const preview={...base,...change};
+  assert.equal(validateStudioDraft(preview).playable,false);
+  assert.throws(()=>liveRoomSettings(preview),/preview/);
+ }
+});
+test('Blitz squad retains balanced team count and ignores Classic-only class goal',()=>{
+ const base=presetStudioDraft({...DEFAULT_DRAFT,format:'squad',teamCount:4,goalTarget:90,
+   game:'speed',length:20},'stretch','blitz');
+ assert.deepEqual(liveRoomSettings(base),{game:'speed',roundLength:20,
+   objective:'blitz',minutes:10,teamCount:4,goalTarget:0});
 });
