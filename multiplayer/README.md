@@ -20,6 +20,10 @@ Student avatars are small cosmetic allowlisted configurations, not raw image upl
 
 The teacher entry now offers **Classic Challenge** (playable now) alongside safe planning previews for **Blitz**, **Bullseye**, **Perfect Run**, and the full cooperative **Class Quest**. Teachers can experiment with Quick / Balanced / Stretch presets, meaningful targets and three participation formats, including a **Puzzle Relay** preview. Unsupported objectives disable room creation and are never sent to the current Worker. Free-for-All and 2–4 team **Squad League** work immediately using existing team commands, with optional Classic class-goal setup. [Scope and tests](../docs/PASS_1_MULTIPLAYER_HOST_STUDIO.md).
 
+## Arena 2.0 Pass 2 — playable Blitz
+
+The Host Studio now supports a **timed, self-paced Blitz** for all four audited mathematical activities: independent questions and private instant mathematical feedback, a class-wide 1–15 minute countdown, server-owned ranking by correct decisions then accuracy then points, independent 2–4 team play, and automatic end-of-round awards. The existing Classic Challenge remains teacher-paced. All other new objectives are still clearly labelled previews. [Blitz implementation, safeguards and tests](../docs/PASS_2_MULTIPLAYER_BLITZ.md).
+
 ## Four distinct mathematical modes
 
 | Mode | Content | Choice | Time |
