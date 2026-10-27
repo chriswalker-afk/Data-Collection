@@ -417,8 +417,8 @@ $('create').addEventListener('click',createRoom);
 $('join-form').addEventListener('submit',event=>{event.preventDefault();void joinRoom();});
 // Preserve a typed room code when visiting the optional, locally saved Critter Lab.
 $('critter-customise')?.addEventListener('click',()=>{
-  const typed=$('room-code').value.replace(/\\s/g,'');
-  $('critter-customise').href='./critter-lab/index.html'+(/^\\d{6}$/.test(typed)?'?room='+typed:'');
+  const typed=$('room-code').value.replace(/\s/g,'');
+  $('critter-customise').href='./critter-lab/index.html'+(/^\d{6}$/.test(typed)?'?room='+typed:'');
 });
 $('leave').addEventListener('click',async()=>{
   if(!roomCode||!token){leave();return;}
