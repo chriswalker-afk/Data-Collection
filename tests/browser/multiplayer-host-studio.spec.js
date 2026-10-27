@@ -98,12 +98,10 @@ test('advanced settings are honestly labelled preview-only',async({page})=>{
  await selectObjective(page,'class');
  await expect(page.locator('#studio-advanced-live-note')).toBeVisible();
  await expect(page.locator('#studio-advanced-future-fields')).toBeHidden();
+ await expect(page.locator('#create')).toBeEnabled();
  await selectFormat(page,'relay');
- await expect(page.locator('#studio-advanced-future-fields')).toBeVisible();
- await page.locator('#studio-difficulty').selectOption('advanced');
- await page.locator('#studio-question-order').selectOption('same');
- await page.locator('#studio-leaderboard').uncheck();
  await expect(page.locator('#create')).toBeDisabled();
+ await expect(page.locator('#studio-preview-availability')).toContainText('Puzzle Relay');
 });
 test('Classic squad and optional goal are applied using existing Worker lobby commands',async({page,request,isMobile})=>{
  test.skip(isMobile,'Parallel mobile join and team tests already cover 320px and 390px; avoid duplicate local Worker load.');
