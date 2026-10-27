@@ -97,7 +97,7 @@ export function createTeamUI({make,button,command,stageKicker}){
         if(room.status!=='lobby'&&t.opportunities>0){
           item.append(progress('Checked accuracy',t.correct,t.accuracy),
             make('p',t.accuracy+'% accuracy · '+t.coverage+'% participation','team-small-note'));
-          if(room.status==='finished')item.append(make('span',
+          if(room.status==='finished'&&room.objective!=='blitz')item.append(make('span',
             t.questComplete?'✦ Team Quest completed':'Team Quest not yet completed','team-quest-label'));
         }
         grid.append(item);
