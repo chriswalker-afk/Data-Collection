@@ -1,11 +1,11 @@
 import {test,expect} from '@playwright/test';
 import {readFileSync} from 'node:fs';
+import {GAME_SORT_BOARDS} from '../../multiplayer/game-bank.js';
 
 const API='http://127.0.0.1:8787';
 const SCENARIOS=JSON.parse(readFileSync(new URL('../../content/scenarios.json',import.meta.url),'utf8')).scenarios;
 const concepts=JSON.parse(readFileSync(new URL('../../content/concepts.json',import.meta.url),'utf8')).concepts;
-const evaluation=JSON.parse(readFileSync(new URL('../../content/evaluations.json',import.meta.url),'utf8')).evaluations;
-const boards=Object.fromEntries(evaluation.map(x=>[x.id,x]));
+const boards=Object.fromEntries(GAME_SORT_BOARDS.map(x=>[x.id,x]));
 const headers=token=>({Authorization:'Bearer '+token});
 const route=code=>API+'/rooms/'+code;
 async function create(request,game='which',minutes=1) {
