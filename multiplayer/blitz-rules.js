@@ -8,6 +8,9 @@ import {GAME_MODES,makeGameDeck} from './modes.js';
 export const BLITZ_MIN_MINUTES=1;
 export const BLITZ_MAX_MINUTES=15;
 export const BLITZ_MAX_ATTEMPTS=400;
+export function blitzDeadlineReached(deadline,now){
+  return Number.isSafeInteger(deadline)&&deadline>0&&Number.isSafeInteger(now)&&now>=deadline;
+}
 export function validBlitzSettings(game,length,minutes){
   return Object.hasOwn(GAME_MODES,game)&&GAME_MODES[game].lengths.includes(length)&&
     Number.isInteger(minutes)&&minutes>=BLITZ_MIN_MINUTES&&minutes<=BLITZ_MAX_MINUTES;
