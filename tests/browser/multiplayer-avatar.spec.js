@@ -28,7 +28,7 @@ test('teacher sees real chosen critter on every device, including podium',async(
        const row=document.querySelector('#players .critter-portrait');
        return [row.children[2].src,row.children[1].src,row.children[0].src];
     });
-    expect(head).toContain('data:image/svg+xml');
+    await expect(page.locator('#players .critter-portrait img').nth(2)).toHaveAttribute('src',/^data:image\\/svg\\+xml/);
     expect(body).toContain('/assets/bodies/penguin.svg');
     expect(legs).toContain('/assets/legs/frog.svg');
   }finally{await studentContext.close();}
