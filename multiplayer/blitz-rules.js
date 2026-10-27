@@ -53,7 +53,7 @@ export function currentBlitzItem(room,player){
   const index=p.order[p.cursor];
   return Number.isInteger(index)&&index>=0&&index<room.deck.length?room.deck[index]:null;
 }
-export function blazeNextQuestion(player,length,now,randomIndex=secureIndex){
+export function advanceBlitzQuestion(player,length,now,randomIndex=secureIndex){
   const p=player.blitz;
   if(!p||!p.feedback)throw new Error('Answer the current question before continuing');
   const previous=p.order[p.cursor];
@@ -78,7 +78,7 @@ export function blitzStandings(room){
       score:player.score||0};
   }).sort((a,b)=>b.correct-a.correct||
       // Use exact fractions for tie-breaking; rounded display accuracy is only UI.
-      (b.checked?a.correct*b.checked:0)-(a.checked?b.correct*a.checked:0)||
+      (a.checked?b.correct*a.checked:0)-(b.checked?a.correct*b.checked:0)||
       b.score-a.score||a.id.localeCompare(b.id));
   // An unanswered round has no fictitious winner. Full equality shares rank.
   let lastRank=null;
