@@ -4,7 +4,7 @@ import {SCENARIOS} from './scenarios.js';
 import {ROUND_LENGTHS,cleanNickname,secureIndex} from './rules.js';
 import {GAME_MODES,validLength,questionTimeMs,makeGameDeck,safeGameQuestion,revealGameAnswer,gradeGameAnswer} from './modes.js';
 import {makeBlitzDeck,validBlitzSettings,BLITZ_MAX_ATTEMPTS,initialBlitzPlayer,
-  currentBlitzItem,advanceBlitzQuestion,blitzQuestionKey,blitzStandings} from './blitz-rules.js';
+  currentBlitzItem,advanceBlitzQuestion,blitzQuestionKey,blitzStandings,blitzDeadlineReached} from './blitz-rules.js';
 import {makeCeremony,ceremonySnapshot,collectableReceipt} from './ceremony-rules.js';
 import {
   TEAM_DEFINITIONS,TEAM_COUNTS,CLASS_TARGETS,balanceTeams,nextTeamId,
@@ -87,7 +87,7 @@ function blitzPublicState(room,participant,now){
   const standings=blitzStandings(room);
   const player=participant.host?null:room.players.find(p=>p.id===participant.id);
   const progress=player?.blitz;
-  const item=room.status==='playing'&&!progress?.feedback&&now<room.deadline?
+  const item=room.status==='playing'&&!progress?.feedback&&!blitzDeadlineReached(room.deadline,now)?
     currentBlitzItem(room,player):null;
   return {
     endAt:room.blitzEnd,minutes:room.blitzMinutes,serverNow:now,
@@ -189,7 +189,7 @@ export class GameRoom extends DurableObject{
     return ids;
   }
   finishExpiredBlitz(room){
-    if(room?.objective==='blitz'&&room.status==='playing'&&Date.now()>=room.deadline){
+    if(room?.objective==='blitz'&&room.status==='playing'&&blitzDeadlineReached(room.deadline,Date.now())){
       room.status='finished';room.finishedReason='time';this.save(room);this.broadcast();
       return true;
     }
@@ -301,7 +301,7 @@ export class GameRoom extends DurableObject{
     }else if(command.type==='blitz-answer'&&!person.host&&room.status==='playing'&&room.objective==='blitz'){
       const now=Date.now(),player=room.players.find(p=>p.id===person.id);
       const progress=player?.blitz;
-      if(now>=room.deadline)return {error:'Blitz time is up'};
+      if(blitzDeadlineReached(room.deadline,now))return {error:'Blitz time is up'};
       if(!progress)return {error:'Blitz progress unavailable'};
       if(progress.feedback)return {error:'Answer already submitted. Review it before continuing.'};
       if(progress.attempts>=BLITZ_MAX_ATTEMPTS)return {error:'Maximum verified attempts reached'};
@@ -434,7 +434,7 @@ export class GameRoom extends DurableObject{
     const room=this.ctx.storage.kv.get('room');
     if(room&&Date.now()<room.created+ROOM_TTL_MS){
       if(room.objective==='blitz'&&room.status==='playing'){
-        if(Date.now()>=room.deadline){
+        if(blitzDeadlineReached(room.deadline,Date.now())){
           room.status='finished';room.finishedReason='time';
           this.save(room);this.broadcast();
         }else{
