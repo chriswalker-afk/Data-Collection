@@ -5,6 +5,16 @@
 .build-page .build-settings label{flex:0 0 auto}
 .build-page .build-settings select{flex:1 1 220px;max-width:420px}
 .build-page .build-settings-explainer{flex-basis:100%;color:#527065;font-size:.79rem;line-height:1.55;margin:0}
+.build-page .build-setting-group{display:flex;flex-direction:column;gap:7px;flex:1 1 220px;min-width:0}
+.build-page .build-setting-group label{font-weight:750;min-width:0}
+.build-page .build-setting-group select{width:100%;max-width:100%;min-width:0;flex:0 1 auto}
+.build-page .build-case-brief{padding:clamp(15px,2.5vw,23px);margin:6px 0 16px;border:1px solid #b6d3ce;border-radius:16px;background:linear-gradient(135deg,#eaf5f0,#f5f9fc);color:#214b46}
+.build-page .build-case-label{display:inline-block;font-size:.68rem;font-weight:870;letter-spacing:.11em;color:#1c6d56}
+.build-page .build-case-title{margin:5px 0 8px;font-size:clamp(1.04rem,2.25vw,1.23rem);line-height:1.33;color:#164e48}
+.build-page .build-case-context{margin:0 0 10px;line-height:1.55;font-size:.9rem;color:#294e4a;overflow-wrap:anywhere}
+.build-page .build-case-task{margin:0;padding:10px 12px;border-radius:9px;border-left:4px solid #2d8065;background:rgba(255,255,255,.72);font-weight:745;font-size:.84rem;line-height:1.55;color:#1a5547}
+.build-page .build-case-caution{margin:12px 0 16px;padding:12px 15px;border-radius:10px;background:#edf5fc;border:1px solid #c4d9ed;color:#2a526c;font-size:.84rem;line-height:1.6}
+
 .build-page .build-workspace{border:1px solid #b6d4c6;border-radius:23px;padding:clamp(18px,3.2vw,34px);background:linear-gradient(151deg,#fff 69%,#f5fbf8);box-shadow:0 12px 27px rgba(19,71,55,.075)}
 .build-page .build-workspace>.eyebrow{color:#277054;font-weight:860;letter-spacing:.12em}
 .build-page .exam-heading{font-size:clamp(1.4rem,2.8vw,1.95rem);color:#183f47;margin:9px 0 13px}

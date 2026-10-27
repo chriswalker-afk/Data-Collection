@@ -408,7 +408,7 @@ function updateLengthPicker(){
     which:'Five sampling methods are balanced across the challenge. 20 seconds per question.',
     speed:'Type the mathematical term without a word bank. 25 seconds per definition.',
     match:'Connect six term–definition pairs per board. 75 seconds per board.',
-    sort:'Sort 8–10 statements into four destinations. 90 seconds per board.'
+    sort:'Sort 8–12 statements into four destinations. 90 seconds per board.'
   }[game];
 }
 $('game-mode').addEventListener('change',updateLengthPicker);

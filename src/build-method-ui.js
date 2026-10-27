@@ -3,10 +3,12 @@
 // saved progress, method sequencing and the Show model action.
 import {checkProcedure} from './exam.js';
 import {STEP_GUIDANCE,buildInsights,buildSummary,validateBuildBank} from './build-method.js';
+import {validateBuildScenarios} from './build-context.js';
 
 const mount=document.getElementById('app');
 const announcer=document.getElementById('announcer');
 const methods=new Map();
+const cases=new Map();
 const attempts=new Map();
 let pointerDrag=null;
 let ghost=null;
@@ -28,7 +30,17 @@ const say=message=>{
 const panel=()=>mount.querySelector('.exam-workspace[data-method-id]');
 const orderFrom=(container)=>[...container.querySelectorAll('.exam-step[data-step-id]')].map(
  node=>node.dataset.stepId);
-const methodFor=(root=panel())=>root?methods.get(root.dataset.methodId):null;
+const methodFor=(root=panel())=>{
+ if(!root)return null;
+ const original=methods.get(root.dataset.methodId);
+ if(!original)return null;
+ const current=cases.get(root.dataset.buildCaseId);
+ if(!current)return original;
+ return {...original,
+   procedure:current.steps,
+   workedExample:current.workedExample
+ };
+};
 
 function enhanceSettings(page){
  const picker=page.querySelector('#build-method');
@@ -37,7 +49,7 @@ function enhanceSettings(page){
  settings.dataset.buildEnhanced='true';
  settings.classList.add('build-settings');
  settings.append(elem('p','build-settings-explainer',
-  'Start with any method. You will construct all five procedures in one round.'));
+  'Choose a first method and a challenge level. Each round covers five methods; varied investigations refresh when you replay.'));
 }
 function enhancePreamble(root,method){
  root.classList.add('build-workspace');
@@ -444,7 +456,7 @@ mount.addEventListener('click',event=>{
  }
 },true);
 mount.addEventListener('change',event=>{
- if(isBuild()&&event.target.matches('#build-method')){attempts.clear();cleanDrag();}
+ if(isBuild()&&event.target.matches('#build-method,#build-level')){attempts.clear();cleanDrag();}
 },true);
 window.addEventListener('hashchange',()=>{
  const now=location.hash;
@@ -460,11 +472,18 @@ const observer=new MutationObserver(enhance);
 observer.observe(mount,{childList:true,subtree:true});
 async function init(){
  try{
-  const result=await fetch(new URL('../content/methods.json',import.meta.url));
-  if(!result.ok)throw new Error('Sampling method data unavailable');
-  const {methods:bank}=await result.json();
+  const [result,caseResult]=await Promise.all([
+    fetch(new URL('../content/methods.json',import.meta.url)),
+    fetch(new URL('../content/build-scenarios.json',import.meta.url))
+  ]);
+  if(!result.ok||!caseResult.ok)throw new Error('Sampling method or investigation data unavailable');
+  const [{methods:bank},{buildScenarios:investigations}]=await Promise.all([
+    result.json(),caseResult.json()
+  ]);
   validateBuildBank(bank);
+  validateBuildScenarios(bank,investigations);
   for(const method of bank)methods.set(method.id,method);
+  for(const item of investigations)cases.set(item.id,item);
   enhance();
  }catch(error){
   console.warn('Optional Build the Method guidance unavailable:',error);

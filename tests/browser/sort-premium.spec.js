@@ -102,7 +102,7 @@ test('asking for model explanations distinguishes destination and mathematical r
  expect((await state(page)).answers).toBe(10);
 });
 
-test('all six pair choices regenerate an unmarked board and expose both methods',async({page})=>{
+test('all ten pair choices regenerate an unmarked board and expose both methods',async({page})=>{
  await start(page);
  const bank=await fetchData(page,'sort-pairs','pairs');
  for(const pair of bank){

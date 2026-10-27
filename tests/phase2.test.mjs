@@ -9,6 +9,7 @@ import {
 const file = name => JSON.parse(readFileSync(new URL('../content/' + name + '.json', import.meta.url), 'utf8'));
 const {evaluations} = file('evaluations');
 const {rounds} = file('sort-rounds');
+const {pairs} = file('sort-pairs');
 const {methods} = file('methods');
 const {scenarios} = file('scenarios');
 const {concepts} = file('concepts');
@@ -16,7 +17,7 @@ const {concepts} = file('concepts');
 test('Pass 2 references the audited bank with complete method and sorting labels', () => {
   assert.equal(METHOD_ORDER.length,5);
   assert.equal(rounds.length,9);
-  assert.equal(evaluations.length,36);
+  assert.equal(evaluations.length,46);
   assert.equal(scenarios.length,50);
   assert.ok(rounds.every(round => SORT_LABELS[round.id]));
   assert.ok(METHOD_ORDER.every(method => METHOD_LABELS[method]));
@@ -46,7 +47,12 @@ test('Sort It! uses exactly the original scoped claims and answer keys', () => {
     }
     assert.deepEqual([...polarities].sort(), ['advantage','disadvantage']);
   }
-  assert.equal(used.size, evaluations.length);
+  assert.equal(used.size,36,'All 36 original evaluation statements remain represented in legacy rounds');
+  const added=evaluations.filter(item=>!used.has(item.id));
+  assert.equal(added.length,10,'Pass C adds ten specialised comparison statements');
+  const comparisonIds=new Set(pairs.flatMap(pair=>pair.evaluationIds));
+  assert.ok(added.every(item=>comparisonIds.has(item.id)),
+    'Every added advantage/disadvantage point must be practised in Sort It!');
 });
 
 test('both comparison rounds have distinct answers and explicit explanations', () => {

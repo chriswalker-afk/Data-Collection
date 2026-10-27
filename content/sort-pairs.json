@@ -132,6 +132,119 @@
         "opp-unrepresentative",
         "opp-researcher"
       ]
+    },
+    {
+      "id": "pair-srs-systematic",
+      "label": "Simple random vs systematic",
+      "methods": [
+        "simple-random",
+        "systematic"
+      ],
+      "evaluationIds": [
+        "srs-equal",
+        "srs-objective",
+        "srs-subgroups",
+        "srs-large",
+        "srs-no-proportions",
+        "sys-speed",
+        "sys-scale",
+        "sys-single-start",
+        "sys-periodic",
+        "sys-noninteger"
+      ],
+      "claimOverrides": {
+        "srs-objective": "Generating a separate fair lottery of distinct unit labels avoids interviewer preference when selecting the fixed-size group.",
+        "sys-speed": "After calculating a fixed interval, an ordered list can be sampled quickly from one random start.",
+        "srs-large": "Generating and following up many separately selected random labels can be cumbersome for a large dispersed population.",
+        "sys-noninteger": "A fixed-step selection plan needs care when N/n is not a whole number; blindly rounding may give an incorrect count."
+      }
+    },
+    {
+      "id": "pair-srs-quota",
+      "label": "Simple random vs quota",
+      "methods": [
+        "simple-random",
+        "quota"
+      ],
+      "evaluationIds": [
+        "srs-equal",
+        "srs-objective",
+        "srs-lottery",
+        "srs-frame",
+        "srs-subgroups",
+        "srs-large",
+        "quota-proportions",
+        "quota-no-frame",
+        "quota-speed",
+        "quota-selection",
+        "quota-classify",
+        "quota-unseen"
+      ],
+      "claimOverrides": {
+        "srs-objective": "Drawing distinct random unit labels from a complete numbered frame prevents deliberate interviewer choice at selection.",
+        "quota-proportions": "Setting fixed non-random recruitment targets by population subgroup can reflect chosen group proportions.",
+        "quota-speed": "Filling subgroup targets by approaching willing eligible people can be quicker than arranging separate random draws.",
+        "srs-subgroups": "An unstratified random draw may contain fewer people from a small important group than intended by chance.",
+        "quota-unseen": "Quota interviewers who replace refusals with nearby willing volunteers may hide nonresponse within a filled target."
+      }
+    },
+    {
+      "id": "pair-systematic-stratified",
+      "label": "Systematic vs stratified",
+      "methods": [
+        "systematic",
+        "stratified"
+      ],
+      "evaluationIds": [
+        "sys-speed",
+        "sys-scale",
+        "sys-single-start",
+        "sys-periodic",
+        "sys-noninteger",
+        "sys-frame",
+        "strata-proportions",
+        "strata-comparison",
+        "strata-precision",
+        "strata-classify",
+        "strata-random",
+        "strata-frames"
+      ],
+      "claimOverrides": {
+        "sys-single-start": "An ordered list needs one random start; subsequent entries are selected at a fixed calculated interval.",
+        "sys-frame": "All eligible units must occupy identifiable positions in an ordered list so the fixed step can be followed.",
+        "strata-proportions": "Allocating places separately across defined strata prevents important groups being overlooked by chance.",
+        "strata-random": "After allocating places to each subgroup, random draws are still required within every stratum.",
+        "strata-frames": "For separate random selections, reliable sampling frames are needed for each of the classified population strata."
+      }
+    },
+    {
+      "id": "pair-stratified-opportunity",
+      "label": "Stratified vs opportunity",
+      "methods": [
+        "stratified",
+        "opportunity"
+      ],
+      "evaluationIds": [
+        "strata-proportions",
+        "strata-comparison",
+        "strata-precision",
+        "strata-classify",
+        "strata-random",
+        "strata-frames",
+        "opp-easy",
+        "opp-cost",
+        "opp-zero-frame",
+        "opp-unrepresentative",
+        "opp-researcher",
+        "opp-time"
+      ],
+      "claimOverrides": {
+        "strata-proportions": "Random draws separately within fixed strata keep their planned proportions in the final sample.",
+        "strata-frames": "To choose randomly from each stratum, the relevant group lists must be reliably prepared.",
+        "opp-easy": "People immediately available at the chosen location can be recruited without a population lottery.",
+        "opp-cost": "Asking nearby willing respondents usually takes little time or money compared with making subgroup frames.",
+        "opp-zero-frame": "Choosing available eligible volunteers avoids both constructing a full random frame and setting subgroup targets."
+      }
     }
   ]
 }

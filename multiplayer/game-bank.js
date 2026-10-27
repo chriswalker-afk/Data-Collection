@@ -646,5 +646,321 @@ export const GAME_SORT_BOARDS=[
         "explanation": "Personal choice and willingness to respond can distort the sample."
       }
     ]
+  },
+  {
+    "id": "pair-srs-systematic",
+    "label": "Simple random vs systematic",
+    "methods": [
+      "simple-random",
+      "systematic"
+    ],
+    "statements": [
+      {
+        "id": "srs-equal",
+        "statement": "Every possible sample of the chosen size has the same probability.",
+        "correctDestination": "simple-random:advantage",
+        "explanation": "The defining property of a simple random sample."
+      },
+      {
+        "id": "srs-objective",
+        "statement": "Generating a separate fair lottery of distinct unit labels avoids interviewer preference when selecting the fixed-size group.",
+        "correctDestination": "simple-random:advantage",
+        "explanation": "This reduces selection bias from personal preference but does not ensure perfect representativeness."
+      },
+      {
+        "id": "srs-subgroups",
+        "statement": "Small subgroups may be underrepresented by chance.",
+        "correctDestination": "simple-random:disadvantage",
+        "explanation": "No fixed subgroup proportions are guaranteed in an ordinary simple random sample."
+      },
+      {
+        "id": "srs-large",
+        "statement": "Generating and following up many separately selected random labels can be cumbersome for a large dispersed population.",
+        "correctDestination": "simple-random:disadvantage",
+        "explanation": "Obtaining the frame and contacting randomly selected units may be costly."
+      },
+      {
+        "id": "srs-no-proportions",
+        "statement": "Without separately planned subgroup draws, a random sample does not guarantee fixed numbers from each year group.",
+        "correctDestination": "simple-random:disadvantage",
+        "explanation": "Ordinary simple random sampling makes every fixed-size subset equally likely; subgroup counts may vary by chance."
+      },
+      {
+        "id": "sys-speed",
+        "statement": "After calculating a fixed interval, an ordered list can be sampled quickly from one random start.",
+        "correctDestination": "systematic:advantage",
+        "explanation": "Only one random starting point is needed."
+      },
+      {
+        "id": "sys-scale",
+        "statement": "Convenient for large ordered lists.",
+        "correctDestination": "systematic:advantage",
+        "explanation": "Regular selection can be easier to administer than choosing many separate random numbers."
+      },
+      {
+        "id": "sys-single-start",
+        "statement": "After one randomly chosen starting position, the remaining selected positions follow a fixed repeatable interval.",
+        "correctDestination": "systematic:advantage",
+        "explanation": "There is no need to generate a separate random number for every selected item when the sampling interval is set."
+      },
+      {
+        "id": "sys-periodic",
+        "statement": "A periodic pattern in the list can produce a distorted sample.",
+        "correctDestination": "systematic:disadvantage",
+        "explanation": "For example, if every tenth entry belongs to a particular category, selecting every tenth unit can be unrepresentative."
+      },
+      {
+        "id": "sys-noninteger",
+        "statement": "A fixed-step selection plan needs care when N/n is not a whole number; blindly rounding may give an incorrect count.",
+        "correctDestination": "systematic:disadvantage",
+        "explanation": "A non-integer ratio needs a stated systematic plan that produces the requested number, not an assumed universal rounding rule."
+      }
+    ]
+  },
+  {
+    "id": "pair-srs-quota",
+    "label": "Simple random vs quota",
+    "methods": [
+      "simple-random",
+      "quota"
+    ],
+    "statements": [
+      {
+        "id": "srs-equal",
+        "statement": "Every possible sample of the chosen size has the same probability.",
+        "correctDestination": "simple-random:advantage",
+        "explanation": "The defining property of a simple random sample."
+      },
+      {
+        "id": "srs-objective",
+        "statement": "Drawing distinct random unit labels from a complete numbered frame prevents deliberate interviewer choice at selection.",
+        "correctDestination": "simple-random:advantage",
+        "explanation": "This reduces selection bias from personal preference but does not ensure perfect representativeness."
+      },
+      {
+        "id": "srs-lottery",
+        "statement": "A uniform lottery over whole samples avoids interviewer judgement when choosing which units enter the study.",
+        "correctDestination": "simple-random:advantage",
+        "explanation": "When every possible fixed-size subset is equally likely, selection is impartial; later nonresponse can still affect findings."
+      },
+      {
+        "id": "srs-frame",
+        "statement": "A complete sampling frame is needed.",
+        "correctDestination": "simple-random:disadvantage",
+        "explanation": "An incomplete or outdated list can exclude eligible units."
+      },
+      {
+        "id": "srs-subgroups",
+        "statement": "An unstratified random draw may contain fewer people from a small important group than intended by chance.",
+        "correctDestination": "simple-random:disadvantage",
+        "explanation": "No fixed subgroup proportions are guaranteed in an ordinary simple random sample."
+      },
+      {
+        "id": "srs-large",
+        "statement": "Can be cumbersome for a large, widely spread population.",
+        "correctDestination": "simple-random:disadvantage",
+        "explanation": "Obtaining the frame and contacting randomly selected units may be costly."
+      },
+      {
+        "id": "quota-proportions",
+        "statement": "Setting fixed non-random recruitment targets by population subgroup can reflect chosen group proportions.",
+        "correctDestination": "quota:advantage",
+        "explanation": "This only guarantees representation for the characteristics used to set quotas."
+      },
+      {
+        "id": "quota-no-frame",
+        "statement": "No complete list of the population is required.",
+        "correctDestination": "quota:advantage",
+        "explanation": "People can be recruited directly into target groups."
+      },
+      {
+        "id": "quota-speed",
+        "statement": "Filling subgroup targets by approaching willing eligible people can be quicker than arranging separate random draws.",
+        "correctDestination": "quota:advantage",
+        "explanation": "Interviewers need not construct complete sampling frames or carry out random draws within each quota group."
+      },
+      {
+        "id": "quota-selection",
+        "statement": "Non-random recruitment can introduce selection bias.",
+        "correctDestination": "quota:disadvantage",
+        "explanation": "Convenient or approachable people may be overrepresented within each quota."
+      },
+      {
+        "id": "quota-classify",
+        "statement": "Defining and checking many groups can be costly or inaccurate.",
+        "correctDestination": "quota:disadvantage",
+        "explanation": "More characteristics create more group combinations and administrative burden."
+      },
+      {
+        "id": "quota-unseen",
+        "statement": "Quota interviewers who replace refusals with nearby willing volunteers may hide nonresponse within a filled target.",
+        "correctDestination": "quota:disadvantage",
+        "explanation": "Even with correct group totals, respondents selected by convenience may differ from all eligible people in those groups."
+      }
+    ]
+  },
+  {
+    "id": "pair-systematic-stratified",
+    "label": "Systematic vs stratified",
+    "methods": [
+      "systematic",
+      "stratified"
+    ],
+    "statements": [
+      {
+        "id": "sys-speed",
+        "statement": "Once the interval is set, selection is quick and simple.",
+        "correctDestination": "systematic:advantage",
+        "explanation": "Only one random starting point is needed."
+      },
+      {
+        "id": "sys-scale",
+        "statement": "Convenient for large ordered lists.",
+        "correctDestination": "systematic:advantage",
+        "explanation": "Regular selection can be easier to administer than choosing many separate random numbers."
+      },
+      {
+        "id": "sys-single-start",
+        "statement": "An ordered list needs one random start; subsequent entries are selected at a fixed calculated interval.",
+        "correctDestination": "systematic:advantage",
+        "explanation": "There is no need to generate a separate random number for every selected item when the sampling interval is set."
+      },
+      {
+        "id": "sys-periodic",
+        "statement": "A periodic pattern in the list can produce a distorted sample.",
+        "correctDestination": "systematic:disadvantage",
+        "explanation": "For example, if every tenth entry belongs to a particular category, selecting every tenth unit can be unrepresentative."
+      },
+      {
+        "id": "sys-noninteger",
+        "statement": "If N divided by n is not an integer, an unsuitable rounded interval may give the wrong final sample size.",
+        "correctDestination": "systematic:disadvantage",
+        "explanation": "A non-integer ratio needs a stated systematic plan that produces the requested number, not an assumed universal rounding rule."
+      },
+      {
+        "id": "sys-frame",
+        "statement": "All eligible units must occupy identifiable positions in an ordered list so the fixed step can be followed.",
+        "correctDestination": "systematic:disadvantage",
+        "explanation": "The method needs a list with defined positions."
+      },
+      {
+        "id": "strata-proportions",
+        "statement": "Allocating places separately across defined strata prevents important groups being overlooked by chance.",
+        "correctDestination": "stratified:advantage",
+        "explanation": "Helpful when group proportions matter to the investigation."
+      },
+      {
+        "id": "strata-comparison",
+        "statement": "Allows planned coverage of important population groups.",
+        "correctDestination": "stratified:advantage",
+        "explanation": "Makes it less likely that an important group is missed by chance."
+      },
+      {
+        "id": "strata-precision",
+        "statement": "Sample sizes can be set separately for important strata before random draws are made within each stratum.",
+        "correctDestination": "stratified:advantage",
+        "explanation": "Planned subgroup coverage is ensured by allocations; the selection of people within each stratum must remain random."
+      },
+      {
+        "id": "strata-classify",
+        "statement": "Population members must be classified into distinct strata.",
+        "correctDestination": "stratified:disadvantage",
+        "explanation": "Classification can be difficult or costly if group information is incomplete."
+      },
+      {
+        "id": "strata-random",
+        "statement": "After allocating places to each subgroup, random draws are still required within every stratum.",
+        "correctDestination": "stratified:disadvantage",
+        "explanation": "The method inherits framing and practical difficulties of simple random selection."
+      },
+      {
+        "id": "strata-frames",
+        "statement": "For separate random selections, reliable sampling frames are needed for each of the classified population strata.",
+        "correctDestination": "stratified:disadvantage",
+        "explanation": "Obtaining accurate membership and sampling frames for multiple strata can demand extra preparation and checking."
+      }
+    ]
+  },
+  {
+    "id": "pair-stratified-opportunity",
+    "label": "Stratified vs opportunity",
+    "methods": [
+      "stratified",
+      "opportunity"
+    ],
+    "statements": [
+      {
+        "id": "strata-proportions",
+        "statement": "Random draws separately within fixed strata keep their planned proportions in the final sample.",
+        "correctDestination": "stratified:advantage",
+        "explanation": "Helpful when group proportions matter to the investigation."
+      },
+      {
+        "id": "strata-comparison",
+        "statement": "Allows planned coverage of important population groups.",
+        "correctDestination": "stratified:advantage",
+        "explanation": "Makes it less likely that an important group is missed by chance."
+      },
+      {
+        "id": "strata-precision",
+        "statement": "Sample sizes can be set separately for important strata before random draws are made within each stratum.",
+        "correctDestination": "stratified:advantage",
+        "explanation": "Planned subgroup coverage is ensured by allocations; the selection of people within each stratum must remain random."
+      },
+      {
+        "id": "strata-classify",
+        "statement": "Population members must be classified into distinct strata.",
+        "correctDestination": "stratified:disadvantage",
+        "explanation": "Classification can be difficult or costly if group information is incomplete."
+      },
+      {
+        "id": "strata-random",
+        "statement": "Random selection is still needed within each stratum.",
+        "correctDestination": "stratified:disadvantage",
+        "explanation": "The method inherits framing and practical difficulties of simple random selection."
+      },
+      {
+        "id": "strata-frames",
+        "statement": "To choose randomly from each stratum, the relevant group lists must be reliably prepared.",
+        "correctDestination": "stratified:disadvantage",
+        "explanation": "Obtaining accurate membership and sampling frames for multiple strata can demand extra preparation and checking."
+      },
+      {
+        "id": "opp-easy",
+        "statement": "People immediately available at the chosen location can be recruited without a population lottery.",
+        "correctDestination": "opportunity:advantage",
+        "explanation": "Does not require a full sampling frame."
+      },
+      {
+        "id": "opp-cost",
+        "statement": "Asking nearby willing respondents usually takes little time or money compared with making subgroup frames.",
+        "correctDestination": "opportunity:advantage",
+        "explanation": "Convenient location and time reduce recruitment effort."
+      },
+      {
+        "id": "opp-zero-frame",
+        "statement": "Choosing available eligible volunteers avoids both constructing a full random frame and setting subgroup targets.",
+        "correctDestination": "opportunity:advantage",
+        "explanation": "Directly approaching convenient respondents needs little preliminary selection infrastructure."
+      },
+      {
+        "id": "opp-unrepresentative",
+        "statement": "People present in one place or time may not represent the wider population.",
+        "correctDestination": "opportunity:disadvantage",
+        "explanation": "E.g. morning shoppers may differ from evening shoppers."
+      },
+      {
+        "id": "opp-researcher",
+        "statement": "Who is approached may depend heavily on the researcher.",
+        "correctDestination": "opportunity:disadvantage",
+        "explanation": "Personal choice and willingness to respond can distort the sample."
+      },
+      {
+        "id": "opp-time",
+        "statement": "People absent from the chosen location or time are systematically unlikely to enter the sample.",
+        "correctDestination": "opportunity:disadvantage",
+        "explanation": "A sample recruited at one place and time may exclude people with different routines, creating selection bias."
+      }
+    ]
   }
 ];

@@ -19,7 +19,7 @@ The original ten Solo Arcade games remain available at `index.html`, with their 
 | Which Method? | Sampling scenarios balanced across the five methods | 5, 10, 20 questions | 20 s/question |
 | Speed Recall | Definitions with precise accepted terms/synonyms | 5, 10, 20 questions | 25 s/question |
 | Match Up | Six terms and scrambled definitions per board | 1, 2, 3 boards | 75 s/board |
-| Sort It! | Advantages/disadvantages of two methods across four columns | 1, 3, 6 boards | 90 s/board |
+| Sort It! | All ten pairwise method comparisons, with 8–12 advantage/disadvantage statements across four columns | 1, 3, 6, 10 boards | 90 s/board |
 
 Correct individual answers receive **1,000 accuracy points plus up to 100 speed points**. Match Up and Sort It! use proportional mathematical credit across the board (maximum 1,000 base) and award the small speed bonus only for an entirely correct board. Invalid/incomplete boards are rejected without creating an attempt.
 

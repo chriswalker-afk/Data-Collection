@@ -4,7 +4,7 @@ export const ARENA_MODES=Object.freeze({
   which:{label:'Which Method?',lengths:[5,10,20],seconds:20,unit:'questions'},
   speed:{label:'Speed Recall',lengths:[5,10,20],seconds:25,unit:'definitions'},
   match:{label:'Match Up',lengths:[1,2,3],seconds:75,unit:'boards'},
-  sort:{label:'Sort It!',lengths:[1,3,6],seconds:90,unit:'boards'}
+  sort:{label:'Sort It!',lengths:[1,3,6,10],seconds:90,unit:'boards'}
 });
 export function createModeUI({make,button,command,updateClock,actionRow,supportBox,stageKicker,summaryProgress,announce,refreshStage}){
   let key=null,selected=null;
