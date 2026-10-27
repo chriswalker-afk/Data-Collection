@@ -60,7 +60,7 @@
             <span class="entry-mode-icon" aria-hidden="true">▣</span>
             <div><span class="entry-mode-tag">01 / TEACHER</span><h3 id="host-heading">Host a classroom</h3></div>
           </div>
-          <p>Host a teacher-paced Classic Challenge or a timed, self-paced Blitz. Explore Bullseye, Perfect Run, Class Quest and Puzzle Relay before their engines arrive.</p>
+          <p>Choose Classic, timed Blitz, accuracy-based Bullseye or streak-based Perfect Run. Class Quest and Puzzle Relay remain upcoming experiences.</p>
           <div id="host-studio" class="host-studio">
             <fieldset class="studio-step studio-fieldset">
               <legend><span class="studio-step-number">01</span> Choose a challenge</legend>
@@ -77,12 +77,12 @@
                 </label>
                 <label class="studio-choice">
                   <input type="radio" name="studio-objective" value="bullseye">
-                  <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">◎</span><strong>Bullseye</strong><span class="studio-status">PREVIEW</span></span>
+                  <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">◎</span><strong>Bullseye</strong><span class="studio-status is-live">LIVE</span></span>
                   <small>Reach a rolling accuracy target.</small>
                 </label>
                 <label class="studio-choice">
                   <input type="radio" name="studio-objective" value="perfect">
-                  <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">✦</span><strong>Perfect Run</strong><span class="studio-status">PREVIEW</span></span>
+                  <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">✦</span><strong>Perfect Run</strong><span class="studio-status is-live">LIVE</span></span>
                   <small>Build a streak of consecutive correct answers.</small>
                 </label>
                 <label class="studio-choice studio-choice-wide">
@@ -154,9 +154,9 @@
                   <small class="studio-field-note">This is an extra goal in Classic, not the planned full Class Quest game.</small>
                 </div>
                 <div id="studio-future-settings" class="studio-future-fields" hidden>
-                  <p class="studio-future-note">Try out the proposed settings. These objectives are previews; no unimplemented game can create a live room.</p>
+                  <p class="studio-future-note" id="studio-future-note">Class Quest is a preview. It cannot create a live room yet.</p>
                   <div id="studio-minutes-row" class="studio-field-row" hidden>
-                    <label for="studio-minutes">Blitz time limit (minutes)</label>
+                    <label for="studio-minutes" id="studio-minutes-label">Blitz time limit (minutes)</label>
                     <input type="number" id="studio-minutes" min="1" max="15" step="1" value="5">
                   </div>
                   <div id="studio-accuracy-target-row" class="studio-field-row" hidden>
@@ -225,7 +225,7 @@
             </section>
             <p id="studio-validation" role="alert" class="studio-validation" hidden></p>
             <button class="btn btn-primary entry-submit" type="button" id="create">Create room ↗</button>
-            <p class="studio-footer-note">Blitz and Classic are playable now. Other objectives remain previews until their gameplay engines pass release checks.</p>
+            <p class="studio-footer-note">Classic, Blitz, Bullseye and Perfect Run are playable in individual or team formats. Cooperative Class Quest and Puzzle Relay are still previews.</p>
           </div>
         </section>
         <section class="multiplayer-panel student-entry" aria-labelledby="join-heading">
