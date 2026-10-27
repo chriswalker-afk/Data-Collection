@@ -27,7 +27,7 @@ test('teacher chooses four formats with appropriate board lengths and timers',as
  await open(page);
  for(const [mode,options,seconds] of [
   ['which',['5','10','20'],20],['speed',['5','10','20'],25],
-  ['match',['1','2','3'],75],['sort',['1','3','6'],90]
+  ['match',['1','2','3'],75],['sort',['1','3','6','10'],90]
  ]){
   await page.locator('#game-mode').selectOption(mode);
   expect(await page.locator('#length option').evaluateAll(opts=>opts.map(o=>o.value))).toEqual(options);
