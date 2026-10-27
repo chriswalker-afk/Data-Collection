@@ -206,7 +206,7 @@ function arcadePathsView(){
     span('arcade-path-foot','Create or join a room ↗'));
   const awards=link('','./awards.html','arcade-path-card is-awards');
   awards.append(icon('✦','arcade-path-icon'),span('arcade-path-spark','03 / COLLECT'),
-    span('arcade-path-name','My Awards'),span('arcade-path-desc','Collect 16 quirky mathematical achievements across your independent revision.'),
+    span('arcade-path-name','My Awards'),span('arcade-path-desc','Collect '+AWARDS.length+' quirky mathematical achievements across your independent revision.'),
     span('arcade-path-foot',earnedAwards(awardLedger).length+' / '+AWARDS.length+' collected · Open cabinet ↗'));
   cards.append(solo,multi,awards);section.append(cards);
   return section;

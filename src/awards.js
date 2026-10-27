@@ -51,7 +51,37 @@ const defs = [
     hint:'Earn full automatic numerical credit on three different questions. Written self-reviews do not count.'},
   {id:'reasoning-robin',name:'Reasoning Robin',emoji:'🐦',level:'self-rated',group:'Practice & reflection',
     description:'Write and review three substantial independent explanations in different cases.',
-    hint:'Draft at least 120 characters of your own reasoning in each of three different cases. This rewards writing effort, not mathematical correctness.'}
+    hint:'Draft at least 120 characters of your own reasoning in each of three different cases. This rewards writing effort, not mathematical correctness.'},
+  {id:'curious-cat',name:'Curious Cat',emoji:'🐈',level:'verified',group:'Sampling detectives',
+    description:'Identify your first sampling method correctly without help.',
+    hint:'Answer one Which Method? scenario correctly on its first attempt.'},
+  {id:'method-mouse',name:'Method Mouse',emoji:'🐭',level:'verified',group:'Sampling detectives',
+    description:'Recognise all five sampling methods in at least one distinct scenario each.',
+    hint:'Make one verified identification for each of the five sampling methods.'},
+  {id:'scenario-seal',name:'Scenario Seal',emoji:'🦭',level:'verified',group:'Sampling detectives',
+    description:'Correctly identify sampling methods in 15 different scenarios.',
+    hint:'Build up 15 unique, first-attempt, unassisted Which Method? identifications.'},
+  {id:'vocabulary-viper',name:'Vocabulary Viper',emoji:'🐍',level:'verified',group:'Recall specialists',
+    description:'Type five different mathematical terms correctly from memory.',
+    hint:'Retrieve five distinct terms in Speed Recall without hints or review mode.'},
+  {id:'flashcard-fawn',name:'Flashcard Fawn',emoji:'🦌',level:'self-rated',group:'Practice & reflection',
+    description:'Self-rate confident recall on five different flashcards.',
+    hint:'Reveal and rate Know it on five distinct cards. This is confidence, not checked accuracy.'},
+  {id:'error-eagle',name:'Error Eagle',emoji:'🦅',level:'verified',group:'Reasoning & repair',
+    description:'Diagnose six different three-part sampling errors correctly on the first check.',
+    hint:'Identify the flaw, repair and consequence across six distinct Spot the Error cases.'},
+  {id:'number-narwhal',name:'Number Narwhal',emoji:'🐋',level:'verified',group:'Reasoning & repair',
+    description:'Solve six different numerical Exam Lab questions for full automatic credit.',
+    hint:'Earn full checked numerical credit in six unique questions, without hints or model reveals.'},
+  {id:'arcade-alpaca',name:'Arcade Alpaca',emoji:'🦙',level:'verified',group:'Pattern masters',
+    description:'Complete perfect, unassisted rounds in three different recall or procedure games.',
+    hint:'Earn qualifying full rounds in any three of Match Up, Sort It!, Missing Words, Speed Recall and Build the Method.'},
+  {id:'pentathlon-peacock',name:'Pentathlon Peacock',emoji:'🦚',level:'verified',group:'Pattern masters',
+    description:'Master all five kinds of qualifying perfect rounds.',
+    hint:'Earn a full, eligible round in Match Up, Sort It!, Missing Words, Speed Recall and Build the Method.'},
+  {id:'reflection-rabbit',name:'Reflection Rabbit',emoji:'🐇',level:'self-rated',group:'Practice & reflection',
+    description:'Write five substantial, independent explanations in different reasoning cases.',
+    hint:'Write at least 120 characters independently in five different cases. Writing effort is not auto-graded.'}
 ];
 export const AWARDS = Object.freeze(defs.map(d=>Object.freeze(d)));
 export const AWARD_GROUPS = Object.freeze([...new Set(AWARDS.map(a=>a.group))]);
@@ -70,6 +100,9 @@ function evidenceProgress(state,award){
   const e=state.evidence, n=field=>(e[field]||[]).length;
   const countFor=method=>Object.values(e.identify).filter(x=>x===method).length;
   if(award.id==='sampling-fox')return [AWARD_METHODS.filter(m=>countFor(m)>=2).length,5];
+  if(award.id==='curious-cat')return [Math.min(1,Object.keys(e.identify).length),1];
+  if(award.id==='method-mouse')return [AWARD_METHODS.filter(m=>countFor(m)>=1).length,5];
+  if(award.id==='scenario-seal')return [Math.min(15,Object.keys(e.identify).length),15];
   if(award.method)return [Math.min(3,countFor(award.method)),3];
   const rules={
     'bias-buster':[Math.min(3,n('error')),3],
@@ -81,7 +114,14 @@ function evidenceProgress(state,award){
     'sorting-salamander':[Number(e.rounds.includes('sort')),1],
     'procedure-panda':[Number(e.rounds.includes('build')),1],
     'calculation-capybara':[Math.min(3,n('exam')),3],
-    'reasoning-robin':[Math.min(3,n('reason')),3]
+    'reasoning-robin':[Math.min(3,n('reason')),3],
+    'vocabulary-viper':[Math.min(5,n('speed')),5],
+    'flashcard-fawn':[Math.min(5,n('flashcards')),5],
+    'error-eagle':[Math.min(6,n('error')),6],
+    'number-narwhal':[Math.min(6,n('exam')),6],
+    'arcade-alpaca':[Math.min(3,n('rounds')),3],
+    'pentathlon-peacock':[Math.min(5,n('rounds')),5],
+    'reflection-rabbit':[Math.min(5,n('reason')),5]
   };
   return rules[award.id]||[0,1];
 }
