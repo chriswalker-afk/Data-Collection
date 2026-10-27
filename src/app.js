@@ -390,7 +390,11 @@ function showCompletion(game) {
           'flash-review-all',{},'btn btn-quiet'),
         action('Browse all cards','flash-browse',{},'btn btn-quiet')
       ]:[]),
-      action('Play another round ↻', 'restart', {}, 'btn '+(game==='flashcards'&&session.revisitIds?.length?'btn-quiet':'btn-primary')),
+      ...(game==='sort'?[
+        action('Try the next comparison →','sort-next-pair',{},'btn btn-primary')
+      ]:[]),
+      action(game==='build'?'Practise another case set ↻':'Play another round ↻', 'restart', {},
+        'btn '+(game==='sort'||game==='flashcards'&&session.revisitIds?.length?'btn-quiet':'btn-primary')),
       link('Back to arcade', hashFor('home', topic), 'btn btn-quiet'),
       action('Share short feedback', 'open-feedback', {}, 'text-button')
     )
@@ -1613,6 +1617,13 @@ function onAction(button) {
   session={items:session.missed.map(id=>data.errors.find(q=>q.id===id)),index:0,correct:0,complete:false,answered:false,reviewMode:true,missed:[],errorStats:{located:0,repaired:0,explained:0},selectedLine:null,selectedRepair:null,selectedImpact:null};render('#exam-heading');return;
  }
  if(command.startsWith('reason-')&&mode==='reason'){reasoningUI.handle(command,button);return;}
+  if(command==='sort-next-pair'&&mode==='sort'&&session?.complete){
+    const ids=data.sortPairs.map(pair=>pair.id),at=ids.indexOf(sortRoundId);
+    sortRoundId=ids[(at+1)%ids.length];
+    restartGame();render('#sort-set');
+    announce('Next comparison: '+session.round.label+'. New unmarked board ready.');
+    return;
+  }
   if(command.startsWith('sort-')&&mode==='sort'){sortUI.handle(command,button);return;}
   if(command.startsWith('sim-')){examSimulator.handle(command,button);return;}
   if(['build-move','build-check','build-reveal','build-next','error-check','error-next'].includes(command)){examAction(command,button);return;}
