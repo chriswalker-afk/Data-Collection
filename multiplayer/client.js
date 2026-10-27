@@ -1,3 +1,4 @@
+import {createHostStudio} from './host-studio-ui.js';
 import {ARENA_MODES,createModeUI} from './mode-ui.js';
 import {createCeremonyUI} from './ceremony-ui.js';
 import {createTeamUI} from './team-ui.js';
@@ -58,10 +59,23 @@ function leave(){
 }
 async function createRoom(){
   try{
+    // Server-ready settings alone may create a room. Planned objectives/relay
+    // cannot be sent to the current teacher-paced Worker.
+    const settings=hostStudio.liveSettings();
     notice('Creating the classroom…');
-    const response=await api('/rooms',{roundLength:Number($('length').value),game:gameMode()});
-    roomCode=response.code;token=response.token;isHost=true;store();notice('');
-    connect();
+    const response=await api('/rooms',{roundLength:settings.roundLength,game:settings.game});
+    roomCode=response.code;token=response.token;isHost=true;store();
+    const setupWarnings=[];
+    // These are the existing authenticated lobby commands, not new gameplay.
+    if(settings.teamCount){
+      try{await api('/rooms/'+roomCode+'/command',{type:'teams-set',count:settings.teamCount},true);}
+      catch{setupWarnings.push('Team setup could not be applied. Set teams in the lobby before starting.');}
+    }
+    if(settings.goalTarget){
+      try{await api('/rooms/'+roomCode+'/command',{type:'goal-set',target:settings.goalTarget},true);}
+      catch{setupWarnings.push('Class goal could not be applied. Set it in the lobby before starting.');}
+    }
+    notice(setupWarnings.join(' '));connect();
   }catch(e){notice(e.message);}
 }
 async function joinRoom(){
@@ -440,25 +454,7 @@ function render(){
   if(!clockTimer)clockTimer=setInterval(updateClock,250);
 }
 
-function updateLengthPicker(){
-  const game=gameMode(),selected=String($('length').value);
-  const options=ARENA_MODES[game]?.lengths||[5,10,20];
-  $('length').replaceChildren();
-  options.forEach((n,i)=>{
-    const opt=make('option',n+' '+(ARENA_MODES[game]?.unit||'questions')+
-      (i===0?' · Quick starter':i===options.length-1?' · Extended':' · Class challenge'));
-    opt.value=String(n);$('length').append(opt);
-  });
-  $('length').value=options.includes(Number(selected))?selected:String(options[Math.min(1,options.length-1)]);
-  $('mode-description').textContent={
-    which:'Five sampling methods are balanced across the challenge. 20 seconds per question.',
-    speed:'Type the mathematical term without a word bank. 25 seconds per definition.',
-    match:'Connect six term–definition pairs per board. 75 seconds per board.',
-    sort:'Sort 8–12 statements into four destinations. 90 seconds per board.'
-  }[game];
-}
-$('game-mode').addEventListener('change',updateLengthPicker);
-updateLengthPicker();
+const hostStudio=createHostStudio(document.querySelector('.host-entry'));
 $('create').addEventListener('click',createRoom);
 $('join-form').addEventListener('submit',event=>{event.preventDefault();void joinRoom();});
 // Preserve a typed room code when visiting the optional, locally saved Critter Lab.
