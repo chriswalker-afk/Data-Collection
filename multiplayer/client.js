@@ -367,6 +367,10 @@ function render(){
   const cursor=activeInput?document.activeElement.selectionStart:null;
   const activeFeedback=document.activeElement?.id==='teacher-feedback-text';
   const feedbackCursor=activeFeedback?document.activeElement.selectionStart:null;
+  const activePacedRecall=document.activeElement?.id==='blitz-recall-answer';
+  const pacedCursor=activePacedRecall?document.activeElement.selectionStart:null;
+  const activeBoardId=/^blitz-board-\d+$/.test(document.activeElement?.id||'')?
+    document.activeElement.id:null;
   const stage=$('stage');stage.replaceChildren();
   stage.classList.toggle('is-blitz',isPaced(room.objective));
   if(isPaced(room.objective))blitzUI.focusFor(room);
@@ -544,6 +548,14 @@ function render(){
     if(input){input.focus({preventScroll:true});input.setSelectionRange(feedbackCursor,feedbackCursor);}
   }
   if(activeInput){const input=stage.querySelector('#arena-speed-answer');if(input&&!input.disabled){input.focus({preventScroll:true});input.setSelectionRange(cursor,cursor);}}
+  if(activePacedRecall){
+    const input=stage.querySelector('#blitz-recall-answer');
+    if(input&&!input.disabled){input.focus({preventScroll:true});input.setSelectionRange(pacedCursor,pacedCursor);}
+  }
+  if(activeBoardId){
+    const control=stage.querySelector('#'+activeBoardId);
+    if(control&&!control.disabled)control.focus({preventScroll:true});
+  }
   if(!clockTimer)clockTimer=setInterval(updateClock,250);
 }
 
