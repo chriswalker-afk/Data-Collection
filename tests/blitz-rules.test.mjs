@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {SCENARIOS} from '../multiplayer/scenarios.js';
 import {GAME_MODES,gradeGameAnswer} from '../multiplayer/modes.js';
 import {
- validBlitzSettings,makeBlitzDeck,newBlitzOrder,initialBlitzPlayer,
+ validBlitzSettings,blitzDeadlineReached,makeBlitzDeck,newBlitzOrder,initialBlitzPlayer,
  advanceBlitzQuestion,currentBlitzItem,blitzQuestionKey,blitzStandings,BLITZ_MAX_ATTEMPTS
 } from '../multiplayer/blitz-rules.js';
 const random=()=>0;
@@ -101,4 +101,13 @@ test('Blitz standings break equal-correct ties by actual accuracy before speed p
 test('zero-correct participants never receive invented awards ranks',()=>{
  const room={players:[{id:'a',score:0,blitz:{correct:0,checked:3,attempts:3}}]};
  assert.deepEqual(blitzStandings(room).map(x=>x.rank),[null]);
+});
+
+test('the exact shared server deadline ends Blitz without granting extra time',()=>{
+ const deadline=500000;
+ assert.equal(blitzDeadlineReached(deadline,deadline-1),false);
+ assert.equal(blitzDeadlineReached(deadline,deadline),true);
+ assert.equal(blitzDeadlineReached(deadline,deadline+1),true);
+ assert.equal(blitzDeadlineReached(0,deadline),false);
+ assert.equal(blitzDeadlineReached(deadline,NaN),false);
 });
