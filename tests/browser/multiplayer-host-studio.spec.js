@@ -64,7 +64,7 @@ test('Bullseye and cooperative metrics keep their edited configuration after ref
  await page.locator('#studio-accuracy-target').fill('95');
  await page.locator('#studio-accuracy-window').fill('12');
  await expect(page.locator('#studio-preview-detail')).toContainText('95% accuracy');
- await expect(page.locator('#studio-preview-detail')).toContainText('12 answers');
+ await expect(page.locator('#studio-preview-detail')).toContainText('12 fully marked tasks');
  await selectObjective(page,'class');
  await page.locator('#studio-class-metric').selectOption('correct');
  await page.locator('#studio-class-correct').fill('180');
