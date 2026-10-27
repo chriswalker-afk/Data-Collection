@@ -16,7 +16,7 @@ for(const name of ['src','styles','content','critter-lab']){
 mkdirSync(join(output,'multiplayer'),{recursive:true});
 copyFileSync(join(root,'multiplayer/client.js'),join(output,'multiplayer/client.js'));
 copyFileSync(join(root,'multiplayer/mode-ui.js'),join(output,'multiplayer/mode-ui.js'));
-for(const file of ['ceremony-ui.js','keepsakes.js','award-catalogue.js','team-ui.js','avatar.js','avatar-ui.js','host-studio.js','host-studio-ui.js','blitz-ui.js','class-quest-ui.js']){
+for(const file of ['ceremony-ui.js','keepsakes.js','award-catalogue.js','team-ui.js','avatar.js','avatar-ui.js','host-studio.js','host-studio-ui.js','blitz-ui.js','class-quest-ui.js','relay-ui.js']){
   copyFileSync(join(root,'multiplayer',file),join(output,'multiplayer',file));
 }
 if(!readFileSync(join(output,'multiplayer/client.js'),'utf8').includes("from './mode-ui.js'")){
@@ -39,6 +39,12 @@ if(!readFileSync(join(output,'multiplayer/client.js'),'utf8').includes("from './
 }
 if(!readFileSync(join(output,'multiplayer/client.js'),'utf8').includes("from './class-quest-ui.js'")){
   throw new Error('Published multiplayer client must import the Class Quest display');
+}
+if(!readFileSync(join(output,'multiplayer/client.js'),'utf8').includes("from './relay-ui.js'")){
+  throw new Error('Published multiplayer client must import the Class Mosaic presentation');
+}
+if(!readFileSync(join(output,'multiplayer/relay-ui.js'),'utf8').includes('export function createRelayUI')){
+  throw new Error('Published Class Mosaic UI missing');
 }
 // Keep Pages publishing independent of the backend; never publish Worker internals.
 
@@ -72,7 +78,7 @@ if(!readFileSync(join(output,'src/app.js'),'utf8').includes("'./critter-lab/inde
 if(!readFileSync(join(output,'multiplayer.html'),'utf8').includes('href="./critter-lab/index.html"')){
   throw new Error('Multiplayer join screen is missing its Critter Lab link');
 }
-for(const name of ['multiplayer/worker.js','multiplayer/rules.js','multiplayer/scenarios.js','multiplayer/modes.js','multiplayer/game-bank.js','multiplayer/ceremony-rules.js','multiplayer/team-rules.js','multiplayer/blitz-rules.js','multiplayer/race-rules.js','multiplayer/class-quest-rules.js']){
+for(const name of ['multiplayer/worker.js','multiplayer/rules.js','multiplayer/scenarios.js','multiplayer/modes.js','multiplayer/game-bank.js','multiplayer/ceremony-rules.js','multiplayer/team-rules.js','multiplayer/blitz-rules.js','multiplayer/race-rules.js','multiplayer/class-quest-rules.js','multiplayer/relay-bank.js','multiplayer/relay-rules.js','multiplayer/relay-adapter.js']){
   if(existsSync(join(output,name)))throw new Error('Worker backend must not be deployed to Pages: '+name);
 }
 console.log('Pages publish artifact verified: three Arcade modes plus Critter Lab, styles, scripts and content exist.');
