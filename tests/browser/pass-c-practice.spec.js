@@ -5,8 +5,8 @@ const source=async(page,name,key)=>page.evaluate(async({name,key})=>
 async function startBuild(page,method='simple-random',level='mixed'){
  await page.goto('/#/build/sampling');
  await expect(page.locator('.exam-workspace[data-build-case-id]')).toBeVisible();
- if(method!=='simple-random')await page.locator('#build-method').selectOption(method);
- if(level!=='mixed')await page.locator('#build-level').selectOption(level);
+ await page.locator('#build-method').selectOption(method);
+ await page.locator('#build-level').selectOption(level);
  await expect(page.locator('.build-case-brief')).toBeVisible();
 }
 async function stepIds(page){
@@ -44,7 +44,7 @@ test('Build the Method presents a meaningful scenario brief and student-controll
  await expect(page.locator('.build-case-label')).toHaveText('DEVELOP CASE');
  await page.locator('#build-level').selectOption('extend');
  await expect(page.locator('[data-case-level]')).toHaveAttribute('data-case-level','extend');
- expect(await progress(page)).toBeNull('Changing the level is not a scored attempt');
+ expect(await progress(page),'Changing the level is not a scored attempt').toBeNull();
 });
 
 test('case-specific model and caution remain visible with ungraded reveal',async({page})=>{
@@ -129,7 +129,7 @@ test('every missing Sort It! comparison is available and sets four balanced dest
   }
   await expect(page.locator('[data-action="sort-check"]')).toBeDisabled();
  }
- expect(await progress(page)).toBeNull('Switching comparison boards does not earn credit');
+ expect(await progress(page),'Switching comparison boards does not earn credit').toBeNull();
 });
 
 test('new systematic-versus-stratified board checks complete placement exactly once',async({page})=>{
