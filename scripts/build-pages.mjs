@@ -16,7 +16,7 @@ for(const name of ['src','styles','content','critter-lab']){
 mkdirSync(join(output,'multiplayer'),{recursive:true});
 copyFileSync(join(root,'multiplayer/client.js'),join(output,'multiplayer/client.js'));
 copyFileSync(join(root,'multiplayer/mode-ui.js'),join(output,'multiplayer/mode-ui.js'));
-for(const file of ['ceremony-ui.js','keepsakes.js','award-catalogue.js','team-ui.js','avatar.js','avatar-ui.js']){
+for(const file of ['ceremony-ui.js','keepsakes.js','award-catalogue.js','team-ui.js','avatar.js','avatar-ui.js','host-studio.js','host-studio-ui.js']){
   copyFileSync(join(root,'multiplayer',file),join(output,'multiplayer',file));
 }
 if(!readFileSync(join(output,'multiplayer/client.js'),'utf8').includes("from './mode-ui.js'")){
@@ -27,6 +27,12 @@ if(!readFileSync(join(output,'multiplayer/client.js'),'utf8').includes("from './
 }
 if(!readFileSync(join(output,'multiplayer/client.js'),'utf8').includes("from './team-ui.js'")){
   throw new Error('Published multiplayer client must include the accessible Team UI module');
+}
+if(!readFileSync(join(output,'multiplayer/client.js'),'utf8').includes("from './host-studio-ui.js'")){
+  throw new Error('Published multiplayer client must load the Host Studio');
+}
+if(!readFileSync(join(output,'multiplayer/host-studio-ui.js'),'utf8').includes("from './host-studio.js'")){
+  throw new Error('Published Host Studio must include its validated configuration model');
 }
 // Keep Pages publishing independent of the backend; never publish Worker internals.
 
