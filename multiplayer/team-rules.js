@@ -74,13 +74,20 @@ export function teamStandings(room,includeCurrent=true){
       questComplete:room.status==='finished'||room.status==='ceremony'?
         progress.achieved:false};
   });
-  results.sort((a,b)=>b.averageScore-a.averageScore||a.id.localeCompare(b.id));
+  const isBlitz=room.objective==='blitz';
+  // For Blitz, normalize correct decisions by team size before the speed-based
+  // point tiebreaker. A larger team cannot dominate by volume alone.
+  const comparison=(a,b)=>isBlitz?
+    (b.correct*Math.max(1,a.members)-a.correct*Math.max(1,b.members))||
+      b.accuracy-a.accuracy||b.averageScore-a.averageScore:
+    b.averageScore-a.averageScore;
+  results.sort((a,b)=>comparison(a,b)||a.id.localeCompare(b.id));
   let lastRank=0;
   for(let i=0;i<results.length;i++){
-    if(!results[i].averageScore)results[i].rank=null;
-    else if(i&&results[i].averageScore===results[i-1].averageScore)
-      results[i].rank=lastRank;
-    else{lastRank=i+1;results[i].rank=lastRank;}
+    const row=results[i],prev=results[i-1];
+    if(!(isBlitz?row.correct:row.averageScore))row.rank=null;
+    else if(i&&comparison(row,prev)===0)row.rank=lastRank;
+    else{lastRank=i+1;row.rank=lastRank;}
   }
   return results;
 }
