@@ -50,6 +50,38 @@
 .multiplayer-players ol.is-crowded li{grid-template-columns:19px 37px minmax(0,1fr) auto}
 .multiplayer-players ol.is-crowded .player-name{font-size:.77rem}
 
+/* A personal, editable mascot in the student's waiting lobby. */
+.multiplayer-stage .lobby-my-critter{
+  display:flex;align-items:center;gap:17px;
+  margin:20px 0 3px;padding:16px 20px;
+  border:1px solid #b8d8c6;border-radius:19px;
+  background:linear-gradient(125deg,#f3faf4,#eef5fa 95%);
+}
+.multiplayer-stage .lobby-my-critter .critter-portrait{
+  width:93px;height:105px;--critter-halo:#e4f4ec;
+}
+.multiplayer-stage .lobby-my-critter-copy{min-width:0;flex:1}
+.multiplayer-stage .lobby-my-critter-kicker{
+  display:block;font-size:.64rem;letter-spacing:.12em;
+  color:#44705d;font-weight:900;
+}
+.multiplayer-stage .lobby-my-critter-name{
+  display:block;margin:5px 0;color:#1c4e3a;
+  font-size:1.15rem;line-height:1.25;overflow-wrap:anywhere;
+}
+.multiplayer-stage .lobby-my-critter-note{
+  color:#4e685c;font-size:.76rem;line-height:1.55;margin:5px 0 9px;
+}
+.multiplayer-stage .lobby-my-critter-edit{
+  display:inline-flex;min-height:40px;align-items:center;
+  padding:7px 13px;border-radius:10px;
+  border:1px solid #9cbfaa;background:#fff;
+  color:#235d46;font-weight:830;font-size:.76rem;
+  text-decoration:none;
+}
+.multiplayer-stage .lobby-my-critter-edit:hover{background:#e5f4e8}
+.multiplayer-stage .lobby-my-critter-edit:focus-visible{outline:3px solid #bb8d38;outline-offset:3px}
+
 /* Ceremony: the stage is theatrical, but score order is unchanged and teacher-controlled. */
 .multiplayer-stage .ceremony-card.is-podium,
 .multiplayer-stage .ceremony-card.is-finale,
@@ -197,6 +229,9 @@
 
 /* Animations are personality, not a scoring signal; none delay user interaction. */
 @media (prefers-reduced-motion:no-preference){
+  .multiplayer-room[data-phase="lobby"] .lobby-my-critter .critter-portrait{
+    animation:critter-idle 4.5s ease-in-out infinite;
+  }
   .multiplayer-room[data-phase="lobby"] .multiplayer-players ol:not(.is-crowded) li:not(.is-offline) .critter-portrait{
     animation:critter-idle 4.2s ease-in-out infinite;
     animation-delay:var(--critter-delay,0ms);
@@ -290,6 +325,9 @@
   }
 }
 @media(max-width:430px){
+  .multiplayer-stage .lobby-my-critter{gap:11px;padding:12px}
+  .multiplayer-stage .lobby-my-critter .critter-portrait{width:70px;height:79px}
+
   .multiplayer-players li,.multiplayer-players ol.is-crowded li{
     grid-template-columns:16px 38px minmax(0,1fr) auto;
     gap:6px;padding:8px;
