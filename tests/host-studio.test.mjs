@@ -32,7 +32,7 @@ test('Blitz is live while future challenges and Puzzle Relay remain preview-only
  for(const objective of ['bullseye','perfect','class']){
   const d=presetStudioDraft(DEFAULT_DRAFT,'balanced',objective);
   assert.equal(validateStudioDraft(d).playable,false);
-  assert.throws(()=>legacyRoomSettings(d),/preview/);
+  assert.throws(()=>liveRoomSettings(d),/preview/);
   assert.match(describeStudioDraft(d).availability,/Preview only/);
  }
  const blitz=presetStudioDraft(DEFAULT_DRAFT,'balanced','blitz');
