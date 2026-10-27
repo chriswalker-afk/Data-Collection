@@ -9,7 +9,7 @@ export const GAME_MODES=Object.freeze({
     description:'Type the mathematical term that matches each definition.'}),
   match:Object.freeze({id:'match',label:'Match Up',lengths:[1,2,3],seconds:75,
     description:'Build all six correct term–definition pairs in each board.'}),
-  sort:Object.freeze({id:'sort',label:'Sort It!',lengths:[1,3,6],seconds:90,
+  sort:Object.freeze({id:'sort',label:'Sort It!',lengths:[1,3,6,10],seconds:90,
     description:'Place statements under the correct method and advantage/disadvantage.'})
 });
 export const GAME_IDS=Object.freeze(Object.keys(GAME_MODES));
