@@ -29,10 +29,18 @@ test('default studio hosts the same checked classic multiplayer activities',asyn
 });
 test('objective presets and previews never create unfinished gameplay rooms',async({page})=>{
  await open(page);
+ await selectObjective(page,'blitz');
+ await expect(page.locator('#create')).toBeEnabled();
+ await expect(page.locator('#studio-preview-availability')).toContainText('Ready to host now');
+ await expect(page.locator('#studio-minutes')).toBeVisible();
+ for(const objective of ['bullseye','perfect']){
+  await selectObjective(page,objective);
+  await expect(page.locator('#create')).toBeEnabled();
+  await expect(page.locator('#studio-preview-availability')).toContainText('Ready to host now');
+  await expect(page.locator('#studio-minutes')).toBeVisible();
+  await expect(page.locator('#studio-future-note')).toBeHidden();
+ }
  for(const [objective,target,needle] of [
-  ['blitz','#studio-minutes','5 minutes'],
-  ['bullseye','#studio-accuracy-target','80% accuracy'],
-  ['perfect','#studio-streak-target','5 correct answers consecutively'],
   ['class','#studio-class-metric','shared']
  ]){
   await selectObjective(page,objective);
@@ -56,7 +64,7 @@ test('Bullseye and cooperative metrics keep their edited configuration after ref
  await page.locator('#studio-accuracy-target').fill('95');
  await page.locator('#studio-accuracy-window').fill('12');
  await expect(page.locator('#studio-preview-detail')).toContainText('95% accuracy');
- await expect(page.locator('#studio-preview-detail')).toContainText('12 answers');
+ await expect(page.locator('#studio-preview-detail')).toContainText('12 fully marked tasks');
  await selectObjective(page,'class');
  await page.locator('#studio-class-metric').selectOption('correct');
  await page.locator('#studio-class-correct').fill('180');
@@ -91,7 +99,7 @@ test('advanced settings are honestly labelled preview-only',async({page})=>{
  await page.locator('#studio-advanced summary').click();
  await expect(page.locator('#studio-advanced-live-note')).toBeVisible();
  await expect(page.locator('#studio-advanced-future-fields')).toBeHidden();
- await selectObjective(page,'bullseye');
+ await selectObjective(page,'class');
  await expect(page.locator('#studio-advanced-future-fields')).toBeVisible();
  await page.locator('#studio-difficulty').selectOption('advanced');
  await page.locator('#studio-question-order').selectOption('same');
@@ -99,7 +107,7 @@ test('advanced settings are honestly labelled preview-only',async({page})=>{
  await expect(page.locator('#create')).toBeDisabled();
 });
 test('Classic squad and optional goal are applied using existing Worker lobby commands',async({page,request,isMobile})=>{
- test.skip(isMobile,'Mobile team join and layout are tested elsewhere; avoid duplicate local Worker load.');
+ test.skip(isMobile,'Parallel mobile join and team tests already cover 320px and 390px; avoid duplicate local Worker load.');
  await open(page);
  await selectFormat(page,'squad');
  await page.locator('#studio-team-count').selectOption('3');

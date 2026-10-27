@@ -20,6 +20,14 @@ Student avatars are small cosmetic allowlisted configurations, not raw image upl
 
 The teacher entry now offers **Classic Challenge** (playable now) alongside safe planning previews for **Blitz**, **Bullseye**, **Perfect Run**, and the full cooperative **Class Quest**. Teachers can experiment with Quick / Balanced / Stretch presets, meaningful targets and three participation formats, including a **Puzzle Relay** preview. Unsupported objectives disable room creation and are never sent to the current Worker. Free-for-All and 2–4 team **Squad League** work immediately using existing team commands, with optional Classic class-goal setup. [Scope and tests](../docs/PASS_1_MULTIPLAYER_HOST_STUDIO.md).
 
+## Arena 2.0 Pass 2 — playable Blitz
+
+The Host Studio now supports a **timed, self-paced Blitz** for all four audited mathematical activities: independent questions and private instant mathematical feedback, a class-wide 1–15 minute countdown, server-owned ranking by correct decisions then accuracy then points, independent 2–4 team play, and automatic end-of-round awards. The existing Classic Challenge remains teacher-paced. All other new objectives are still clearly labelled previews. [Blitz implementation, safeguards and tests](../docs/PASS_2_MULTIPLAYER_BLITZ.md).
+
+## Arena 2.0 Pass 3 — Bullseye + Perfect Run
+
+**Bullseye** and **Perfect Run** extend the independent question engine: first student to reach a target rolling percentage over a full window or a verified consecutive fully-correct streak wins. Teachers choose the targets and a 1–15-minute safety countdown. All four audited activities and individual or balanced-team play are supported. A board is one task, and must be fully correct; partially correct boards still receive checked points and explanations. If nobody reaches the goal, no mathematical winner is invented. The cooperative Class Quest and distributed Puzzle Relay are still previews. [Pass 3 goals, validation and no-winner policy](../docs/PASS_3_MULTIPLAYER_RACES.md).
+
 ## Four distinct mathematical modes
 
 | Mode | Content | Choice | Time |

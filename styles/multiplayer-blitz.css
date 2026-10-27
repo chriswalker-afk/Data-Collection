@@ -1,0 +1,71 @@
+/* Arena 2.0 Pass 2 — independent timed Blitz. */
+.multiplayer-stage.is-blitz{background:#fff}
+.multiplayer-stage.is-blitz .blitz-clock{display:inline-flex;align-items:center;font-size:1.18rem;
+  font-weight:900;color:#185b45;background:#def2e6;border:1px solid #9ccdb2;
+  font-variant-numeric:tabular-nums;letter-spacing:.04em;padding:10px 17px;
+  border-radius:13px;margin:0 0 15px}
+.multiplayer-stage.is-blitz .blitz-clock.time-up{color:#963b23;background:#fff0e8;border-color:#e8b69e}
+.multiplayer-stage.is-blitz .blitz-heading{margin-top:9px}
+.blitz-live-summary{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 20px}
+.blitz-live-summary span{background:#e9f3ec;border:1px solid #c3decf;color:#335e4b;
+  padding:9px 13px;border-radius:10px;font-size:.79rem;font-weight:760}
+.blitz-live-summary .blitz-summary-value{background:#d7ece0;color:#165b3d;font-weight:880}
+.blitz-question-number{display:block;margin:16px 0 8px;color:#507463;font-weight:840;font-size:.69rem;
+  letter-spacing:.13em}
+.multiplayer-stage .blitz-question-heading{font-size:clamp(1.18rem,2.4vw,1.65rem);
+  color:#164638;line-height:1.4;margin:0 0 15px;letter-spacing:-.03em}
+.multiplayer-stage .blitz-hint{color:#527262;font-size:.84rem;line-height:1.6;margin:10px 0 18px}
+.multiplayer-stage .blitz-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.blitz-options .method-option{min-height:64px}
+.blitz-recall-form{display:grid;gap:12px;max-width:610px}
+.blitz-field-label{font-size:.79rem;font-weight:820;color:#315949;line-height:1.5}
+.blitz-recall-form input,.blitz-board-select{display:block;width:100%;min-width:0;
+  min-height:49px;padding:11px 13px;border:1.5px solid #a8cbbc;
+  border-radius:11px;color:#173e32;background:#fff;font:inherit;font-size:.86rem}
+.blitz-recall-form input:focus-visible,.blitz-board-select:focus-visible,.blitz-next:focus-visible,
+.blitz-submit:focus-visible{outline:3px solid #cb9e42;outline-offset:3px}
+.blitz-recall-form .btn,.blitz-submit,.blitz-next{justify-self:start;min-height:47px;font-weight:800;
+  margin-top:8px}
+.blitz-recall-form button:disabled,.blitz-submit:disabled,.blitz-next:disabled{opacity:.55;cursor:not-allowed}
+.blitz-board{display:grid;gap:10px;margin:13px 0 17px}
+.blitz-board-row{display:grid;gap:8px;min-width:0;background:#f4faf6;border:1px solid #d5e7dc;
+  border-radius:14px;padding:14px}
+.blitz-board-row label{font-weight:760;font-size:.82rem;line-height:1.55;overflow-wrap:anywhere}
+.blitz-board-select{max-width:100%;white-space:normal}
+.multiplayer-stage .blitz-counter{font-size:.77rem;color:#40745a;font-weight:840}
+.multiplayer-stage .blitz-feedback-heading{font-size:clamp(1.35rem,3vw,1.85rem);color:#184d39}
+.multiplayer-stage .blitz-feedback-tally{font-size:.89rem;font-weight:850;color:#1a6346;
+  background:#e3f3e9;padding:11px 13px;border-radius:11px;max-width:max-content}
+.blitz-answer-review{display:grid;gap:9px;background:#f6faf6;border:1px solid #c9e0d1;
+  border-left:4px solid #59a578;padding:18px;border-radius:14px;margin:18px 0}
+.blitz-answer-review strong{font-size:.82rem;color:#225542}
+.blitz-answer-review p{margin:4px 0!important;font-size:.82rem;color:#365b4c;line-height:1.6}
+.multiplayer-stage .blitz-teacher-pulse{background:#e7f2ec;border:1px solid #c0decb;
+  border-radius:13px;padding:14px 16px;color:#225a43;font-weight:800;font-size:.96rem}
+.multiplayer-stage.is-blitz .btn-danger{background:#fff0eb;color:#843a25;border:1px solid #e3b7a9;
+  padding:11px 16px;min-height:46px}
+.multiplayer-room.is-blitz .player-score{font-size:.72rem;white-space:normal;text-align:right;max-width:130px}
+.multiplayer-room.is-blitz .roster-explainer{background:#dff1e7}
+.multiplayer-room.is-blitz .multiplayer-players li{grid-template-columns:24px minmax(0,1fr) auto}
+@media(max-width:560px){
+ .multiplayer-stage .blitz-options{grid-template-columns:1fr}
+ .blitz-live-summary span{padding:8px 10px}
+ .multiplayer-room.is-blitz .player-score{max-width:92px;font-size:.68rem}
+ .blitz-board-row{padding:12px}
+}
+@media(prefers-reduced-motion:reduce){
+ .multiplayer-room.is-blitz *{scroll-behavior:auto}
+}
+
+/* Rolling window and streak progress are mathematical status, not decoration. */
+.multiplayer-stage .blitz-race-progress{
+  border:1.5px solid #87bda0;background:#d6eee0;color:#165b40;font-weight:890;
+  font-variant-numeric:tabular-nums;
+}
+.multiplayer-stage .blitz-feedback-heading{line-height:1.35}
+.multiplayer-stage.is-blitz .blitz-answer-review{max-width:100%;overflow-wrap:anywhere}
+.multiplayer-stage.is-blitz .blitz-live-summary{margin-bottom:18px}
+@media(max-width:390px){
+  .multiplayer-stage .blitz-live-summary span{flex:1 1 100%;text-align:center}
+  .multiplayer-stage.is-blitz .blitz-clock{width:100%;justify-content:center}
+}

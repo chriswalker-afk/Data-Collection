@@ -1,6 +1,6 @@
 import {
   STUDIO_STORAGE_KEY, DEFAULT_DRAFT, OBJECTIVES, FORMATS, GAMES, CLASS_METRICS,
-  cleanStudioDraft, presetStudioDraft, validateStudioDraft, legacyRoomSettings, describeStudioDraft
+  cleanStudioDraft, presetStudioDraft, validateStudioDraft, liveRoomSettings, describeStudioDraft
 } from './host-studio.js';
 
 // Host Studio is a real draft/configurator, not a substitute for a game engine.
@@ -10,6 +10,12 @@ const MODE_DESCRIPTIONS={
   speed:'Type the mathematical term without a word bank. 25 seconds per definition.',
   match:'Connect six term–definition pairs per board. 75 seconds per board.',
   sort:'Sort 8–12 statements into four destinations. 90 seconds per board.'
+};
+const PACED_DESCRIPTIONS={
+  which:'Identify sampling methods from audited scenarios. Progress independently; the shared safety clock controls the race.',
+  speed:'Type mathematical terms from memory. Each completely correct response counts as a successful task.',
+  match:'Complete six accurate term–definition pairs. A board counts towards a streak or accuracy only if all six pairs are correct.',
+  sort:'Classify every advantage or disadvantage accurately. Partial credit earns points, but only an entirely correct board counts as a successful task.'
 };
 const numericFields={
   'studio-team-count':'teamCount','studio-goal-target':'goalTarget',
@@ -51,7 +57,8 @@ export function createHostStudio(root) {
       draft.length=game.lengths[Math.min(['quick','balanced','stretch'].indexOf(draft.preset),game.lengths.length-1)];
     }
     picker.value=String(draft.length);
-    find('mode-description').textContent=MODE_DESCRIPTIONS[draft.game];
+    find('mode-description').textContent=draft.objective==='classic'?
+      MODE_DESCRIPTIONS[draft.game]:PACED_DESCRIPTIONS[draft.game];
   }
   function show(id,visible){find(id).hidden=!visible;}
   function render(){
@@ -74,7 +81,10 @@ export function createHostStudio(root) {
     show('studio-class-goal-row',draft.objective==='classic');
     show('studio-team-count-row',draft.format==='squad'||draft.format==='relay');
     show('studio-future-settings',draft.objective!=='classic');
-    show('studio-minutes-row',draft.objective==='blitz');
+    show('studio-minutes-row',['blitz','bullseye','perfect'].includes(draft.objective));
+    find('studio-minutes-label').textContent=draft.objective==='blitz'?
+      'Blitz time limit (minutes)':'Race safety limit (minutes)';
+    show('studio-future-note',draft.objective==='class');
     show('studio-accuracy-target-row',draft.objective==='bullseye');
     show('studio-accuracy-window-row',draft.objective==='bullseye');
     show('studio-streak-target-row',draft.objective==='perfect');
@@ -87,8 +97,12 @@ export function createHostStudio(root) {
     for(const [id,key] of Object.entries(numericFields))find(id).value=String(draft[key]);
     for(const [id,key] of Object.entries(stringFields))find(id).value=draft[key];
     find('studio-leaderboard').checked=draft.showLeaderboard;
-    find('studio-advanced-live-note').hidden=draft.objective!=='classic';
-    find('studio-advanced-future-fields').hidden=draft.objective==='classic';
+    const isPaced=['blitz','bullseye','perfect'].includes(draft.objective);
+    find('studio-advanced-live-note').hidden=!(draft.objective==='classic'||isPaced);
+    find('studio-advanced-live-note').textContent=isPaced?
+      'These modes use the vetted, varied question bank, checked answers and a visible leaderboard. Custom difficulty and hidden leaderboards are not yet supported.':
+      'Classic uses the current checked question bank, class controls and leaderboard.';
+    find('studio-advanced-future-fields').hidden=draft.objective==='classic'||isPaced;
     renderPreview();
   }
   function renderPreview(){
@@ -102,13 +116,20 @@ export function createHostStudio(root) {
     find('studio-validation').textContent=message;
     find('studio-validation').hidden=!message;
     create.disabled=!validation.playable;
-    create.textContent=validation.playable?'Create room ↗':'Preview only · Not yet playable';
+    create.textContent=validation.playable?
+      (draft.objective==='blitz'?'Create Blitz room ↗':
+        draft.objective==='bullseye'?'Create Bullseye room ↗':
+        draft.objective==='perfect'?'Create Perfect Run room ↗':'Create room ↗'):
+      'Preview only · Not yet playable';
     find('studio-preview').dataset.availability=validation.playable?'live':'preview';
   }
   root.addEventListener('change',event=>{
     const field=event.target;
     if(field.name==='studio-objective'&&Object.hasOwn(OBJECTIVES,field.value)){
       draft=presetStudioDraft(draft,draft.preset,field.value);
+      if(['blitz','bullseye','perfect'].includes(draft.objective)){
+        draft.difficulty='mixed';draft.questionOrder='varied';draft.showLeaderboard=true;
+      }
     }else if(field.name==='studio-format'&&Object.hasOwn(FORMATS,field.value)){
       draft.format=field.value;
     }else if(field.id==='game-mode'&&Object.hasOwn(GAMES,field.value)){
@@ -144,6 +165,6 @@ export function createHostStudio(root) {
   render();
   return {
     draft:()=>({...draft}),
-    liveSettings:()=>legacyRoomSettings(draft)
+    liveSettings:()=>liveRoomSettings(draft)
   };
 }

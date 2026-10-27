@@ -1,4 +1,5 @@
 import {createHostStudio} from './host-studio-ui.js';
+import {createBlitzUI} from './blitz-ui.js';
 import {ARENA_MODES,createModeUI} from './mode-ui.js';
 import {createCeremonyUI} from './ceremony-ui.js';
 import {createTeamUI} from './team-ui.js';
@@ -16,6 +17,9 @@ const LABELS=Object.freeze({
 const STORAGE_KEY='sampling-arcade-multiplayer-v1';
 const gameMode=()=>$('game-mode').value;
 const modeName=game=>ARENA_MODES[game||'which']?.label||'Which Method?';
+const PACE_NAMES=Object.freeze({blitz:'Blitz',bullseye:'Bullseye',perfect:'Perfect Run'});
+const isPaced=objective=>Object.hasOwn(PACE_NAMES,objective);
+const isRace=objective=>objective==='bullseye'||objective==='perfect';
 const $=id=>document.getElementById(id);
 let roomCode=null,token=null,isHost=false,room=null,websocket=null;
 let generation=0,retryTimer=null,pollTimer=null,clockTimer=null,backoff=750;
@@ -59,11 +63,18 @@ function leave(){
 }
 async function createRoom(){
   try{
-    // Server-ready settings alone may create a room. Planned objectives/relay
-    // cannot be sent to the current teacher-paced Worker.
+    // Only validated Classic, Blitz, Bullseye and Perfect Run settings reach
+    // the Worker. Puzzle Relay and Class Quest remain previews.
     const settings=hostStudio.liveSettings();
     notice('Creating the classroom…');
-    const response=await api('/rooms',{roundLength:settings.roundLength,game:settings.game});
+    const response=await api('/rooms',{
+      roundLength:settings.roundLength,game:settings.game,
+      objective:settings.objective,minutes:settings.minutes,
+      ...(settings.objective==='bullseye'?{
+        accuracyTarget:settings.accuracyTarget,accuracyWindow:settings.accuracyWindow
+      }:{}),
+      ...(settings.objective==='perfect'?{streakTarget:settings.streakTarget}:{})
+    });
     roomCode=response.code;token=response.token;isHost=true;store();
     const setupWarnings=[];
     // These are the existing authenticated lobby commands, not new gameplay.
@@ -108,12 +119,15 @@ function receiveState(data){
   if(data.myMultiplayerAwards?.completed&&data.myMultiplayerAwards.awarded?.length){
     saveKeepsake(data.myMultiplayerAwards);
   }
-  if(room.question?.serverNow)clockOffset=room.question.serverNow-Date.now();
+  if(room.question?.serverNow||room.blitz?.serverNow)
+    clockOffset=(room.question?.serverNow||room.blitz?.serverNow)-Date.now();
   render();
   const current=room.status+'|'+(room.question?.id||room.reveal?.question?.id||'')+
     '|'+(room.ceremony?.run||0)+'|'+(room.ceremony?.step??'-');
   if(previous!=='undefined|'&&previous!==current){
-    const announcement=room.status==='playing'?'New question '+room.question.index+' of '+room.question.total:
+    const announcement=room.status==='playing'?
+      (isPaced(room.objective)?PACE_NAMES[room.objective]+' is live':
+        'New question '+room.question.index+' of '+room.question.total):
       room.status==='reveal'?'Answer revealed':
       room.status==='ceremony'?'Awards ceremony reveal '+(room.ceremony.step+1)+' of '+room.ceremony.total:
       room.status==='finished'?'Round complete':'Classroom lobby';
@@ -196,6 +210,23 @@ async function command(type,method,targetId){
   }
 }
 function updateClock(){
+  if(isPaced(room?.objective)&&room.status==='playing'){
+    const blitzTimer=$('blitz-clock');
+    const remaining=Math.max(0,room.blitz.endAt-(Date.now()+clockOffset));
+    const seconds=Math.ceil(remaining/1000);
+    if(blitzTimer){
+      const minutes=Math.floor(seconds/60),rest=String(seconds%60).padStart(2,'0');
+      blitzTimer.textContent=minutes+':'+rest+' remaining';
+      blitzTimer.classList.toggle('time-up',seconds===0);
+    }
+    if(seconds===0){
+      for(const control of document.querySelectorAll(
+        '#stage .blitz-options button,#stage .blitz-recall-form input,#stage .blitz-recall-form button,#stage .blitz-board-select,#stage .blitz-submit,#stage .blitz-next')){
+        control.disabled=true;
+      }
+    }
+    return;
+  }
   const timer=$('question-clock');
   if(!timer||!room?.question)return;
   const seconds=Math.max(0,Math.ceil((room.question.deadline-(Date.now()+clockOffset))/1000));
@@ -240,12 +271,14 @@ const modeUI=createModeUI({
 });
 const ceremonyUI=createCeremonyUI({make,button,actionRow,command,stageKicker});
 const teamUI=createTeamUI({make,button,command,stageKicker});
+const blitzUI=createBlitzUI({button,command,refreshStage:()=>render(),stageKicker});
 function render(){
   const active=Boolean(roomCode&&room);
   $('entry').hidden=active;
   $('room').hidden=!active;
   if(!active)return;
   $('room').classList.toggle('is-ceremony',room.status==='ceremony');
+  $('room').classList.toggle('is-blitz',isPaced(room.objective));
   $('room').dataset.phase=room.status;
   if(displayedRoomCode!==roomCode){displayedScores.clear();displayedRoomCode=roomCode;}
 
@@ -253,7 +286,9 @@ function render(){
   $('room-id').textContent=roomCode;
   $('room-status').textContent={
     lobby:'Lobby · waiting for players',
-    playing:'Question '+room.question?.index+' of '+room.question?.total,
+    playing:isPaced(room.objective)?
+      PACE_NAMES[room.objective]+' · independent questions':
+      'Question '+room.question?.index+' of '+room.question?.total,
     reveal:'Answer review · discuss the mathematics',
     finished:'Challenge complete · final standings',
     ceremony:'Grand Awards Ceremony · reveal '+(room.ceremony?.step+1)+' of '+room.ceremony?.total
@@ -261,18 +296,28 @@ function render(){
   const closed=room.status!=='lobby'||room.locked;
   $('room-lock').textContent=closed?'Joining closed':'Joining open';
   $('room-lock').classList.toggle('is-locked',closed);
-  $('room-meta').textContent=modeName(room.game)+' · '+room.roundLength+' '+(ARENA_MODES[room.game||'which']?.unit||'questions');
+  $('room-meta').textContent=isPaced(room.objective)?
+    PACE_NAMES[room.objective]+' · '+room.blitz?.minutes+' minutes · '+modeName(room.game):
+    modeName(room.game)+' · '+room.roundLength+' '+(ARENA_MODES[room.game||'which']?.unit||'questions');
   $('player-count').textContent=room.players.length+' / 45';
   teamUI.sidebar(room,$('class-pulse'));
   $('players-heading').textContent=room.status==='lobby'?'Classroom roster':'Live leaderboard';
-  $('roster-help').textContent=isHost?(room.status==='lobby'?
-    'You control who joins. You can remove a nickname before starting.':
-    'Scores and submissions update live on every connected device.'):
-    'Nicknames only. Your progress in Solo Arcade is kept separate.';
+  $('roster-help').textContent=isPaced(room.objective)&&room.status!=='lobby'?
+    (isRace(room.objective)?
+      'First to reach the mathematical target wins. A correct board must be fully correct.':
+      'Blitz ranks the most correct decisions first, then checked accuracy and points.'):
+    isHost?(room.status==='lobby'?
+      'You control who joins. You can remove a nickname before starting.':
+      'Scores and submissions update live on every connected device.'):
+      'Nicknames only. Your progress in Solo Arcade is kept separate.';
 
   const playerList=$('players');playerList.replaceChildren();
   playerList.classList.toggle('is-crowded',room.players.length>24);
-  const list=[...room.players].sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name));
+  const blitzRank=new Map((room.blitz?.standings||[]).map((x,i)=>[x.id,i]));
+  const raceProgress=new Map((room.blitz?.standings||[]).map(x=>[x.id,x]));
+  const list=[...room.players].sort((a,b)=>isPaced(room.objective)?
+    (blitzRank.get(a.id)??999)-(blitzRank.get(b.id)??999)||a.name.localeCompare(b.name):
+    b.score-a.score||a.name.localeCompare(b.name));
   for(const [index,player] of list.entries()){
     const item=make('li');item.dataset.playerId=player.id;
     item.classList.toggle('is-local-player',!isHost&&player.id===room.me?.id);
@@ -287,15 +332,26 @@ function render(){
     const details=make('div',undefined,'player-details');
     const name=make('span',player.name,'player-name');
     const state=make('span',
-      player.answered?'Answer submitted':player.online?'Connected':'Not currently connected',
+      isPaced(room.objective)&&room.status!=='lobby'?
+        (player.online?'Playing independently':'Not currently connected'):
+        player.answered?'Answer submitted':player.online?'Connected':'Not currently connected',
       'player-presence'+(player.answered?' is-answered':player.online?' is-online':''));
     details.append(name,state);
     if(room.teamCount&&player.teamId){
       const team=room.teams?.find(x=>x.id===player.teamId);
       if(team)details.append(make('span',team.icon+' '+team.name,'player-team-label'));
     }
-    item.append(critterPortrait(player.avatar),details,make('span',player.score+' points','player-score'));
-    item.querySelector('.player-score').setAttribute('aria-label',player.score+' points');
+    const ranking=raceProgress.get(player.id);
+    const scoreLabel=isRace(room.objective)&&room.status!=='lobby'?
+      (room.objective==='bullseye'?
+        (ranking?.windowAnswered||0)+' / '+room.blitz.race.accuracyWindow+
+        ' marked · '+(ranking?.windowAccuracy||0)+'%':
+        'Streak '+(ranking?.currentStreak||0)+' / '+room.blitz.race.streakTarget):
+      (room.objective==='blitz'&&room.status!=='lobby'?
+        player.correct+' correct · '+player.accuracy+'%':
+        player.score+' points');
+    item.append(critterPortrait(player.avatar),details,make('span',scoreLabel,'player-score'));
+    item.querySelector('.player-score').setAttribute('aria-label',scoreLabel);
     if(isHost&&room.status==='lobby'){
       const remove=button('Remove',()=>{
         if(window.confirm('Remove '+player.name+' from this room?'))void command('remove',undefined,player.id);
@@ -311,7 +367,13 @@ function render(){
   const cursor=activeInput?document.activeElement.selectionStart:null;
   const activeFeedback=document.activeElement?.id==='teacher-feedback-text';
   const feedbackCursor=activeFeedback?document.activeElement.selectionStart:null;
+  const activePacedRecall=document.activeElement?.id==='blitz-recall-answer';
+  const pacedCursor=activePacedRecall?document.activeElement.selectionStart:null;
+  const activeBoardId=/^blitz-board-\d+$/.test(document.activeElement?.id||'')?
+    document.activeElement.id:null;
   const stage=$('stage');stage.replaceChildren();
+  stage.classList.toggle('is-blitz',isPaced(room.objective));
+  if(isPaced(room.objective))blitzUI.focusFor(room);
   if(room.status==='lobby'){
     stage.append(stageKicker(isHost?'HOST CONTROL CENTRE':'YOU ARE READY'));
     const h2=make('h2',isHost?'Your classroom is ready':'You are in the arena!');
@@ -321,8 +383,17 @@ function render(){
       'The teacher will start the round. Keep this tab open for live questions and feedback.'));
     const stats=make('div',undefined,'lobby-stat-row');
     stats.append(statusChip(room.players.length+' joined'),
-      statusChip(room.roundLength+' '+(ARENA_MODES[room.game||'which']?.unit||'questions')),
-      statusChip((room.questionSeconds||20)+' seconds each'));
+      ...(isPaced(room.objective)?[
+        statusChip(room.blitz.minutes+' minute safety limit'),
+        statusChip(isRace(room.objective)?
+          (room.objective==='bullseye'?
+            room.blitz.race.target+'% accuracy over '+room.blitz.race.accuracyWindow+' tasks':
+            room.blitz.race.target+' correct tasks in a row'):
+          'Independent question progress')
+      ]:[
+        statusChip(room.roundLength+' '+(ARENA_MODES[room.game||'which']?.unit||'questions')),
+        statusChip((room.questionSeconds||20)+' seconds each')
+      ]));
     stage.append(make('p',modeName(room.game)+' · '+(ARENA_MODES[room.game||'which']?.label==='Speed Recall'?'Type exact mathematical terms.':ARENA_MODES[room.game||'which']?.label==='Match Up'?'Pair terms with precise definitions.':ARENA_MODES[room.game||'which']?.label==='Sort It!'?'Sort advantages and disadvantages across two methods.':'Identify the sampling method from its context.'),'arena-mode-intro'));
     stage.append(stats);
     if(isHost){
@@ -330,7 +401,8 @@ function render(){
         room.locked?'New participants cannot join until you unlock the lobby.':
           'New students can join using the six-digit code. Lock joining when the class is ready.'));
       const actions=actionRow();
-      const start=button('Start challenge',()=>command('start'));
+      const start=button(isPaced(room.objective)?
+        'Start '+PACE_NAMES[room.objective]:'Start challenge',()=>command('start'));
       start.disabled=room.players.length<1||(room.teamCount>room.players.length);
       const lock=button(room.locked?'Unlock joining':'Lock joining',
         ()=>command(room.locked?'unlock':'lock'),'btn btn-quiet');
@@ -359,6 +431,9 @@ function render(){
       }
     }
     teamUI.setup(room,isHost,stage);
+  }else if(room.status==='playing'&&isPaced(room.objective)){
+    blitzUI.render(room,isHost,stage);
+    updateClock();
   }else if(room.status==='playing'&&room.question&&room.game!=='which'){
     modeUI.renderQuestion(room,isHost,pendingAnswer,stage);
   }else if(room.status==='playing'&&room.question){
@@ -418,12 +493,34 @@ function render(){
     ceremonyUI.render(room,isHost,stage);
   }else if(room.status==='finished'){
     stage.append(stageKicker('ROUND COMPLETE'));
-    const h2=make('h2','Challenge complete!');h2.tabIndex=-1;stage.append(h2);
-    stage.append(make('p','Well played. Celebrate accurate thinking and discuss any tricky sampling decisions.'));
+    const race=room.blitz?.race;
+    const winner=race?.winnerId?room.players.find(p=>p.id===race.winnerId):null;
+    const targetWon=isRace(room.objective)&&race?.finishReason==='target'&&winner;
+    const name=PACE_NAMES[room.objective]||'Challenge';
+    const h2=make('h2',isRace(room.objective)?
+      (targetWon?'Target achieved!':name+' complete!'):
+      (room.objective==='blitz'?'Blitz complete!':'Challenge complete!'));
+    h2.tabIndex=-1;stage.append(h2);
+    stage.append(make('p',isRace(room.objective)?
+      (targetWon?'First to reach the target: '+winner.name+'. Excellent mathematical precision!':
+        'The safety countdown or teacher ended the challenge before a target was met. No winner has been invented.'):
+      (room.objective==='blitz'?
+        'Blitz is ranked by correct decisions first, then accuracy and checked points.':
+        'Well played. Celebrate accurate thinking and discuss any tricky sampling decisions.')));
     const summary=make('div',undefined,'room-finished-summary');
     const top=list[0];
-    summary.append(make('p',top?'Top score: '+top.name+' · '+top.score+' points':'Thank you for taking part.'));
+    summary.append(make('p',targetWon?
+      (room.objective==='bullseye'?
+        winner.name+' reached '+race.target+'% accuracy across '+race.accuracyWindow+' marked tasks.':
+        winner.name+' completed '+race.target+' fully correct tasks consecutively.'):
+      (room.objective==='blitz'&&top?
+        'Leading result: '+top.name+' · '+top.correct+' correct · '+top.accuracy+'% accuracy':
+        (!isRace(room.objective)&&top?
+          'Top score: '+top.name+' · '+top.score+' points':'Every checked response counts towards learning.'))));
     stage.append(summary);
+    if(isRace(room.objective)&&!isHost&&room.blitz?.feedback){
+      blitzUI.renderResultFeedback(room,stage);
+    }
     stage.append(make('p',room.finished?.ceremonyCompleted?
       'The ceremony is complete. Open My Awards to see your saved Multiplayer keepsakes.':
       'The teacher can now present the Grand Awards Ceremony, with a podium and mathematical character trophies.','small-note'));
@@ -451,6 +548,14 @@ function render(){
     if(input){input.focus({preventScroll:true});input.setSelectionRange(feedbackCursor,feedbackCursor);}
   }
   if(activeInput){const input=stage.querySelector('#arena-speed-answer');if(input&&!input.disabled){input.focus({preventScroll:true});input.setSelectionRange(cursor,cursor);}}
+  if(activePacedRecall){
+    const input=stage.querySelector('#blitz-recall-answer');
+    if(input&&!input.disabled){input.focus({preventScroll:true});input.setSelectionRange(pacedCursor,pacedCursor);}
+  }
+  if(activeBoardId){
+    const control=stage.querySelector('#'+activeBoardId);
+    if(control&&!control.disabled)control.focus({preventScroll:true});
+  }
   if(!clockTimer)clockTimer=setInterval(updateClock,250);
 }
 

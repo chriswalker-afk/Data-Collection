@@ -47,3 +47,13 @@ export function scoreAnswer(correct,elapsedMs,durationMs){
 export function publicQuestion(item){
   return {id:item.id,prompt:item.prompt};
 }
+
+/** Only the explicit Playwright local Worker may use a high creation quota.
+ * Real Workers, production domains, and localhost without that binding keep
+ * exactly the original anti-abuse rate limits.
+ */
+export function roomCreationRateLimits(env,url){
+  const hostname=new URL(url).hostname;
+  const local=env?.LOCAL_TEST_MODE==='1'&&hostname==='127.0.0.1';
+  return {perClient:local?500:24,global:local?3000:120};
+}
