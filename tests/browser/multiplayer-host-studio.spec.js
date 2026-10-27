@@ -98,7 +98,8 @@ test('advanced settings are honestly labelled preview-only',async({page})=>{
  await page.locator('#studio-leaderboard').uncheck();
  await expect(page.locator('#create')).toBeDisabled();
 });
-test('Classic squad and optional goal are applied using existing Worker lobby commands',async({page,request})=>{
+test('Classic squad and optional goal are applied using existing Worker lobby commands',async({page,request,isMobile})=>{
+ test.skip(isMobile,'Mobile team join and layout are tested elsewhere; avoid duplicate local Worker load.');
  await open(page);
  await selectFormat(page,'squad');
  await page.locator('#studio-team-count').selectOption('3');
