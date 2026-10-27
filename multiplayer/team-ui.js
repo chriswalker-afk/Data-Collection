@@ -64,9 +64,14 @@ export function createTeamUI({make,button,command,stageKicker}){
       [80,'80% accurate'],[90,'90% accurate']],room.goalTarget||0);
     const applyGoal=button('Set class goal',()=>void command('goal-set',{target:Number(target.value)}),'btn btn-quiet');
     applyGoal.id='goal-apply';
-    controls.append(parent('div','team-setup-field',[goalLabel,target,applyGoal]));
+    if(room.objective==='classic')
+      controls.append(parent('div','team-setup-field',[goalLabel,target,applyGoal]));
     section.append(controls);
-    section.append(make('p','A class goal succeeds when at least 75% of available responses are submitted, at least five mathematical decisions are checked, and the chosen accuracy target is met. Team Quests use 75% accuracy and 75% participation.','team-setup-note'));
+    section.append(make('p',room.objective==='classic'?
+      'A class goal succeeds when at least 75% of available responses are submitted, at least five mathematical decisions are checked, and the chosen accuracy target is met. Team Quests use 75% accuracy and 75% participation.':
+      ['bullseye','perfect'].includes(room.objective)?
+        'In this race, a team wins only when one of its members first reaches the full mathematical target. Class Quest goals are a separate upcoming mode.':
+        'Timed Blitz uses average checked team contributions; Class Quest goals will be available in a later pass.','team-setup-note'));
     stage.append(section);
   }
   function progress(label,value,max){
@@ -84,7 +89,10 @@ export function createTeamUI({make,button,command,stageKicker}){
     if(root.hidden)return;
     if(teams.length){
       const section=make('section',undefined,'team-score-panel');
-      section.append(make('h3','Team standings'),make('p','Fair score: points per team member','team-small-note'));
+      section.append(make('h3','Team standings'),make('p',
+        ['bullseye','perfect'].includes(room.objective)?
+          'The first team to reach the target wins; other scores show progress.':
+          'Fair score: points per team member','team-small-note'));
       const grid=make('div',undefined,'team-score-grid');
       for(const t of teams){
         const item=make('article',undefined,'team-score-card');
@@ -97,7 +105,7 @@ export function createTeamUI({make,button,command,stageKicker}){
         if(room.status!=='lobby'&&t.opportunities>0){
           item.append(progress('Checked accuracy',t.correct,t.accuracy),
             make('p',t.accuracy+'% accuracy · '+t.coverage+'% participation','team-small-note'));
-          if(room.status==='finished'&&room.objective!=='blitz')item.append(make('span',
+          if(room.status==='finished'&&room.objective==='classic')item.append(make('span',
             t.questComplete?'✦ Team Quest completed':'Team Quest not yet completed','team-quest-label'));
         }
         grid.append(item);
@@ -165,7 +173,10 @@ export function createTeamUI({make,button,command,stageKicker}){
     if(room.classQuest)stage.append(make('p',room.classQuest.achieved?
       '✦ Collaborative Class Quest achieved: the class met its accuracy and participation goals.':
       'The Class Quest target was not reached this time. Discuss one adjustment to make next round.','team-finish-summary'));
-    if(room.teams?.length)stage.append(make('p','Individual awards still celebrate checked mathematical thinking. Team standings show average points per member.','team-finish-summary'));
+    if(room.teams?.length)stage.append(make('p',
+      ['bullseye','perfect'].includes(room.objective)?
+        'Team victory is credited to the first verified target-reaching student. Other teams retain their checked practice scores and mathematical awards.':
+        'Individual awards still celebrate checked mathematical thinking. Team standings show average points per member.','team-finish-summary'));
   }
   return {setup,sidebar,review,finished};
 }
