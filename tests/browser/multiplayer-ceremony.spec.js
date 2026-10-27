@@ -68,6 +68,8 @@ test('teacher leads fully synchronized Match Up ceremony, podium and locally sav
     await page.getByRole('button',{name:'Next reveal'}).click();
     await expect(student.locator('.ceremony-card.is-podium')).toBeVisible();
     await expect(student.locator('.ceremony-podium-step.is-gold')).toContainText('Ceremony Fox');
+    await expect(student.locator('.ceremony-podium-step.is-gold')).toHaveAttribute('data-place','1');
+    await expect(student.locator('.ceremony-podium-step.is-gold .critter-portrait')).toHaveCount(1);
     await student.reload();
     await expect(student.locator('.ceremony-card.is-podium')).toBeVisible({timeout:15000});
     await page.getByRole('button',{name:'Previous reveal'}).click();
@@ -75,6 +77,8 @@ test('teacher leads fully synchronized Match Up ceremony, podium and locally sav
     await page.getByRole('button',{name:'Next reveal'}).click();
     await page.getByRole('button',{name:'Skip to finale'}).click();
     await expect(student.locator('.ceremony-card.is-finale')).toBeVisible();
+    await expect(student.locator('.ceremony-class-gallery li')).toHaveCount(1);
+    await expect(student.locator('.ceremony-class-gallery li')).toContainText('Ceremony Fox');
     const record=await student.evaluate(()=>JSON.parse(localStorage.getItem('sampling-arcade-multiplayer-keepsakes-v1')));
     expect(record.entries).toHaveLength(1);
     expect(record.entries[0].awarded).toContain('match-mongoose');
@@ -147,6 +151,8 @@ test('full Sort It! awards ceremony fits 320px and preserves Solo progress',asyn
     await page.getByRole('button',{name:'Reveal answer'}).click();
     await page.getByRole('button',{name:'Finish challenge'}).click();
     await page.getByRole('button',{name:'Start awards ceremony'}).click();
+    await page.getByRole('button',{name:'Next reveal'}).click();
+    await expect(student.locator('.ceremony-card.is-podium')).toBeVisible();
     for(const width of [320,390,768,1280]){
       await student.setViewportSize({width,height:840});
       await expect(student.locator('.ceremony-card')).toBeVisible();
@@ -154,6 +160,7 @@ test('full Sort It! awards ceremony fits 320px and preserves Solo progress',asyn
     }
     await page.getByRole('button',{name:'Skip to finale'}).click();
     await expect(student.locator('.ceremony-card.is-finale')).toBeVisible();
+    await expect(student.locator('.ceremony-class-gallery li')).toHaveCount(1);
     const keep=await student.evaluate(()=>JSON.parse(localStorage.getItem('sampling-arcade-multiplayer-keepsakes-v1')));
     expect(keep.entries[0].awarded).toContain('sorting-salamander');
     expect(await student.evaluate(()=>localStorage.getItem('sampling-arcade-progress-v1')))
