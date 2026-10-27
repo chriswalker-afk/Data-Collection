@@ -30,6 +30,9 @@ test('lobby critter personality is calm, locally recognizable and reduced-motion
   try{
     await studentJoin(student,code,'Quiet Quokka');
     await expect(student.locator('#players li.is-local-player')).toHaveCount(1);
+    await expect(student.locator('.lobby-my-critter .critter-portrait')).toBeVisible();
+    await expect(student.getByRole('link',{name:/Edit my critter/}))
+      .toHaveAttribute('href','./critter-lab/index.html?room='+code);
     await expect(page.locator('#players .critter-portrait')).toHaveCount(1);
     await expect(student.locator('#room')).toHaveAttribute('data-phase','lobby');
 
@@ -44,6 +47,7 @@ test('lobby critter personality is calm, locally recognizable and reduced-motion
     await student.emulateMedia({reducedMotion:'no-preference'});
     await page.getByRole('button',{name:'Start challenge'}).click();
     await expect(student.locator('#room')).toHaveAttribute('data-phase','playing');
+    await expect(student.locator('.lobby-my-critter')).toHaveCount(0);
     expect(await student.locator('#players .critter-portrait').evaluate(
       el=>getComputedStyle(el).animationName)).toBe('none');
   }finally{await student.close();}
