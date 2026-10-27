@@ -45,13 +45,13 @@ function playerStats(room,players,entries,threshold){
   // Timed Blitz has no fixed number of scheduled questions per player.
   // For Blitz, coverage is the proportion of members who contributed at least
   // one checked answer, not submissions divided by an arbitrary deck size.
-  const blitz=room.objective==='blitz';
-  const opportunities=blitz?players.length:players.length*(room.deck?.length||room.roundLength||0);
-  const contributed=blitz?new Set(rows.map(r=>r.playerId)).size:submitted;
+  const paced=['blitz','bullseye','perfect'].includes(room.objective);
+  const opportunities=paced?players.length:players.length*(room.deck?.length||room.roundLength||0);
+  const contributed=paced?new Set(rows.map(r=>r.playerId)).size:submitted;
   const minResponses=Math.ceil(opportunities*.75);
   const coverage=ratio(contributed,opportunities);
   const accuracy=ratio(correct,checked);
-  const ready=opportunities>0&&contributed>=minResponses&&checked>=5&&!blitz;
+  const ready=opportunities>0&&contributed>=minResponses&&checked>=5&&!paced;
   return {submitted,opportunities,correct,checked,coverage,accuracy,
     ready,achieved:ready&&accuracy>=threshold};
 }
@@ -75,16 +75,26 @@ export function teamStandings(room,includeCurrent=true){
         progress.achieved:false};
   });
   const isBlitz=room.objective==='blitz';
-  // For Blitz, normalize correct decisions by team size before the speed-based
-  // point tiebreaker. A larger team cannot dominate by volume alone.
-  const comparison=(a,b)=>isBlitz?
-    (b.correct*Math.max(1,a.members)-a.correct*Math.max(1,b.members))||
-      b.accuracy-a.accuracy||b.averageScore-a.averageScore:
-    b.averageScore-a.averageScore;
+  const isRace=['bullseye','perfect'].includes(room.objective);
+  const winningTeam=isRace?room.race?.winningTeamId:null;
+  // Blitz normalizes mathematical decisions by team size. Race modes
+  // prioritize the objectively first target-reaching student and their team;
+  // other teams are shown as progress, not invented target winners.
+  const comparison=(a,b)=>isRace?
+    Number(b.id===winningTeam)-Number(a.id===winningTeam)||
+      b.averageScore-a.averageScore:
+    isBlitz?
+      (b.correct*Math.max(1,a.members)-a.correct*Math.max(1,b.members))||
+        b.accuracy-a.accuracy||b.averageScore-a.averageScore:
+      b.averageScore-a.averageScore;
   results.sort((a,b)=>comparison(a,b)||a.id.localeCompare(b.id));
   let lastRank=0;
   for(let i=0;i<results.length;i++){
     const row=results[i],prev=results[i-1];
+    if(isRace){
+      row.rank=row.id===winningTeam?1:null;
+      continue;
+    }
     if(!(isBlitz?row.correct:row.averageScore))row.rank=null;
     else if(i&&comparison(row,prev)===0)row.rank=lastRank;
     else{lastRank=i+1;row.rank=lastRank;}
