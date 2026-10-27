@@ -22,7 +22,8 @@ const numericFields={
   'studio-minutes':'minutes','studio-accuracy-target':'accuracyTarget',
   'studio-accuracy-window':'accuracyWindow','studio-streak-target':'streakTarget',
   'studio-class-accuracy':'classAccuracy','studio-class-correct':'classCorrect',
-  'studio-class-participation':'classParticipation','studio-class-per-student':'classPerStudent'
+  'studio-class-participation':'classParticipation','studio-class-per-student':'classPerStudent',
+  'studio-mosaic-tiles':'mosaicTiles'
 };
 const stringFields={
   'studio-class-metric':'classMetric','studio-difficulty':'difficulty',
@@ -57,7 +58,8 @@ export function createHostStudio(root) {
       draft.length=game.lengths[Math.min(['quick','balanced','stretch'].indexOf(draft.preset),game.lengths.length-1)];
     }
     picker.value=String(draft.length);
-    find('mode-description').textContent=draft.objective==='classic'?
+    find('mode-description').textContent=draft.objective==='mosaic'?
+      'Puzzle Relay assigns three complementary sampling decisions to each team. Completing all three verified roles reveals one class tile.':draft.objective==='classic'?
       MODE_DESCRIPTIONS[draft.game]:draft.objective==='class'?
       'Complete independent checked tasks to build a shared class goal. Each question or board contributes to collective progress.':
       PACED_DESCRIPTIONS[draft.game];
@@ -79,13 +81,16 @@ export function createHostStudio(root) {
     }
     find('game-mode').value=draft.game;
     updateLengthPicker();
+    show('studio-game-selector',draft.objective!=='mosaic');
     show('studio-length-row',draft.objective==='classic');
     show('studio-class-goal-row',draft.objective==='classic');
     show('studio-team-count-row',draft.format==='squad'||draft.format==='relay');
     show('studio-future-settings',draft.objective!=='classic');
-    show('studio-minutes-row',['blitz','bullseye','perfect','class'].includes(draft.objective));
-    find('studio-minutes-label').textContent=draft.objective==='blitz'?
-      'Blitz time limit (minutes)':'Race safety limit (minutes)';
+    show('studio-mosaic-tiles-row',draft.objective==='mosaic');
+    show('studio-minutes-row',['blitz','bullseye','perfect','class','mosaic'].includes(draft.objective));
+    find('studio-minutes-label').textContent=draft.objective==='mosaic'?
+      'Class Mosaic time limit (minutes)':draft.objective==='blitz'?
+      'Blitz time limit (minutes)':'Challenge safety limit (minutes)';
     show('studio-future-note',false);
     show('studio-accuracy-target-row',draft.objective==='bullseye');
     show('studio-accuracy-window-row',draft.objective==='bullseye');
@@ -100,13 +105,15 @@ export function createHostStudio(root) {
     for(const [id,key] of Object.entries(stringFields))find(id).value=draft[key];
     find('studio-leaderboard').checked=draft.showLeaderboard;
     const isPaced=['blitz','bullseye','perfect','class'].includes(draft.objective);
-    find('studio-advanced-live-note').hidden=!(draft.objective==='classic'||isPaced);
-    find('studio-advanced-live-note').textContent=draft.objective==='class'?
+    const mosaic=draft.objective==='mosaic';
+    find('studio-advanced-live-note').hidden=!(draft.objective==='classic'||isPaced||mosaic);
+    find('studio-advanced-live-note').textContent=mosaic?
+      'Class Mosaic deliberately has no individual ranking. Role questions are different, verified privately by the Worker, and awarded only to the shared mosaic.':draft.objective==='class'?
       'Class Quest has a shared progress board, not an individual leaderboard. Difficulty and alternate question-order modifiers are not yet supported.':
       isPaced?
       'These modes use the vetted, varied question bank, checked answers and a visible leaderboard. Custom difficulty and hidden leaderboards are not yet supported.':
       'Classic uses the current checked question bank, class controls and leaderboard.';
-    find('studio-advanced-future-fields').hidden=draft.objective==='classic'||isPaced;
+    find('studio-advanced-future-fields').hidden=draft.objective==='classic'||isPaced||mosaic;
     renderPreview();
   }
   function renderPreview(){
@@ -124,7 +131,8 @@ export function createHostStudio(root) {
       (draft.objective==='blitz'?'Create Blitz room ↗':
         draft.objective==='bullseye'?'Create Bullseye room ↗':
         draft.objective==='perfect'?'Create Perfect Run room ↗':
-        draft.objective==='class'?'Create Class Quest room ↗':'Create room ↗'):
+        draft.objective==='class'?'Create Class Quest room ↗':
+        draft.objective==='mosaic'?'Create Class Mosaic room ↗':'Create room ↗'):
       'Preview only · Not yet playable';
     find('studio-preview').dataset.availability=validation.playable?'live':'preview';
   }
@@ -135,8 +143,20 @@ export function createHostStudio(root) {
       if(['blitz','bullseye','perfect','class'].includes(draft.objective)){
         draft.difficulty='mixed';draft.questionOrder='varied';draft.showLeaderboard=true;
       }
+      if(draft.objective==='mosaic'){
+        draft.format='relay';draft.game='which';draft.length=5;draft.goalTarget=0;
+        draft.difficulty='mixed';draft.questionOrder='varied';draft.showLeaderboard=false;
+      }
     }else if(field.name==='studio-format'&&Object.hasOwn(FORMATS,field.value)){
       draft.format=field.value;
+      if(draft.format==='relay'){
+        draft=presetStudioDraft(draft,draft.preset,'mosaic');
+        draft.format='relay';draft.game='which';draft.length=5;draft.goalTarget=0;
+        draft.difficulty='mixed';draft.questionOrder='varied';draft.showLeaderboard=false;
+      }else if(draft.objective==='mosaic'){
+        draft=presetStudioDraft(draft,draft.preset,'classic');
+        draft.format=field.value;draft.showLeaderboard=true;
+      }
     }else if(field.id==='game-mode'&&Object.hasOwn(GAMES,field.value)){
       draft.game=field.value;
       draft.length=GAMES[field.value].lengths[Math.min(

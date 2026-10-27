@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="./styles/multiplayer-studio.css">
   <link rel="stylesheet" href="./styles/multiplayer-blitz.css">
   <link rel="stylesheet" href="./styles/multiplayer-class-quest.css">
+  <link rel="stylesheet" href="./styles/multiplayer-relay.css">
   <link rel="stylesheet" href="./styles/multiplayer-critters.css">
 </head>
 <body>
@@ -61,7 +62,7 @@
             <span class="entry-mode-icon" aria-hidden="true">▣</span>
             <div><span class="entry-mode-tag">01 / TEACHER</span><h3 id="host-heading">Host a classroom</h3></div>
           </div>
-          <p>Choose Classic, timed Blitz, accuracy-based Bullseye or streak-based Perfect Run. Class Quest is now cooperative and playable; Puzzle Relay remains upcoming.</p>
+          <p>Choose Classic, Blitz, Bullseye, Perfect Run or cooperative Class Quest. New: Puzzle Relay unlocks a shared Class Mosaic, piece by piece.</p>
           <div id="host-studio" class="host-studio">
             <fieldset class="studio-step studio-fieldset">
               <legend><span class="studio-step-number">01</span> Choose a challenge</legend>
@@ -91,6 +92,11 @@
                   <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">✳</span><strong>Class Quest</strong><span class="studio-status is-live">LIVE</span></span>
                   <small>Everyone contributes to a shared class achievement.</small>
                 </label>
+                <label class="studio-choice studio-choice-wide">
+                  <input type="radio" name="studio-objective" value="mosaic">
+                  <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">🧩</span><strong>Class Mosaic</strong><span class="studio-status is-live">LIVE</span></span>
+                  <small>Complete complementary team puzzles to reveal one shared mosaic.</small>
+                </label>
               </div>
             </fieldset>
             <fieldset class="studio-step studio-fieldset">
@@ -108,7 +114,7 @@
                 </label>
                 <label class="studio-choice studio-choice-wide">
                   <input type="radio" name="studio-format" value="relay">
-                  <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">◇</span><strong>Puzzle Relay</strong><span class="studio-status">PREVIEW</span></span>
+                  <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">◇</span><strong>Puzzle Relay</strong><span class="studio-status is-live">LIVE</span></span>
                   <small>Split the mathematical challenge across teammates' screens.</small>
                 </label>
               </div>
@@ -130,13 +136,15 @@
                 </div>
               </div>
               <div class="entry-inputs studio-fields">
-                <label for="game-mode">Mathematical activity</label>
-                <select id="game-mode">
-                  <option value="which" selected>Which Method? · Apply sampling methods</option>
-                  <option value="speed">Speed Recall · Type from memory</option>
-                  <option value="match">Match Up · Connect precise definitions</option>
-                  <option value="sort">Sort It! · Compare methods and evaluate</option>
-                </select>
+                <div id="studio-game-selector" class="studio-field-row">
+                  <label for="game-mode">Mathematical activity</label>
+                  <select id="game-mode">
+                    <option value="which" selected>Which Method? · Apply sampling methods</option>
+                    <option value="speed">Speed Recall · Type from memory</option>
+                    <option value="match">Match Up · Connect precise definitions</option>
+                    <option value="sort">Sort It! · Compare methods and evaluate</option>
+                  </select>
+                </div>
                 <div id="studio-length-row" class="studio-field-row">
                   <label for="length">Challenge length</label>
                   <select id="length">
@@ -159,6 +167,15 @@
                   <div id="studio-minutes-row" class="studio-field-row" hidden>
                     <label for="studio-minutes" id="studio-minutes-label">Blitz time limit (minutes)</label>
                     <input type="number" id="studio-minutes" min="1" max="15" step="1" value="5">
+                  </div>
+                  <div id="studio-mosaic-tiles-row" class="studio-field-row" hidden>
+                    <label for="studio-mosaic-tiles">Shared mosaic target</label>
+                    <select id="studio-mosaic-tiles">
+                      <option value="6">6 tiles · Short class challenge</option>
+                      <option value="10" selected>10 tiles · Balanced</option>
+                      <option value="15">15 tiles · Extended collaboration</option>
+                    </select>
+                    <small class="studio-field-note">At least two students per team; all three verified puzzle roles are needed for each tile.</small>
                   </div>
                   <div id="studio-accuracy-target-row" class="studio-field-row" hidden>
                     <label for="studio-accuracy-target">Bullseye accuracy target (%)</label>
@@ -226,7 +243,7 @@
             </section>
             <p id="studio-validation" role="alert" class="studio-validation" hidden></p>
             <button class="btn btn-primary entry-submit" type="button" id="create">Create room ↗</button>
-            <p class="studio-footer-note">Classic, Blitz, Bullseye and Perfect Run are playable in individual or team formats. Class Quest is playable now; Puzzle Relay is still a preview.</p>
+            <p class="studio-footer-note">Classic, Blitz, Bullseye and Perfect Run work individually or in squads. Class Quest and Class Mosaic are cooperative. Puzzle Relay requires teams, with no individual podium.</p>
           </div>
         </section>
         <section class="multiplayer-panel student-entry" aria-labelledby="join-heading">
