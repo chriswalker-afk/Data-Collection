@@ -330,6 +330,19 @@ function render(){
     }else{
       stage.append(supportBox('Waiting for your teacher',
         'Your nickname appears in the roster. The teacher will start the selected challenge; read each instruction carefully.'));
+      const me=room.players.find(person=>person.id===room.me?.id);
+      if(me){
+        const card=make('section',undefined,'lobby-my-critter');
+        const text=make('div',undefined,'lobby-my-critter-copy');
+        text.append(make('span','YOUR CRITTER · READY TO PLAY','lobby-my-critter-kicker'),
+          make('strong',me.name,'lobby-my-critter-name'),
+          make('p','Your unique mascot will cheer you on through the challenge.','lobby-my-critter-note'));
+        const customise=make('a','Edit my critter ↗','lobby-my-critter-edit');
+        customise.href='./critter-lab/index.html?room='+roomCode;
+        text.append(customise);
+        card.append(critterPortrait(me.avatar,'medium'),text);
+        stage.append(card);
+      }
     }
     teamUI.setup(room,isHost,stage);
   }else if(room.status==='playing'&&room.question&&room.game!=='which'){
