@@ -93,7 +93,7 @@ test('teacher leads fully synchronized Match Up ceremony, podium and locally sav
     await student.goto('/awards.html');
     await expect(student.locator('#keepsake-count')).toHaveText('2 / 11');
     await expect(student.locator('[data-keepsake-id="match-mongoose"]')).toBeVisible();
-    await expect(student.locator('#cabinet-count')).toHaveText('0 / 16');
+    await expect(student.locator('#cabinet-count')).toHaveText('0 / 26');
   }finally{await student.close();}
 });
 test('students cannot choose podiums, launch or advance ceremony or mint awards from errors',async({page,request,isMobile})=>{

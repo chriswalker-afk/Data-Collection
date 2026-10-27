@@ -14,10 +14,10 @@ function fill(state,game,prefix,n,extra={}){
   for(let i=0;i<n;i++)state=award(state,verify(game,prefix+'-'+i,extra)).state;
   return state;
 }
-test('catalogue has 16 unique collectible IDs and labelled verification classes',()=>{
-  assert.equal(AWARDS.length,16);
-  assert.equal(new Set(AWARDS.map(a=>a.id)).size,16);
-  assert.equal(AWARDS.filter(a=>a.level==='self-rated').length,2);
+test('catalogue has 26 unique collectible IDs and labelled verification classes',()=>{
+  assert.equal(AWARDS.length,26);
+  assert.equal(new Set(AWARDS.map(a=>a.id)).size,26);
+  assert.equal(AWARDS.filter(a=>a.level==='self-rated').length,4);
   assert.ok(AWARDS.every(a=>a.name&&a.emoji&&a.description&&a.hint));
 });
 test('the fox requires 2 distinct verified scenarios for all five methods',()=>{
@@ -82,7 +82,7 @@ test('only complete independent first-check rounds earn one-round trophies',()=>
     const blocked=award(s,{kind:'round',verified:true,...e,review:true});
     assert.equal(blocked.newlyUnlocked.length,0);
     const good=award(s,{kind:'round',verified:true,...e});
-    assert.equal(good.newlyUnlocked.length,1,e.game);
+    assert.ok(good.newlyUnlocked.some(x=>x.id===({match:'match-mongoose',sort:'sorting-salamander',cloze:'word-weasel',build:'procedure-panda',speed:'precision-penguin'})[e.game]),e.game);
     s=good.state;
   }
   assert.equal(s.evidence.rounds.length,5);
@@ -107,7 +107,7 @@ test('malformed or forged unlock records without supporting evidence are discard
   const crafted={version:1,evidence:{identify:{'case-0':'quota'},speed:['safe',null,'BAD!', 'safe']},
     unlocked:{'sampling-fox':'2020-01-01','bias-buster':'2020-01-01'}};
   const clean=sanitizeAwards(crafted);
-  assert.equal(Object.keys(clean.unlocked).length,0);
+  assert.deepEqual(Object.keys(clean.unlocked),['curious-cat']);
   assert.deepEqual(clean.evidence.speed,['safe']);
   assert.equal(Object.keys(clean.evidence.identify).length,1);
   assert.equal(sanitizeAwards({version:8}).version,1);
@@ -134,4 +134,47 @@ test('invalid backups do not erase stored awards',()=>{
     assert.throws(()=>restoreAwardBackup(bad,before),Error);
   }
   assert.ok(before.unlocked['bias-buster']);
+});
+
+test('new milestones unlock from verified distinct evidence and preserve legacy backups',()=>{
+  let s=emptyAwards();
+  const answer=(game,id,extra={})=>({kind:'answer',game,id,verified:true,correct:true,review:false,assisted:false,...extra});
+  s=applyAwardEvent(s,answer('identify','first',{method:'quota'}),date).state;
+  assert.ok(earnedAwards(s).some(x=>x.id==='curious-cat'));
+  for(const method of ['simple-random','systematic','stratified','opportunity'])
+    s=applyAwardEvent(s,answer('identify',method,{method}),date).state;
+  assert.ok(earnedAwards(s).some(x=>x.id==='method-mouse'));
+  for(let i=0;i<10;i++)s=applyAwardEvent(s,answer('identify','scenario-'+i,{method:'quota'}),date).state;
+  assert.ok(earnedAwards(s).some(x=>x.id==='scenario-seal'));
+  for(let i=0;i<6;i++){
+    s=applyAwardEvent(s,answer('speed','typed-'+i),date).state;
+    s=applyAwardEvent(s,answer('error','error-'+i),date).state;
+    s=applyAwardEvent(s,answer('exam','calculation-'+i),date).state;
+    if(i<5){
+      s=applyAwardEvent(s,answer('flashcards','flash-'+i,{verified:false,selfRated:true}),date).state;
+      s=applyAwardEvent(s,{kind:'writing',game:'reason',id:'reflection-'+i,independent:true,writtenLength:120},date).state;
+    }
+  }
+  for(const id of ['vocabulary-viper','error-eagle','number-narwhal','flashcard-fawn','reflection-rabbit'])
+    assert.ok(earnedAwards(s).some(x=>x.id===id),id);
+  const old=s.unlocked['bias-buster'];
+  delete s.unlocked['error-eagle'];
+  const restored=restoreAwardBackup(exportAwardBackup(s,date));
+  assert.ok(restored.unlocked['error-eagle']);
+  assert.equal(restored.unlocked['bias-buster'],old);
+});
+test('three and five eligible round types unlock increasing multi-game trophies',()=>{
+  let s=emptyAwards();
+  const rounds=[
+    {game:'match',total:8,correct:8,attempted:8,mistakes:0},
+    {game:'sort',total:10,correct:10,firstCheck:true},
+    {game:'cloze',total:10,correct:10,level:'independent'},
+    {game:'build',total:5,correct:5,firstCheck:true},
+    {game:'speed',total:10,correct:10,attempted:10,speedMode:'untimed'}
+  ];
+  for(let i=0;i<rounds.length;i++){
+    s=applyAwardEvent(s,{kind:'round',verified:true,...rounds[i]},date).state;
+    if(i===2)assert.ok(s.unlocked['arcade-alpaca']);
+  }
+  assert.ok(s.unlocked['pentathlon-peacock']);
 });

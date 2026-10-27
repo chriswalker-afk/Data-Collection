@@ -28,7 +28,8 @@ function card(award){
   const article=node('article','trophy-card'+(isEarned?' is-earned':' is-locked'));
   article.setAttribute('data-award-id',award.id);
   const head=node('div','trophy-head');
-  const portrait=node('div','trophy-portrait',award.emoji);
+  const portrait=node('div','trophy-portrait');
+  portrait.append(node('span','trophy-creature',award.emoji));
   portrait.setAttribute('aria-hidden','true');
   const caption=node('div','trophy-caption');
   caption.append(node('span','trophy-serial',award.group),
@@ -53,30 +54,39 @@ function card(award){
   return article;
 }
 function renderKeepsakes(){
-  const summary=keepsakeSummary(loadKeepsakes());
+  const collected=keepsakeSummary(loadKeepsakes());
+  const earned=new Map(collected.map(award=>[award.id,award]));
   const count=document.getElementById('keepsake-count');
-  count.textContent=summary.length+' / '+ARENA_AWARDS.length;
+  count.textContent=collected.length+' / '+ARENA_AWARDS.length;
   const root=document.getElementById('keepsake-grid'),empty=document.getElementById('keepsake-empty');
   const content=document.createDocumentFragment();
-  for(const award of summary){
-    const tile=node('article','keepsake-tile');
-    tile.dataset.keepsakeId=award.id;
-    const portrait=node('span','keepsake-portrait',award.emoji);
+  for(const entry of ARENA_AWARDS){
+    const award=earned.get(entry.id);
+    const isEarned=Boolean(award);
+    const tile=node('article','keepsake-tile'+(isEarned?' is-earned':' is-locked'));
+    tile.dataset.keepsakeId=entry.id;
+    const portrait=node('span','keepsake-portrait');
     portrait.setAttribute('aria-hidden','true');
+    portrait.append(node('span','keepsake-creature',entry.emoji));
     const details=node('div','keepsake-details');
-    details.append(node('span','keepsake-state','✦ FROM MULTIPLAYER'),
-      node('h3','keepsake-name',award.name),
-      node('p','keepsake-reason',award.detail),
-      node('p','keepsake-when','Collected '+award.earnedCount+
-        (award.earnedCount===1?' time':' times')+' · Most recent '+new Date(award.mostRecent)
-          .toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})));
+    details.append(node('span','keepsake-state',isEarned?'✦ FROM MULTIPLAYER':'◇ NOT YET COLLECTED'),
+      node('h3','keepsake-name',entry.name),
+      node('p','keepsake-reason',entry.detail),
+      node('p','keepsake-when',isEarned?
+        'Collected '+award.earnedCount+(award.earnedCount===1?' time':' times')+
+        ' · Most recent '+new Date(award.mostRecent)
+          .toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):
+        'Finish a Multiplayer Awards Ceremony to collect this character.'));
     tile.append(portrait,details);content.append(tile);
   }
-  root.replaceChildren(content);empty.hidden=summary.length>0;
+  root.replaceChildren(content);
+  empty.hidden=collected.length>0;
 }
 function render(){
   renderKeepsakes();
   cabinet=loadAwards();
+  document.querySelector('.cabinet-hero-medal').classList.toggle('is-earned',Boolean(cabinet.unlocked['sampling-fox']));
+  document.getElementById('solo-trophy-total').textContent=AWARDS.length+' Solo trophies';
   const achieved=earnedAwards(cabinet).length;
   count.textContent=achieved+' / '+AWARDS.length;
   progress.value=achieved;
