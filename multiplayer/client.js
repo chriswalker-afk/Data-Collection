@@ -19,6 +19,9 @@ const $=id=>document.getElementById(id);
 let roomCode=null,token=null,isHost=false,room=null,websocket=null;
 let generation=0,retryTimer=null,pollTimer=null,clockTimer=null,backoff=750;
 let clockOffset=0,pendingAnswer=false,avatarUpdateInFlight=null;
+// A one-frame score celebration is based only on the previous visible server score.
+const displayedScores=new Map();
+let displayedRoomCode=null;
 const make=(tag,text,className)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(className)el.className=className;return el;};
 function button(label,callback,className='btn btn-primary'){
   const el=make('button',label,className);el.type='button';el.onclick=callback;return el;
@@ -50,6 +53,7 @@ function stopConnections(){
 function leave(){
   stopConnections();sessionStorage.removeItem(STORAGE_KEY);
   roomCode=null;token=null;isHost=false;room=null;pendingAnswer=false;
+  displayedScores.clear();displayedRoomCode=null;
   connection('');notice('');render();
 }
 async function createRoom(){
@@ -228,6 +232,8 @@ function render(){
   $('room').hidden=!active;
   if(!active)return;
   $('room').classList.toggle('is-ceremony',room.status==='ceremony');
+  $('room').dataset.phase=room.status;
+  if(displayedRoomCode!==roomCode){displayedScores.clear();displayedRoomCode=roomCode;}
 
   $('room-title').textContent=isHost?'TEACHER CLASSROOM':'YOUR CLASSROOM';
   $('room-id').textContent=roomCode;
@@ -251,9 +257,19 @@ function render(){
     'Nicknames only. Your progress in Solo Arcade is kept separate.';
 
   const playerList=$('players');playerList.replaceChildren();
+  playerList.classList.toggle('is-crowded',room.players.length>24);
   const list=[...room.players].sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name));
-  for(const player of list){
+  for(const [index,player] of list.entries()){
     const item=make('li');item.dataset.playerId=player.id;
+    item.classList.toggle('is-local-player',!isHost&&player.id===room.me?.id);
+    item.classList.toggle('is-offline',!player.online);
+    item.style.setProperty('--critter-delay',(-210*(index%7))+'ms');
+    const previousScore=displayedScores.get(player.id);
+    if(previousScore!==undefined&&player.score>previousScore &&
+      (room.status==='reveal'||room.status==='finished')){
+      item.classList.add('is-score-rise');
+    }
+    displayedScores.set(player.id,player.score);
     const details=make('div',undefined,'player-details');
     const name=make('span',player.name,'player-name');
     const state=make('span',
@@ -314,6 +330,19 @@ function render(){
     }else{
       stage.append(supportBox('Waiting for your teacher',
         'Your nickname appears in the roster. The teacher will start the selected challenge; read each instruction carefully.'));
+      const me=room.players.find(person=>person.id===room.me?.id);
+      if(me){
+        const card=make('section',undefined,'lobby-my-critter');
+        const text=make('div',undefined,'lobby-my-critter-copy');
+        text.append(make('span','YOUR CRITTER · READY TO PLAY','lobby-my-critter-kicker'),
+          make('strong',me.name,'lobby-my-critter-name'),
+          make('p','Your unique mascot will cheer you on through the challenge.','lobby-my-critter-note'));
+        const customise=make('a','Edit my critter ↗','lobby-my-critter-edit');
+        customise.href='./critter-lab/index.html?room='+roomCode;
+        text.append(customise);
+        card.append(critterPortrait(me.avatar,'medium'),text);
+        stage.append(card);
+      }
     }
     teamUI.setup(room,isHost,stage);
   }else if(room.status==='playing'&&room.question&&room.game!=='which'){

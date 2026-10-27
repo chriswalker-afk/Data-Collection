@@ -1,21 +1,369 @@
-
-/* Critters decorate mathematical results but never replace scores or names. */
-.critter-portrait{position:relative;display:inline-block;width:47px;height:53px;flex:none;vertical-align:middle;isolation:isolate}
-.critter-portrait-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+/* Critter Lab visual polish: small, lightweight personalities; mathematical results remain first. */
+.critter-portrait{
+  position:relative;display:inline-block;width:47px;height:53px;
+  flex:none;vertical-align:middle;isolation:isolate;overflow:visible;
+  --critter-halo:#e7f2e9;
+}
+.critter-portrait::before{
+  content:"";position:absolute;left:7%;right:7%;top:12%;bottom:8%;
+  border-radius:50%;background:radial-gradient(circle at 45% 29%,#fff 2%,var(--critter-halo) 76%);
+  border:1px solid #cadfd2;z-index:0;
+}
+.critter-portrait::after{
+  content:"";position:absolute;left:22%;right:22%;bottom:6%;
+  height:7%;background:#264a3b23;border-radius:50%;filter:blur(2px);z-index:0;
+}
+.critter-portrait-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:1}
 .critter-portrait--medium{width:80px;height:90px}
-.critter-portrait--large{width:116px;height:131px}
-.multiplayer-players li{grid-template-columns:26px 47px minmax(0,1fr) auto}
+.critter-portrait--large{width:clamp(86px,9vw,126px);height:auto;aspect-ratio:8/9}
+
+/* Roster: the critter and nickname are one readable, compact unit. */
+.multiplayer-players li{
+  grid-template-columns:22px 47px minmax(0,1fr) auto;
+  gap:9px;padding:10px 11px;position:relative;
+  transition:border-color .2s ease,background-color .2s ease,box-shadow .2s ease;
+}
+.multiplayer-players li::before{font-variant-numeric:tabular-nums;align-self:center}
 .multiplayer-players li>.critter-portrait{grid-column:2}
 .multiplayer-players li>.player-details{grid-column:3}
-.multiplayer-players li>.player-score{grid-column:4}
-.multiplayer-players li>.player-remove{grid-column:3/5}
-.ceremony-person-with-critter{display:inline-flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap}
-.ceremony-person-with-critter strong{overflow-wrap:anywhere}
-.ceremony-podium-names .ceremony-person-with-critter{display:flex}
-.ceremony-recipients .ceremony-person-with-critter{justify-content:flex-start}
-@media(max-width:390px){
- .multiplayer-players li{gap:6px;padding:8px;grid-template-columns:18px 37px minmax(0,1fr) auto}
- .multiplayer-players li>.critter-portrait{width:37px;height:43px}
- .critter-portrait--large{width:83px;height:94px}
+.multiplayer-players li>.player-score{grid-column:4;justify-self:end;text-align:right}
+.multiplayer-players li>.player-remove{grid-column:3/5;margin-top:2px}
+.multiplayer-players li.is-local-player{
+  background:#f4faf4;border-color:#8fc9a5;box-shadow:inset 3px 0 #448b67;
 }
-@media print{.critter-portrait{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+.multiplayer-players li.is-local-player .player-name::after{
+  content:" · you";font-size:.66rem;font-weight:800;color:#2b7860;white-space:nowrap;
+}
+.multiplayer-players li.is-offline .critter-portrait{filter:grayscale(.55);opacity:.72}
+.multiplayer-players li.is-offline .player-presence{color:#687a70}
+.multiplayer-players li .player-name{line-height:1.35}
+.multiplayer-players li .player-presence{display:flex;align-items:center;gap:5px;line-height:1.3}
+.multiplayer-players li .player-presence::before{
+  content:"";width:6px;height:6px;flex:none;border-radius:50%;background:#9faea6;
+}
+.multiplayer-players li .player-presence.is-online::before{background:#38a26b}
+.multiplayer-players li .player-presence.is-answered::before{background:#4b8cbf}
+.multiplayer-players li .player-score{font-variant-numeric:tabular-nums;font-weight:900;letter-spacing:-.02em}
+.multiplayer-players ol.is-crowded{gap:5px}
+.multiplayer-players ol.is-crowded li{padding:7px 9px;gap:7px}
+.multiplayer-players ol.is-crowded .critter-portrait{width:37px;height:42px}
+.multiplayer-players ol.is-crowded li{grid-template-columns:19px 37px minmax(0,1fr) auto}
+.multiplayer-players ol.is-crowded .player-name{font-size:.77rem}
+
+/* A personal, editable mascot in the student's waiting lobby. */
+.multiplayer-stage .lobby-my-critter{
+  display:flex;align-items:center;gap:17px;
+  margin:20px 0 3px;padding:16px 20px;
+  border:1px solid #b8d8c6;border-radius:19px;
+  background:linear-gradient(125deg,#f3faf4,#eef5fa 95%);
+}
+.multiplayer-stage .lobby-my-critter .critter-portrait{
+  width:93px;height:105px;--critter-halo:#e4f4ec;
+}
+.multiplayer-stage .lobby-my-critter-copy{min-width:0;flex:1}
+.multiplayer-stage .lobby-my-critter-kicker{
+  display:block;font-size:.64rem;letter-spacing:.12em;
+  color:#44705d;font-weight:900;
+}
+.multiplayer-stage .lobby-my-critter-name{
+  display:block;margin:5px 0;color:#1c4e3a;
+  font-size:1.15rem;line-height:1.25;overflow-wrap:anywhere;
+}
+.multiplayer-stage .lobby-my-critter-note{
+  color:#4e685c;font-size:.76rem;line-height:1.55;margin:5px 0 9px;
+}
+.multiplayer-stage .lobby-my-critter-edit{
+  display:inline-flex;min-height:40px;align-items:center;
+  padding:7px 13px;border-radius:10px;
+  border:1px solid #9cbfaa;background:#fff;
+  color:#235d46;font-weight:830;font-size:.76rem;
+  text-decoration:none;
+}
+.multiplayer-stage .lobby-my-critter-edit:hover{background:#e5f4e8}
+.multiplayer-stage .lobby-my-critter-edit:focus-visible{outline:3px solid #bb8d38;outline-offset:3px}
+
+/* Ceremony: the stage is theatrical, but score order is unchanged and teacher-controlled. */
+.multiplayer-stage .ceremony-card.is-podium,
+.multiplayer-stage .ceremony-card.is-finale,
+.multiplayer-stage .ceremony-card.is-award{overflow:hidden}
+.multiplayer-stage .ceremony-card.is-podium{
+  background:
+    radial-gradient(circle at 50% 0%,#fff2be,#ffffff00 36%),
+    radial-gradient(circle at 11% 92%,#e0f0e4,#ffffff00 42%),#fffdfa;
+}
+.multiplayer-stage .ceremony-card.is-podium::before,
+.multiplayer-stage .ceremony-card.is-finale::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;
+  background-image:
+    radial-gradient(circle,#e6b968 0 3px,transparent 3.5px),
+    radial-gradient(circle,#86b8a0 0 2.5px,transparent 3px),
+    radial-gradient(circle,#caa7d2 0 2px,transparent 2.5px),
+    radial-gradient(circle,#dfb05e 0 2px,transparent 2.5px);
+  background-position:8% 15%,88% 11%,17% 72%,79% 67%;
+  background-size:174px 143px,205px 175px,189px 198px,213px 166px;
+  background-repeat:repeat;opacity:.26;
+}
+.multiplayer-stage .ceremony-podium{
+  position:relative;gap:clamp(8px,1.5vw,17px);margin:32px 0 18px;
+}
+.multiplayer-stage .ceremony-podium-step{
+  position:relative;isolation:isolate;
+  justify-content:flex-start;gap:9px;
+  min-height:325px;padding:19px 11px 0;
+  border-radius:21px 21px 12px 12px;
+  box-shadow:0 10px 22px #213f3720, inset 0 2px 0 #ffffffcf;
+}
+.multiplayer-stage .ceremony-podium-step::after{
+  content:attr(data-place);display:block;align-self:stretch;
+  margin:auto -11px 0;padding:11px 6px 13px;
+  border-top:1px solid #ffffff9c;
+  border-radius:0 0 10px 10px;
+  background:#739b8240;
+  color:#2c5447;font-weight:950;font-size:clamp(1.65rem,4vw,2.6rem);
+  line-height:1.1;letter-spacing:-.055em;
+}
+.multiplayer-stage .ceremony-podium-step.is-gold{
+  min-height:376px;transform:translateY(-10px);
+  border-color:#d6aa48;background:linear-gradient(166deg,#fffdf2 0%,#fff0c8 60%,#eecb7e 100%);
+  box-shadow:0 15px 34px #b48a392b,inset 0 2px #fff;
+}
+.multiplayer-stage .ceremony-podium-step.is-gold::after{background:#e8bd69a1;color:#7f561b}
+.multiplayer-stage .ceremony-podium-step.is-silver{
+  border-color:#a9bfc1;background:linear-gradient(165deg,#fdfefe,#eaf0f2 57%,#d3e0e1)
+}
+.multiplayer-stage .ceremony-podium-step.is-bronze{
+  border-color:#c99e80;background:linear-gradient(165deg,#fffaf6,#f1e4da 55%,#e9c3a8)
+}
+.multiplayer-stage .ceremony-podium-emoji{
+  font-size:clamp(2rem,3vw,2.8rem);line-height:1.1;
+}
+.multiplayer-stage .ceremony-podium-rank{
+  color:#3d584d;font-size:.75rem;line-height:1.35;
+  text-transform:uppercase;letter-spacing:.06em;
+}
+.multiplayer-stage .ceremony-podium-names{
+  display:flex;flex-direction:row;flex-wrap:wrap;
+  justify-content:center;align-content:start;align-items:flex-start;
+  gap:7px;max-height:345px;overflow:auto;
+  min-height:115px;padding:4px 2px 10px;
+}
+.ceremony-person-with-critter{
+  display:inline-flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:6px;min-width:0;max-width:100%;
+  padding:5px 8px 9px;border-radius:16px;
+  background:#ffffff91;border:1px solid #ffffffbd;
+  text-align:center;color:#244b3c;
+}
+.ceremony-person-with-critter strong{
+  max-width:100%;overflow-wrap:anywhere;line-height:1.3;
+  font-size:clamp(.8rem,1.15vw,1.02rem);
+}
+.multiplayer-stage .ceremony-podium-names .ceremony-people-caption{flex:1 0 100%;display:block;text-align:center}
+.multiplayer-stage .ceremony-podium-step.is-gold .critter-portrait{
+  --critter-halo:#fff1ce;
+}
+.multiplayer-stage .ceremony-podium-score{
+  display:block;margin:2px 0 5px;color:#345447;
+  font-size:clamp(.84rem,1.5vw,1.04rem);font-weight:900;
+}
+.multiplayer-stage .ceremony-podium-step.is-gold .ceremony-podium-score{color:#654811}
+.multiplayer-stage .ceremony-podium-step .ceremony-people-caption{
+  font-size:.68rem;color:#5c6d61;line-height:1.3;font-weight:720;
+}
+.multiplayer-stage .ceremony-recipients li{
+  padding:6px 10px;min-width:0;max-width:100%;
+  background:linear-gradient(135deg,#fff,#f7fbf7);
+  border-color:#c9dfd1;
+}
+.multiplayer-stage .ceremony-recipients .ceremony-person-with-critter{
+  flex-direction:row;justify-content:flex-start;
+  background:transparent;border:0;padding:0;gap:9px;text-align:left;
+}
+.multiplayer-stage .ceremony-recipients .critter-portrait{--critter-halo:#f8eddd}
+.multiplayer-stage .ceremony-recipients .ceremony-person-with-critter strong{font-size:.9rem}
+.multiplayer-stage .ceremony-recipients ul{max-height:330px}
+.multiplayer-stage .ceremony-award-portrait{filter:drop-shadow(0 9px 12px #9d753422)}
+.multiplayer-stage .ceremony-team-podium article{position:relative;box-shadow:0 8px 22px #163e3420}
+.multiplayer-stage .ceremony-team-podium article .ceremony-team-critters{
+  display:flex;align-items:center;justify-content:center;
+  padding:9px 0 4px;min-height:70px;
+}
+.multiplayer-stage .ceremony-team-critters .critter-portrait{
+  width:56px;height:63px;margin-left:-9px;filter:drop-shadow(0 3px 3px #18372a23)
+}
+.multiplayer-stage .ceremony-team-critters .critter-portrait:first-child{margin-left:0}
+.multiplayer-stage .ceremony-team-critters .ceremony-more{
+  display:inline-grid;place-items:center;margin-left:5px;padding:8px;
+  background:#fff;border:1px solid #bfd8c8;color:#2b5d48;border-radius:20px;font-size:.68rem;font-weight:850;
+}
+/* Everyone gets a place in the finale, irrespective of rank. */
+.multiplayer-stage .ceremony-class-photo{
+  margin:29px auto 4px;padding:18px 14px 14px;
+  max-width:960px;border:1px solid #c6ddcd;border-radius:22px;
+  background:linear-gradient(145deg,#f7fcf8,#e9f4ec);
+}
+.multiplayer-stage .ceremony-class-photo h3{
+  margin:0;color:#24543f;font-size:clamp(1.08rem,2.1vw,1.4rem);
+  letter-spacing:-.03em;
+}
+.multiplayer-stage .ceremony-class-photo p{
+  font-size:.78rem;color:#536b5d;margin:6px auto 13px;line-height:1.45;
+}
+.multiplayer-stage .ceremony-class-gallery{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));
+  gap:9px;list-style:none;padding:4px 3px 10px;margin:0;
+  max-height:370px;overflow-y:auto;overscroll-behavior:contain;
+}
+.multiplayer-stage .ceremony-class-gallery li{
+  min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:8px 6px 10px;border-radius:15px;background:#fff;border:1px solid #d5e7d9;
+}
+.multiplayer-stage .ceremony-class-gallery strong{
+  max-width:100%;color:#2c5945;font-size:.71rem;line-height:1.25;overflow-wrap:anywhere;
+}
+.multiplayer-stage .ceremony-class-gallery .critter-portrait{
+  width:65px;height:74px;--critter-halo:#eff8ef;
+}
+.multiplayer-room:fullscreen .ceremony-class-gallery{max-height:min(45vh,500px)}
+.multiplayer-room:fullscreen .ceremony-podium-step.is-gold .critter-portrait{width:clamp(108px,10vw,164px)}
+
+/* Animations are personality, not a scoring signal; none delay user interaction. */
+@media (prefers-reduced-motion:no-preference){
+  .multiplayer-room[data-phase="lobby"] .lobby-my-critter .critter-portrait{
+    animation:critter-idle 4.5s ease-in-out infinite;
+  }
+  .multiplayer-room[data-phase="lobby"] .multiplayer-players ol:not(.is-crowded) li:not(.is-offline) .critter-portrait{
+    animation:critter-idle 4.2s ease-in-out infinite;
+    animation-delay:var(--critter-delay,0ms);
+  }
+  .multiplayer-players li.is-score-rise .player-score{
+    animation:critter-score-glow .7s ease-out both;
+  }
+  .multiplayer-stage .ceremony-card.is-podium .ceremony-podium-step{
+    animation:critter-podium-entrance .68s cubic-bezier(.2,.83,.23,1.08) both;
+    animation-delay:var(--reveal-delay,0ms);
+  }
+  .multiplayer-stage .ceremony-card.is-podium .ceremony-podium-step.is-gold{
+    animation-name:critter-podium-gold;
+  }
+  .multiplayer-stage .ceremony-card.is-podium .critter-portrait{
+    animation:critter-celebrate .95s cubic-bezier(.2,.75,.22,1) both;
+    animation-delay:calc(var(--reveal-delay,0ms) + 350ms);
+  }
+  .multiplayer-stage .ceremony-card.is-award .ceremony-recipients li{
+    animation:critter-reveal .55s ease-out both;
+    animation-delay:var(--reveal-delay,0ms);
+  }
+  .multiplayer-stage .ceremony-card.is-finale .ceremony-class-gallery li{
+    animation:critter-reveal .55s ease-out both;
+    animation-delay:var(--reveal-delay,0ms);
+  }
+  .multiplayer-stage .ceremony-card.is-podium::before,
+  .multiplayer-stage .ceremony-card.is-finale::before{
+    animation:critter-confetti .95s ease-out both;
+  }
+}
+@keyframes critter-idle{
+  0%,100%{transform:translateY(0) rotate(0)}
+  50%{transform:translateY(-3px) rotate(-1.5deg)}
+}
+@keyframes critter-score-glow{
+  0%{background:#fff3c9;transform:scale(1.09);box-shadow:0 0 0 5px #f4d06a55}
+  100%{background:transparent;transform:scale(1);box-shadow:none}
+}
+@keyframes critter-podium-entrance{
+  from{opacity:0;transform:translateY(38px) scale(.92)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes critter-podium-gold{
+  from{opacity:0;transform:translateY(46px) scale(.9)}
+  to{opacity:1;transform:translateY(-10px) scale(1)}
+}
+@keyframes critter-celebrate{
+  0%{transform:translateY(0) rotate(0)}
+  28%{transform:translateY(-16px) rotate(-5deg)}
+  52%{transform:translateY(-6px) rotate(4deg)}
+  75%{transform:translateY(-9px) rotate(-2deg)}
+  100%{transform:translateY(0) rotate(0)}
+}
+@keyframes critter-reveal{
+  from{opacity:0;transform:translateY(12px) scale(.97)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes critter-confetti{
+  from{opacity:0;transform:translateY(-12px)}
+  to{opacity:.26;transform:translateY(0)}
+}
+@media(max-width:760px){
+  .multiplayer-stage .ceremony-podium-step{min-height:280px}
+  .multiplayer-stage .ceremony-podium-step.is-gold{min-height:325px}
+  .multiplayer-stage .ceremony-podium-names{max-height:320px}
+}
+@media(max-width:600px){
+  .multiplayer-stage .ceremony-podium{gap:13px;margin:22px 0 14px}
+  .multiplayer-stage .ceremony-podium-step,
+  .multiplayer-stage .ceremony-podium-step.is-gold{
+    display:grid;grid-template-columns:42px minmax(0,1fr);
+    grid-template-areas:"medal rank" "names names" "score score" "place place";
+    align-items:center;justify-content:stretch;min-height:0!important;
+    padding:14px 14px 0;gap:7px;
+    transform:none;border-radius:18px;
+  }
+  .multiplayer-stage .ceremony-podium-step .ceremony-podium-emoji{grid-area:medal}
+  .multiplayer-stage .ceremony-podium-step .ceremony-podium-rank{grid-area:rank;text-align:left}
+  .multiplayer-stage .ceremony-podium-step .ceremony-podium-names{grid-area:names;
+    justify-content:center;min-height:70px;max-height:250px;overflow:auto;
+    width:100%;text-align:center;padding:1px 0 6px}
+  .multiplayer-stage .ceremony-podium-step .ceremony-podium-score{grid-area:score;margin:1px 0 3px}
+  .multiplayer-stage .ceremony-podium-step::after{grid-area:place;margin:0 -14px;padding:7px 4px 9px}
+  .multiplayer-stage .ceremony-podium .critter-portrait--large{width:82px;height:92px}
+  .multiplayer-stage .ceremony-class-gallery{grid-template-columns:repeat(auto-fit,minmax(85px,1fr));gap:7px}
+}
+@media(max-width:600px) and (prefers-reduced-motion:no-preference){
+  .multiplayer-stage .ceremony-card.is-podium .ceremony-podium-step.is-gold{
+    animation-name:critter-podium-entrance;
+  }
+}
+@media(max-width:430px){
+  .multiplayer-stage .lobby-my-critter{gap:11px;padding:12px}
+  .multiplayer-stage .lobby-my-critter .critter-portrait{width:70px;height:79px}
+
+  .multiplayer-players li,.multiplayer-players ol.is-crowded li{
+    grid-template-columns:16px 38px minmax(0,1fr) auto;
+    gap:6px;padding:8px;
+  }
+  .multiplayer-players li>.critter-portrait,
+  .multiplayer-players ol.is-crowded .critter-portrait{width:38px;height:43px}
+  .multiplayer-players .player-score{font-size:.69rem}
+  .multiplayer-players .player-name{font-size:.76rem}
+  .multiplayer-players .player-presence{font-size:.61rem}
+  .multiplayer-stage .ceremony-recipients .critter-portrait--medium{width:55px;height:62px}
+  .multiplayer-stage .ceremony-class-photo{padding:14px 8px}
+  .multiplayer-stage .ceremony-class-gallery{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(min-width:1500px){
+  .multiplayer-room:fullscreen .ceremony-title{font-size:clamp(3rem,4vw,5rem)}
+  .multiplayer-room:fullscreen .ceremony-class-gallery{grid-template-columns:repeat(auto-fit,minmax(118px,1fr))}
+  .multiplayer-room:fullscreen .ceremony-class-gallery .critter-portrait{width:90px;height:102px}
+}
+@media(prefers-reduced-motion:reduce){
+  .critter-portrait,.critter-portrait-layer,
+  .multiplayer-players li,.multiplayer-players li .player-score,
+  .multiplayer-stage .ceremony-card.is-podium *,
+  .multiplayer-stage .ceremony-card.is-award *,
+  .multiplayer-stage .ceremony-card.is-finale *{animation:none!important;transition:none!important}
+  .multiplayer-stage .ceremony-podium-step.is-gold{transform:none!important}
+}
+@media(forced-colors:active){
+  .multiplayer-players li.is-local-player{border:2px solid Highlight}
+  .critter-portrait::before{background:Canvas;border:1px solid CanvasText}
+  .multiplayer-stage .ceremony-podium-step,
+  .multiplayer-stage .ceremony-class-photo,
+  .multiplayer-stage .ceremony-class-gallery li{border:1px solid CanvasText;background:Canvas}
+}
+@media print{
+  .critter-portrait{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .multiplayer-stage .ceremony-card::before{display:none!important}
+  .multiplayer-stage .ceremony-podium-step{box-shadow:none}
+  .multiplayer-stage .ceremony-class-gallery{max-height:none;overflow:visible}
+}
