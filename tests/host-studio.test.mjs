@@ -179,7 +179,7 @@ test('Class Mosaic rejects unverified or incompatible configuration',()=>{
  for(const invalid of [
    {mosaicTiles:7},{mosaicTiles:0},{minutes:0},{minutes:16},
    {format:'squad'},{showLeaderboard:true},{game:'sort'},
-   {roundLength:10},{difficulty:'advanced'},{questionOrder:'same'},
+   {length:10},{difficulty:'advanced'},{questionOrder:'same'},
    {goalTarget:80},{teamCount:1},{teamCount:5}
  ]){
    const d={...base,...invalid};
