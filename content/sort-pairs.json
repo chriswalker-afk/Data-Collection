@@ -169,7 +169,7 @@
       "evaluationIds": [
         "srs-equal",
         "srs-objective",
-        "srs-small",
+        "srs-lottery",
         "srs-frame",
         "srs-subgroups",
         "srs-large",
