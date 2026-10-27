@@ -130,6 +130,9 @@ export function createHostStudio(root) {
     if(Object.hasOwn(numericFields,event.target.id)){
       draft[numericFields[event.target.id]]=event.target.value===''?NaN:Number(event.target.value);
       renderPreview();
+      // 'input' is the only guaranteed event before immediate refresh; saving
+      // valid drafts here preserves the teacher's last numerical edit.
+      persist();
     }
   });
   for(const preset of root.querySelectorAll('[data-studio-preset]')){
