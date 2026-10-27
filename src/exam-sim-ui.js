@@ -159,8 +159,11 @@ export function createExamSimulationUI(deps){
  }
  function writtenReview(q,entry){
   const {data}=get(),wrap=div('sim-written-review');
-  wrap.append(feedbackBanner('review','Self-review your explanation',[
-    paragraph('','Compare your writing with this model, then tick only points genuinely covered. These ticks are not marks from Pearson or from an automated examiner.')
+  const modelOnly=!entry.draft.trim();
+  wrap.append(feedbackBanner('review',modelOnly?'Model study · no written answer':'Self-review your explanation',[
+    paragraph('',modelOnly?
+      'You viewed the model without writing an answer. No points can be claimed in self-review; the question remains a practice target.':
+      'Compare your writing with the model, then tick only ideas genuinely covered in your answer. This is not examination marking.')
   ]));
   if(q.type==='procedure'){
    const method=data.methods.find(m=>m.id===q.methodId),steps=element('ol',{className:'sim-model-steps'});
@@ -179,11 +182,17 @@ export function createExamSimulationUI(deps){
   }
   if(entry.draft)wrap.append(div('sim-draft-compare',
     heading(4,'sim-panel-heading','Your answer'),paragraph('sim-preserved-text',entry.draft)));
+  if(q.examinerFocus){
+    const focus=element('details',{className:'sim-focus-tip'});
+    focus.append(element('summary',{},'What matters most in this answer'),
+      paragraph('sim-help',q.examinerFocus));
+    wrap.append(focus);
+  }
   const check=element('fieldset',{className:'sim-checklist'});
-  check.append(element('legend',{},'Which important ideas did you include?'));
+  check.append(element('legend',{},modelOnly?'Points to look for next time':'Which important ideas did you include?'));
   for(const p of writtenChecklist(q,data.methods)){
    const input=element('input',{type:'checkbox','data-sim-point':p.id,
-     checked:entry.included.includes(p.id)});
+     checked:!modelOnly&&entry.included.includes(p.id),disabled:modelOnly});
    check.append(element('label',{className:'sim-check-row'},input,span('',p.text)));
   }
   check.append(element('label',{className:'sim-check-row sim-flag'},
@@ -191,9 +200,15 @@ export function createExamSimulationUI(deps){
     span('','Flag this question for more practice, even if I covered every point.')));
   wrap.append(check,
    element('p',{id:'sim-check-count',className:'sim-check-count','aria-live':'polite'},
-    entry.included.length+' of '+writtenChecklist(q,data.methods).length+' ideas ticked (self-review, not a mark).'),
-   paragraph('sim-help','Unticked points and hints add practice targets. Writing is never automatically credited as mastered.'),
-    div('next-row',action('Save self-review and continue →','sim-next',{},'btn btn-primary')));
+    (modelOnly?0:entry.included.length)+' of '+writtenChecklist(q,data.methods).length+' ideas ticked (self-review, not a mark).'),
+   paragraph('sim-help',modelOnly?'Model-only study always becomes a practice target.':
+     'Unticked points and hints add practice targets. Writing is never automatically credited as mastered.'),
+   div('sim-improvement',
+     element('label',{for:'sim-improvement',className:'sim-improvement-label'},'One improvement for next time (optional)'),
+     element('textarea',{id:'sim-improvement',rows:'2',maxlength:'600',className:'sim-improvement-input',
+       placeholder:'Which idea or calculation would you add to your next answer?'},entry.improvement||''),
+     paragraph('sim-help','Private revision note saved on this device; never interpreted as an exam mark.')),
+   div('next-row',action('Save self-review and continue →','sim-next',{},'btn btn-primary')));
   return wrap;
  }
  function questionView(){
