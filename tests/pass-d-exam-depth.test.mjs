@@ -109,7 +109,7 @@ test('unseen-first papers avoid previously practised questions when eligible poo
    assert.ok(evals.some(q=>q.coverageArea==='inference')&&evals.some(q=>q.coverageArea==='methods'));
    const rank={foundation:0,develop:1,extend:2};
    const ranks=paper.questionIds.map(id=>rank[byId.get(id).level]);
-   assert.deepEqual(ranks,[...ranks].sort());
+   assert.ok(ranks.every((value,i)=>i===0||ranks[i-1]<=value),'Paper difficulty must never decrease: '+level);
   }
   if(level==='confidence')assert.ok(second.questionIds.every(id=>byId.get(id).level!=='extend'));
   if(level==='stretch')assert.ok(second.questionIds.every(id=>byId.get(id).level!=='foundation'));
