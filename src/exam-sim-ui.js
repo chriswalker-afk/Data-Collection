@@ -263,6 +263,7 @@ export function createExamSimulationUI(deps){
       field.label+': '+(field.supplied||'(blank)')+' → '+field.expected+' ('+field.working+')'));
    }
    if(row.draft)card.append(paragraph('sim-preserved-text','Your writing: '+row.draft));
+   if(row.improvement)card.append(paragraph('sim-improvement-report','My next step: '+row.improvement));
    if(row.hintsUsed)card.append(paragraph('sim-help','Hints used: try this question independently in a later practice paper.'));
    if(!numberTask(q))card.append(paragraph('sim-help','Written answer was self-reviewed, not automatically assessed.'));
    if(row.needsReview)card.append(link('Targeted revision: '+(q.type==='evaluation'?'Contextual Reasoning':'Build the Method'),
@@ -387,6 +388,7 @@ export function createExamSimulationUI(deps){
     const area=document.getElementById('sim-draft');area?.focus();
     deps.announce('Write your answer first or choose reveal model.');return;
    }
+   if(!entry.draft.trim()){entry.included=[];entry.flag=true;}
    entry.stage='review';persist();show('.sim-written-review .typed-feedback');
    deps.announce('Compare your response with the model and self-review checklist.');return;
   }
@@ -395,7 +397,9 @@ export function createExamSimulationUI(deps){
    if(!numberTask(q)&&entry.stage!=='review')return;
    if(!numberTask(q)){
     const total=writtenChecklist(q,get().data.methods).length;
-    const needsReview=entry.flag||entry.included.length<total||entry.hintsUsed>0;
+    const modelOnly=!entry.draft.trim();
+    if(modelOnly){entry.included=[];entry.flag=true;}
+    const needsReview=modelOnly||entry.flag||entry.included.length<total||entry.hintsUsed>0;
     examState.reviewIds=changeReviewTargets(examState.reviewIds,q.id,needsReview);
    }
    entry.stage='done';
@@ -410,6 +414,9 @@ export function createExamSimulationUI(deps){
   const {session}=get();
   if(session?.ready||session?.complete||!session?.questionIds)return;
   const q=currentQuestion(),entry=ensureEntry();
+  if(entry.stage==='review'&&!numberTask(q)&&input.id==='sim-improvement'){
+    entry.improvement=input.value.slice(0,600);persist();return;
+  }
   if(entry.stage!=='answer')return;
   if(input.id==='sim-draft'&&!numberTask(q))entry.draft=input.value.slice(0,2400);
   else if(input.matches('input[data-sim-num]')&&numberTask(q)){
@@ -435,6 +442,7 @@ export function createExamSimulationUI(deps){
   const q=currentQuestion(),entry=ensureEntry();
   if(numberTask(q)||entry.stage!=='review')return;
   if(control.matches('input[data-sim-point]')){
+   if(!entry.draft.trim())return;
    const id=control.dataset.simPoint,allowed=writtenChecklist(q,get().data.methods).some(x=>x.id===id);
    if(!allowed)return;
    entry.included=control.checked?[...new Set([...entry.included,id])]:entry.included.filter(x=>x!==id);
