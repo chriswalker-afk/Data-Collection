@@ -393,7 +393,7 @@ function showCompletion(game) {
       ...(game==='sort'?[
         action('Try the next comparison →','sort-next-pair',{},'btn btn-primary')
       ]:[]),
-      action(game==='build'?'Practise another case set ↻':'Play another round ↻', 'restart', {},
+      action('Play another round ↻', 'restart', {},
         'btn '+(game==='sort'||game==='flashcards'&&session.revisitIds?.length?'btn-quiet':'btn-primary')),
       link('Back to arcade', hashFor('home', topic), 'btn btn-quiet'),
       action('Share short feedback', 'open-feedback', {}, 'text-button')
