@@ -121,3 +121,21 @@ jobs:
             playwright-report/
             test-results/
           retention-days: 7
+
+
+  blitz-staging-revision:
+    name: Exact-revision Blitz Cloudflare staging smoke
+    if: github.event_name == 'pull_request' && github.head_ref == 'feature/multiplayer-blitz-pass2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    needs: unit-and-content
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate isolated staging deployed from this exact PR head
+        env:
+          MULTIPLAYER_API: https://sampling-arcade-blitz-pass2-test.chris-walker-d8b.workers.dev
+          EXPECTED_BUILD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node scripts/multiplayer-blitz-smoke.mjs
