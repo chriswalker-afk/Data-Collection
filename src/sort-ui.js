@@ -26,7 +26,7 @@ export function createSortItUI(deps){
     select.append(element('option',{value:pair.id,selected:pair.id===session.round.id},pair.label));
   }
   wrap.querySelector('.sort-pair-setting').append(select);
-  wrap.append(paragraph('sort-setting-note','Each set has its own mixture of strengths and limitations. Changing the pair starts a fresh board.'));
+  wrap.append(paragraph('sort-setting-note',data.sortPairs.length+' method comparisons available. Each board has both strengths and limitations; changing the pair starts fresh.'));
   return wrap;
  }
 
