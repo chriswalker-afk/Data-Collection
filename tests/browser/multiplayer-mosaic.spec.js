@@ -91,9 +91,9 @@ test('Class Mosaic requires valid setup, keeps roles private, and refuses forged
   expect(JSON.stringify(slide)).not.toContain('podium');
 });
 
-test('15-tile cooperative victory with a realistic 45-student classroom',async({request,isMobile})=>{
+test('15-tile cooperative victory with a realistic 45-student classroom',async({request,page,isMobile})=>{
   test.skip(isMobile,'45-player server load runs once, independently of viewport');
-  test.setTimeout(135000);
+  test.setTimeout(170000);
   const host=await create(request,{mosaicTiles:15,teamCount:4,minutes:10}),code=host.code;
   const responses=await Promise.all(Array.from({length:45},(_,i)=>
     request.post(`${API}/rooms/${code}/join`,{data:{name:'Relay Learner '+String(i+1).padStart(2,'0')}})));
@@ -115,11 +115,41 @@ test('15-tile cooperative victory with a realistic 45-student classroom',async({
   expect(new Set(done.mosaic.mosaic.map(t=>t.index)).size).toBe(15);
   expect(done.players).toHaveLength(45);
   expect(done.players.every(p=>p.score===0)).toBe(true);
+  // Exactly the same verified 45-player result must render at phone and
+  // projector widths; the browser does not infer winners or inflate tiles.
+  await page.addInitScript(({api,code,token})=>{
+    window.__SAMPLING_MULTIPLAYER_API__=api;
+    sessionStorage.setItem('sampling-arcade-multiplayer-v1',
+      JSON.stringify({roomCode:code,token,isHost:true}));
+  },{api:API,code,token:host.token});
+  await page.goto('/multiplayer.html');
+  await expect(page.locator('.mosaic-picture-grid')).toBeVisible({timeout:16000});
+  await expect(page.locator('.mosaic-picture-tile.is-revealed')).toHaveCount(15);
+  await expect(page.locator('.mosaic-team-card')).toHaveCount(4);
+  await expect(page.locator('#players li')).toHaveCount(45);
+  await expect(page.locator('#players')).toHaveClass(/is-crowded/);
+  await expect(page.locator('.mosaic-picture')).toHaveAttribute('data-completed','true');
+  for(const width of [320,390,768,1920]){
+    await page.setViewportSize({width,height:920});
+    const widths=await page.evaluate(()=>({
+      document:document.documentElement.scrollWidth,
+      viewport:window.innerWidth,
+      image:document.querySelector('.mosaic-picture-grid').getBoundingClientRect().width
+    }));
+    expect(widths.document-widths.viewport,'Mosaic overflow at '+width+'px').toBeLessThanOrEqual(1);
+    expect(widths.image,'Mosaic artwork hidden at '+width+'px').toBeGreaterThan(100);
+  }
   await cmd(request,code,host.token,{type:'ceremony-start'});
   await cmd(request,code,host.token,{type:'ceremony-next'});
   const celebration=(await state(request,code,host.token)).ceremony.slide;
   expect(celebration.kind).toBe('mosaic');expect(celebration.achieved).toBe(true);
   expect(celebration.completedTiles).toBe(15);
+  await expect(page.locator('.ceremony-card.is-mosaic')).toBeVisible({timeout:16000});
+  await expect(page.locator('.mosaic-ceremony-tribute')).toHaveCount(4);
+  await expect(page.locator('.ceremony-card .mosaic-picture-tile.is-revealed')).toHaveCount(15);
+  expect(await page.locator('.mosaic-ceremony-tribute[data-earned="true"]').count()).toBe(4);
+  const scene=await page.locator('.mosaic-picture').getAttribute('data-scene');
+  expect(['garden','reef','stars']).toContain(scene);
 });
 
 test('Puzzle Relay works on a 320px student device and reconnects without losing role',async({page,browser,request,isMobile})=>{
@@ -138,6 +168,8 @@ test('Puzzle Relay works on a 320px student device and reconnects without losing
     await expect(pupil.locator('#connection')).toHaveText('Live connection',{timeout:15000});
     await cmd(request,code,host.token,{type:'start'});
     await expect(pupil.locator('.mosaic-shell')).toBeVisible();
+    await expect(pupil.locator('.mosaic-picture-grid')).toHaveAttribute('role','img');
+    await expect(pupil.locator('.mosaic-picture-tile')).toHaveCount(6);
     await expect(pupil.locator('.mosaic-team-card')).toHaveCount(2);
     const token=await pupil.evaluate(()=>JSON.parse(sessionStorage.getItem('sampling-arcade-multiplayer-v1')).token);
     const first=await state(request,code,token);

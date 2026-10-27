@@ -16,7 +16,7 @@ for(const name of ['src','styles','content','critter-lab']){
 mkdirSync(join(output,'multiplayer'),{recursive:true});
 copyFileSync(join(root,'multiplayer/client.js'),join(output,'multiplayer/client.js'));
 copyFileSync(join(root,'multiplayer/mode-ui.js'),join(output,'multiplayer/mode-ui.js'));
-for(const file of ['ceremony-ui.js','keepsakes.js','award-catalogue.js','team-ui.js','avatar.js','avatar-ui.js','host-studio.js','host-studio-ui.js','blitz-ui.js','class-quest-ui.js','relay-ui.js']){
+for(const file of ['ceremony-ui.js','keepsakes.js','award-catalogue.js','team-ui.js','avatar.js','avatar-ui.js','host-studio.js','host-studio-ui.js','blitz-ui.js','class-quest-ui.js','relay-ui.js','mosaic-art.js','mosaic-art-ui.js']){
   copyFileSync(join(root,'multiplayer',file),join(output,'multiplayer',file));
 }
 if(!readFileSync(join(output,'multiplayer/client.js'),'utf8').includes("from './mode-ui.js'")){
@@ -45,6 +45,14 @@ if(!readFileSync(join(output,'multiplayer/client.js'),'utf8').includes("from './
 }
 if(!readFileSync(join(output,'multiplayer/relay-ui.js'),'utf8').includes('export function createRelayUI')){
   throw new Error('Published Class Mosaic UI missing');
+}
+if(!readFileSync(join(output,'multiplayer/ceremony-ui.js'),'utf8').includes("from './mosaic-art-ui.js'")){
+  throw new Error('Ceremony must use the identical shared picture reveal');
+}
+for(const artwork of ['garden','reef','stars']){
+  const svg=readFileSync(join(output,'styles','mosaic-'+artwork+'.svg'),'utf8');
+  if(!svg.includes('viewBox="0 0 1600 900"')||!svg.includes('<svg'))
+    throw new Error('Invalid cooperative mosaic artwork: '+artwork);
 }
 // Keep Pages publishing independent of the backend; never publish Worker internals.
 

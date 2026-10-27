@@ -1,6 +1,8 @@
 // One projected ceremony step, supplied entirely by the Durable Object.
 // No client-side winner selection, award inference or timer-driven auto-advances.
 import {critterPortrait} from './avatar-ui.js';
+import {createMosaicPicture} from './mosaic-art-ui.js';
+import {MOSAIC_TEAM_NAMES,MOSAIC_TEAM_ICONS} from './mosaic-art.js';
 const MEDALS={1:{label:'Gold',emoji:'🥇',tone:'gold'},
   2:{label:'Silver',emoji:'🥈',tone:'silver'},3:{label:'Bronze',emoji:'🥉',tone:'bronze'}};
 export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
@@ -96,9 +98,11 @@ export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
     steps.className='ceremony-progress';steps.setAttribute('aria-label','Ceremony reveal '+(c.step+1)+' of '+c.total);
     outer.append(steps);
     if(slide.kind==='welcome'){
-      outer.append(node('div','✦   🏆   ✧','ceremony-welcome-icons'),h(slide.title),
+      outer.append(node('div',room.objective==='mosaic'?'✦   🧩   ✧':'✦   🏆   ✧','ceremony-welcome-icons'),h(slide.title),
         node('p',slide.subtitle,'ceremony-subtitle'),
-        node('p','A little celebration for the careful thinkers, determined improvers and mathematical detectives in the room.','ceremony-context'));
+        node('p',room.objective==='mosaic'?
+          'One picture belongs to the whole class. Every tile you see was earned by three checked mathematical roles.':
+          'A celebration for careful thinkers, determined improvers and mathematical detectives.','ceremony-context'));
     }else if(slide.kind==='team-podium'){
       outer.append(node('div','🤝','ceremony-top-icon'),h(slide.title));
       const board=node('div',undefined,'ceremony-team-podium');
@@ -129,21 +133,41 @@ export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
     }else if(slide.kind==='mosaic'){
       outer.append(node('div',slide.achieved?'✦   🎉   ✧':'✦   🤝   ✧','ceremony-welcome-icons'),
         h(slide.title),node('p',slide.subtitle,'ceremony-subtitle'));
-      const count=slide.completedTiles+' / '+slide.targetTiles+' tiles completed';
+      const count=slide.completedTiles+' of '+slide.targetTiles+' verified picture tiles';
       const coverage=slide.contributingTeams+' of '+slide.totalTeams+' teams contributed';
       outer.append(node('p',count+' · '+coverage,'ceremony-finale-count'));
-      const grid=node('div',undefined,'mosaic-grid mosaic-ceremony-grid');
-      grid.style.setProperty('--mosaic-columns',String(slide.targetTiles===6?3:5));
-      grid.setAttribute('role','group');
-      grid.setAttribute('aria-label',count);
-      for(let i=0;i<slide.targetTiles;i++){
-        const won=slide.tiles.find(tile=>tile.index===i);
-        const el=node('span',won?'✦':'◇','mosaic-tile'+(won?' is-revealed':''));
-        el.setAttribute('aria-label',won?'Tile '+(i+1)+' unlocked':'Tile '+(i+1)+' locked');
-        if(won)el.dataset.teamId=won.teamId;
-        grid.append(el);
+      const {figure}=createMosaicPicture({
+        roomCode:room.code,targetTiles:slide.targetTiles,
+        tiles:slide.tiles,achieved:slide.achieved,scope:'ceremony'
+      });
+      const recap=node('div',undefined,'mosaic-ceremony-recap');
+      recap.append(figure);
+      outer.append(recap);
+      const thanks=node('section',undefined,'mosaic-team-thanks');
+      thanks.append(node('h3','Every team has a place in our picture'));
+      const grid=node('div',undefined,'mosaic-ceremony-tributes');
+      for(const id of Object.keys(MOSAIC_TEAM_NAMES).slice(0,slide.totalTeams)){
+        const contributed=slide.tiles.filter(tile=>tile.teamId===id).length;
+        const roster=room.players.filter(p=>p.teamId===id);
+        const card=node('article',undefined,'mosaic-ceremony-tribute');
+        card.dataset.teamId=id;
+        card.dataset.earned=String(contributed>0);
+        card.append(node('h3',(MOSAIC_TEAM_ICONS[id]||'✳')+' '+MOSAIC_TEAM_NAMES[id]),
+          node('p',contributed+' verified '+(contributed===1?'tile':'tiles')+
+            ' · '+roster.length+' teammates'));
+        const avatars=node('div',undefined,'ceremony-team-critters');
+        avatars.setAttribute('aria-label','Critters belonging to '+MOSAIC_TEAM_NAMES[id]);
+        for(const person of roster.slice(0,4)){
+          const portrait=critterPortrait(person.avatar,'small');portrait.title=person.name;
+          avatars.append(portrait);
+        }
+        if(roster.length>4)avatars.append(node('span','+'+(roster.length-4),'ceremony-more'));
+        card.append(avatars,node('p',contributed>0?
+          'Thank you for explaining, evaluating and improving together.':
+          'Still part of the team — there is room for us all in the next challenge.'));
+        grid.append(card);
       }
-      outer.append(grid);
+      thanks.append(grid);outer.append(thanks);
     }else if(slide.kind==='class-quest'){
       outer.append(node('div',slide.achieved?'✦   🎉   ✧':'✦   🤝   ✧','ceremony-welcome-icons'),
         h(slide.title));
@@ -183,10 +207,22 @@ export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
       recipients(slide,outer);
     }else if(slide.kind==='finale'){
       outer.append(node('div','✦   🎉   ✧','ceremony-welcome-icons'),h(slide.title),
-        node('p',slide.subtitle,'ceremony-subtitle'),
-        node('p',slide.awardedCount+' different character award'+(slide.awardedCount===1?'':'s')+
+        node('p',slide.subtitle,'ceremony-subtitle'));
+      if(room.objective==='mosaic'){
+        const tiles=room.mosaic?.completedTiles||0,target=room.mosaic?.targetTiles||0;
+        const contributing=room.mosaic?.teams?.filter(t=>t.tiles>0).length||0;
+        outer.append(node('p',tiles+' of '+target+' verified tiles · '+
+          contributing+' teams contributed','ceremony-finale-count'),
+          node('p',room.mosaic?.achieved?
+            'The entire illustrated picture was unlocked by cooperation, not a competitive podium.':
+            'We celebrate the progress genuinely earned by our class.','ceremony-context'));
+      }else{
+        outer.append(node('p',room.objective==='class'&&slide.awardedCount===0?
+          'Every classmate helped us practise mathematical reasoning together.':
+          slide.awardedCount+' different character award'+(slide.awardedCount===1?'':'s')+
           ' celebrated · '+slide.recipientsCount+' student'+(slide.recipientsCount===1?'':'s')+
           ' earned a special achievement','ceremony-finale-count'));
+      }
       if(room.players?.length)outer.append(classPhoto(room.players));
     }
     stage.append(outer);

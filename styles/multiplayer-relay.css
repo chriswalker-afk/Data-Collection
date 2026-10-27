@@ -32,3 +32,70 @@
 @media(prefers-reduced-motion:reduce){.mosaic-shell *{animation:none!important;transition:none!important}}
 
 .mosaic-puzzle-name{font-size:.73rem;color:#315b4d;margin:6px 0 12px;font-weight:700}.mosaic-scenario{background:#eef8f2;border-left:3px solid #358369;border-radius:8px;padding:12px;margin:8px 0 15px;line-height:1.6;color:#294f40;font-size:.81rem}
+
+/* Pass 6: a real, continuous illustration revealed by server-earned tiles. */
+.mosaic-picture{--mosaic-scene:url('./mosaic-garden.svg');margin:18px auto 25px;max-width:800px;min-width:0}
+.mosaic-picture[data-scene="reef"]{--mosaic-scene:url('./mosaic-reef.svg')}
+.mosaic-picture[data-scene="stars"]{--mosaic-scene:url('./mosaic-stars.svg')}
+.mosaic-picture-grid{display:grid;grid-template-columns:repeat(var(--mosaic-columns,5),minmax(0,1fr));grid-template-rows:repeat(var(--mosaic-rows,2),minmax(0,1fr));gap:3px;aspect-ratio:16/9;position:relative;isolation:isolate;overflow:hidden;border-radius:21px;border:7px solid #f7faf2;background:#254d62;box-shadow:0 18px 45px rgba(19,67,77,.19),0 0 0 1px rgba(15,56,74,.2)}
+.mosaic-picture-tile{display:grid;place-items:center;position:relative;isolation:isolate;overflow:hidden;min-width:0;min-height:0}
+.mosaic-picture-tile.is-locked{background:radial-gradient(ellipse at 30% 22%,rgba(255,255,255,.16),transparent 55%),linear-gradient(145deg,#385f74,#21384f)}
+.mosaic-picture[data-scene="garden"] .mosaic-picture-tile.is-locked{background:radial-gradient(ellipse at 30% 24%,rgba(255,255,255,.19),transparent 55%),linear-gradient(145deg,#42766e,#244c58)}
+.mosaic-picture[data-scene="reef"] .mosaic-picture-tile.is-locked{background:radial-gradient(ellipse at 30% 24%,rgba(255,255,255,.19),transparent 55%),linear-gradient(145deg,#246c83,#224462)}
+.mosaic-picture-tile.is-locked:after{content:"";position:absolute;inset:7px;border:1px solid rgba(255,255,255,.16);border-radius:8px;pointer-events:none}
+.mosaic-piece-lock{font-weight:900;font-size:clamp(.65rem,2.15vw,1.4rem);color:#c8e5e3;letter-spacing:.12em;text-shadow:0 1px 8px rgba(0,0,0,.16)}
+.mosaic-piece-image{position:absolute;inset:0;background-image:var(--mosaic-scene);background-repeat:no-repeat;background-color:#e1f4e7;pointer-events:none}
+.mosaic-picture-tile.is-locked .mosaic-piece-image{display:none}
+.mosaic-picture[data-completed="true"] .mosaic-picture-grid{gap:0;box-shadow:0 18px 52px rgba(19,67,77,.22),0 0 0 3px #f2d68b}
+.mosaic-picture-caption{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:5px 16px;padding:12px 5px 0;font-size:.82rem;line-height:1.5;color:#4d6c65}
+.mosaic-picture-caption strong{color:#275e54;font-size:.9rem}
+.mosaic-picture-tile.is-fresh .mosaic-piece-image{animation:mosaic-unveil 660ms cubic-bezier(.22,1,.36,1) both}
+@keyframes mosaic-unveil{0%{opacity:.15;transform:scale(.82);filter:brightness(1.5)}55%{opacity:1;transform:scale(1.045)}100%{opacity:1;transform:scale(1);filter:brightness(1)}}
+.mosaic-unlock-banner{display:flex;gap:10px;align-items:center;border-radius:14px;background:#e5f2dc;border:1px solid #a2c69f;color:#265c42;padding:10px 14px;margin:10px 0 18px;font-size:.9rem;line-height:1.45}
+.mosaic-unlock-icon{font-size:1.55rem;flex:none}
+.mosaic-reaction{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid #c3dfd2;border-radius:16px;padding:12px 17px;margin:5px 0 20px;min-width:0}
+.mosaic-reaction-copy{display:grid;gap:3px;min-width:0}
+.mosaic-reaction-copy strong{font-size:.89rem;color:#225b4e}
+.mosaic-reaction-copy span{font-size:.78rem;color:#567166}
+.mosaic-reaction-critters{display:flex;align-items:center;padding-inline:10px}
+.mosaic-reaction-critters .critter-portrait{margin-inline-start:-9px;filter:drop-shadow(0 2px 3px rgba(24,52,59,.12))}
+.mosaic-reaction[data-new="true"] .critter-portrait{animation:mosaic-cheer 650ms ease-in-out both}
+@keyframes mosaic-cheer{0%{transform:translateY(4px) scale(.9)}55%{transform:translateY(-9px) scale(1.08)}100%{transform:translateY(0) scale(1)}}
+.mosaic-coach-note{display:grid;gap:4px;padding:12px 15px;background:#eaf7f1;border-left:4px solid #4b9e76;border-radius:10px;margin:6px 0 16px;color:#2d584a;font-size:.83rem;line-height:1.55}
+.mosaic-coach-note strong{font-size:.87rem;color:#236349}
+.mosaic-teacher-pulse{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:13px 0 21px}
+.mosaic-pulse-stat{background:#fff;border:1px solid #c3dcd1;border-radius:14px;padding:12px 10px;display:grid;gap:4px;text-align:center}
+.mosaic-pulse-stat strong{font-size:1.35rem;color:#1b6955;font-variant-numeric:tabular-nums}
+.mosaic-pulse-stat span{font-size:.72rem;line-height:1.35;color:#4d7369}
+.mosaic-pulse-stat.is-alert{background:#fff4df;border-color:#e1b98b}
+.mosaic-pulse-stat.is-alert strong{color:#7e5429}
+.mosaic-role-roster{list-style:none;display:grid;gap:6px;padding:0;margin:10px 0 4px}
+.mosaic-role-roster li{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:5px;font-size:.76rem;padding:7px 9px;background:#f2faf5;border:1px solid #e0ebe4;border-radius:9px}
+.mosaic-role-roster li[data-status="blocked"]{background:#fff4e9;border-color:#e8cbad}
+.mosaic-role-roster li[data-status="complete"]{background:#e8f4e9}
+.mosaic-role-roster strong{font-size:.78rem;color:#305c4d}
+.mosaic-role-roster span{font-size:.72rem;color:#526c61}
+.mosaic-role-roster .mosaic-role-name{display:flex;align-items:center;gap:6px}
+.mosaic-student-team{font-size:.82rem;font-weight:750;color:#2c6754;margin:0 0 9px}
+.mosaic-lobby-team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,205px),1fr));gap:9px;margin:13px 0}
+.mosaic-lobby-team{display:grid;gap:5px;background:#fff;border:1px solid #d1e3db;padding:12px 13px;border-radius:13px}
+.mosaic-lobby-team strong{color:#275c52;font-size:.86rem}
+.mosaic-lobby-team small{color:#557165;font-size:.76rem;line-height:1.45}
+.mosaic-lobby-team[data-ready="false"]{background:#fff8ea;border-color:#e9c9a5}
+.mosaic-ceremony-tributes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,215px),1fr));gap:12px;margin:21px 0}
+.mosaic-ceremony-tribute{border:1px solid #d6e2d9;border-radius:15px;padding:15px;background:rgba(255,255,255,.85);display:grid;gap:8px;text-align:left;min-width:0}
+.mosaic-ceremony-tribute h3{font-size:1rem;color:#235b50;margin:0;line-height:1.3}
+.mosaic-ceremony-tribute p{font-size:.81rem;color:#476c60;margin:0;line-height:1.45}
+.mosaic-ceremony-tribute .ceremony-team-critters{display:flex;flex-wrap:wrap}
+.mosaic-ceremony-tribute .critter-portrait{max-width:62px}
+.mosaic-ceremony-tribute[data-earned="false"]{background:#f2f5f3}
+.mosaic-ceremony-recap{max-width:860px;margin:15px auto 0}
+.is-class-mosaic #stage{min-width:0}
+.is-class-mosaic .mosaic-shell{width:100%;max-width:1080px;margin:0 auto}
+.is-class-mosaic #players .player-score{font-weight:650}
+.mosaic-warning{background:#fff0db;padding:10px 12px;border-radius:10px;border:1px solid #ecc5a0}
+.mosaic-help{font-size:.8rem;color:#41675e;line-height:1.5}
+@media (min-width:1200px){.is-class-mosaic:fullscreen .mosaic-picture{max-width:980px}.is-class-mosaic:fullscreen .mosaic-picture-grid{border-width:9px}.is-class-mosaic:fullscreen .mosaic-shell h2{font-size:2rem}}
+@media(max-width:560px){.mosaic-picture-grid{border-width:4px;border-radius:13px;gap:2px}.mosaic-piece-lock{font-size:.75rem}.mosaic-picture-caption{display:grid;gap:2px}.mosaic-teacher-pulse{gap:5px}.mosaic-pulse-stat{padding:10px 6px}.mosaic-pulse-stat strong{font-size:1.05rem}.mosaic-pulse-stat span{font-size:.67rem}}
+@media(prefers-reduced-motion:reduce){.mosaic-picture-tile.is-fresh .mosaic-piece-image,.mosaic-reaction[data-new="true"] .critter-portrait{animation:none!important;transition:none!important}}
+@media print{.mosaic-picture-grid{print-color-adjust:exact;-webkit-print-color-adjust:exact}.mosaic-picture-tile.is-locked{background:#e1e7e6}.mosaic-piece-lock{color:#426368}}
