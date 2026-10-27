@@ -42,11 +42,16 @@ function playerStats(room,players,entries,threshold){
   const submitted=rows.length;
   const correct=rows.reduce((n,e)=>n+e.correctCount,0);
   const checked=rows.reduce((n,e)=>n+e.total,0);
-  const opportunities=players.length*(room.deck?.length||room.roundLength||0);
+  // Timed Blitz has no fixed number of scheduled questions per player.
+  // For Blitz, coverage is the proportion of members who contributed at least
+  // one checked answer, not submissions divided by an arbitrary deck size.
+  const paced=['blitz','bullseye','perfect'].includes(room.objective);
+  const opportunities=paced?players.length:players.length*(room.deck?.length||room.roundLength||0);
+  const contributed=paced?new Set(rows.map(r=>r.playerId)).size:submitted;
   const minResponses=Math.ceil(opportunities*.75);
-  const coverage=ratio(submitted,opportunities);
+  const coverage=ratio(contributed,opportunities);
   const accuracy=ratio(correct,checked);
-  const ready=opportunities>0&&submitted>=minResponses&&checked>=5;
+  const ready=opportunities>0&&contributed>=minResponses&&checked>=5&&!paced;
   return {submitted,opportunities,correct,checked,coverage,accuracy,
     ready,achieved:ready&&accuracy>=threshold};
 }
@@ -69,13 +74,30 @@ export function teamStandings(room,includeCurrent=true){
       questComplete:room.status==='finished'||room.status==='ceremony'?
         progress.achieved:false};
   });
-  results.sort((a,b)=>b.averageScore-a.averageScore||a.id.localeCompare(b.id));
+  const isBlitz=room.objective==='blitz';
+  const isRace=['bullseye','perfect'].includes(room.objective);
+  const winningTeam=isRace?room.race?.winningTeamId:null;
+  // Blitz normalizes mathematical decisions by team size. Race modes
+  // prioritize the objectively first target-reaching student and their team;
+  // other teams are shown as progress, not invented target winners.
+  const comparison=(a,b)=>isRace?
+    Number(b.id===winningTeam)-Number(a.id===winningTeam)||
+      b.averageScore-a.averageScore:
+    isBlitz?
+      (b.correct*Math.max(1,a.members)-a.correct*Math.max(1,b.members))||
+        b.accuracy-a.accuracy||b.averageScore-a.averageScore:
+      b.averageScore-a.averageScore;
+  results.sort((a,b)=>comparison(a,b)||a.id.localeCompare(b.id));
   let lastRank=0;
   for(let i=0;i<results.length;i++){
-    if(!results[i].averageScore)results[i].rank=null;
-    else if(i&&results[i].averageScore===results[i-1].averageScore)
-      results[i].rank=lastRank;
-    else{lastRank=i+1;results[i].rank=lastRank;}
+    const row=results[i],prev=results[i-1];
+    if(isRace){
+      row.rank=row.id===winningTeam?1:null;
+      continue;
+    }
+    if(!(isBlitz?row.correct:row.averageScore))row.rank=null;
+    else if(i&&comparison(row,prev)===0)row.rank=lastRank;
+    else{lastRank=i+1;row.rank=lastRank;}
   }
   return results;
 }

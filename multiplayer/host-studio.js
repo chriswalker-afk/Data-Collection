@@ -3,9 +3,9 @@
 export const STUDIO_STORAGE_KEY = 'sampling-arcade-host-studio-v1';
 export const OBJECTIVES = Object.freeze({
   classic: {label:'Classic Challenge',short:'Teacher-paced questions',availability:'live'},
-  blitz: {label:'Blitz',short:'Most correct before the clock ends',availability:'planned'},
-  bullseye: {label:'Bullseye',short:'Reach a rolling accuracy target',availability:'planned'},
-  perfect: {label:'Perfect Run',short:'Build a consecutive-correct streak',availability:'planned'},
+  blitz: {label:'Blitz',short:'Most correct before the clock ends',availability:'live'},
+  bullseye: {label:'Bullseye',short:'Reach a rolling accuracy target',availability:'live'},
+  perfect: {label:'Perfect Run',short:'Build a consecutive-correct streak',availability:'live'},
   class: {label:'Class Quest',short:'A shared mathematical target',availability:'planned'}
 });
 export const FORMATS = Object.freeze({
@@ -122,15 +122,37 @@ export function validateStudioDraft(draft) {
   if(typeof draft.showLeaderboard!=='boolean')
     errors.push('Choose whether the leaderboard is visible.');
   const valid=errors.length===0;
-  const playable=valid&&draft.objective==='classic'&&draft.format!=='relay';
+  const paced=['blitz','bullseye','perfect'].includes(draft.objective);
+  const playable=valid&&(draft.objective==='classic'||paced)&&draft.format!=='relay'&&
+    (!paced||(draft.difficulty==='mixed'&&
+      draft.questionOrder==='varied'&&draft.showLeaderboard===true));
   return {valid,playable,errors};
 }
 export function legacyRoomSettings(draft) {
   const check=validateStudioDraft(draft);
   if(!check.valid)throw new Error(check.errors[0]);
-  if(!check.playable)throw new Error('This challenge is a preview and cannot create a live room yet.');
+  if(!check.playable||draft.objective!=='classic')
+    throw new Error('This challenge is not a Classic room.');
   return {game:draft.game,roundLength:draft.length,
     teamCount:draft.format==='squad'?draft.teamCount:0,goalTarget:draft.goalTarget};
+}
+export function liveRoomSettings(draft){
+  const check=validateStudioDraft(draft);
+  if(!check.valid)throw new Error(check.errors[0]);
+  if(!check.playable)throw new Error(
+    'This challenge is a preview or has planned settings not supported by this engine.');
+  if(draft.objective==='classic')
+    return {...legacyRoomSettings(draft),objective:'classic',minutes:0};
+  return {
+    game:draft.game,roundLength:draft.length,
+    objective:draft.objective,minutes:draft.minutes,
+    teamCount:draft.format==='squad'?draft.teamCount:0,
+    goalTarget:0,
+    ...(draft.objective==='bullseye'?{
+      accuracyTarget:draft.accuracyTarget,accuracyWindow:draft.accuracyWindow
+    }:{}),
+    ...(draft.objective==='perfect'?{streakTarget:draft.streakTarget}:{})
+  };
 }
 export function describeStudioDraft(draft) {
   const check=validateStudioDraft(draft);
@@ -146,10 +168,10 @@ export function describeStudioDraft(draft) {
       outcome=`Answer as many questions as possible in ${draft.minutes} minutes; accuracy before speed.`;
       break;
     case 'bullseye':
-      outcome=`Reach ${draft.accuracyTarget}% accuracy in the most recent ${draft.accuracyWindow} answers (after ${draft.accuracyWindow} qualifying answers).`;
+      outcome=`First to reach ${draft.accuracyTarget}% accuracy over the most recent ${draft.accuracyWindow} fully marked tasks (after ${draft.accuracyWindow} tasks). Safety limit: ${draft.minutes} minutes.`;
       break;
     case 'perfect':
-      outcome=`Reach ${draft.streakTarget} correct answers consecutively; an incorrect answer resets the streak.`;
+      outcome=`First to complete ${draft.streakTarget} fully correct tasks in a row; an incorrect or partially correct task resets the streak. Safety limit: ${draft.minutes} minutes.`;
       break;
     default:
       outcome=draft.classMetric==='accuracy'?`Aim for ${draft.classAccuracy}% accuracy with at least ${draft.classParticipation}% participation.`:
@@ -163,9 +185,9 @@ export function describeStudioDraft(draft) {
     outcome+=` Optional existing class goal: ${draft.goalTarget}% accuracy.`;
   const availability=check.playable?'Ready to host now':
     draft.format==='relay'?'Preview only — Puzzle Relay needs the distributed-question engine (Pass 5).':
-    draft.objective==='blitz'?'Preview only — Blitz gameplay arrives in Pass 2.':
-    ['bullseye','perfect'].includes(draft.objective)?
-      'Preview only — accuracy and streak engines arrive in Pass 3.':
+    draft.objective==='blitz'?'Preview only — advanced modifiers require a later engine.':
+    ['bullseye','perfect','blitz'].includes(draft.objective)?
+      'Preview only — these advanced modifiers require a later engine.':
       'Preview only — full cooperative Class Quest arrives in Pass 4.';
   return {title:`${objective} · ${format}`,description:`${game}. ${outcome}`,
     availability,playable:check.playable};
