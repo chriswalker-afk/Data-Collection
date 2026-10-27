@@ -7,6 +7,9 @@ import {makeBlitzDeck,validBlitzSettings,BLITZ_MAX_ATTEMPTS,initialBlitzPlayer,
   currentBlitzItem,advanceBlitzQuestion,blitzQuestionKey,blitzStandings,blitzDeadlineReached} from './blitz-rules.js';
 import {isPaced,isRace,validRaceSettings,initialRaceProgress,recordRaceTask,
   raceTaskProgress,raceStandings} from './race-rules.js';
+import {validClassQuestSettings,initialClassQuest,classQuestProgress,
+  questMethodEvidence,classQuestStandings,isClassQuest,QUEST_MIN_PLAYERS,
+  QUEST_MAX_CORRECT_CREDIT} from './class-quest-rules.js';
 import {makeCeremony,ceremonySnapshot,collectableReceipt} from './ceremony-rules.js';
 import {
   TEAM_DEFINITIONS,TEAM_COUNTS,CLASS_TARGETS,balanceTeams,nextTeamId,
@@ -86,7 +89,8 @@ function preparedView(room){
 }
 function pacedPublicState(room,participant,now){
   if(!isPaced(room.objective))return null;
-  const standings=isRace(room.objective)?raceStandings(room):blitzStandings(room);
+  const standings=isClassQuest(room.objective)?classQuestStandings(room):
+    isRace(room.objective)?raceStandings(room):blitzStandings(room);
   const player=participant.host?null:room.players.find(p=>p.id===participant.id);
   const progress=player?.blitz;
   const item=room.status==='playing'&&!progress?.feedback&&!blitzDeadlineReached(room.deadline,now)?
@@ -125,15 +129,19 @@ function publicState(room,participant,now,connections,prepared=preparedView(room
   return {
     code:room.code,status:room.status,game,roundLength:room.roundLength,
     objective:room.objective||'classic',blitz:pacedPublicState(room,participant,now),
+    quest:classQuestProgress(room),
     teamCount:room.teamCount||0,goalTarget:room.goalTarget||0,
     teams:prepared.teams,classQuest:prepared.classQuest,
     teacherFeedback:prepared.teacherFeedback,questionPulse:prepared.questionPulse,
     questionSeconds:questionTimeMs(game)/1000,locked:Boolean(room.locked),
     players:room.players.map(p=>({
-      id:p.id,name:p.name,avatar:safeAvatar(p.avatar),score:prepared.visibleScores.get(p.id)||0,
+      id:p.id,name:p.name,avatar:safeAvatar(p.avatar),
+      score:isClassQuest(room.objective)?0:(prepared.visibleScores.get(p.id)||0),
       teamId:p.teamId||null,online:connections.has(p.id),
       answered:classic?prepared.answered.has(p.id):Boolean(p.blitz?.feedback),
-      ...(classic?{}:{
+      ...(classic?{}:isClassQuest(room.objective)?{
+        contributed:(p.blitz?.attempts||0)>=2
+      }:{
         correct:p.blitz?.correct||0,checked:p.blitz?.checked||0,
         attempts:p.blitz?.attempts||0,
         accuracy:p.blitz?.checked?Math.round(100*p.blitz.correct/p.blitz.checked):0
@@ -176,13 +184,16 @@ export class GameRoom extends DurableObject{
   async create(code,roundLength,game='which',objective='classic',minutes=0,raceSettings={}){
     if(this.room()||this.ctx.storage.kv.get('room'))return {error:'Room code already in use'};
     if(!validLength(game,roundLength))return {error:'Invalid game or round length'};
-    if(!['classic','blitz','bullseye','perfect'].includes(objective))
+    if(!['classic','blitz','bullseye','perfect','class'].includes(objective))
       return {error:'Unsupported challenge objective'};
     if(objective==='blitz'&&!validBlitzSettings(game,roundLength,minutes))
       return {error:'Choose a Blitz time between 1 and 15 minutes'};
     if(isRace(objective)&&!validRaceSettings({
       objective,game,roundLength,minutes,...raceSettings
     }))return {error:'Choose valid accuracy, streak and safety time targets'};
+    if(isClassQuest(objective)&&!validClassQuestSettings({
+      objective,game,roundLength,minutes,...raceSettings
+    }))return {error:'Choose valid Class Quest and participation targets'};
     if(objective==='classic'&&minutes!==0)return {error:'Unexpected Classic timer'};
     const race=isRace(objective)?{
       ...(objective==='bullseye'?{
@@ -191,7 +202,13 @@ export class GameRoom extends DurableObject{
       }:{streakTarget:raceSettings.streakTarget}),
       winnerId:null,winningTeamId:null,finishReason:null,endedAt:null
     }:null;
+    const questSettings=isClassQuest(objective)?{
+      classMetric:raceSettings.classMetric,classAccuracy:raceSettings.classAccuracy,
+      classCorrect:raceSettings.classCorrect,classParticipation:raceSettings.classParticipation,
+      classPerStudent:raceSettings.classPerStudent
+    }:null;
     const room={code,status:'lobby',created:Date.now(),game,roundLength,objective,race,
+      questSettings,quest:null,
       blitzMinutes:isPaced(objective)?minutes:0,blitzEnd:0,locked:false,
       hostToken:crypto.randomUUID(),ceremonyId:crypto.randomUUID(),players:[],deck:[],index:0,deadline:0,answers:[],results:[],ceremony:null,teamCount:0,goalTarget:0,feedback:null,feedbackUpdates:0};
     this.save(room);
@@ -217,6 +234,9 @@ export class GameRoom extends DurableObject{
       room.status='finished';room.finishedReason='time';
       if(isRace(room.objective)){
         room.race.finishReason='time';room.race.endedAt=Date.now();
+      }
+      if(isClassQuest(room.objective)&&room.quest){
+        room.quest.finishReason='time';room.quest.endedAt=Date.now();
       }
       this.save(room);this.broadcast();
       return true;
@@ -313,9 +333,17 @@ export class GameRoom extends DurableObject{
       room.goalTarget=command.target;
     }else if(command.type==='start'&&person.host&&room.status==='lobby'){
       if(room.players.length===0)return {error:'At least one student must join'};
+      if(isClassQuest(room.objective)&&room.players.length<QUEST_MIN_PLAYERS)
+        return {error:'Class Quest needs at least three students to share the goal'};
+      if(isClassQuest(room.objective)&&room.questSettings.classMetric==='correct'&&
+        room.players.length*QUEST_MAX_CORRECT_CREDIT<room.questSettings.classCorrect)
+        return {error:'This class cannot reach that Knowledge Quest target. Add students or lower the target.'};
       if((room.teamCount||0)>room.players.length)
         return {error:'Each team needs at least one student before starting'};
       const now=Date.now();
+      if(isClassQuest(room.objective))
+        room.quest=initialClassQuest({...room.questSettings,game:room.game,
+          roundLength:room.roundLength,minutes:room.blitzMinutes},room.players);
       room.deck=isPaced(room.objective)?makeBlitzDeck(room.game,SCENARIOS):
         makeGameDeck(room.game||'which',room.roundLength,SCENARIOS);
       room.index=0;room.answers=[];room.results=[];room.ceremony=null;room.feedback=null;room.feedbackUpdates=0;
@@ -351,7 +379,10 @@ export class GameRoom extends DurableObject{
         playerId:player.id,index:attemptIndex,questionId:item.id,
         correctCount:graded.correctCount,total:graded.total,points:graded.points,
         ...(room.game==='which'&&graded.correctCount===graded.total?{method:item.correctMethod}:{}),
-        ...(room.game==='speed'&&graded.correctCount===graded.total?{termId:item.id}:{})
+        ...(room.game==='speed'&&graded.correctCount===graded.total?{termId:item.id}:{}),
+        ...(isClassQuest(room.objective)?{
+          methods:questMethodEvidence(room.game,item,command,graded)
+        }:{})
       });
       progress.feedback={
         correctCount:graded.correctCount,total:graded.total,points:graded.points,
@@ -359,6 +390,14 @@ export class GameRoom extends DurableObject{
         reviewQuestion:safeGameQuestion(room.game,item),
         ...revealGameAnswer(room.game,item)
       };
+      if(isClassQuest(room.objective)){
+        const quest=classQuestProgress(room);
+        if(quest?.goalMet){
+          room.quest.achieved=true;room.quest.finishReason='target';
+          room.quest.endedAt=now;room.finishedReason='target';
+          room.status='finished';room.deadline=0;
+        }
+      }
       if(isRace(room.objective)){
         const result=recordRaceTask(progress,room.objective,room.race,graded,now);
         if(result.won){
@@ -432,6 +471,9 @@ export class GameRoom extends DurableObject{
       if(isRace(room.objective)&&!room.race.finishReason){
         room.race.finishReason='host';room.race.endedAt=Date.now();
       }
+      if(isClassQuest(room.objective)&&room.quest&&!room.quest.finishReason){
+        room.quest.finishReason='host';room.quest.endedAt=Date.now();
+      }
       room.status='finished';room.deadline=0;
     }else{return {error:'Action not available'};}
     this.save(room);this.broadcast();return {ok:true};
@@ -487,6 +529,9 @@ export class GameRoom extends DurableObject{
           if(isRace(room.objective)){
             room.race.finishReason='time';room.race.endedAt=Date.now();
           }
+          if(isClassQuest(room.objective)&&room.quest){
+            room.quest.finishReason='time';room.quest.endedAt=Date.now();
+          }
           this.save(room);this.broadcast();
         }else{
           await this.ctx.storage.setAlarm(room.deadline);
@@ -511,7 +556,7 @@ export default {
     }
     const url=new URL(request.url);
     if(url.pathname==='/health'&&request.method==='GET')
-      return json(request,{ok:true,service:'sampling-arcade-multiplayer',version:9,transport:'websocket',features:['teams','class-goals','teacher-feedback','ceremony','avatars','blitz','bullseye','perfect-run'],
+      return json(request,{ok:true,service:'sampling-arcade-multiplayer',version:10,transport:'websocket',features:['teams','class-goals','teacher-feedback','ceremony','avatars','blitz','bullseye','perfect-run','class-quest'],
         games:Object.keys(GAME_MODES),buildSha:env.BUILD_SHA||null});
     if(url.pathname==='/rooms'&&request.method==='POST'){
       let body;try{body=await smallJSON(request);}catch(e){return fail(request,e.message==='Request too large'?e.message:'Invalid JSON',e.message==='Request too large'?413:400);}
@@ -519,17 +564,23 @@ export default {
       const objective=body.objective===undefined?'classic':body.objective;
       const minutes=body.minutes===undefined?0:body.minutes;
       if(!validLength(game,roundLength))return fail(request,'Choose a valid game and round length');
-      if(!['classic','blitz','bullseye','perfect'].includes(objective))
+      if(!['classic','blitz','bullseye','perfect','class'].includes(objective))
         return fail(request,'Unsupported challenge objective');
       if(objective==='blitz'&&!validBlitzSettings(game,roundLength,minutes))
         return fail(request,'Choose a Blitz time between 1 and 15 minutes');
       const raceSettings={
         accuracyTarget:body.accuracyTarget,accuracyWindow:body.accuracyWindow,
-        streakTarget:body.streakTarget
+        streakTarget:body.streakTarget,
+        classMetric:body.classMetric,classAccuracy:body.classAccuracy,
+        classCorrect:body.classCorrect,classParticipation:body.classParticipation,
+        classPerStudent:body.classPerStudent
       };
       if(isRace(objective)&&!validRaceSettings({
         objective,game,roundLength,minutes,...raceSettings
       }))return fail(request,'Choose valid accuracy, streak and safety time targets');
+      if(isClassQuest(objective)&&!validClassQuestSettings({
+        objective,game,roundLength,minutes,...raceSettings
+      }))return fail(request,'Choose valid Class Quest and participation targets');
       if(objective==='classic'&&minutes!==0)return fail(request,'Classic rooms do not accept a Blitz timer');
       const key=await fingerprint(request);
       const limit=roomCreationRateLimits(env,request.url);
