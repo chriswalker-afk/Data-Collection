@@ -1,6 +1,7 @@
 import {createHostStudio} from './host-studio-ui.js';
 import {createBlitzUI} from './blitz-ui.js';
 import {createClassQuestUI} from './class-quest-ui.js';
+import {createRelayUI} from './relay-ui.js';
 import {ARENA_MODES,createModeUI} from './mode-ui.js';
 import {createCeremonyUI} from './ceremony-ui.js';
 import {createTeamUI} from './team-ui.js';
@@ -21,6 +22,7 @@ const modeName=game=>ARENA_MODES[game||'which']?.label||'Which Method?';
 const PACE_NAMES=Object.freeze({blitz:'Blitz',bullseye:'Bullseye',perfect:'Perfect Run',class:'Class Quest'});
 const isPaced=objective=>Object.hasOwn(PACE_NAMES,objective);
 const isRace=objective=>objective==='bullseye'||objective==='perfect';
+const isMosaic=objective=>objective==='mosaic';
 const $=id=>document.getElementById(id);
 let roomCode=null,token=null,isHost=false,room=null,websocket=null;
 let generation=0,retryTimer=null,pollTimer=null,clockTimer=null,backoff=750;
@@ -64,8 +66,7 @@ function leave(){
 }
 async function createRoom(){
   try{
-    // Only validated Classic, Blitz, races and Class Quest settings reach
-    // the Worker. Distributed Puzzle Relay remains a preview.
+    // Only validated live settings reach the Worker; Mosaic has a separate checked puzzle bank.
     const settings=hostStudio.liveSettings();
     notice('Creating the classroom…');
     const response=await api('/rooms',{
@@ -79,6 +80,9 @@ async function createRoom(){
         classMetric:settings.classMetric,classAccuracy:settings.classAccuracy,
         classCorrect:settings.classCorrect,classParticipation:settings.classParticipation,
         classPerStudent:settings.classPerStudent
+      }:{}),
+      ...(settings.objective==='mosaic'?{
+        teamCount:settings.teamCount,mosaicTiles:settings.mosaicTiles
       }:{})
     });
     roomCode=response.code;token=response.token;isHost=true;store();
@@ -125,14 +129,14 @@ function receiveState(data){
   if(data.myMultiplayerAwards?.completed&&data.myMultiplayerAwards.awarded?.length){
     saveKeepsake(data.myMultiplayerAwards);
   }
-  if(room.question?.serverNow||room.blitz?.serverNow)
-    clockOffset=(room.question?.serverNow||room.blitz?.serverNow)-Date.now();
+  if(room.serverNow||room.question?.serverNow||room.blitz?.serverNow)
+    clockOffset=(room.serverNow||room.question?.serverNow||room.blitz?.serverNow)-Date.now();
   render();
   const current=room.status+'|'+(room.question?.id||room.reveal?.question?.id||'')+
     '|'+(room.ceremony?.run||0)+'|'+(room.ceremony?.step??'-');
   if(previous!=='undefined|'&&previous!==current){
     const announcement=room.status==='playing'?
-      (isPaced(room.objective)?PACE_NAMES[room.objective]+' is live':
+      (isMosaic(room.objective)?'Puzzle Relay is live':isPaced(room.objective)?PACE_NAMES[room.objective]+' is live':
         'New question '+room.question.index+' of '+room.question.total):
       room.status==='reveal'?'Answer revealed':
       room.status==='ceremony'?'Awards ceremony reveal '+(room.ceremony.step+1)+' of '+room.ceremony.total:
@@ -216,6 +220,17 @@ async function command(type,method,targetId){
   }
 }
 function updateClock(){
+  if(isMosaic(room?.objective)&&room.mosaic?.status==='playing'){
+    const clock=$('mosaic-clock'),remaining=Math.max(0,room.mosaic.deadline-(Date.now()+clockOffset));
+    const seconds=Math.ceil(remaining/1000);
+    if(clock){
+      clock.textContent=Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0')+' remaining';
+      clock.classList.toggle('time-up',seconds===0);
+    }
+    if(seconds===0)for(const control of document.querySelectorAll('#stage .mosaic-option'))
+      control.disabled=true;
+    return;
+  }
   if(isPaced(room?.objective)&&room.status==='playing'){
     const blitzTimer=$('blitz-clock');
     const remaining=Math.max(0,room.blitz.endAt-(Date.now()+clockOffset));
@@ -279,6 +294,7 @@ const ceremonyUI=createCeremonyUI({make,button,actionRow,command,stageKicker});
 const teamUI=createTeamUI({make,button,command,stageKicker});
 const blitzUI=createBlitzUI({button,command,refreshStage:()=>render(),stageKicker});
 const questUI=createClassQuestUI();
+const relayUI=createRelayUI({command,button,stageKicker,refreshStage:()=>render()});
 function render(){
   const active=Boolean(roomCode&&room);
   $('entry').hidden=active;
