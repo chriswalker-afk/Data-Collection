@@ -226,4 +226,37 @@ expectStatus(await request('POST',path+'/command',{type:'ceremony-next'},teamwor
 assert.equal(expectStatus(await request('GET',path+'/state',undefined,sessions[0].token),200,'class goal slide').ceremony.slide.achieved,true);
 console.log('PASS: Pass 6 teacher-only teams, balanced six-player setup, hidden scores, class quest, feedback and ceremony.');
 
+// Pass C: independently verify the deployed Worker exposes all ten authored
+// comparison boards and keeps every destination private until teacher reveal.
+const deep=expectStatus(await request('POST','/rooms',{game:'sort',roundLength:10}),201,'create ten-board sorting');
+const reviewer=expectStatus(await request('POST','/rooms/'+deep.code+'/join',{name:'Pass C Otter'}),201,'join ten-board sorting');
+const route='/rooms/'+deep.code;
+expectStatus(await request('POST',route+'/command',{type:'start'},deep.token),200,'start ten-board sorting');
+const seenBoards=new Set();
+for(let i=0;i<10;i++){
+ const current=expectStatus(await request('GET',route+'/state',undefined,reviewer.token),200,'Pass C board '+(i+1));
+ assert.equal(current.question.total,10);
+ assert.equal(current.question.index,i+1);
+ assert.equal(current.question.kind,'sort');
+ assert.ok(!seenBoards.has(current.question.id),'Ten-board game repeated a comparison');
+ seenBoards.add(current.question.id);
+ assert.ok(current.question.statements.length>=8&&current.question.statements.length<=12);
+ for(const key of ['solutions','correctDestination','answerKey'])
+   assert.ok(!JSON.stringify(current.question).includes('"'+key+'"'),'Early solution leaked: '+key);
+ const answers={placements:Object.fromEntries(current.question.statements.map(item=>{
+   const source=evaluationIndex[item.id];
+   assert.ok(source,'Unknown multiplayer comparison statement '+item.id);
+   return [item.id,source.subject+':'+source.polarity];
+ }))};
+ expectStatus(await request('POST',route+'/command',{type:'answer',...answers},reviewer.token),200,'Pass C answer '+(i+1));
+ expectStatus(await request('POST',route+'/command',{type:'reveal'},deep.token),200,'Pass C reveal '+(i+1));
+ const after=expectStatus(await request('GET',route+'/state',undefined,reviewer.token),200,'Pass C checked '+(i+1));
+ assert.equal(after.reveal.answers[0].correctCount,current.question.statements.length);
+ expectStatus(await request('POST',route+'/command',{type:'next'},deep.token),200,'Pass C advance '+(i+1));
+}
+assert.equal(seenBoards.size,10,'Pass C should cycle through all ten unique method pairs');
+assert.equal(expectStatus(await request('GET',route+'/state',undefined,deep.token),200,'Pass C round finished').status,'finished');
+console.log('PASS: Cloudflare Pass C ten unique real multiplayer comparison boards, private solutions and scored full-board submissions.');
+
+
 
