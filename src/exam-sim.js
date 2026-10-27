@@ -14,6 +14,7 @@ export function paperQuestionPool(questions,difficulty='mixed'){
 }
 export const EXAM_STORE_KEY='sampling-arcade-exam-v1';
 export const MAX_TARGETS=40;
+export const MAX_RECENT_QUESTIONS=60;
 
 export function integerInput(value){
   const text=String(value??'').trim().replace(/,/g,'');
@@ -83,23 +84,40 @@ export function writtenChecklist(question,methods){
   if(!method)throw new Error('Unknown audited method '+question.methodId);
   return [...procedureModelSteps(question,methods).map(p=>({id:'step-'+p.id,text:p.text})),...(question.extraPoints||[])];
 }
-export function makePaper(questions,variant,random=Math.random,difficulty='mixed'){
+// New papers prefer unseen questions, then the least recently practised ones.
+// Shuffling remains the tie-breaker, so repeats still vary after a pool is exhausted.
+export function preferUnseenQuestions(pool,recentIds=[],random=Math.random){
+  const recent=new Map([...new Set(Array.isArray(recentIds)?recentIds:[])]
+    .map((id,i)=>[id,i]));
+  return shuffled(pool,random).sort((a,b)=>{
+    const aAge=recent.has(a.id)?recent.get(a.id):Number.POSITIVE_INFINITY;
+    const bAge=recent.has(b.id)?recent.get(b.id):Number.POSITIVE_INFINITY;
+    return bAge-aAge;
+  });
+}
+export function updateRecentQuestionIds(prior,newIds){
+  const ids=[...(Array.isArray(newIds)?newIds:[]).reverse(),
+    ...(Array.isArray(prior)?prior:[])];
+  return [...new Set(ids.filter(id=>typeof id==='string'&&id.length<=72))]
+    .slice(0,MAX_RECENT_QUESTIONS);
+}
+export function makePaper(questions,variant,random=Math.random,difficulty='mixed',recentIds=[]){
   const size=PAPER_SIZES[variant];
   if(!size)throw new Error('Unknown paper format');
   const count=size/PAPER_TYPES.length;
   const eligible=paperQuestionPool(questions,difficulty);
   const chosen=PAPER_TYPES.flatMap(type=>{
-    const pool=shuffled(eligible.filter(q=>q.type===type),random);
+    const pool=preferUnseenQuestions(eligible.filter(q=>q.type===type),recentIds,random);
     if(pool.length<count)throw new Error('Insufficient '+type+' questions');
     if(type!=='evaluation'||count<2)return pool.slice(0,count);
-    // A standard or full paper deliberately samples both inference/census and method critique.
+    // Standard/full papers deliberately span both inference and method critique.
     const inference=pool.find(q=>q.coverageArea==='inference');
     const methods=pool.find(q=>q.coverageArea==='methods');
     if(!inference||!methods)throw new Error('Missing evaluation coverage groups');
     const retained=[inference,methods];
     return retained.concat(pool.filter(q=>!retained.includes(q)).slice(0,count-2));
   });
-  // Gradually raise difficulty within a paper while retaining random order within each level.
+  // Gradually raise difficulty, preserving variation within each difficulty band.
   const ordered=shuffled(chosen,random).sort((a,b)=>LEVEL_ORDER[a.level]-LEVEL_ORDER[b.level]);
   return newPaper(variant,ordered.map(q=>q.id),difficulty);
 }
@@ -116,18 +134,19 @@ export function newPaper(variant,questionIds,difficulty='mixed'){
   return {variant,difficulty,questionIds:[...questionIds],index:0,entries:{},complete:false};
 }
 export function paperEntry(paper,id){
-  return paper.entries[id]||{values:{},draft:'',stage:'answer',included:[],flag:false,hintsUsed:0};
+  return paper.entries[id]||{values:{},draft:'',improvement:'',stage:'answer',included:[],flag:false,hintsUsed:0};
 }
 export function changeReviewTargets(ids,id,flag){
   const next=[id,...ids.filter(x=>x!==id)].slice(0,MAX_TARGETS);
   return flag?next:ids.filter(x=>x!==id);
 }
-export function emptyExamStore(){return {version:1,reviewIds:[],paper:null};}
+export function emptyExamStore(){return {version:1,reviewIds:[],recentQuestionIds:[],paper:null};}
 const safeId=value=>typeof value==='string'&&/^[a-z][a-z0-9-]{1,70}$/.test(value);
 function sanitizeEntry(value,question,methods){
-  const entry={values:{},draft:'',stage:'answer',included:[],flag:false,hintsUsed:0};
+  const entry={values:{},draft:'',improvement:'',stage:'answer',included:[],flag:false,hintsUsed:0};
   if(!value||typeof value!=='object'||Array.isArray(value))return entry;
   if(typeof value.draft==='string')entry.draft=value.draft.slice(0,2400);
+  if(typeof value.improvement==='string')entry.improvement=value.improvement.slice(0,600);
   if(['answer','feedback','review','done'].includes(value.stage))entry.stage=value.stage;
   entry.flag=value.flag===true;
   if(Number.isSafeInteger(value.hintsUsed)&&value.hintsUsed>=0&&value.hintsUsed<=2)entry.hintsUsed=value.hintsUsed;
@@ -142,6 +161,10 @@ function sanitizeEntry(value,question,methods){
     const allowed=new Set(writtenChecklist(question,methods).map(x=>x.id));
     if(Array.isArray(value.included))entry.included=[...new Set(value.included.filter(x=>allowed.has(x)))];
     if(entry.stage==='feedback')entry.stage='answer';
+    // Reading a model without writing cannot count as checking ideas in one's own answer.
+    if(!entry.draft.trim()&&['review','done'].includes(entry.stage)){
+      entry.included=[];entry.flag=true;
+    }
   }
   return entry;
 }
@@ -150,6 +173,8 @@ export function sanitizeExamStore(value,questions,methods){
   if(!value||typeof value!=='object'||Array.isArray(value)||value.version!==1)return result;
   const byId=new Map(questions.map(q=>[q.id,q]));
   if(Array.isArray(value.reviewIds))result.reviewIds=[...new Set(value.reviewIds.filter(id=>safeId(id)&&byId.has(id)))].slice(0,MAX_TARGETS);
+  if(Array.isArray(value.recentQuestionIds))
+    result.recentQuestionIds=[...new Set(value.recentQuestionIds.filter(id=>safeId(id)&&byId.has(id)))].slice(0,MAX_RECENT_QUESTIONS);
   const p=value.paper;
   if(!p||typeof p!=='object'||Array.isArray(p)||![...Object.keys(PAPER_SIZES),'review'].includes(p.variant))return result;
   if(!Array.isArray(p.questionIds)||p.questionIds.length<1||p.questionIds.length>12||
@@ -196,10 +221,13 @@ export function paperSummary(paper,questions,methods){
     }
     const points=writtenChecklist(q,methods),included=new Set(entry.included);
     writtenQuestions++;totalChecklist+=points.length;
-    covered+=points.filter(x=>included.has(x.id)).length;
-    return {id,title:q.title,type:q.type,label:entry.stage==='answer'?'Not reviewed':entry.included.length+' / '+points.length+' self-checked points',
-      needsReview:entry.stage==='answer'||entry.flag||entry.included.length<points.length||entry.hintsUsed>0,
-      draft:entry.draft,score:null,hintsUsed:entry.hintsUsed};
+    const hasDraft=Boolean(entry.draft.trim());
+    covered+=hasDraft?points.filter(x=>included.has(x.id)).length:0;
+    return {id,title:q.title,type:q.type,
+      label:entry.stage==='answer'?'Not reviewed':
+        !hasDraft?'Model studied · no written answer':entry.included.length+' / '+points.length+' self-checked points',
+      needsReview:entry.stage==='answer'||!hasDraft||entry.flag||entry.included.length<points.length||entry.hintsUsed>0,
+      draft:entry.draft,improvement:entry.improvement||'',score:null,hintsUsed:entry.hintsUsed};
   });
   return {rows,correctParts,possibleParts,fullyCorrect,numberQuestions,writtenQuestions,covered,totalChecklist};
 }
