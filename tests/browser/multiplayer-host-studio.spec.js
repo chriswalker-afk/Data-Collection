@@ -29,8 +29,11 @@ test('default studio hosts the same checked classic multiplayer activities',asyn
 });
 test('objective presets and previews never create unfinished gameplay rooms',async({page})=>{
  await open(page);
+ await selectObjective(page,'blitz');
+ await expect(page.locator('#create')).toBeEnabled();
+ await expect(page.locator('#studio-preview-availability')).toContainText('Ready to host now');
+ await expect(page.locator('#studio-minutes')).toBeVisible();
  for(const [objective,target,needle] of [
-  ['blitz','#studio-minutes','5 minutes'],
   ['bullseye','#studio-accuracy-target','80% accuracy'],
   ['perfect','#studio-streak-target','5 correct answers consecutively'],
   ['class','#studio-class-metric','shared']
@@ -98,7 +101,8 @@ test('advanced settings are honestly labelled preview-only',async({page})=>{
  await page.locator('#studio-leaderboard').uncheck();
  await expect(page.locator('#create')).toBeDisabled();
 });
-test('Classic squad and optional goal are applied using existing Worker lobby commands',async({page,request})=>{
+test('Classic squad and optional goal are applied using existing Worker lobby commands',async({page,request,isMobile})=>{
+ test.skip(isMobile,'Parallel mobile join and team tests already cover 320px and 390px; avoid duplicate local Worker load.');
  await open(page);
  await selectFormat(page,'squad');
  await page.locator('#studio-team-count').selectOption('3');
