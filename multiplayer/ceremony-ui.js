@@ -115,21 +115,45 @@ export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
           card.append(group);
         }
         card.append(
-          node('span',team.rank?team.rank===1?'1st place':team.rank===2?'2nd place':
+          node('span',room.objective==='class'?'Working together':
+            team.rank?team.rank===1?'1st place':team.rank===2?'2nd place':
             team.rank===3?'3rd place':'4th place':'No positive points yet','team-rank'),
-          node('strong',team.averageScore.toLocaleString('en-GB')+' average points','team-average'),
+          node('strong',room.objective==='class'?
+            team.correct+' correct decisions':' '+team.averageScore.toLocaleString('en-GB')+' average points','team-average'),
           node('span',team.members+' members · '+team.accuracy+'% checked accuracy','team-quest-label'),
-          node('span',team.questComplete?'✦ Team Quest achieved':'Team Quest not yet achieved','team-quest-label'));
+          node('span',room.objective==='class'?'Contributing to our shared quest':
+            team.questComplete?'✦ Team Quest achieved':'Team Quest not yet achieved','team-quest-label'));
         board.append(card);
       }
       outer.append(board,node('p',slide.subtitle,'ceremony-footnote'));
     }else if(slide.kind==='class-quest'){
       outer.append(node('div',slide.achieved?'✦   🎉   ✧':'✦   🤝   ✧','ceremony-welcome-icons'),
-        h(slide.title),
-        node('p',slide.accuracy+'% checked accuracy · '+slide.coverage+
+        h(slide.title));
+      if(slide.metric){
+        const goalText=slide.metric==='accuracy'?
+          'Mean student accuracy: '+slide.accuracy+'% / '+slide.target.accuracy+'%':
+          slide.metric==='correct'?
+            'Credited correct decisions: '+slide.creditedCorrect+' / '+slide.target.correct:
+          slide.metric==='mastery'?
+            'Sampling methods mastered: '+slide.methods.filter(m=>m.contributors>=m.needed).length+' of 5':
+            'Students meeting personal goal: '+slide.everyoneMet+' / '+slide.needed;
+        outer.append(node('p',goalText,'ceremony-subtitle'),
+          node('p','Meaningful participation: '+slide.contributors+' of '+slide.totalStudents+
+            ' students, '+slide.coverage+'%.','ceremony-finale-count'));
+        if(slide.metric==='mastery'){
+          const grid=node('ul',undefined,'quest-ceremony-methods');
+          for(const method of slide.methods){
+            grid.append(node('li',method.label+': '+method.contributors+
+              ' / '+method.needed+' students'));
+          }
+          outer.append(grid);
+        }
+      }else{
+        outer.append(node('p',slide.accuracy+'% checked accuracy · '+slide.coverage+
           '% class participation','ceremony-subtitle'),
-        node('p','Goal: '+slide.target+'% accuracy and 75% participation','ceremony-finale-count'),
-        node('p',slide.subtitle,'ceremony-footnote'));
+          node('p','Goal: '+slide.target+'% accuracy and 75% participation','ceremony-finale-count'));
+      }
+      outer.append(node('p',slide.subtitle,'ceremony-footnote'));
     }else if(slide.kind==='podium'){
       outer.append(node('div','🏆','ceremony-top-icon'),h(slide.title));
       podium(slide,outer);
