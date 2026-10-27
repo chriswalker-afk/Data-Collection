@@ -2437,7 +2437,7 @@
         },
         {
           "id": "interval",
-          "text": "Calculate k = 360 ÷ 30 = 12."
+          "text": "Calculate k = 360 ÷ 30 = 12, the regular gap between the selected positions."
         },
         {
           "id": "start",
@@ -3512,7 +3512,7 @@
           "text": "A defensible allocation such as 41,22,15 or 40,23,15 totals 78; draw randomly within each stratum."
         }
       ],
-      "model": "The exact allocations are 40.5, 22.5 and 15. If both halves round up, the total is 79. One defensible allocation is 41, 22 and 15; I would then choose that many distinct members randomly from each group's complete list.",
+      "model": "The exact allocations are 40.5, 22.5 and 15. If both halves round up, the total is 79 rather than the intended 78. One defensible allocation is 41, 22 and 15; I would then choose that many distinct members randomly from each group's complete list.",
       "sourceEvaluationIds": [
         "strata-proportions",
         "strata-random"
