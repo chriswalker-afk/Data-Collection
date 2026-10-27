@@ -36,12 +36,18 @@ export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
     }else{
       for(const group of groups){
         const medal=MEDALS[group.rank],item=node('li',undefined,'ceremony-podium-step is-'+medal.tone);
+        item.dataset.place=String(group.rank);
+        // The podium order stays silver/gold/bronze; the centre winner arrives first.
+        item.style.setProperty('--reveal-delay',
+          group.rank===1?'90ms':group.rank===2?'270ms':'420ms');
         item.append(node('span',medal.emoji,'ceremony-podium-emoji'),
           node('span',medal.label+' · '+(group.rows.length>1?'Joint ':'')+(group.rank===1?'1st':group.rank===2?'2nd':'3rd')+' place',
             'ceremony-podium-rank'));
         const names=node('div',undefined,'ceremony-podium-names');
         for(const person of group.rows)names.append(personWithCritter(person,'large'));
-        item.append(names,node('span',group.rows[0].score.toLocaleString('en-GB')+' points','ceremony-podium-score'));
+        item.append(names);
+        if(group.rows.length>1)item.append(node('span',group.rows.length+' joint winners','ceremony-people-caption'));
+        item.append(node('span',group.rows[0].score.toLocaleString('en-GB')+' points','ceremony-podium-score'));
         stand.append(item);
       }
       container.append(stand);
@@ -54,10 +60,30 @@ export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
     nameBox.append(node('span',slide.recipients.length===1?'Awarded to':'Awarded to '+slide.recipients.length+' mathematicians',
       'ceremony-recipients-kicker'));
     const names=node('ul');
-    for(const person of slide.recipients){
-      const li=node('li');li.append(node('span','✦','ceremony-name-spark'),personWithCritter(person));names.append(li);
+    for(const [index,person] of slide.recipients.entries()){
+      const li=node('li');
+      li.style.setProperty('--reveal-delay',Math.min(index,10)*55+'ms');
+      li.append(node('span','✦','ceremony-name-spark'),personWithCritter(person));
+      names.append(li);
     }
     nameBox.append(names);container.append(detail,nameBox);
+  }
+  function classPhoto(players){
+    // A non-ranked class photo: everyone is included, regardless of points.
+    const section=node('section',undefined,'ceremony-class-photo');
+    section.append(node('h3','Our classroom critters'),
+      node('p',players.length+' players · Every mathematician belongs in the celebration.'));
+    const list=node('ul',undefined,'ceremony-class-gallery');
+    list.setAttribute('aria-label','All classroom critters, alphabetically by nickname');
+    const alphabetical=[...players].sort((a,b)=>a.name.localeCompare(b.name,'en-GB'));
+    for(const [index,person] of alphabetical.entries()){
+      const item=node('li');
+      item.style.setProperty('--reveal-delay',Math.min(index,10)*50+'ms');
+      item.append(critterPortrait(person.avatar,'medium'),node('strong',person.name));
+      list.append(item);
+    }
+    section.append(list);
+    return section;
   }
   function render(room,isHost,stage){
     const c=room.ceremony;
@@ -80,7 +106,16 @@ export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
       for(const team of slide.standings){
         const card=node('article');
         card.append(node('span',team.icon,'team-avatar'),
-          node('strong',team.name,'team-name'),
+          node('strong',team.name,'team-name'));
+        const teamMates=room.players.filter(person=>person.teamId===team.id);
+        if(teamMates.length){
+          const group=node('div',undefined,'ceremony-team-critters');
+          group.setAttribute('aria-label',team.name+' team critters');
+          for(const person of teamMates.slice(0,4))group.append(critterPortrait(person.avatar));
+          if(teamMates.length>4)group.append(node('span','+'+(teamMates.length-4),'ceremony-more'));
+          card.append(group);
+        }
+        card.append(
           node('span',team.rank?team.rank===1?'1st place':team.rank===2?'2nd place':
             team.rank===3?'3rd place':'4th place':'No positive points yet','team-rank'),
           node('strong',team.averageScore.toLocaleString('en-GB')+' average points','team-average'),
@@ -111,6 +146,7 @@ export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
         node('p',slide.awardedCount+' different character award'+(slide.awardedCount===1?'':'s')+
           ' celebrated · '+slide.recipientsCount+' student'+(slide.recipientsCount===1?'':'s')+
           ' earned a special achievement','ceremony-finale-count'));
+      if(room.players?.length)outer.append(classPhoto(room.players));
     }
     stage.append(outer);
     if(isHost)controls(c,stage);
