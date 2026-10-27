@@ -22,7 +22,7 @@ export default defineConfig({
       timeout: 20000
     },
     {
-      command: 'npx wrangler dev --config multiplayer/wrangler.jsonc --ip 127.0.0.1 --port 8787',
+      command: 'npx wrangler dev --config multiplayer/wrangler.test.jsonc --ip 127.0.0.1 --port 8787',
       url: 'http://127.0.0.1:8787/health',
       reuseExistingServer: !process.env.CI,
       timeout: 60000
