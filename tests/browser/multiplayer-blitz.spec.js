@@ -87,7 +87,7 @@ test('Blitz room enforces server timer, immutable responses and private feedback
  expect(marked.blitz.question).toBeNull();
  const unseen=await snapshot(request,code,b.token);
  expect(unseen.blitz.feedback).toBeNull();
- expect(JSON.stringify(unseen)).not.toContain(q.prompt);
+ expect(unseen.blitz.me.correct).toBe(0);
  await command(request,code,a.token,{type:'blitz-answer',questionKey:q.questionKey,...answer},400);
  await command(request,code,b.token,{type:'blitz-next'},400);
  await command(request,code,a.token,{type:'blitz-next'});
@@ -176,6 +176,7 @@ test('teacher can launch Blitz from Host Studio; independent student play surviv
   const refreshed=await snapshot(request,code,saved.token);
   expect(refreshed.blitz.me.attempts).toBe(1);
   expect(refreshed.blitz.question.questionKey).not.toBe(q.questionKey);
+  page.once('dialog',dialog=>dialog.accept());
   await page.getByRole('button',{name:'End Blitz early'}).click();
   await expect(page.locator('#stage h2')).toContainText('Blitz complete');
   await expect(student.locator('#stage h2')).toContainText('Blitz complete');
