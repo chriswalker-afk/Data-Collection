@@ -233,7 +233,7 @@ test('mobile student's Perfect Run progress and feedback survive a refresh',asyn
    systematic:'Systematic sampling',quota:'Quota sampling',opportunity:'Opportunity sampling'}[input.method];
   await student.locator('.blitz-options .method-option').filter({hasText:label}).click();
   await expect(student.locator('.blitz-answer-review')).toBeVisible({timeout:15000});
-  await expect(student.locator('.blitz-hint')).toContainText('Current perfect run');
+  await expect(student.locator('.blitz-hint').filter({hasText:'Current perfect run'})).toBeVisible();
   await student.reload();
   await expect(student.locator('.blitz-answer-review')).toBeVisible({timeout:15000});
   await student.getByRole('button',{name:'Next question'}).click();
