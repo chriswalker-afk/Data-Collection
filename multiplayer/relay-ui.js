@@ -213,6 +213,7 @@ export function createRelayUI({command,button,stageKicker,refreshStage}={}){
             roundId:task.roundId,partIndex:task.partIndex,choiceId:option.id
           }),'mosaic-option');
           control.dataset.mosaicOption=option.id;
+          control.dataset.mosaicRound=task.roundId;
           control.disabled=pending||task.remaining===0||Date.now()<task.tryAfter;
           options.append(control);
         }
