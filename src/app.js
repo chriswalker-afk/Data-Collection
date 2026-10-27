@@ -212,6 +212,23 @@ function arcadePathsView(){
   return section;
 }
 
+
+function critterLabPromo(){
+  const section=element('section',{className:'arcade-critter-promo','aria-labelledby':'critter-lab-heading'});
+  const copy=div('arcade-critter-promo-copy',
+    span('arcade-critter-promo-eyebrow','A LITTLE CREATIVITY BEFORE MULTIPLAYER'),
+    heading(2,'','Build your critter',{id:'critter-lab-heading'}),
+    paragraph('','Mix animal heads, bodies and legs, choose their colours, and save a wonderfully ridiculous mascot on this device.'),
+    link('Open Critter Lab ↗','./critter-lab/index.html','arcade-critter-promo-cta'));
+  const preview=div('arcade-critter-promo-avatar');
+  preview.setAttribute('aria-hidden','true');
+  for(const [kind,id] of [['legs','frog'],['bodies','penguin'],['heads','fox']]){
+    preview.append(element('img',{src:'./critter-lab/assets/'+kind+'/'+id+'.svg',alt:'',loading:'lazy'}));
+  }
+  section.append(copy,preview);
+  return section;
+}
+
 function homeView() {
   const root = div('page page-home');
   const hero = element('section', { className: 'hero' });
@@ -237,7 +254,7 @@ function homeView() {
     div('floating-card art-front', span('art-label', 'KEY IDEA 01'), span('art-word', 'Population'), span('art-rule', ''), span('art-sentence', 'The entire set of interest.'))
   );
   hero.append(copy, art);
-  root.append(hero,arcadePathsView());
+  root.append(hero,arcadePathsView(),critterLabPromo());
   const topicSection = element('section', { className: 'section section-topic', 'aria-labelledby': 'topic-title' });
   topicSection.append(
     div('section-top', div('', span('eyebrow', 'MAKE IT YOURS'), heading(2, 'section-title', 'What are you revising?', { id: 'topic-title' })),

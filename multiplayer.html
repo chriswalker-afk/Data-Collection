@@ -9,6 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./styles/arcade-hub.css">
+  <link rel="stylesheet" href="./styles/critter-lab-promo.css">
   <link rel="stylesheet" href="./styles/multiplayer.css">
 </head>
 <body>
@@ -87,6 +88,14 @@
             <label for="nickname">Your nickname</label>
             <input id="nickname" name="nickname" required autocomplete="off" maxlength="20" placeholder="Maths Explorer">
             <p class="entry-field-tip">Use a nickname, not your full name. Your teacher sees the same nickname.</p>
+            <div class="critter-entry-invite" role="note">
+              <span class="critter-entry-invite-icon" aria-hidden="true">🐾</span>
+              <div class="critter-entry-invite-copy">
+                <strong>Make a critter (optional)</strong>
+                <p>Mix animal parts and colours before the challenge. Your critter is saved on this device; room-wide avatar display is coming in a later update.</p>
+                <a id="critter-customise" href="./critter-lab/index.html">Create or change your critter ↗</a>
+              </div>
+            </div>
             <button class="btn btn-primary entry-submit" type="submit" id="join">Join game <span aria-hidden="true">↗</span></button>
           </form>
         </section>
