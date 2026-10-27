@@ -324,6 +324,8 @@ export class GameRoom extends DurableObject{
       });
       progress.feedback={
         correctCount:graded.correctCount,total:graded.total,points:graded.points,
+        // Private checked-question context makes Sort It! explanations readable.
+        reviewQuestion:safeGameQuestion(room.game,item),
         ...revealGameAnswer(room.game,item)
       };
     }else if(command.type==='blitz-next'&&!person.host&&room.status==='playing'&&room.objective==='blitz'){
