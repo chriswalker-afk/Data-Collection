@@ -16,7 +16,7 @@ function fill(state,game,prefix,n,extra={}){
 }
 test('catalogue has 26 unique collectible IDs and labelled verification classes',()=>{
   assert.equal(AWARDS.length,26);
-  assert.equal(new Set(AWARDS.map(a=>a.id)).size,16);
+  assert.equal(new Set(AWARDS.map(a=>a.id)).size,26);
   assert.equal(AWARDS.filter(a=>a.level==='self-rated').length,4);
   assert.ok(AWARDS.every(a=>a.name&&a.emoji&&a.description&&a.hint));
 });
@@ -107,7 +107,7 @@ test('malformed or forged unlock records without supporting evidence are discard
   const crafted={version:1,evidence:{identify:{'case-0':'quota'},speed:['safe',null,'BAD!', 'safe']},
     unlocked:{'sampling-fox':'2020-01-01','bias-buster':'2020-01-01'}};
   const clean=sanitizeAwards(crafted);
-  assert.equal(Object.keys(clean.unlocked).length,0);
+  assert.deepEqual(Object.keys(clean.unlocked),['curious-cat']);
   assert.deepEqual(clean.evidence.speed,['safe']);
   assert.equal(Object.keys(clean.evidence.identify).length,1);
   assert.equal(sanitizeAwards({version:8}).version,1);
