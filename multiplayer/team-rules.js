@@ -45,7 +45,7 @@ function playerStats(room,players,entries,threshold){
   // Timed Blitz has no fixed number of scheduled questions per player.
   // For Blitz, coverage is the proportion of members who contributed at least
   // one checked answer, not submissions divided by an arbitrary deck size.
-  const paced=['blitz','bullseye','perfect'].includes(room.objective);
+  const paced=['blitz','bullseye','perfect','class'].includes(room.objective);
   const opportunities=paced?players.length:players.length*(room.deck?.length||room.roundLength||0);
   const contributed=paced?new Set(rows.map(r=>r.playerId)).size:submitted;
   const minResponses=Math.ceil(opportunities*.75);
@@ -71,16 +71,19 @@ export function teamStandings(room,includeCurrent=true){
       correct:progress.correct,checked:progress.checked,submitted:progress.submitted,
       opportunities:progress.opportunities,coverage:progress.coverage,
       accuracy:progress.accuracy,
-      questComplete:room.status==='finished'||room.status==='ceremony'?
-        progress.achieved:false};
+      questComplete:room.objective==='class'?false:
+        (room.status==='finished'||room.status==='ceremony'?progress.achieved:false)};
   });
+  const isCooperative=room.objective==='class';
   const isBlitz=room.objective==='blitz';
   const isRace=['bullseye','perfect'].includes(room.objective);
   const winningTeam=isRace?room.race?.winningTeamId:null;
   // Blitz normalizes mathematical decisions by team size. Race modes
   // prioritize the objectively first target-reaching student and their team;
   // other teams are shown as progress, not invented target winners.
-  const comparison=(a,b)=>isRace?
+  const comparison=(a,b)=>isCooperative?
+    b.coverage-a.coverage||a.id.localeCompare(b.id):
+    isRace?
     Number(b.id===winningTeam)-Number(a.id===winningTeam)||
       b.averageScore-a.averageScore:
     isBlitz?
@@ -91,6 +94,10 @@ export function teamStandings(room,includeCurrent=true){
   let lastRank=0;
   for(let i=0;i<results.length;i++){
     const row=results[i],prev=results[i-1];
+    if(isCooperative){
+      row.rank=null;
+      continue;
+    }
     if(isRace){
       row.rank=row.id===winningTeam?1:null;
       continue;

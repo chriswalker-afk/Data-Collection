@@ -143,3 +143,21 @@ jobs:
             test-results/
           if-no-files-found: ignore
           retention-days: 7
+
+
+  class-quest-staging-revision:
+    name: Exact-revision Class Quest Cloudflare staging smoke
+    if: github.event_name == 'pull_request' && github.head_ref == 'feature/multiplayer-class-quest-pass4'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    needs: unit-and-content
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact revision and four real cooperative objectives
+        env:
+          MULTIPLAYER_API: https://sampling-arcade-class-quest-pass4-test.chris-walker-d8b.workers.dev
+          EXPECTED_BUILD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node scripts/multiplayer-class-quest-smoke.mjs

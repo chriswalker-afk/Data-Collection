@@ -3,6 +3,7 @@ import {safeAvatar} from './avatar.js';
 import {teamStandings,classQuestSnapshot} from './team-rules.js';
 import {blitzStandings} from './blitz-rules.js';
 import {isRace,raceStandings} from './race-rules.js';
+import {classQuestProgress} from './class-quest-rules.js';
 // Pass 5: entirely server-derived classroom achievements and a deterministic ceremony.
 // No individual achievement or point total is accepted from a browser request.
 const validScore=n=>Number.isSafeInteger(n)&&n>=0;
@@ -27,7 +28,7 @@ function longestFullStreak(rows){
 export function roomAwards(room){
   const game=room.game||'which';
   const paced=room.objective==='blitz'||isRace(room.objective);
-  const podium=paced?
+  const podium=room.objective==='class'?[]:paced?
     (isRace(room.objective)?raceStandings(room):blitzStandings(room))
       .filter(row=>row.rank!==null).map(row=>{
       const p=room.players.find(person=>person.id===row.id);
@@ -90,13 +91,29 @@ export function makeCeremony(room){
   ];
   if(room.teamCount){
     const teamResults=teamStandings(room);
-    slides.push({kind:'team-podium',title:'Our team league',
+    slides.push({kind:'team-podium',title:room.objective==='class'?
+      'Teams contributing together':'Our team league',
       standings:teamResults,
-      subtitle:isRace(room.objective)?
+      subtitle:room.objective==='class'?
+        'Every team added checked mathematical evidence to the one shared class achievement. No team is ranked.':
+      isRace(room.objective)?
         (room.race?.winningTeamId?
           'The first student to reach the mathematical target also wins for their team.':
           'No team met the target; average checked scores show each team\'s progress.'):
         'Every team is ranked by average checked points per member, so larger groups have no scoring advantage.'});
+  }
+  if(room.objective==='class'){
+    const goal=classQuestProgress(room);
+    slides.push({kind:'class-quest',title:goal.achieved?
+      'Class Quest achieved together!':'Our Class Quest journey',
+      metric:goal.metric,target:goal.target,achieved:goal.achieved,
+      accuracy:goal.accuracy,coverage:goal.coverage,
+      contributors:goal.contributors,needed:goal.needed,totalStudents:goal.totalStudents,
+      creditedCorrect:goal.creditedCorrect,correct:goal.correct,checked:goal.checked,
+      everyoneMet:goal.everyoneMet,methods:goal.methods,
+      subtitle:goal.achieved?
+        'Every contribution counted. Together, we earned the shared mathematical achievement.':
+        'We made mathematical progress. Next time, involve more classmates or refine our methods.'});
   }
   if(room.goalTarget){
     const goal=classQuestSnapshot(room);
@@ -109,7 +126,7 @@ export function makeCeremony(room){
         'Together, we reached our mathematical accuracy and participation goals.':
         'A thoughtful class challenge takes participation and precision. See what we can improve next time.'});
   }
-  slides.push({kind:'podium',title:'Our classroom podium',standings,
+  if(room.objective!=='class')slides.push({kind:'podium',title:'Our classroom podium',standings,
     subtitle:isRace(room.objective)?
       (standings.length?
         'First to achieve the verified target wins; correct and partially correct attempts still count towards learning.':

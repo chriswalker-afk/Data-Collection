@@ -63,3 +63,8 @@ jobs:
           MULTIPLAYER_API: https://sampling-arcade-multiplayer-stage.chris-walker-d8b.workers.dev
           EXPECTED_BUILD_SHA: ${{ github.sha }}
         run: node scripts/multiplayer-race-smoke.mjs
+      - name: Validate Class Quest's four cooperative goals and participation
+        env:
+          MULTIPLAYER_API: https://sampling-arcade-multiplayer-stage.chris-walker-d8b.workers.dev
+          EXPECTED_BUILD_SHA: ${{ github.sha }}
+        run: node scripts/multiplayer-class-quest-smoke.mjs

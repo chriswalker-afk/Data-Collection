@@ -40,16 +40,12 @@ test('objective presets and previews never create unfinished gameplay rooms',asy
   await expect(page.locator('#studio-minutes')).toBeVisible();
   await expect(page.locator('#studio-future-note')).toBeHidden();
  }
- for(const [objective,target,needle] of [
-  ['class','#studio-class-metric','shared']
- ]){
-  await selectObjective(page,objective);
-  await expect(page.locator('#create')).toBeDisabled();
-  await expect(page.locator('#studio-preview-availability')).toContainText('Preview only');
-  await expect(page.locator(target)).toBeVisible();
-  if(objective!=='class')await expect(page.locator('#studio-preview-detail')).toContainText(needle);
-  await expect(page.locator('#room')).toBeHidden();
- }
+ await selectObjective(page,'class');
+ await expect(page.locator('#create')).toBeEnabled();
+ await expect(page.locator('#studio-class-metric')).toBeVisible();
+ await expect(page.locator('#studio-minutes')).toBeVisible();
+ await expect(page.locator('#studio-preview-availability')).toContainText('Ready to host now');
+ await expect(page.locator('#room')).toBeHidden();
  await selectObjective(page,'classic');
  await expect(page.locator('#create')).toBeEnabled();
  await selectFormat(page,'relay');
@@ -69,16 +65,16 @@ test('Bullseye and cooperative metrics keep their edited configuration after ref
  await page.locator('#studio-class-metric').selectOption('correct');
  await page.locator('#studio-class-correct').fill('180');
  await page.locator('#studio-class-participation').fill('85');
- await expect(page.locator('#studio-preview-detail')).toContainText('180 correct answers');
- await expect(page.locator('#studio-preview-detail')).toContainText('85% participation');
+ await expect(page.locator('#studio-preview-detail')).toContainText('180 credited correct decisions');
+ await expect(page.locator('#studio-preview-detail')).toContainText('85% completing two checked tasks');
  await page.reload();
  await expect(page.locator('input[name="studio-objective"][value="class"]')).toBeChecked();
  await expect(page.locator('#studio-class-correct')).toHaveValue('180');
  await expect(page.locator('#studio-class-participation')).toHaveValue('85');
- await expect(page.locator('#create')).toBeDisabled();
+ await expect(page.locator('#create')).toBeEnabled();
  await page.locator('#studio-class-metric').selectOption('everyone');
  await page.locator('#studio-class-per-student').fill('6');
- await expect(page.locator('#studio-preview-detail')).toContainText('each answer 6 questions correctly');
+ await expect(page.locator('#studio-preview-detail')).toContainText('each complete 6 entirely correct tasks');
 });
 test('invalid configuration shows its reason and cannot launch',async({page})=>{
  await open(page);
@@ -100,11 +96,12 @@ test('advanced settings are honestly labelled preview-only',async({page})=>{
  await expect(page.locator('#studio-advanced-live-note')).toBeVisible();
  await expect(page.locator('#studio-advanced-future-fields')).toBeHidden();
  await selectObjective(page,'class');
- await expect(page.locator('#studio-advanced-future-fields')).toBeVisible();
- await page.locator('#studio-difficulty').selectOption('advanced');
- await page.locator('#studio-question-order').selectOption('same');
- await page.locator('#studio-leaderboard').uncheck();
+ await expect(page.locator('#studio-advanced-live-note')).toBeVisible();
+ await expect(page.locator('#studio-advanced-future-fields')).toBeHidden();
+ await expect(page.locator('#create')).toBeEnabled();
+ await selectFormat(page,'relay');
  await expect(page.locator('#create')).toBeDisabled();
+ await expect(page.locator('#studio-preview-availability')).toContainText('Puzzle Relay');
 });
 test('Classic squad and optional goal are applied using existing Worker lobby commands',async({page,request,isMobile})=>{
  test.skip(isMobile,'Parallel mobile join and team tests already cover 320px and 390px; avoid duplicate local Worker load.');

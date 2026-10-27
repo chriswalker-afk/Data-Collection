@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="./styles/multiplayer.css">
   <link rel="stylesheet" href="./styles/multiplayer-studio.css">
   <link rel="stylesheet" href="./styles/multiplayer-blitz.css">
+  <link rel="stylesheet" href="./styles/multiplayer-class-quest.css">
   <link rel="stylesheet" href="./styles/multiplayer-critters.css">
 </head>
 <body>
@@ -60,7 +61,7 @@
             <span class="entry-mode-icon" aria-hidden="true">▣</span>
             <div><span class="entry-mode-tag">01 / TEACHER</span><h3 id="host-heading">Host a classroom</h3></div>
           </div>
-          <p>Choose Classic, timed Blitz, accuracy-based Bullseye or streak-based Perfect Run. Class Quest and Puzzle Relay remain upcoming experiences.</p>
+          <p>Choose Classic, timed Blitz, accuracy-based Bullseye or streak-based Perfect Run. Class Quest is now cooperative and playable; Puzzle Relay remains upcoming.</p>
           <div id="host-studio" class="host-studio">
             <fieldset class="studio-step studio-fieldset">
               <legend><span class="studio-step-number">01</span> Choose a challenge</legend>
@@ -87,7 +88,7 @@
                 </label>
                 <label class="studio-choice studio-choice-wide">
                   <input type="radio" name="studio-objective" value="class">
-                  <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">✳</span><strong>Class Quest</strong><span class="studio-status">PREVIEW</span></span>
+                  <span class="studio-choice-heading"><span class="studio-choice-icon" aria-hidden="true">✳</span><strong>Class Quest</strong><span class="studio-status is-live">LIVE</span></span>
                   <small>Everyone contributes to a shared class achievement.</small>
                 </label>
               </div>
@@ -154,7 +155,7 @@
                   <small class="studio-field-note">This is an extra goal in Classic, not the planned full Class Quest game.</small>
                 </div>
                 <div id="studio-future-settings" class="studio-future-fields" hidden>
-                  <p class="studio-future-note" id="studio-future-note">Class Quest is a preview. It cannot create a live room yet.</p>
+                  <p class="studio-future-note" id="studio-future-note">Class Quest is a team achievement, with minimum participation and a configurable safety countdown.</p>
                   <div id="studio-minutes-row" class="studio-field-row" hidden>
                     <label for="studio-minutes" id="studio-minutes-label">Blitz time limit (minutes)</label>
                     <input type="number" id="studio-minutes" min="1" max="15" step="1" value="5">
@@ -185,16 +186,16 @@
                     <input type="number" id="studio-class-accuracy" min="60" max="100" step="5" value="80">
                   </div>
                   <div id="studio-class-correct-row" class="studio-field-row" hidden>
-                    <label for="studio-class-correct">Correct answers across the class</label>
+                    <label for="studio-class-correct">Credited correct decisions across the class</label>
                     <input type="number" id="studio-class-correct" min="20" max="300" step="5" value="150">
                   </div>
                   <div id="studio-class-per-student-row" class="studio-field-row" hidden>
-                    <label for="studio-class-per-student">Correct answers per participating student</label>
+                    <label for="studio-class-per-student">Fully correct tasks per participating student</label>
                     <input type="number" id="studio-class-per-student" min="1" max="10" step="1" value="5">
                   </div>
-                  <p id="studio-class-mastery-row" class="studio-field-note" hidden>Students will need to demonstrate understanding of all five sampling methods.</p>
+                  <p id="studio-class-mastery-row" class="studio-field-note" hidden>Two different students must supply verified correct evidence for each of the five sampling methods. At least three students must contribute overall.</p>
                   <div id="studio-participation-row" class="studio-field-row" hidden>
-                    <label for="studio-class-participation">Minimum meaningful participation (%)</label>
+                    <label for="studio-class-participation">Students completing two checked tasks (%)</label>
                     <input type="number" id="studio-class-participation" min="50" max="100" step="5" value="80">
                   </div>
                 </div>
@@ -225,7 +226,7 @@
             </section>
             <p id="studio-validation" role="alert" class="studio-validation" hidden></p>
             <button class="btn btn-primary entry-submit" type="button" id="create">Create room ↗</button>
-            <p class="studio-footer-note">Classic, Blitz, Bullseye and Perfect Run are playable in individual or team formats. Cooperative Class Quest and Puzzle Relay are still previews.</p>
+            <p class="studio-footer-note">Classic, Blitz, Bullseye and Perfect Run are playable in individual or team formats. Class Quest is playable now; Puzzle Relay is still a preview.</p>
           </div>
         </section>
         <section class="multiplayer-panel student-entry" aria-labelledby="join-heading">

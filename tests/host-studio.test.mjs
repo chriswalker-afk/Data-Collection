@@ -28,13 +28,10 @@ test('quick, balanced and stretch presets use valid lengths for all four mathema
   }
  }
 });
-test('Classic, Blitz, Bullseye and Perfect Run live; Class Quest and Puzzle Relay remain previews',()=>{
- for(const objective of ['class']){
-  const d=presetStudioDraft(DEFAULT_DRAFT,'balanced',objective);
-  assert.equal(validateStudioDraft(d).playable,false);
-  assert.throws(()=>liveRoomSettings(d),/preview/);
-  assert.match(describeStudioDraft(d).availability,/Preview only/);
- }
+test('Classic, Blitz, races and Class Quest live while Puzzle Relay remains preview-only',()=>{
+ const cooperative=presetStudioDraft(DEFAULT_DRAFT,'balanced','class');
+ assert.equal(validateStudioDraft(cooperative).playable,true);
+ assert.match(describeStudioDraft(cooperative).availability,/Ready to host/);
  const blitz=presetStudioDraft(DEFAULT_DRAFT,'balanced','blitz');
  assert.equal(validateStudioDraft(blitz).playable,true);
  assert.deepEqual(liveRoomSettings(blitz),{game:'which',roundLength:10,
@@ -109,7 +106,7 @@ test('presets preserve the subject and participation while resetting only target
 test('snapshot never implies a planned objective is live',()=>{
  for(const objective of Object.keys(OBJECTIVES)){
   const d=presetStudioDraft(DEFAULT_DRAFT,'balanced',objective);
-  assert.equal(describeStudioDraft(d).playable,['classic','blitz','bullseye','perfect'].includes(objective));
+  assert.equal(describeStudioDraft(d).playable,['classic','blitz','bullseye','perfect','class'].includes(objective));
  }
 });
 
@@ -149,6 +146,20 @@ test('race advanced preview modifiers cannot affect the live Worker',()=>{
   for(const bad of [{difficulty:'advanced'},{questionOrder:'same'},{showLeaderboard:false}]){
    assert.equal(validateStudioDraft({...base,...bad}).playable,false);
    assert.throws(()=>liveRoomSettings({...base,...bad}),/preview/);
+  }
+ }
+});
+
+test('Class Quest settings are live only when validated and cannot enable planned modifiers',()=>{
+ for(const metric of Object.keys(CLASS_METRICS)){
+  const d={...DEFAULT_DRAFT,objective:'class',classMetric:metric,format:'squad',teamCount:3};
+  assert.equal(validateStudioDraft(d).playable,true);
+  assert.deepEqual(liveRoomSettings(d),{game:'which',roundLength:10,
+   objective:'class',minutes:5,teamCount:3,goalTarget:0,
+   classMetric:metric,classAccuracy:80,classCorrect:150,
+   classParticipation:80,classPerStudent:5});
+  for(const change of [{showLeaderboard:false},{difficulty:'advanced'},{questionOrder:'same'}]){
+   assert.equal(validateStudioDraft({...d,...change}).playable,false);
   }
  }
 });

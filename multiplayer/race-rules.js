@@ -7,7 +7,7 @@ import {validBlitzSettings} from './blitz-rules.js';
 
 export const RACE_OBJECTIVES=Object.freeze(['bullseye','perfect']);
 export const isRace=objective=>RACE_OBJECTIVES.includes(objective);
-export const isPaced=objective=>objective==='blitz'||isRace(objective);
+export const isPaced=objective=>objective==='blitz'||isRace(objective)||objective==='class';
 export const RACE_MAX_ATTEMPTS=400;
 
 export function validRaceSettings({objective,game,roundLength,minutes,accuracyTarget,accuracyWindow,streakTarget}={}){

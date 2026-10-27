@@ -6,7 +6,7 @@ export const OBJECTIVES = Object.freeze({
   blitz: {label:'Blitz',short:'Most correct before the clock ends',availability:'live'},
   bullseye: {label:'Bullseye',short:'Reach a rolling accuracy target',availability:'live'},
   perfect: {label:'Perfect Run',short:'Build a consecutive-correct streak',availability:'live'},
-  class: {label:'Class Quest',short:'A shared mathematical target',availability:'planned'}
+  class: {label:'Class Quest',short:'A shared mathematical target',availability:'live'}
 });
 export const FORMATS = Object.freeze({
   individual:{label:'Free-for-All',description:'Everyone answers on their own screen.'},
@@ -122,7 +122,7 @@ export function validateStudioDraft(draft) {
   if(typeof draft.showLeaderboard!=='boolean')
     errors.push('Choose whether the leaderboard is visible.');
   const valid=errors.length===0;
-  const paced=['blitz','bullseye','perfect'].includes(draft.objective);
+  const paced=['blitz','bullseye','perfect','class'].includes(draft.objective);
   const playable=valid&&(draft.objective==='classic'||paced)&&draft.format!=='relay'&&
     (!paced||(draft.difficulty==='mixed'&&
       draft.questionOrder==='varied'&&draft.showLeaderboard===true));
@@ -151,7 +151,12 @@ export function liveRoomSettings(draft){
     ...(draft.objective==='bullseye'?{
       accuracyTarget:draft.accuracyTarget,accuracyWindow:draft.accuracyWindow
     }:{}),
-    ...(draft.objective==='perfect'?{streakTarget:draft.streakTarget}:{})
+    ...(draft.objective==='perfect'?{streakTarget:draft.streakTarget}:{}),
+    ...(draft.objective==='class'?{
+      classMetric:draft.classMetric,classAccuracy:draft.classAccuracy,
+      classCorrect:draft.classCorrect,classParticipation:draft.classParticipation,
+      classPerStudent:draft.classPerStudent
+    }:{})
   };
 }
 export function describeStudioDraft(draft) {
@@ -174,11 +179,15 @@ export function describeStudioDraft(draft) {
       outcome=`First to complete ${draft.streakTarget} fully correct tasks in a row; an incorrect or partially correct task resets the streak. Safety limit: ${draft.minutes} minutes.`;
       break;
     default:
-      outcome=draft.classMetric==='accuracy'?`Aim for ${draft.classAccuracy}% accuracy with at least ${draft.classParticipation}% participation.`:
-        draft.classMetric==='correct'?`Collect ${draft.classCorrect} correct answers with at least ${draft.classParticipation}% participation.`:
-        draft.classMetric==='mastery'?`Show understanding across all five sampling methods with at least ${draft.classParticipation}% participation.`:
-        `At least ${draft.classParticipation}% of students each answer ${draft.classPerStudent} questions correctly.`;
+      outcome=draft.classMetric==='accuracy'?
+        `Aim for ${draft.classAccuracy}% mean student accuracy; at least ${draft.classParticipation}% must complete two checked tasks. Safety limit: ${draft.minutes} minutes.`:
+        draft.classMetric==='correct'?
+        `Collect ${draft.classCorrect} credited correct decisions (maximum 20 per student), with at least ${draft.classParticipation}% completing two checked tasks. Safety limit: ${draft.minutes} minutes.`:
+        draft.classMetric==='mastery'?
+        `Demonstrate all five sampling methods with two different students contributing correct evidence per method; at least ${draft.classParticipation}% must complete two tasks. Safety limit: ${draft.minutes} minutes.`:
+        `At least ${draft.classParticipation}% of students each complete ${draft.classPerStudent} entirely correct tasks and at least two checked tasks. Safety limit: ${draft.minutes} minutes.`;
   }
+  if(draft.objective==='class')outcome+=' At least three students are needed to start. Everybody shares the result.';
   if(draft.format==='squad')outcome+=` ${draft.teamCount} balanced teams.`;
   if(draft.format==='relay')outcome+=' Different parts of a task appear on teammates\' screens.';
   if(draft.objective==='classic'&&draft.goalTarget)
@@ -186,9 +195,9 @@ export function describeStudioDraft(draft) {
   const availability=check.playable?'Ready to host now':
     draft.format==='relay'?'Preview only — Puzzle Relay needs the distributed-question engine (Pass 5).':
     draft.objective==='blitz'?'Preview only — advanced modifiers require a later engine.':
-    ['bullseye','perfect','blitz'].includes(draft.objective)?
-      'Preview only — these advanced modifiers require a later engine.':
-      'Preview only — full cooperative Class Quest arrives in Pass 4.';
+    ['bullseye','perfect','blitz','class'].includes(draft.objective)?
+      'Preview only — advanced difficulty and leaderboard modifiers require a later engine.':
+      'Preview only — additional objectives require future engines.';
   return {title:`${objective} · ${format}`,description:`${game}. ${outcome}`,
     availability,playable:check.playable};
 }

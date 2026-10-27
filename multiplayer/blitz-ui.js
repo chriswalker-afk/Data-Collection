@@ -4,7 +4,7 @@ const METHODS={
   'simple-random':'Simple random sampling',systematic:'Systematic sampling',
   stratified:'Stratified sampling',quota:'Quota sampling',opportunity:'Opportunity sampling'
 };
-const PACED_NAMES=Object.freeze({blitz:'BLITZ',bullseye:'BULLSEYE',perfect:'PERFECT RUN'});
+const PACED_NAMES=Object.freeze({blitz:'BLITZ',bullseye:'BULLSEYE',perfect:'PERFECT RUN',class:'CLASS QUEST'});
 const isRace=room=>room.objective==='bullseye'||room.objective==='perfect';
 const create=(name,cls,text)=>{
   const el=document.createElement(name);if(cls)el.className=cls;
@@ -29,7 +29,8 @@ export function createBlitzUI({button,command,refreshStage,stageKicker}){
     stage.append(stageKicker(PACED_NAMES[room.objective]+' · LIVE CLASSROOM CHALLENGE'));
     const title=create('h2','blitz-heading',isRace(room)?
       (room.objective==='bullseye'?'Aim for accuracy. Keep improving.':
-        'Build your perfect run.'):'Think accurately. Keep moving.');
+        'Build your perfect run.'):room.objective==='class'?
+        'Work together. Every answer matters.':'Think accurately. Keep moving.');
     title.tabIndex=-1;stage.append(title);
     const progress=create('div','blitz-live-summary');
     progress.append(create('span','blitz-summary-value',String(stats?.correct??0)+' correct'),
@@ -188,10 +189,13 @@ export function createBlitzUI({button,command,refreshStage,stageKicker}){
     stage.append(timer);
     if(isHost){
       stage.append(stageKicker(PACED_NAMES[room.objective]+' · TEACHER VIEW'));
-      const heading=create('h2','',isRace(room)?
+      const heading=create('h2','',room.objective==='class'?
+        'Everyone has a part to play':isRace(room)?
         'The race is on — first to the target wins':'Your class is in full flow');
       heading.tabIndex=-1;stage.append(heading);
-      stage.append(hint(isRace(room)?
+      stage.append(hint(room.objective==='class'?
+        'Students get independent checked tasks and instant private explanations. Everyone works towards a shared mathematical goal; there is no individual podium.':
+        isRace(room)?
         (room.objective==='bullseye'?
           'Goal: '+room.blitz.race.target+'% accuracy across the most recent '+
             room.blitz.race.accuracyWindow+
@@ -201,11 +205,15 @@ export function createBlitzUI({button,command,refreshStage,stageKicker}){
           ' Students progress independently; the Worker decides who reaches the goal first.':
         'Each student gets an independent question and instant private feedback. The server controls the shared deadline and final ranks.'));
       const all=state.standings||[];
-      stage.append(create('p','blitz-teacher-pulse',
+      stage.append(create('p','blitz-teacher-pulse',room.objective==='class'?
+        (room.quest.correct+' mathematical decisions correct · '+
+          room.quest.contributors+' of '+room.quest.needed+' contributors ready'):
         all.reduce((n,s)=>n+s.correct,0)+' checked decisions correct · '+
-        all.reduce((n,s)=>n+s.attempts,0)+' submissions'));
+          all.reduce((n,s)=>n+s.attempts,0)+' submissions'));
       stage.append(button('End '+(room.objective==='blitz'?'Blitz':PACED_NAMES[room.objective])+' early',()=>{
-        if(confirm('End this challenge now? A mathematical winner will only be named if someone has met the target.'))
+        if(confirm(room.objective==='class'?
+          'End Class Quest before the class reaches its goal? Verified progress will remain, but no success will be invented.':
+          'End this challenge now? A mathematical winner will only be named if someone has met the target.'))
           void command('close');
       },'btn btn-danger'));
       return;

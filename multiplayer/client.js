@@ -1,5 +1,6 @@
 import {createHostStudio} from './host-studio-ui.js';
 import {createBlitzUI} from './blitz-ui.js';
+import {createClassQuestUI} from './class-quest-ui.js';
 import {ARENA_MODES,createModeUI} from './mode-ui.js';
 import {createCeremonyUI} from './ceremony-ui.js';
 import {createTeamUI} from './team-ui.js';
@@ -17,7 +18,7 @@ const LABELS=Object.freeze({
 const STORAGE_KEY='sampling-arcade-multiplayer-v1';
 const gameMode=()=>$('game-mode').value;
 const modeName=game=>ARENA_MODES[game||'which']?.label||'Which Method?';
-const PACE_NAMES=Object.freeze({blitz:'Blitz',bullseye:'Bullseye',perfect:'Perfect Run'});
+const PACE_NAMES=Object.freeze({blitz:'Blitz',bullseye:'Bullseye',perfect:'Perfect Run',class:'Class Quest'});
 const isPaced=objective=>Object.hasOwn(PACE_NAMES,objective);
 const isRace=objective=>objective==='bullseye'||objective==='perfect';
 const $=id=>document.getElementById(id);
@@ -63,8 +64,8 @@ function leave(){
 }
 async function createRoom(){
   try{
-    // Only validated Classic, Blitz, Bullseye and Perfect Run settings reach
-    // the Worker. Puzzle Relay and Class Quest remain previews.
+    // Only validated Classic, Blitz, races and Class Quest settings reach
+    // the Worker. Distributed Puzzle Relay remains a preview.
     const settings=hostStudio.liveSettings();
     notice('Creating the classroom…');
     const response=await api('/rooms',{
@@ -73,7 +74,12 @@ async function createRoom(){
       ...(settings.objective==='bullseye'?{
         accuracyTarget:settings.accuracyTarget,accuracyWindow:settings.accuracyWindow
       }:{}),
-      ...(settings.objective==='perfect'?{streakTarget:settings.streakTarget}:{})
+      ...(settings.objective==='perfect'?{streakTarget:settings.streakTarget}:{}),
+      ...(settings.objective==='class'?{
+        classMetric:settings.classMetric,classAccuracy:settings.classAccuracy,
+        classCorrect:settings.classCorrect,classParticipation:settings.classParticipation,
+        classPerStudent:settings.classPerStudent
+      }:{})
     });
     roomCode=response.code;token=response.token;isHost=true;store();
     const setupWarnings=[];
@@ -272,6 +278,7 @@ const modeUI=createModeUI({
 const ceremonyUI=createCeremonyUI({make,button,actionRow,command,stageKicker});
 const teamUI=createTeamUI({make,button,command,stageKicker});
 const blitzUI=createBlitzUI({button,command,refreshStage:()=>render(),stageKicker});
+const questUI=createClassQuestUI();
 function render(){
   const active=Boolean(roomCode&&room);
   $('entry').hidden=active;
@@ -279,6 +286,7 @@ function render(){
   if(!active)return;
   $('room').classList.toggle('is-ceremony',room.status==='ceremony');
   $('room').classList.toggle('is-blitz',isPaced(room.objective));
+  $('room').classList.toggle('is-class-quest',room.objective==='class');
   $('room').dataset.phase=room.status;
   if(displayedRoomCode!==roomCode){displayedScores.clear();displayedRoomCode=roomCode;}
 
@@ -290,7 +298,7 @@ function render(){
       PACE_NAMES[room.objective]+' · independent questions':
       'Question '+room.question?.index+' of '+room.question?.total,
     reveal:'Answer review · discuss the mathematics',
-    finished:'Challenge complete · final standings',
+    finished:room.objective==='class'?'Class Quest · shared result':'Challenge complete · final standings',
     ceremony:'Grand Awards Ceremony · reveal '+(room.ceremony?.step+1)+' of '+room.ceremony?.total
   }[room.status]||'Classroom';
   const closed=room.status!=='lobby'||room.locked;
@@ -301,8 +309,11 @@ function render(){
     modeName(room.game)+' · '+room.roundLength+' '+(ARENA_MODES[room.game||'which']?.unit||'questions');
   $('player-count').textContent=room.players.length+' / 45';
   teamUI.sidebar(room,$('class-pulse'));
-  $('players-heading').textContent=room.status==='lobby'?'Classroom roster':'Live leaderboard';
-  $('roster-help').textContent=isPaced(room.objective)&&room.status!=='lobby'?
+  $('players-heading').textContent=room.objective==='class'?'Our class crew':
+    room.status==='lobby'?'Classroom roster':'Live leaderboard';
+  $('roster-help').textContent=room.objective==='class'?
+    'No individual rankings. Every classmate contributes to one mathematical achievement.':
+    isPaced(room.objective)&&room.status!=='lobby'?
     (isRace(room.objective)?
       'First to reach the mathematical target wins. A correct board must be fully correct.':
       'Blitz ranks the most correct decisions first, then checked accuracy and points.'):
@@ -315,7 +326,9 @@ function render(){
   playerList.classList.toggle('is-crowded',room.players.length>24);
   const blitzRank=new Map((room.blitz?.standings||[]).map((x,i)=>[x.id,i]));
   const raceProgress=new Map((room.blitz?.standings||[]).map(x=>[x.id,x]));
-  const list=[...room.players].sort((a,b)=>isPaced(room.objective)?
+  const list=[...room.players].sort((a,b)=>room.objective==='class'?
+    a.name.localeCompare(b.name):
+    isPaced(room.objective)?
     (blitzRank.get(a.id)??999)-(blitzRank.get(b.id)??999)||a.name.localeCompare(b.name):
     b.score-a.score||a.name.localeCompare(b.name));
   for(const [index,player] of list.entries()){
@@ -332,6 +345,9 @@ function render(){
     const details=make('div',undefined,'player-details');
     const name=make('span',player.name,'player-name');
     const state=make('span',
+      room.objective==='class'&&room.status!=='lobby'?
+        (player.contributed?'Contributed · 2+ checked tasks':
+          player.online?'Working towards our goal':'Not currently connected'):
       isPaced(room.objective)&&room.status!=='lobby'?
         (player.online?'Playing independently':'Not currently connected'):
         player.answered?'Answer submitted':player.online?'Connected':'Not currently connected',
@@ -342,7 +358,9 @@ function render(){
       if(team)details.append(make('span',team.icon+' '+team.name,'player-team-label'));
     }
     const ranking=raceProgress.get(player.id);
-    const scoreLabel=isRace(room.objective)&&room.status!=='lobby'?
+    const scoreLabel=room.objective==='class'&&room.status!=='lobby'?
+      (player.contributed?'✓ Contributing':'Ready to help'):
+      isRace(room.objective)&&room.status!=='lobby'?
       (room.objective==='bullseye'?
         (ranking?.windowAnswered||0)+' / '+room.blitz.race.accuracyWindow+
         ' marked · '+(ranking?.windowAccuracy||0)+'%':
@@ -385,7 +403,10 @@ function render(){
     stats.append(statusChip(room.players.length+' joined'),
       ...(isPaced(room.objective)?[
         statusChip(room.blitz.minutes+' minute safety limit'),
-        statusChip(isRace(room.objective)?
+        statusChip(room.objective==='class'?
+          ({accuracy:'Shared accuracy',correct:'Shared correct decisions',
+            mastery:'Five-method mastery',everyone:'Everyone contributes'}[room.questSetup?.metric]||'Class cooperation'):
+        isRace(room.objective)?
           (room.objective==='bullseye'?
             room.blitz.race.target+'% accuracy over '+room.blitz.race.accuracyWindow+' tasks':
             room.blitz.race.target+' correct tasks in a row'):
@@ -403,14 +424,22 @@ function render(){
       const actions=actionRow();
       const start=button(isPaced(room.objective)?
         'Start '+PACE_NAMES[room.objective]:'Start challenge',()=>command('start'));
-      start.disabled=room.players.length<1||(room.teamCount>room.players.length);
+      start.disabled=room.players.length<(room.objective==='class'?3:1)||
+        (room.teamCount>room.players.length)||
+        (room.objective==='class'&&room.questSetup?.metric==='correct'&&
+          room.questSetup.correct>room.players.length*20);
       const lock=button(room.locked?'Unlock joining':'Lock joining',
         ()=>command(room.locked?'unlock':'lock'),'btn btn-quiet');
       lock.id='lock-toggle';lock.setAttribute('aria-pressed',String(Boolean(room.locked)));
       actions.append(start,lock,
         button('Close classroom',()=>{if(window.confirm('End this classroom for everyone?'))void command('close');},'btn btn-danger'));
       stage.append(actions);
-      if(!room.players.length)stage.append(make('p','At least one student must join before you can start.','small-note'));
+      if(room.objective==='class'&&room.players.length<3)
+        stage.append(make('p','At least three students must join before Class Quest can begin.','small-note'));
+      else if(room.objective==='class'&&room.questSetup?.metric==='correct'&&
+        room.questSetup.correct>room.players.length*20)
+        stage.append(make('p','Add students or create a room with a smaller Knowledge Quest target (maximum 20 credited decisions per student).','small-note'));
+      else if(!room.players.length)stage.append(make('p','At least one student must join before you can start.','small-note'));
       else if(room.teamCount>room.players.length)
         stage.append(make('p','Each team needs at least one participant before the challenge can start.','small-note'));
     }else{
@@ -432,6 +461,7 @@ function render(){
     }
     teamUI.setup(room,isHost,stage);
   }else if(room.status==='playing'&&isPaced(room.objective)){
+    if(room.objective==='class')questUI.render(room,stage);
     blitzUI.render(room,isHost,stage);
     updateClock();
   }else if(room.status==='playing'&&room.question&&room.game!=='which'){
@@ -497,11 +527,17 @@ function render(){
     const winner=race?.winnerId?room.players.find(p=>p.id===race.winnerId):null;
     const targetWon=isRace(room.objective)&&race?.finishReason==='target'&&winner;
     const name=PACE_NAMES[room.objective]||'Challenge';
-    const h2=make('h2',isRace(room.objective)?
+    const h2=make('h2',room.objective==='class'?
+      (room.quest?.achieved?'We did it — Class Quest achieved!':'Our Class Quest journey'):
+      isRace(room.objective)?
       (targetWon?'Target achieved!':name+' complete!'):
       (room.objective==='blitz'?'Blitz complete!':'Challenge complete!'));
     h2.tabIndex=-1;stage.append(h2);
-    stage.append(make('p',isRace(room.objective)?
+    stage.append(make('p',room.objective==='class'?
+      (room.quest?.achieved?
+        'The class met its shared goal together with meaningful participation.':
+        'The safety countdown or teacher ended the quest before the goal was met. Everyone’s checked practice still matters.'):
+      isRace(room.objective)?
       (targetWon?'First to reach the target: '+winner.name+'. Excellent mathematical precision!':
         'The safety countdown or teacher ended the challenge before a target was met. No winner has been invented.'):
       (room.objective==='blitz'?
@@ -509,7 +545,10 @@ function render(){
         'Well played. Celebrate accurate thinking and discuss any tricky sampling decisions.')));
     const summary=make('div',undefined,'room-finished-summary');
     const top=list[0];
-    summary.append(make('p',targetWon?
+    summary.append(make('p',room.objective==='class'?
+      (room.quest?.contributors+' students contributed · '+room.quest?.correct+
+        ' checked decisions correct · '+room.quest?.coverage+'% meaningful participation'):
+      targetWon?
       (room.objective==='bullseye'?
         winner.name+' reached '+race.target+'% accuracy across '+race.accuracyWindow+' marked tasks.':
         winner.name+' completed '+race.target+' fully correct tasks consecutively.'):
@@ -518,12 +557,15 @@ function render(){
         (!isRace(room.objective)&&top?
           'Top score: '+top.name+' · '+top.score+' points':'Every checked response counts towards learning.'))));
     stage.append(summary);
-    if(isRace(room.objective)&&!isHost&&room.blitz?.feedback){
+    if(room.objective==='class')questUI.render(room,stage);
+    if((isRace(room.objective)||room.objective==='class')&&!isHost&&room.blitz?.feedback){
       blitzUI.renderResultFeedback(room,stage);
     }
     stage.append(make('p',room.finished?.ceremonyCompleted?
       'The ceremony is complete. Open My Awards to see your saved Multiplayer keepsakes.':
-      'The teacher can now present the Grand Awards Ceremony, with a podium and mathematical character trophies.','small-note'));
+      room.objective==='class'?
+        'The teacher can now celebrate the whole class and verified mathematical achievements. No individual podium.':
+        'The teacher can now present the Grand Awards Ceremony, with a podium and mathematical character trophies.','small-note'));
     if(!isHost&&room.finished?.ceremonyCompleted)stage.append(make('a','See My Awards','ceremony-awards-link'));
     if(!isHost&&room.finished?.ceremonyCompleted){
       const link=stage.querySelector('.ceremony-awards-link');link.href='./awards.html';
