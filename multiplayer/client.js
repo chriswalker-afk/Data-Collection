@@ -17,6 +17,9 @@ const LABELS=Object.freeze({
 const STORAGE_KEY='sampling-arcade-multiplayer-v1';
 const gameMode=()=>$('game-mode').value;
 const modeName=game=>ARENA_MODES[game||'which']?.label||'Which Method?';
+const PACE_NAMES=Object.freeze({blitz:'Blitz',bullseye:'Bullseye',perfect:'Perfect Run'});
+const isPaced=objective=>Object.hasOwn(PACE_NAMES,objective);
+const isRace=objective=>objective==='bullseye'||objective==='perfect';
 const $=id=>document.getElementById(id);
 let roomCode=null,token=null,isHost=false,room=null,websocket=null;
 let generation=0,retryTimer=null,pollTimer=null,clockTimer=null,backoff=750;
@@ -60,13 +63,17 @@ function leave(){
 }
 async function createRoom(){
   try{
-    // Only validated Classic and Blitz settings reach the Worker. Future
-    // objectives and relay cannot create rooms.
+    // Only validated Classic, Blitz, Bullseye and Perfect Run settings reach
+    // the Worker. Puzzle Relay and Class Quest remain previews.
     const settings=hostStudio.liveSettings();
     notice('Creating the classroom…');
     const response=await api('/rooms',{
       roundLength:settings.roundLength,game:settings.game,
-      objective:settings.objective,minutes:settings.minutes
+      objective:settings.objective,minutes:settings.minutes,
+      ...(settings.objective==='bullseye'?{
+        accuracyTarget:settings.accuracyTarget,accuracyWindow:settings.accuracyWindow
+      }:{}),
+      ...(settings.objective==='perfect'?{streakTarget:settings.streakTarget}:{})
     });
     roomCode=response.code;token=response.token;isHost=true;store();
     const setupWarnings=[];
@@ -119,7 +126,7 @@ function receiveState(data){
     '|'+(room.ceremony?.run||0)+'|'+(room.ceremony?.step??'-');
   if(previous!=='undefined|'&&previous!==current){
     const announcement=room.status==='playing'?
-      (room.objective==='blitz'?'Blitz is live':
+      (isPaced(room.objective)?PACE_NAMES[room.objective]+' is live':
         'New question '+room.question.index+' of '+room.question.total):
       room.status==='reveal'?'Answer revealed':
       room.status==='ceremony'?'Awards ceremony reveal '+(room.ceremony.step+1)+' of '+room.ceremony.total:
@@ -203,7 +210,7 @@ async function command(type,method,targetId){
   }
 }
 function updateClock(){
-  if(room?.objective==='blitz'&&room.status==='playing'){
+  if(isPaced(room?.objective)&&room.status==='playing'){
     const blitzTimer=$('blitz-clock');
     const remaining=Math.max(0,room.blitz.endAt-(Date.now()+clockOffset));
     const seconds=Math.ceil(remaining/1000);
@@ -271,7 +278,7 @@ function render(){
   $('room').hidden=!active;
   if(!active)return;
   $('room').classList.toggle('is-ceremony',room.status==='ceremony');
-  $('room').classList.toggle('is-blitz',room.objective==='blitz');
+  $('room').classList.toggle('is-blitz',isPaced(room.objective));
   $('room').dataset.phase=room.status;
   if(displayedRoomCode!==roomCode){displayedScores.clear();displayedRoomCode=roomCode;}
 
@@ -279,7 +286,9 @@ function render(){
   $('room-id').textContent=roomCode;
   $('room-status').textContent={
     lobby:'Lobby · waiting for players',
-    playing:room.objective==='blitz'?'Blitz · independent questions':'Question '+room.question?.index+' of '+room.question?.total,
+    playing:isPaced(room.objective)?
+      PACE_NAMES[room.objective]+' · independent questions':
+      'Question '+room.question?.index+' of '+room.question?.total,
     reveal:'Answer review · discuss the mathematics',
     finished:'Challenge complete · final standings',
     ceremony:'Grand Awards Ceremony · reveal '+(room.ceremony?.step+1)+' of '+room.ceremony?.total
@@ -287,14 +296,16 @@ function render(){
   const closed=room.status!=='lobby'||room.locked;
   $('room-lock').textContent=closed?'Joining closed':'Joining open';
   $('room-lock').classList.toggle('is-locked',closed);
-  $('room-meta').textContent=room.objective==='blitz'?
-    'Blitz · '+room.blitz?.minutes+' minutes · '+modeName(room.game):
+  $('room-meta').textContent=isPaced(room.objective)?
+    PACE_NAMES[room.objective]+' · '+room.blitz?.minutes+' minutes · '+modeName(room.game):
     modeName(room.game)+' · '+room.roundLength+' '+(ARENA_MODES[room.game||'which']?.unit||'questions');
   $('player-count').textContent=room.players.length+' / 45';
   teamUI.sidebar(room,$('class-pulse'));
   $('players-heading').textContent=room.status==='lobby'?'Classroom roster':'Live leaderboard';
-  $('roster-help').textContent=room.objective==='blitz'&&room.status!=='lobby'?
-    'Blitz ranks the most correct decisions first, then checked accuracy and points.':
+  $('roster-help').textContent=isPaced(room.objective)&&room.status!=='lobby'?
+    (isRace(room.objective)?
+      'First to reach the mathematical target wins. A correct board must be fully correct.':
+      'Blitz ranks the most correct decisions first, then checked accuracy and points.'):
     isHost?(room.status==='lobby'?
       'You control who joins. You can remove a nickname before starting.':
       'Scores and submissions update live on every connected device.'):
@@ -303,7 +314,8 @@ function render(){
   const playerList=$('players');playerList.replaceChildren();
   playerList.classList.toggle('is-crowded',room.players.length>24);
   const blitzRank=new Map((room.blitz?.standings||[]).map((x,i)=>[x.id,i]));
-  const list=[...room.players].sort((a,b)=>room.objective==='blitz'?
+  const raceProgress=new Map((room.blitz?.standings||[]).map(x=>[x.id,x]));
+  const list=[...room.players].sort((a,b)=>isPaced(room.objective)?
     (blitzRank.get(a.id)??999)-(blitzRank.get(b.id)??999)||a.name.localeCompare(b.name):
     b.score-a.score||a.name.localeCompare(b.name));
   for(const [index,player] of list.entries()){
@@ -320,7 +332,7 @@ function render(){
     const details=make('div',undefined,'player-details');
     const name=make('span',player.name,'player-name');
     const state=make('span',
-      room.objective==='blitz'&&room.status!=='lobby'?
+      isPaced(room.objective)&&room.status!=='lobby'?
         (player.online?'Playing independently':'Not currently connected'):
         player.answered?'Answer submitted':player.online?'Connected':'Not currently connected',
       'player-presence'+(player.answered?' is-answered':player.online?' is-online':''));
@@ -329,9 +341,15 @@ function render(){
       const team=room.teams?.find(x=>x.id===player.teamId);
       if(team)details.append(make('span',team.icon+' '+team.name,'player-team-label'));
     }
-    const scoreLabel=room.objective==='blitz'&&room.status!=='lobby'?
-      player.correct+' correct · '+player.accuracy+'%':
-      player.score+' points';
+    const ranking=raceProgress.get(player.id);
+    const scoreLabel=isRace(room.objective)&&room.status!=='lobby'?
+      (room.objective==='bullseye'?
+        (ranking?.windowAnswered||0)+' / '+room.blitz.race.accuracyWindow+
+        ' marked · '+(ranking?.windowAccuracy||0)+'%':
+        'Streak '+(ranking?.currentStreak||0)+' / '+room.blitz.race.streakTarget):
+      (room.objective==='blitz'&&room.status!=='lobby'?
+        player.correct+' correct · '+player.accuracy+'%':
+        player.score+' points');
     item.append(critterPortrait(player.avatar),details,make('span',scoreLabel,'player-score'));
     item.querySelector('.player-score').setAttribute('aria-label',scoreLabel);
     if(isHost&&room.status==='lobby'){
@@ -350,8 +368,8 @@ function render(){
   const activeFeedback=document.activeElement?.id==='teacher-feedback-text';
   const feedbackCursor=activeFeedback?document.activeElement.selectionStart:null;
   const stage=$('stage');stage.replaceChildren();
-  stage.classList.toggle('is-blitz',room.objective==='blitz');
-  if(room.objective==='blitz')blitzUI.focusFor(room);
+  stage.classList.toggle('is-blitz',isPaced(room.objective));
+  if(isPaced(room.objective))blitzUI.focusFor(room);
   if(room.status==='lobby'){
     stage.append(stageKicker(isHost?'HOST CONTROL CENTRE':'YOU ARE READY'));
     const h2=make('h2',isHost?'Your classroom is ready':'You are in the arena!');
@@ -361,9 +379,13 @@ function render(){
       'The teacher will start the round. Keep this tab open for live questions and feedback.'));
     const stats=make('div',undefined,'lobby-stat-row');
     stats.append(statusChip(room.players.length+' joined'),
-      ...(room.objective==='blitz'?[
-        statusChip(room.blitz.minutes+' minute shared countdown'),
-        statusChip('Independent question progress')
+      ...(isPaced(room.objective)?[
+        statusChip(room.blitz.minutes+' minute safety limit'),
+        statusChip(isRace(room.objective)?
+          (room.objective==='bullseye'?
+            room.blitz.race.target+'% accuracy over '+room.blitz.race.accuracyWindow+' tasks':
+            room.blitz.race.target+' correct tasks in a row'):
+          'Independent question progress')
       ]:[
         statusChip(room.roundLength+' '+(ARENA_MODES[room.game||'which']?.unit||'questions')),
         statusChip((room.questionSeconds||20)+' seconds each')
@@ -375,7 +397,8 @@ function render(){
         room.locked?'New participants cannot join until you unlock the lobby.':
           'New students can join using the six-digit code. Lock joining when the class is ready.'));
       const actions=actionRow();
-      const start=button(room.objective==='blitz'?'Start Blitz':'Start challenge',()=>command('start'));
+      const start=button(isPaced(room.objective)?
+        'Start '+PACE_NAMES[room.objective]:'Start challenge',()=>command('start'));
       start.disabled=room.players.length<1||(room.teamCount>room.players.length);
       const lock=button(room.locked?'Unlock joining':'Lock joining',
         ()=>command(room.locked?'unlock':'lock'),'btn btn-quiet');
@@ -404,7 +427,7 @@ function render(){
       }
     }
     teamUI.setup(room,isHost,stage);
-  }else if(room.status==='playing'&&room.objective==='blitz'){
+  }else if(room.status==='playing'&&isPaced(room.objective)){
     blitzUI.render(room,isHost,stage);
     updateClock();
   }else if(room.status==='playing'&&room.question&&room.game!=='which'){
@@ -466,18 +489,34 @@ function render(){
     ceremonyUI.render(room,isHost,stage);
   }else if(room.status==='finished'){
     stage.append(stageKicker('ROUND COMPLETE'));
-    const h2=make('h2',room.objective==='blitz'?'Blitz complete!':'Challenge complete!');
+    const race=room.blitz?.race;
+    const winner=race?.winnerId?room.players.find(p=>p.id===race.winnerId):null;
+    const targetWon=isRace(room.objective)&&race?.finishReason==='target'&&winner;
+    const name=PACE_NAMES[room.objective]||'Challenge';
+    const h2=make('h2',isRace(room.objective)?
+      (targetWon?'Target achieved!':name+' complete!'):
+      (room.objective==='blitz'?'Blitz complete!':'Challenge complete!'));
     h2.tabIndex=-1;stage.append(h2);
-    stage.append(make('p',room.objective==='blitz'?
-      'Blitz is ranked by correct decisions first, then accuracy and checked points.':
-      'Well played. Celebrate accurate thinking and discuss any tricky sampling decisions.'));
+    stage.append(make('p',isRace(room.objective)?
+      (targetWon?'First to reach the target: '+winner.name+'. Excellent mathematical precision!':
+        'The safety countdown or teacher ended the challenge before a target was met. No winner has been invented.'):
+      (room.objective==='blitz'?
+        'Blitz is ranked by correct decisions first, then accuracy and checked points.':
+        'Well played. Celebrate accurate thinking and discuss any tricky sampling decisions.')));
     const summary=make('div',undefined,'room-finished-summary');
     const top=list[0];
-    summary.append(make('p',top?
-      (room.objective==='blitz'?
+    summary.append(make('p',targetWon?
+      (room.objective==='bullseye'?
+        winner.name+' reached '+race.target+'% accuracy across '+race.accuracyWindow+' marked tasks.':
+        winner.name+' completed '+race.target+' fully correct tasks consecutively.'):
+      (room.objective==='blitz'&&top?
         'Leading result: '+top.name+' · '+top.correct+' correct · '+top.accuracy+'% accuracy':
-        'Top score: '+top.name+' · '+top.score+' points'):'Thank you for taking part.'));
+        (!isRace(room.objective)&&top?
+          'Top score: '+top.name+' · '+top.score+' points':'Every checked response counts towards learning.'))));
     stage.append(summary);
+    if(isRace(room.objective)&&!isHost&&room.blitz?.feedback){
+      blitzUI.renderResultFeedback(room,stage);
+    }
     stage.append(make('p',room.finished?.ceremonyCompleted?
       'The ceremony is complete. Open My Awards to see your saved Multiplayer keepsakes.':
       'The teacher can now present the Grand Awards Ceremony, with a podium and mathematical character trophies.','small-note'));
