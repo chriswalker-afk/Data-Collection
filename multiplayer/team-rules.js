@@ -42,11 +42,16 @@ function playerStats(room,players,entries,threshold){
   const submitted=rows.length;
   const correct=rows.reduce((n,e)=>n+e.correctCount,0);
   const checked=rows.reduce((n,e)=>n+e.total,0);
-  const opportunities=players.length*(room.deck?.length||room.roundLength||0);
+  // Timed Blitz has no fixed number of scheduled questions per player.
+  // For Blitz, coverage is the proportion of members who contributed at least
+  // one checked answer, not submissions divided by an arbitrary deck size.
+  const blitz=room.objective==='blitz';
+  const opportunities=blitz?players.length:players.length*(room.deck?.length||room.roundLength||0);
+  const contributed=blitz?new Set(rows.map(r=>r.playerId)).size:submitted;
   const minResponses=Math.ceil(opportunities*.75);
-  const coverage=ratio(submitted,opportunities);
+  const coverage=ratio(contributed,opportunities);
   const accuracy=ratio(correct,checked);
-  const ready=opportunities>0&&submitted>=minResponses&&checked>=5;
+  const ready=opportunities>0&&contributed>=minResponses&&checked>=5&&!blitz;
   return {submitted,opportunities,correct,checked,coverage,accuracy,
     ready,achieved:ready&&accuracy>=threshold};
 }
