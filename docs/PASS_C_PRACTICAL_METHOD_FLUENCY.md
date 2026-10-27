@@ -20,6 +20,12 @@ Build deeper Edexcel 9MA0 sampling understanding by giving students genuinely di
 - At the end of a board, **Try the next comparison** starts the next unmarked pair. **Play another round** still practices the same pair; this is a choice, not a forced long session.
 - `src/sort-it.js` now rejects missing or duplicated method pairs and any board without at least two cards in each of the four destinations. The first complete check is still the only score; corrections and reveals never retroactively award mastery.
 
+## Multiplayer parity and release
+- The private `multiplayer/game-bank.js` now mirrors the full ten-board Solo bank, including identical contextual statements, destinations and mathematical explanations; answer keys remain private until the teacher reveals them.
+- Both Worker and student UI offer **1, 3, 6 or 10** Sort It! boards. The older choices still work; a full ten-board session is optional.
+- Cloudflare staging must deploy and verify the tested Worker before production is updated with the same bundle. The existing Durable Object's `ROOMS` binding, SQLite migration and active production rooms must be preserved.
+- Multiplayer source parity and server-authoritative grading tests must pass in addition to the Solo regressions.
+
 ## Safeguards
 - The original methods, dependency graphs, identifier keys, condition notes, progress schema, awards rules and multiplayer bank are unchanged.
 - The original 36 evaluation statements remain in the original legacy rounds. Ten new evaluation points are used by the new paired boards and appear as additional *points* on the existing aggregated flashcard evaluation cards; this does not create more flashcard IDs or change their mastery scoring.
