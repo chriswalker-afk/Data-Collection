@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {GAME_SORT_BOARDS} from '../multiplayer/game-bank.js';
 
 const api=(process.env.MULTIPLAYER_API||'').replace(/\/$/,'');
 const expected=process.env.EXPECTED_BUILD_SHA||'';
@@ -7,8 +8,7 @@ assert.match(api,/^https:\/\/sampling-arcade-(?:blitz-pass2|races-pass3)-test\.[
 assert.match(expected,/^[a-f\d]{40}$/);
 const concepts=JSON.parse(readFileSync('content/concepts.json','utf8')).concepts;
 const scenarios=JSON.parse(readFileSync('content/scenarios.json','utf8')).scenarios;
-const source=JSON.parse(readFileSync('content/evaluations.json','utf8')).evaluations;
-const boards=Object.fromEntries(source.map(item=>[item.id,item]));
+const boards=Object.fromEntries(GAME_SORT_BOARDS.map(item=>[item.id,item]));
 async function call(path,method='GET',body,token){
   const r=await fetch(api+path,{method,signal:AbortSignal.timeout(12000),
     headers:{...(body?{'Content-Type':'application/json'}:{}),
