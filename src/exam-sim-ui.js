@@ -1,5 +1,5 @@
 // DOM-only rendering and interaction for Pass 5; math and persistence live in exam-sim.js.
-import {PAPER_SIZES,PAPER_TYPES,PAPER_LEVELS,makePaper,makeReviewPaper,numericalKey,gradeNumbers,
+import {PAPER_SIZES,PAPER_TYPES,PAPER_LEVELS,makePaper,makeReviewPaper,updateRecentQuestionIds,numericalKey,gradeNumbers,
  writtenChecklist,procedureModelSteps,paperEntry,changeReviewTargets,paperSummary,reportCsv} from './exam-sim.js';
 import {METHOD_LABELS} from './phase2.js';
 
@@ -31,7 +31,8 @@ export function createExamSimulationUI(deps){
    span('eyebrow','EXAM PRACTICE / SAMPLING'),
    heading(2,'sim-landing-title','Put it all together.'),
    paragraph('sim-lead','Mix proportional allocations, systematic sampling calculations, full procedures and method evaluation in one paper.'),
-   paragraph('sim-honesty','Calculations are checked automatically. Written explanations are compared with a model and self-reviewed — not graded by a computer.'));
+   paragraph('sim-honesty','Calculations are checked automatically. Written explanations are compared with a model and self-reviewed — not graded by a computer.'),
+   paragraph('sim-variety-note','100 authored questions · New papers favour questions you have not recently practised while keeping all four skill areas.'));
   const levels=element('fieldset',{className:'sim-level-picker'});
   levels.append(element('legend',{},'Choose your starting level'));
   const levelDescriptions=[
@@ -158,8 +159,11 @@ export function createExamSimulationUI(deps){
  }
  function writtenReview(q,entry){
   const {data}=get(),wrap=div('sim-written-review');
-  wrap.append(feedbackBanner('review','Self-review your explanation',[
-    paragraph('','Compare your writing with this model, then tick only points genuinely covered. These ticks are not marks from Pearson or from an automated examiner.')
+  const modelOnly=!entry.draft.trim();
+  wrap.append(feedbackBanner('review',modelOnly?'Model study · no written answer':'Self-review your explanation',[
+    paragraph('',modelOnly?
+      'You viewed the model without writing an answer. No points can be claimed in self-review; the question remains a practice target.':
+      'Compare your writing with the model, then tick only ideas genuinely covered in your answer. This is not examination marking.')
   ]));
   if(q.type==='procedure'){
    const method=data.methods.find(m=>m.id===q.methodId),steps=element('ol',{className:'sim-model-steps'});
@@ -178,11 +182,17 @@ export function createExamSimulationUI(deps){
   }
   if(entry.draft)wrap.append(div('sim-draft-compare',
     heading(4,'sim-panel-heading','Your answer'),paragraph('sim-preserved-text',entry.draft)));
+  if(q.examinerFocus){
+    const focus=element('details',{className:'sim-focus-tip'});
+    focus.append(element('summary',{},'What matters most in this answer'),
+      paragraph('sim-help',q.examinerFocus));
+    wrap.append(focus);
+  }
   const check=element('fieldset',{className:'sim-checklist'});
-  check.append(element('legend',{},'Which important ideas did you include?'));
+  check.append(element('legend',{},modelOnly?'Points to look for next time':'Which important ideas did you include?'));
   for(const p of writtenChecklist(q,data.methods)){
    const input=element('input',{type:'checkbox','data-sim-point':p.id,
-     checked:entry.included.includes(p.id)});
+     checked:!modelOnly&&entry.included.includes(p.id),disabled:modelOnly});
    check.append(element('label',{className:'sim-check-row'},input,span('',p.text)));
   }
   check.append(element('label',{className:'sim-check-row sim-flag'},
@@ -190,9 +200,15 @@ export function createExamSimulationUI(deps){
     span('','Flag this question for more practice, even if I covered every point.')));
   wrap.append(check,
    element('p',{id:'sim-check-count',className:'sim-check-count','aria-live':'polite'},
-    entry.included.length+' of '+writtenChecklist(q,data.methods).length+' ideas ticked (self-review, not a mark).'),
-   paragraph('sim-help','Unticked points and hints add practice targets. Writing is never automatically credited as mastered.'),
-    div('next-row',action('Save self-review and continue →','sim-next',{},'btn btn-primary')));
+    (modelOnly?0:entry.included.length)+' of '+writtenChecklist(q,data.methods).length+' ideas ticked (self-review, not a mark).'),
+   paragraph('sim-help',modelOnly?'Model-only study always becomes a practice target.':
+     'Unticked points and hints add practice targets. Writing is never automatically credited as mastered.'),
+   div('sim-improvement',
+     element('label',{for:'sim-improvement',className:'sim-improvement-label'},'One improvement for next time (optional)'),
+     element('textarea',{id:'sim-improvement',rows:'2',maxlength:'600',className:'sim-improvement-input',
+       placeholder:'Which idea or calculation would you add to your next answer?'},entry.improvement||''),
+     paragraph('sim-help','Private revision note saved on this device; never interpreted as an exam mark.')),
+   div('next-row',action('Save self-review and continue →','sim-next',{},'btn btn-primary')));
   return wrap;
  }
  function questionView(){
@@ -247,6 +263,7 @@ export function createExamSimulationUI(deps){
       field.label+': '+(field.supplied||'(blank)')+' → '+field.expected+' ('+field.working+')'));
    }
    if(row.draft)card.append(paragraph('sim-preserved-text','Your writing: '+row.draft));
+   if(row.improvement)card.append(paragraph('sim-improvement-report','My next step: '+row.improvement));
    if(row.hintsUsed)card.append(paragraph('sim-help','Hints used: try this question independently in a later practice paper.'));
    if(!numberTask(q))card.append(paragraph('sim-help','Written answer was self-reviewed, not automatically assessed.'));
    if(row.needsReview)card.append(link('Targeted revision: '+(q.type==='evaluation'?'Contextual Reasoning':'Build the Method'),
@@ -262,10 +279,10 @@ export function createExamSimulationUI(deps){
       : 'Your current paper has no saved practice targets. Try a longer paper or the next challenge level, and explain each result in full sentences.')));
   const exportSettings=div('sim-export-settings',
    heading(3,'sim-panel-heading','Share a summary with your teacher'),
-   paragraph('sim-help','Download a CSV report to share yourself. No student name or cloud upload. Written drafts are excluded unless you opt in; self-reviews are not examination marks.'),
+   paragraph('sim-help','Download a CSV report to share yourself. No student name or cloud upload. Written drafts and improvement notes are excluded unless you opt in; self-reviews are not examination marks.'),
    element('label',{className:'sim-export-choice'},
     element('input',{id:'sim-export-drafts',type:'checkbox',checked:exportDrafts}),
-    span('','Include my written draft answers in the CSV (optional)')));
+    span('','Include my written draft answers and improvement notes in the CSV (optional)')));
   page.append(exportSettings,div('sim-report-actions',
     action('Print this report','sim-print',{},'btn btn-primary'),
     action('Export CSV report','sim-export',{},'btn btn-quiet'),
@@ -285,9 +302,11 @@ export function createExamSimulationUI(deps){
   if(variant==='review'){
    if(!examState.reviewIds.length)return;
    paper=makeReviewPaper(data.examQuestions,examState.reviewIds);
-  }else paper=makePaper(data.examQuestions,variant,Math.random,paperDifficulty);
+  }else paper=makePaper(data.examQuestions,variant,Math.random,paperDifficulty,
+    examState.recentQuestionIds||[]);
   if(examState.paper&&!examState.paper.complete&&!window.confirm(
     'Replace your unfinished paper? Saved draft writing in that paper will be cleared.'))return;
+  examState.recentQuestionIds=updateRecentQuestionIds(examState.recentQuestionIds,paper.questionIds);
   exportDrafts=false;deps.beginPaper(paper);persist();show('#sim-question-heading');deps.announce('Paper started.');
  }
  function submit(form){
@@ -369,6 +388,7 @@ export function createExamSimulationUI(deps){
     const area=document.getElementById('sim-draft');area?.focus();
     deps.announce('Write your answer first or choose reveal model.');return;
    }
+   if(!entry.draft.trim()){entry.included=[];entry.flag=true;}
    entry.stage='review';persist();show('.sim-written-review .typed-feedback');
    deps.announce('Compare your response with the model and self-review checklist.');return;
   }
@@ -377,7 +397,9 @@ export function createExamSimulationUI(deps){
    if(!numberTask(q)&&entry.stage!=='review')return;
    if(!numberTask(q)){
     const total=writtenChecklist(q,get().data.methods).length;
-    const needsReview=entry.flag||entry.included.length<total||entry.hintsUsed>0;
+    const modelOnly=!entry.draft.trim();
+    if(modelOnly){entry.included=[];entry.flag=true;}
+    const needsReview=modelOnly||entry.flag||entry.included.length<total||entry.hintsUsed>0;
     examState.reviewIds=changeReviewTargets(examState.reviewIds,q.id,needsReview);
    }
    entry.stage='done';
@@ -392,6 +414,9 @@ export function createExamSimulationUI(deps){
   const {session}=get();
   if(session?.ready||session?.complete||!session?.questionIds)return;
   const q=currentQuestion(),entry=ensureEntry();
+  if(entry.stage==='review'&&!numberTask(q)&&input.id==='sim-improvement'){
+    entry.improvement=input.value.slice(0,600);persist();return;
+  }
   if(entry.stage!=='answer')return;
   if(input.id==='sim-draft'&&!numberTask(q))entry.draft=input.value.slice(0,2400);
   else if(input.matches('input[data-sim-num]')&&numberTask(q)){
@@ -417,6 +442,7 @@ export function createExamSimulationUI(deps){
   const q=currentQuestion(),entry=ensureEntry();
   if(numberTask(q)||entry.stage!=='review')return;
   if(control.matches('input[data-sim-point]')){
+   if(!entry.draft.trim())return;
    const id=control.dataset.simPoint,allowed=writtenChecklist(q,get().data.methods).some(x=>x.id===id);
    if(!allowed)return;
    entry.included=control.checked?[...new Set([...entry.included,id])]:entry.included.filter(x=>x!==id);

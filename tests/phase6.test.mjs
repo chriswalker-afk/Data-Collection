@@ -9,9 +9,9 @@ const questions=read('exam-practice','questions'),methods=read('methods','method
 const byId=new Map(questions.map(q=>[q.id,q]));
 const evaluated=questions.filter(q=>q.type==='evaluation');
 
-test('sampling coverage has 46 distinct questions and both method and inference cases',()=>{
- assert.equal(questions.length,46);
- assert.equal(new Set(questions.map(q=>q.id)).size,46);
+test('sampling coverage has 100 distinct questions and both method and inference cases',()=>{
+ assert.equal(questions.length,100);
+ assert.equal(new Set(questions.map(q=>q.id)).size,100);
  assert.ok(evaluated.filter(q=>q.coverageArea==='inference').length>=8);
  assert.ok(evaluated.filter(q=>q.coverageArea==='methods').length>=8);
  for(const q of questions){

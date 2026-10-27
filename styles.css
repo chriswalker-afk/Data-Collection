@@ -943,3 +943,20 @@ body { background: var(--bg); }
   .activity-stage { background:#fff; box-shadow:none; break-inside:avoid; }
   .activity-stage .game-card { box-shadow:none; break-inside:avoid; }
 }
+
+/* Pass D — Exam Lab depth: compact study cues and optional written reflection. */
+.sim-variety-note{max-width:730px;margin:9px 0 0;font-size:.79rem;line-height:1.6;color:#42685e}
+.sim-focus-tip{border:1px solid #d2e4d8;border-radius:11px;background:#f5faf6;padding:12px 15px;margin:17px 0}
+.sim-focus-tip summary{cursor:pointer;color:#205e4f;font-size:.88rem;font-weight:800;line-height:1.55}
+.sim-focus-tip summary:focus-visible{outline:3px solid #88cbb6;outline-offset:4px;border-radius:5px}
+.sim-focus-tip .sim-help{margin:10px 0 2px}
+.sim-check-row:has(input:disabled){cursor:default;background:#f6f8f7;border-color:#e2e7e4;color:#526660}
+.sim-check-row input:disabled{opacity:.62}
+.sim-improvement{padding:16px 18px;margin:17px 0;background:#f8faf8;border:1px solid #d9e6dd;border-radius:13px;min-width:0}
+.sim-improvement-label{display:block;margin:0 0 10px;color:#205b4e;font-weight:780;font-size:.87rem}
+.sim-improvement-input{display:block;box-sizing:border-box;width:100%;max-width:100%;min-height:78px;border:1px solid #a7c8b8;border-radius:10px;background:#fff;color:#19483d;padding:11px 13px;resize:vertical;font:inherit;font-size:.88rem;line-height:1.6}
+.sim-improvement-input:focus{outline:3px solid #b5dfd1;outline-offset:1px;border-color:#18846d}
+.sim-improvement .sim-help{margin:9px 0 0}
+.sim-improvement-report{border-left:3px solid #84b5a1;padding:9px 12px;margin:12px 0;background:#f3f8f4;white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:390px){.sim-improvement{padding:13px 12px}.sim-focus-tip{padding:11px 12px}}
+@media print{.sim-focus-tip,.sim-variety-note{display:none!important}}

@@ -72,9 +72,13 @@ assert(errors.length>=30&&reasoning.length>=30,'Incomplete Pass A investigation 
 
 const {questions:examQuestions}=load('exam-practice');
 unique(ids(examQuestions),'exam practice');
-assert(examQuestions.length>=46,'Insufficient mixed exam questions');
-assert(examQuestions.filter(q=>q.type==='evaluation'&&q.coverageArea==='inference').length>=8,'Too little inference/census practice');
-assert(examQuestions.filter(q=>q.type==='evaluation'&&q.coverageArea==='methods').length>=8,'Too little method comparison practice');
+assert(examQuestions.length===100,'Pass D requires 100 exam questions');
+assert(examQuestions.filter(q=>q.type==='allocation').length===20,'Expected 20 allocation questions');
+assert(examQuestions.filter(q=>q.type==='systematic').length===20,'Expected 20 systematic calculations');
+assert(examQuestions.filter(q=>q.type==='procedure').length===24,'Expected 24 procedure prompts');
+assert(examQuestions.filter(q=>q.type==='evaluation').length===36,'Expected 36 evaluation prompts');
+assert(examQuestions.filter(q=>q.type==='evaluation'&&q.coverageArea==='inference').length===21,'Pass D requires 21 inference/census evaluations');
+assert(examQuestions.filter(q=>q.type==='evaluation'&&q.coverageArea==='methods').length===15,'Pass D requires 15 method critique questions');
 for(const type of ['allocation','systematic','procedure','evaluation'])
  assert(examQuestions.filter(q=>q.type===type).length>=8,'Unbalanced exam bank: '+type);
 for(const q of examQuestions){
@@ -103,6 +107,7 @@ for(const q of examQuestions){
   assert(start+(n-1)*(N/n)<=N,'Systematic end outside frame '+q.id);
  }else if(q.type==='procedure'){
   assert(q.focus&&q.note&&Array.isArray(q.extraPoints)&&q.extraPoints.length>0,'Incomplete procedure rationale '+q.id);
+  if(q.id.startsWith('proc-d-'))assert(q.modelSteps?.length>=4&&q.warning.length>=70,'New contextual procedure missing steps or warning '+q.id);
   unique(ids(q.extraPoints),'procedure extra point '+q.id);
   for(const p of q.extraPoints)assert(p.text,'Missing procedure point '+q.id);
   if(q.modelSteps){
@@ -112,6 +117,7 @@ for(const q of examQuestions){
   }
  }else{
   assert(q.model&&q.checklist?.length>=3&&q.sourceEvaluationIds?.length>0,'Incomplete evaluation '+q.id);
+  if(q.id.startsWith('eval-d-'))assert(q.examinerFocus?.length>=50&&q.model.length>=105,'New evaluation missing mathematical focus '+q.id);
   assert(['inference','methods'].includes(q.coverageArea),'Unclassified evaluation '+q.id);
   unique(ids(q.checklist),'evaluation point '+q.id);
   for(const p of q.checklist)assert(p.text,'Missing evaluation point '+q.id);

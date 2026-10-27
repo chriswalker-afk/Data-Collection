@@ -1521,6 +1521,2011 @@
         "Define the population and identify the group actually observed before deciding what the result means.",
         "Think about sampling variation, who may have been missed and whether the conclusion goes beyond the evidence."
       ]
+    },
+    {
+      "id": "alloc-d-stage-production",
+      "type": "allocation",
+      "level": "foundation",
+      "title": "Theatre production teams",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A theatre has 96 stage crew and 144 performers. The director wants a proportional stratified sample of 30 people to discuss rehearsal times.",
+      "task": "Calculate the whole-number sample size for each group.",
+      "data": {
+        "sampleSize": 30,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Stage crew",
+            "size": 96
+          },
+          {
+            "id": "g1",
+            "label": "Performers",
+            "size": 144
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 30 for each group. Verify the whole numbers add to 30; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 2 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 240 × 30. Check that your final group counts add to 30 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-boarding-menus",
+      "type": "allocation",
+      "level": "foundation",
+      "title": "School dining feedback",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A college has 225 boarding students and 375 day students. A proportional stratified survey of 40 students will inform its lunch menu.",
+      "task": "Calculate the number to select randomly from each group.",
+      "data": {
+        "sampleSize": 40,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Boarding students",
+            "size": 225
+          },
+          {
+            "id": "g1",
+            "label": "Day students",
+            "size": 375
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 40 for each group. Verify the whole numbers add to 40; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 2 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 600 × 40. Check that your final group counts add to 40 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-cycling-club",
+      "type": "allocation",
+      "level": "foundation",
+      "title": "Community cycling survey",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A sports club has 360 junior and 240 adult members. It plans a proportional stratified survey of 50 members.",
+      "task": "Find how many junior and adult members should be selected.",
+      "data": {
+        "sampleSize": 50,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Juniors",
+            "size": 360
+          },
+          {
+            "id": "g1",
+            "label": "Adults",
+            "size": 240
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 50 for each group. Verify the whole numbers add to 50; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 2 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 600 × 50. Check that your final group counts add to 50 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-school-support",
+      "type": "allocation",
+      "level": "foundation",
+      "title": "Training session survey",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A school employs 192 teachers and 128 support staff. It needs a proportional random sample of 40 staff for feedback on training.",
+      "task": "Calculate the allocation to each staff group.",
+      "data": {
+        "sampleSize": 40,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Teachers",
+            "size": 192
+          },
+          {
+            "id": "g1",
+            "label": "Support staff",
+            "size": 128
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 40 for each group. Verify the whole numbers add to 40; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 2 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 320 × 40. Check that your final group counts add to 40 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-school-year-10-12",
+      "type": "allocation",
+      "level": "develop",
+      "title": "Three-year-group survey",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A school has 200 Year 10, 180 Year 11 and 120 Year 12 students. It needs a proportional stratified sample of 50 pupils.",
+      "task": "Work out the number selected randomly from each year group.",
+      "data": {
+        "sampleSize": 50,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Year 10",
+            "size": 200
+          },
+          {
+            "id": "g1",
+            "label": "Year 11",
+            "size": 180
+          },
+          {
+            "id": "g2",
+            "label": "Year 12",
+            "size": 120
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 50 for each group. Verify the whole numbers add to 50; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 3 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 500 × 50. Check that your final group counts add to 50 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-sports-sessions",
+      "type": "allocation",
+      "level": "develop",
+      "title": "Sports centre sessions",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A leisure centre has 400 morning, 250 afternoon and 150 evening members in a defined sampling frame. It plans 80 proportional stratified selections.",
+      "task": "Calculate the sample size for each session group.",
+      "data": {
+        "sampleSize": 80,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Morning",
+            "size": 400
+          },
+          {
+            "id": "g1",
+            "label": "Afternoon",
+            "size": 250
+          },
+          {
+            "id": "g2",
+            "label": "Evening",
+            "size": 150
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 80 for each group. Verify the whole numbers add to 80; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 3 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 800 × 80. Check that your final group counts add to 80 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-library-sections",
+      "type": "allocation",
+      "level": "develop",
+      "title": "Library stock review",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A library has 90 fiction, 150 non-fiction and 60 reference books eligible for inspection. It will randomly sample 30 books proportionally.",
+      "task": "Determine the number from each section.",
+      "data": {
+        "sampleSize": 30,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Fiction",
+            "size": 90
+          },
+          {
+            "id": "g1",
+            "label": "Non-fiction",
+            "size": 150
+          },
+          {
+            "id": "g2",
+            "label": "Reference",
+            "size": 60
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 30 for each group. Verify the whole numbers add to 30; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 3 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 300 × 30. Check that your final group counts add to 30 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-regional-trips",
+      "type": "allocation",
+      "level": "develop",
+      "title": "Regional school journeys",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A travel company has records of 240 west, 160 east and 100 central region trips. It needs a proportional sample of 50 recorded trips.",
+      "task": "Calculate the planned random selection from each region.",
+      "data": {
+        "sampleSize": 50,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "West",
+            "size": 240
+          },
+          {
+            "id": "g1",
+            "label": "East",
+            "size": 160
+          },
+          {
+            "id": "g2",
+            "label": "Central",
+            "size": 100
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 50 for each group. Verify the whole numbers add to 50; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 3 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 500 × 50. Check that your final group counts add to 50 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-reef-zones",
+      "type": "allocation",
+      "level": "extend",
+      "title": "Four reef habitats",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "Marine researchers have 216 sheltered, 144 open-water, 120 sandy and 60 rocky eligible reef plots. A proportional random sample of 45 plots is required.",
+      "task": "Find the four exact whole-number allocations.",
+      "data": {
+        "sampleSize": 45,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Sheltered",
+            "size": 216
+          },
+          {
+            "id": "g1",
+            "label": "Open-water",
+            "size": 144
+          },
+          {
+            "id": "g2",
+            "label": "Sandy",
+            "size": 120
+          },
+          {
+            "id": "g3",
+            "label": "Rocky",
+            "size": 60
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 45 for each group. Verify the whole numbers add to 45; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 4 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 540 × 45. Check that your final group counts add to 45 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-transport-routes",
+      "type": "allocation",
+      "level": "extend",
+      "title": "Transport route usage",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "A city transport survey covers 270 rail users, 180 bus users, 90 cyclists and 60 walkers, with each resident assigned to one main travel group. A sample of 60 is planned.",
+      "task": "Allocate the 60 random selections proportionally across four groups.",
+      "data": {
+        "sampleSize": 60,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Rail",
+            "size": 270
+          },
+          {
+            "id": "g1",
+            "label": "Bus",
+            "size": 180
+          },
+          {
+            "id": "g2",
+            "label": "Cycle",
+            "size": 90
+          },
+          {
+            "id": "g3",
+            "label": "Walk",
+            "size": 60
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 60 for each group. Verify the whole numbers add to 60; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 4 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 600 × 60. Check that your final group counts add to 60 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-study-spaces",
+      "type": "allocation",
+      "level": "extend",
+      "title": "Four study environments",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "There are 420 home, 280 classroom, 210 library and 140 cafe users in four mutually exclusive recorded main-study groups. The target is a proportional sample of 105.",
+      "task": "Calculate each group's number of randomly selected participants.",
+      "data": {
+        "sampleSize": 105,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Home",
+            "size": 420
+          },
+          {
+            "id": "g1",
+            "label": "Classroom",
+            "size": 280
+          },
+          {
+            "id": "g2",
+            "label": "Library",
+            "size": 210
+          },
+          {
+            "id": "g3",
+            "label": "Cafe",
+            "size": 140
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 105 for each group. Verify the whole numbers add to 105; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 4 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 1050 × 105. Check that your final group counts add to 105 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "alloc-d-device-groups",
+      "type": "allocation",
+      "level": "extend",
+      "title": "Primary devices",
+      "methodId": "stratified",
+      "conceptId": "proportional-allocation",
+      "context": "In a technology study, 350 people principally use phones, 250 tablets, 200 laptops and 100 desktops. Each person belongs to one primary-device category. The survey takes 90 proportionally.",
+      "task": "Find the four sample allocations that add to exactly 90.",
+      "data": {
+        "sampleSize": 90,
+        "groups": [
+          {
+            "id": "g0",
+            "label": "Phone",
+            "size": 350
+          },
+          {
+            "id": "g1",
+            "label": "Tablet",
+            "size": 250
+          },
+          {
+            "id": "g2",
+            "label": "Laptop",
+            "size": 200
+          },
+          {
+            "id": "g3",
+            "label": "Desktop",
+            "size": 100
+          }
+        ]
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "Use (size of stratum ÷ total population) × 90 for each group. Verify the whole numbers add to 90; then select each allotted number randomly within its own stratum, without repeats.",
+      "hints": [
+        "Add the sizes of all 4 groups to obtain the population N. The groups must not overlap.",
+        "For each group, calculate its size ÷ 900 × 90. Check that your final group counts add to 90 and that selection is random within strata."
+      ]
+    },
+    {
+      "id": "sys-d-warehouse-boxes",
+      "type": "systematic",
+      "level": "foundation",
+      "title": "Warehouse box checks",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A warehouse has 300 cartons recorded in a fixed order. An officer plans to inspect 30 systematically, starting at a randomly selected position of 7.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 300,
+        "sampleSize": 30,
+        "randomStart": 7
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 300 ÷ 30 = 10. There are 29 jumps after the first selected position, so the last position is 7 + (30 − 1) × 10 = 297. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 7 and add (n − 1) intervals, not n intervals. The result must stay within 300."
+      ]
+    },
+    {
+      "id": "sys-d-clinic-tickets",
+      "type": "systematic",
+      "level": "foundation",
+      "title": "Queue ticket audit",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A public service centre has a complete ordered list of 96 numbered tickets. It plans to check 12 and has randomly chosen starting ticket position 6.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 96,
+        "sampleSize": 12,
+        "randomStart": 6
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 96 ÷ 12 = 8. There are 11 jumps after the first selected position, so the last position is 6 + (12 − 1) × 8 = 94. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 6 and add (n − 1) intervals, not n intervals. The result must stay within 96."
+      ]
+    },
+    {
+      "id": "sys-d-museum-entries",
+      "type": "systematic",
+      "level": "foundation",
+      "title": "Museum visitor records",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A museum's chronological records list 160 eligible entries. A systematic check will inspect 20 records with a random starting position of 5.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 160,
+        "sampleSize": 20,
+        "randomStart": 5
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 160 ÷ 20 = 8. There are 19 jumps after the first selected position, so the last position is 5 + (20 − 1) × 8 = 157. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 5 and add (n − 1) intervals, not n intervals. The result must stay within 160."
+      ]
+    },
+    {
+      "id": "sys-d-magazine-copies",
+      "type": "systematic",
+      "level": "foundation",
+      "title": "Magazine production",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A publisher has 540 consecutively numbered eligible magazines in a production list. It samples 45 using a random first position of 8.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 540,
+        "sampleSize": 45,
+        "randomStart": 8
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 540 ÷ 45 = 12. There are 44 jumps after the first selected position, so the last position is 8 + (45 − 1) × 12 = 536. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 8 and add (n − 1) intervals, not n intervals. The result must stay within 540."
+      ]
+    },
+    {
+      "id": "sys-d-rail-passenger",
+      "type": "systematic",
+      "level": "develop",
+      "title": "Rail travel tickets",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "An ordered ticket database holds 1,050 eligible journeys. The transport team will take a systematic sample of 50, after randomly selecting starting position 13.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 1050,
+        "sampleSize": 50,
+        "randomStart": 13
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 1050 ÷ 50 = 21. There are 49 jumps after the first selected position, so the last position is 13 + (50 − 1) × 21 = 1042. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 13 and add (n − 1) intervals, not n intervals. The result must stay within 1050."
+      ]
+    },
+    {
+      "id": "sys-d-course-register",
+      "type": "systematic",
+      "level": "develop",
+      "title": "Online course register",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "There are 576 eligible students in an ordered course register. A systematic sample of 36 will be drawn from a randomly chosen first position of 11.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 576,
+        "sampleSize": 36,
+        "randomStart": 11
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 576 ÷ 36 = 16. There are 35 jumps after the first selected position, so the last position is 11 + (36 − 1) × 16 = 571. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 11 and add (n − 1) intervals, not n intervals. The result must stay within 576."
+      ]
+    },
+    {
+      "id": "sys-d-music-archive",
+      "type": "systematic",
+      "level": "develop",
+      "title": "Music archive audit",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "An archive contains 1,320 consecutively numbered recordings eligible for review. Inspect 60, starting randomly at position 18.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 1320,
+        "sampleSize": 60,
+        "randomStart": 18
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 1320 ÷ 60 = 22. There are 59 jumps after the first selected position, so the last position is 18 + (60 − 1) × 22 = 1316. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 18 and add (n − 1) intervals, not n intervals. The result must stay within 1320."
+      ]
+    },
+    {
+      "id": "sys-d-delivery-sheets",
+      "type": "systematic",
+      "level": "develop",
+      "title": "Delivery tracking sheets",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A courier firm has a complete ordered list of 840 delivery sheets. It samples 56 systematically, with randomly selected first position 10.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 840,
+        "sampleSize": 56,
+        "randomStart": 10
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 840 ÷ 56 = 15. There are 55 jumps after the first selected position, so the last position is 10 + (56 − 1) × 15 = 835. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 10 and add (n − 1) intervals, not n intervals. The result must stay within 840."
+      ]
+    },
+    {
+      "id": "sys-d-machine-readings",
+      "type": "systematic",
+      "level": "extend",
+      "title": "Machine monitoring",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A laboratory records 2,025 observations in time order. A systematic sample of 75 begins at random position 19; the team will later check for repeating time patterns.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 2025,
+        "sampleSize": 75,
+        "randomStart": 19
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 2025 ÷ 75 = 27. There are 74 jumps after the first selected position, so the last position is 19 + (75 − 1) × 27 = 2017. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 19 and add (n − 1) intervals, not n intervals. The result must stay within 2025."
+      ]
+    },
+    {
+      "id": "sys-d-ticket-transactions",
+      "type": "systematic",
+      "level": "extend",
+      "title": "Transaction quality check",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A stadium maintains 2,448 ordered ticket transaction records. Auditors take 72 systematically, with an independent random start of position 31.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 2448,
+        "sampleSize": 72,
+        "randomStart": 31
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 2448 ÷ 72 = 34. There are 71 jumps after the first selected position, so the last position is 31 + (72 − 1) × 34 = 2445. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 31 and add (n − 1) intervals, not n intervals. The result must stay within 2448."
+      ]
+    },
+    {
+      "id": "sys-d-urban-counts",
+      "type": "systematic",
+      "level": "extend",
+      "title": "Traffic observation log",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "A traffic study has 1,512 eligible time-ordered observations. Researchers plan to select 54 at a constant interval with random start 23.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 1512,
+        "sampleSize": 54,
+        "randomStart": 23
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 1512 ÷ 54 = 28. There are 53 jumps after the first selected position, so the last position is 23 + (54 − 1) × 28 = 1507. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 23 and add (n − 1) intervals, not n intervals. The result must stay within 1512."
+      ]
+    },
+    {
+      "id": "sys-d-sensor-sample",
+      "type": "systematic",
+      "level": "extend",
+      "title": "Sensor readings over time",
+      "methodId": "systematic",
+      "conceptId": "sampling-interval",
+      "context": "An environmental sensor stores 3,000 consecutive valid readings. Researchers plan to analyse 120 systematically, starting at random position 24.",
+      "task": "Calculate the sampling interval and the last selected list position.",
+      "data": {
+        "populationSize": 3000,
+        "sampleSize": 120,
+        "randomStart": 24
+      },
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "examAdvice": "For this exact integer ratio, use k = 3000 ÷ 120 = 25. There are 119 jumps after the first selected position, so the last position is 24 + (120 − 1) × 25 = 2999. A systematic plan should also consider possible periodic structure in the ordered list.",
+      "hints": [
+        "Use N ÷ n to find the spacing between neighbouring selected positions. The ratio is an exact whole number here.",
+        "Begin with the randomly selected first position 24 and add (n − 1) intervals, not n intervals. The result must stay within 3000."
+      ]
+    },
+    {
+      "id": "proc-d-art-club",
+      "type": "procedure",
+      "level": "foundation",
+      "title": "Selecting art club members",
+      "methodId": "simple-random",
+      "context": "An art club has exactly 90 registered eligible students. The organiser needs a simple random sample of 9 distinct members to evaluate new workshops.",
+      "task": "Describe a precise selection procedure using a random integer generator.",
+      "modelSteps": [
+        {
+          "id": "frame",
+          "text": "Write a complete list of all 90 eligible art club members."
+        },
+        {
+          "id": "number",
+          "text": "Give each eligible member a unique label from 1 to 90."
+        },
+        {
+          "id": "generate",
+          "text": "Use an unbiased generator to produce random integers between 1 and 90 inclusive."
+        },
+        {
+          "id": "repeat",
+          "text": "Ignore repeated numbers until 9 distinct valid labels have been selected."
+        },
+        {
+          "id": "select",
+          "text": "Contact the 9 members whose labels were retained."
+        }
+      ],
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Specify that a repeated label is ignored, not counted as an extra person."
+        }
+      ],
+      "focus": "Explain why the result contains nine different members and not nine draws with possible repeats.",
+      "note": "A generator already restricted to 1–90 will not yield an invalid out-of-range label.",
+      "warning": "An incomplete club register excludes people even if the random numbers are generated fairly.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the population, selection frame or recruitment venue and the specific group size before describing how participants enter the sample.",
+        "State the method's defining selection rule, apply the numbers in this scenario and explain one important limitation or safeguard."
+      ]
+    },
+    {
+      "id": "proc-d-factory-vanes",
+      "type": "procedure",
+      "level": "develop",
+      "title": "Turbine component testing",
+      "methodId": "simple-random",
+      "context": "A manufacturer has 625 turbine vanes awaiting inspection, each with an inventory ID. A technician wants 25 distinct vanes selected at random, not the 25 nearest to the workshop.",
+      "task": "Give a repeatable simple random selection plan for these 25 components.",
+      "modelSteps": [
+        {
+          "id": "frame",
+          "text": "Check that the inventory frame contains all 625 eligible turbine vanes."
+        },
+        {
+          "id": "number",
+          "text": "Assign each included vane a unique numerical label from 1 to 625."
+        },
+        {
+          "id": "generate",
+          "text": "Generate independent uniformly random integers in the bounded range 1–625."
+        },
+        {
+          "id": "repeat",
+          "text": "Reject duplicates and draw again until 25 different labels are available."
+        },
+        {
+          "id": "select",
+          "text": "Inspect the 25 vanes identified by the accepted numbers."
+        }
+      ],
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Explain why the selected units must be 25 different items even if the generator repeats a label."
+        }
+      ],
+      "focus": "Avoid substituting easily accessible items when a randomly selected vane is inconvenient to reach.",
+      "note": "The frame and method must remain unbiased at the point of selecting the units.",
+      "warning": "Using a complete population frame and avoiding convenience replacements matters more than the speed of the random-number generator.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the population, selection frame or recruitment venue and the specific group size before describing how participants enter the sample.",
+        "State the method's defining selection rule, apply the numbers in this scenario and explain one important limitation or safeguard."
+      ]
+    },
+    {
+      "id": "proc-d-random-tables",
+      "type": "procedure",
+      "level": "extend",
+      "title": "Three-digit random table",
+      "methodId": "simple-random",
+      "context": "An association has a complete register of 240 households. Its survey needs 30 different households, chosen using an unrestricted table of random digits read in successive three-digit groups.",
+      "task": "Describe how to draw the 30-household sample, including the invalid labels and repeated entries.",
+      "modelSteps": [
+        {
+          "id": "frame",
+          "text": "Construct the complete register and give households labels 001 to 240."
+        },
+        {
+          "id": "read",
+          "text": "Read successive three-digit groups from a random-digit table without choosing convenient rows after seeing the values."
+        },
+        {
+          "id": "reject",
+          "text": "Discard 000, numbers from 241 to 999, and repeated valid labels."
+        },
+        {
+          "id": "continue",
+          "text": "Keep reading groups until 30 distinct valid labels have been accepted."
+        },
+        {
+          "id": "select",
+          "text": "Survey the households matched to those 30 accepted labels."
+        }
+      ],
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Explicitly reject 000, 241–999 and repeated labels before claiming that 30 households have been selected."
+        }
+      ],
+      "focus": "The difference between unrestricted digit sources and a generator bounded by 1–240 is crucial.",
+      "note": "For a bounded generator which only returns 1–240, an out-of-range rejection instruction would be unnecessary.",
+      "warning": "Do not accept invalid three-digit labels; every eligible household must remain equally likely to enter a fixed-size random draw.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the population, selection frame or recruitment venue and the specific group size before describing how participants enter the sample.",
+        "State the method's defining selection rule, apply the numbers in this scenario and explain one important limitation or safeguard."
+      ]
+    },
+    {
+      "id": "proc-d-library-register",
+      "type": "procedure",
+      "level": "foundation",
+      "title": "Library loans audit",
+      "methodId": "systematic",
+      "context": "A library has 360 eligible borrowing records in a numbered chronological register. A systematic audit needs 30 records.",
+      "task": "Explain how to select exactly 30 records with a random start, stating the interval and starting-position range.",
+      "modelSteps": [
+        {
+          "id": "frame",
+          "text": "Number all 360 eligible records in their established order."
+        },
+        {
+          "id": "interval",
+          "text": "Calculate k = 360 ÷ 30 = 12, the regular gap between the selected positions."
+        },
+        {
+          "id": "start",
+          "text": "Choose a random starting position from 1 to 12 inclusive."
+        },
+        {
+          "id": "select",
+          "text": "Take that record and then every 12th position until 30 records have been selected."
+        }
+      ],
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "State k = 12 and that the random start must lie among positions 1–12."
+        }
+      ],
+      "focus": "The random start prevents a fixed starting place being chosen by investigator preference.",
+      "note": "Check that the last selected position is within the 360-item frame.",
+      "warning": "A repeated twelve-record pattern could make systematic selection unrepresentative.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the population, selection frame or recruitment venue and the specific group size before describing how participants enter the sample.",
+        "State the method's defining selection rule, apply the numbers in this scenario and explain one important limitation or safeguard."
+      ]
+    },
+    {
+      "id": "proc-d-transport-orders",
+      "type": "procedure",
+      "level": "develop",
+      "title": "Ordered delivery records",
+      "methodId": "systematic",
+      "context": "A courier company has 780 eligible delivery records in time order. It wants 60 for a quality audit and knows the records might vary by delivery shift.",
+      "task": "Describe a systematic sample with the correct interval, random start and a practical limitation.",
+      "modelSteps": [
+        {
+          "id": "frame",
+          "text": "Create or verify a numbered ordered frame of all 780 eligible delivery records."
+        },
+        {
+          "id": "interval",
+          "text": "Calculate the exact selection interval k = 780 ÷ 60 = 13."
+        },
+        {
+          "id": "start",
+          "text": "Randomly choose the first selected position from 1 to 13."
+        },
+        {
+          "id": "select",
+          "text": "Select the first record, then every thirteenth record until 60 different records are chosen."
+        }
+      ],
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Explain why a thirteen-record repeating shift pattern could distort the sample."
+        }
+      ],
+      "focus": "Include the possible periodic-order problem rather than claiming that a random start removes all bias.",
+      "note": "An interval of 13 yields 60 positions for any random start from 1 to 13.",
+      "warning": "A repeating thirteen-position pattern could select the same kind of record repeatedly.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the population, selection frame or recruitment venue and the specific group size before describing how participants enter the sample.",
+        "State the method's defining selection rule, apply the numbers in this scenario and explain one important limitation or safeguard."
+      ]
+    },
+    {
+      "id": "proc-d-conveyor-cycle",
+      "type": "procedure",
+      "level": "extend",
+      "title": "Systematic sampling meets periodicity",
+      "methodId": "systematic",
+      "context": "A production list contains 1,008 numbered items; 84 inspections are required. Each block of 12 positions represents a fixed repeating sequence of machine settings.",
+      "task": "Describe how systematic sampling would work and assess whether its periodicity is suitable.",
+      "modelSteps": [
+        {
+          "id": "frame",
+          "text": "Number the 1,008 eligible production items in the existing order."
+        },
+        {
+          "id": "interval",
+          "text": "Calculate the systematic interval k = 1,008 ÷ 84 = 12."
+        },
+        {
+          "id": "start",
+          "text": "Choose one randomly selected starting position between 1 and 12."
+        },
+        {
+          "id": "select",
+          "text": "Take that item and every 12th subsequent position until exactly 84 items are selected."
+        },
+        {
+          "id": "caution",
+          "text": "Recognise that a 12-item repeated machine cycle may make the resulting sample unrepresentative; consider a simple random sample or stratification by setting instead."
+        }
+      ],
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Link the 12-position cycle directly to the interval of 12 and explain why it matters."
+        }
+      ],
+      "focus": "The mathematical selection remains systematic but its inferential quality can be poor.",
+      "note": "Do not say that a random starting position automatically removes periodic-selection problems.",
+      "warning": "Selecting one repeating cycle position cannot be assumed to represent all machine settings.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the population, selection frame or recruitment venue and the specific group size before describing how participants enter the sample.",
+        "State the method's defining selection rule, apply the numbers in this scenario and explain one important limitation or safeguard."
+      ]
+    },
+    {
+      "id": "proc-d-music-classes",
+      "type": "procedure",
+      "level": "foundation",
+      "title": "Music programme choices",
+      "methodId": "stratified",
+      "context": "A music school has 240 orchestral and 160 choir members, with no student in both groups. A proportional sample of 40 is required.",
+      "task": "Describe how to allocate and select the sample using stratified random sampling.",
+      "modelSteps": [
+        {
+          "id": "strata",
+          "text": "Divide the 400 members into separate orchestral and choir sampling frames."
+        },
+        {
+          "id": "allocate",
+          "text": "Allocate 240/400 × 40 = 24 places to the orchestra and 160/400 × 40 = 16 to the choir."
+        },
+        {
+          "id": "random",
+          "text": "Randomly select 24 different orchestral and 16 different choir members from their respective frames."
+        },
+        {
+          "id": "combine",
+          "text": "Combine the two random draws to make one sample of 40 members."
+        }
+      ],
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Show both allocations, 24 and 16, and explain that drawing within each stratum is random."
+        }
+      ],
+      "focus": "Matching group proportions alone does not make the method stratified unless individual members are randomly chosen.",
+      "note": "The allocations sum to 40 and the groups are mutually exclusive.",
+      "warning": "Filling 24 and 16 places by approaching available volunteers would be quota sampling, not stratified random sampling.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the population, selection frame or recruitment venue and the specific group size before describing how participants enter the sample.",
+        "State the method's defining selection rule, apply the numbers in this scenario and explain one important limitation or safeguard."
+      ]
+    },
+    {
+      "id": "proc-d-recreation-times",
+      "type": "procedure",
+      "level": "develop",
+      "title": "Recreation centre visits",
+      "methodId": "stratified",
+      "context": "A recreation centre has 420 weekday, 280 weekend and 140 holiday-category members; each member is classified by their primary visit category. Researchers need 84 proportionally.",
+      "task": "Set out the full proportional stratified procedure with exact category numbers.",
+      "modelSteps": [
+        {
+          "id": "strata",
+          "text": "Use the mutually exclusive weekday, weekend and holiday membership lists as strata."
+        },
+        {
+          "id": "allocate",
+          "text": "Allocate 420/840 × 84 = 42 weekday, 280/840 × 84 = 28 weekend and 140/840 × 84 = 14 holiday places."
+        },
+        {
+          "id": "random",
+          "text": "Randomly draw 42, 28 and 14 distinct members respectively from each correct stratum frame."
+        },
+        {
+          "id": "combine",
+          "text": "Combine the 42 + 28 + 14 selected members to form the planned 84-person sample."
+        }
+      ],
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Check that the 42, 28 and 14 whole-person allocations total 84."
+        }
+      ],
+      "focus": "Show the calculation and how each subgroup contributes randomly, rather than taking one global convenience sample.",
+      "note": "All membership categories are defined as a single primary category to avoid overlap.",
+      "warning": "If a person belongs to multiple uncorrected strata they may be eligible twice; define mutually exclusive classifications.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the population, selection frame or recruitment venue and the specific group size before describing how participants enter the sample.",
+        "State the method's defining selection rule, apply the numbers in this scenario and explain one important limitation or safeguard."
+      ]
+    },
+    {
+      "id": "proc-d-workshop-shifts",
+      "type": "procedure",
+      "level": "extend",
+      "title": "Manufacturing shift survey",
+      "methodId": "stratified",
+      "context": "A plant employs 200 morning, 240 afternoon and 120 night-shift workers. It needs 56 workers in a proportional stratified survey about shift safety.",
+      "task": "Explain a proportional random design, calculate three stratum allocations and identify a sampling-frame safeguard.",
+      "modelSteps": [
+        {
+          "id": "strata",
+          "text": "Classify all 560 eligible workers into non-overlapping morning, afternoon and night-shift registers."
+        },
+        {
+          "id": "allocate",
+          "text": "Calculate 200/560 × 56 = 20 morning, 240/560 × 56 = 24 afternoon and 120/560 × 56 = 12 night-shift places."
+        },
+        {
+          "id": "random",
+          "text": "Randomly select 20, 24 and 12 different worker IDs from the complete register for each corresponding shift."
+        },
+        {
+          "id": "combine",
+          "text": "Combine the separate selected ID lists into one sample of exactly 56 workers."
+        }
+      ],
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Explain that a missing night-shift register undermines the promised proportional coverage even when the arithmetic is correct."
+        }
+      ],
+      "focus": "Distinguish correct allocation from a complete and accurately classified sampling frame.",
+      "note": "The allocations are exact whole numbers; do not replace random draws with volunteers.",
+      "warning": "An incomplete shift register means eligible workers can have zero probability of selection.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the population, selection frame or recruitment venue and the specific group size before describing how participants enter the sample.",
+        "State the method's defining selection rule, apply the numbers in this scenario and explain one important limitation or safeguard."
+      ]
+    },
+    {
+      "id": "proc-d-evening-arts",
+      "type": "procedure",
+      "level": "foundation",
+      "title": "Arts workshop feedback quotas",
+      "methodId": "quota",
+      "context": "At a public arts evening, an interviewer must collect 50 completed responses: 30 from adult attendees and 20 from teenage attendees. Available volunteers will be approached.",
+      "task": "Describe a quota procedure and explain whether individual respondents are randomly chosen.",
+      "modelSteps": [
+        {
+          "id": "groups",
+          "text": "Define two distinct eligible age groups: adults and teenagers."
+        },
+        {
+          "id": "targets",
+          "text": "Set response targets of 30 adults and 20 teenagers, for a total of 50."
+        },
+        {
+          "id": "recruit",
+          "text": "Approach available, willing attendees without drawing random names, allocating each response to its group."
+        },
+        {
+          "id": "stop",
+          "text": "Stop recruitment for each age group when it reaches its quota and finish when both targets have been met."
+        }
+      ],
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Distinguish planned 30/20 group targets from random selection within those groups."
+        }
+      ],
+      "focus": "The method controls subgroup totals but does not guarantee absence of within-group selection bias.",
+      "note": "The quotas here are given target counts, not necessarily verified population proportions.",
+      "warning": "Non-random recruitment may overrepresent people who are easy to approach or willing to respond.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the population, selection frame or recruitment venue and the specific group size before describing how participants enter the sample.",
+        "State the method's defining selection rule, apply the numbers in this scenario and explain one important limitation or safeguard."
+      ]
+    },
+    {
+      "id": "proc-d-event-sessions",
+      "type": "procedure",
+      "level": "develop",
+      "title": "Convention session feedback",
+      "methodId": "quota",
+      "context": "A convention organiser needs 120 responses: 48 from morning workshops, 42 from afternoon workshops and 30 from evening workshops. Volunteers are recruited near each session exit.",
+      "task": "Explain how to meet all three quotas without misdescribing this as random stratified sampling.",
+      "modelSteps": [
+        {
+          "id": "groups",
+          "text": "Define mutually exclusive attendee groups by the single session listed on each person's survey invitation."
+        },
+        {
+          "id": "targets",
+          "text": "Set targets of 48 morning, 42 afternoon and 30 evening responses, totalling 120."
+        },
+        {
+          "id": "recruit",
+          "text": "Interview eligible willing people as they exit their session without selecting individuals randomly."
+        },
+        {
+          "id": "stop",
+          "text": "End recruitment for each group at its target and finish when all three quotas are filled."
+        }
+      ],
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "State that 48 + 42 + 30 = 120, and that selection within each session is non-random."
+        }
+      ],
+      "focus": "Explain why matching prescribed group numbers is insufficient to establish stratified random sampling.",
+      "note": "Recruitment near exits is convenient and can miss people who leave elsewhere or decline.",
+      "warning": "If participants attend multiple sessions, assign an explicit non-overlapping group to avoid counting someone twice.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the population, selection frame or recruitment venue and the specific group size before describing how participants enter the sample.",
+        "State the method's defining selection rule, apply the numbers in this scenario and explain one important limitation or safeguard."
+      ]
+    },
+    {
+      "id": "proc-d-theatre-visitors",
+      "type": "procedure",
+      "level": "extend",
+      "title": "Public theatre audience research",
+      "methodId": "quota",
+      "context": "A city theatre wants opinions from 80 willing visitors: 36 season-ticket holders, 28 occasional customers and 16 first-time attendees. The survey runs at the lobby.",
+      "task": "Plan the quota approach and explain the limits of inference from its three controlled groups.",
+      "modelSteps": [
+        {
+          "id": "groups",
+          "text": "Classify eligible respondents into one of three non-overlapping ticket-history groups."
+        },
+        {
+          "id": "targets",
+          "text": "Set quotas of 36 season-ticket holders, 28 occasional customers and 16 first-time attendees."
+        },
+        {
+          "id": "recruit",
+          "text": "Approach available eligible willing visitors non-randomly in the lobby, recording responses in the correct group."
+        },
+        {
+          "id": "stop",
+          "text": "Stop taking respondents for each group once full, completing exactly 36 + 28 + 16 = 80 replies."
+        }
+      ],
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Say why matching ticket-history quotas does not remove differences in selection or response within each group."
+        }
+      ],
+      "focus": "Contrast group quotas with a genuine random sample and state one realistic limitation.",
+      "note": "A lobby survey cannot claim the views of non-attenders without additional design.",
+      "warning": "The sample will exclude people who did not attend, and convenient volunteers may differ from other visitors.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the population, selection frame or recruitment venue and the specific group size before describing how participants enter the sample.",
+        "State the method's defining selection rule, apply the numbers in this scenario and explain one important limitation or safeguard."
+      ]
+    },
+    {
+      "id": "proc-d-cafe-respondents",
+      "type": "procedure",
+      "level": "foundation",
+      "title": "Customers at a lunchtime cafe",
+      "methodId": "opportunity",
+      "context": "A researcher asks 18 available adult customers at one cafe during Tuesday lunch about local recycling. No names are randomly chosen.",
+      "task": "Explain how an opportunity sample of 18 is obtained and identify one limitation.",
+      "modelSteps": [
+        {
+          "id": "criteria",
+          "text": "State that eligible respondents are adults who consent to take part in the recycling survey."
+        },
+        {
+          "id": "venue",
+          "text": "Choose the cafe and its Tuesday lunchtime session for approaching available respondents."
+        },
+        {
+          "id": "available",
+          "text": "Ask conveniently available eligible customers whether they will participate, without a random draw."
+        },
+        {
+          "id": "collect",
+          "text": "Record responses from the first 18 willing eligible customers and stop."
+        }
+      ],
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Explain why customers from other venues or times may not appear in the sample."
+        }
+      ],
+      "focus": "The defining feature is availability, not a lottery or fixed subgroup quotas.",
+      "note": "Make the practical place and time explicit when describing a convenience sample.",
+      "warning": "Cafe customers at one lunchtime may not represent all local residents.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the population, selection frame or recruitment venue and the specific group size before describing how participants enter the sample.",
+        "State the method's defining selection rule, apply the numbers in this scenario and explain one important limitation or safeguard."
+      ]
+    },
+    {
+      "id": "proc-d-beach-volunteers",
+      "type": "procedure",
+      "level": "develop",
+      "title": "Beach cleanup opinions",
+      "methodId": "opportunity",
+      "context": "At a Saturday beach cleanup, an organiser wants 35 opinions from willing adult volunteers who happen to be present.",
+      "task": "Describe the opportunity selection clearly and evaluate its reach.",
+      "modelSteps": [
+        {
+          "id": "criteria",
+          "text": "Check that each participant is an adult volunteer eligible for the cleanup survey."
+        },
+        {
+          "id": "venue",
+          "text": "Use the chosen Saturday beach-cleanup event as the practical place and time."
+        },
+        {
+          "id": "available",
+          "text": "Approach conveniently available eligible volunteers without a random selection frame."
+        },
+        {
+          "id": "collect",
+          "text": "Collect 35 responses from consenting people and finish once 35 have participated."
+        }
+      ],
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Discuss why people not volunteering for beach cleanups are likely to be missed."
+        }
+      ],
+      "focus": "Being easy to access makes sampling quick but not necessarily representative of residents.",
+      "note": "Only claim to describe the participating volunteers unless the sampling design is broadened.",
+      "warning": "People who care strongly about litter may be unusually likely to volunteer at this event.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the population, selection frame or recruitment venue and the specific group size before describing how participants enter the sample.",
+        "State the method's defining selection rule, apply the numbers in this scenario and explain one important limitation or safeguard."
+      ]
+    },
+    {
+      "id": "proc-d-technology-exhibition",
+      "type": "procedure",
+      "level": "extend",
+      "title": "Morning technology exhibition poll",
+      "methodId": "opportunity",
+      "context": "An organiser surveys 45 available adult attendees at a technology exhibition on Friday morning about public acceptance of new devices. They claim the result describes all adults in the city.",
+      "task": "Outline the actual recruitment procedure and analyse one limitation of the city-wide conclusion.",
+      "modelSteps": [
+        {
+          "id": "criteria",
+          "text": "Define eligibility as adult respondents willing to answer the device-opinion questionnaire."
+        },
+        {
+          "id": "venue",
+          "text": "Recruit at the technology exhibition during its Friday-morning session."
+        },
+        {
+          "id": "available",
+          "text": "Approach adults who happen to be readily available, rather than selecting randomly from all city adults."
+        },
+        {
+          "id": "collect",
+          "text": "Collect 45 eligible volunteer responses and stop when the target is reached."
+        }
+      ],
+      "extraPoints": [
+        {
+          "id": "apply",
+          "text": "Explain why an exhibition audience could have systematically different technology opinions from the wider city."
+        }
+      ],
+      "focus": "Distinguish the valid description of what was done from an unjustified population-wide inference.",
+      "note": "The method is opportunity sampling; describing a sample is not the same as justifying its representativeness.",
+      "warning": "People absent from the event, or unlikely to attend technology exhibitions, are largely excluded.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the population, selection frame or recruitment venue and the specific group size before describing how participants enter the sample.",
+        "State the method's defining selection rule, apply the numbers in this scenario and explain one important limitation or safeguard."
+      ]
+    },
+    {
+      "id": "eval-d-city-cycling",
+      "type": "evaluation",
+      "level": "foundation",
+      "methodId": "opportunity",
+      "coverageArea": "inference",
+      "title": "Cycling opinions and the city",
+      "context": "A student asks 25 volunteers at a cycling-club meeting about preferred transport and writes that most city residents prefer cycling.",
+      "task": "Evaluate this conclusion and suggest a more defensible investigation.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The target population is all city residents, not the cycling-club volunteers."
+        },
+        {
+          "id": "point-2",
+          "text": "Cycling-club attendees and willing volunteers may be particularly likely to cycle."
+        },
+        {
+          "id": "point-3",
+          "text": "Use a wider sampling frame to select residents, or restrict conclusions to those surveyed."
+        }
+      ],
+      "model": "A cycling club is not a random selection of city residents. Its members may be more positive about cycling. I would broaden the sample of residents and examine nonresponse, or only describe these 25 volunteers.",
+      "sourceEvaluationIds": [
+        "opp-unrepresentative",
+        "sample-bias"
+      ],
+      "examinerFocus": "Connect the sampling mechanism to the target population; sample size alone is insufficient.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-incomplete-census",
+      "type": "evaluation",
+      "level": "foundation",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "title": "An incomplete census register",
+      "context": "A survey team visits all 320 households on an old register, but 45 newly built occupied homes are missing. They claim to have surveyed every village household.",
+      "task": "Explain the coverage error and an appropriate correction.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The original frame omits 45 eligible households in the village."
+        },
+        {
+          "id": "point-2",
+          "text": "Visiting every listed home is not a complete census of the village's current population."
+        },
+        {
+          "id": "point-3",
+          "text": "Update and verify the full household register, and address any nonresponse."
+        }
+      ],
+      "model": "The register omits 45 homes, so covering the old list does not make the result a village-wide census. The team must update the frame before claiming to have covered every eligible household.",
+      "sourceEvaluationIds": [
+        "srs-frame",
+        "sample-bias"
+      ],
+      "examinerFocus": "Coverage of the defined population matters, not merely coverage of the available list.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-two-school-samples",
+      "type": "evaluation",
+      "level": "foundation",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "title": "Two samples of school pupils",
+      "context": "Two students take independent simple random samples of 40 pupils. One finds 55% enjoy morning lessons and the other finds 45%.",
+      "task": "Explain whether the difference proves that one sampling procedure was wrong.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Two valid random draws may select different pupils from the same population."
+        },
+        {
+          "id": "point-2",
+          "text": "Sample percentages differ naturally due to sampling variation."
+        },
+        {
+          "id": "point-3",
+          "text": "Neither percentage is automatically the exact population percentage."
+        }
+      ],
+      "model": "These random samples may contain different pupils, so the two percentages can differ even if both selections are properly made. This is sampling variation; neither result alone establishes the exact school-wide proportion.",
+      "sourceEvaluationIds": [
+        "sample-variation",
+        "srs-equal"
+      ],
+      "examinerFocus": "Avoid treating two differing point estimates as proof that the selection method was invalid.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-strap-destruction",
+      "type": "evaluation",
+      "level": "foundation",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "title": "Destructive strap testing",
+      "context": "A factory produces 5,000 climbing straps. Testing a strap to its failure load destroys it; a manager proposes testing all 5,000 to avoid sampling uncertainty.",
+      "task": "Explain why a census is unsuitable and propose a sample.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Testing every strap destructively would destroy all saleable straps in the batch."
+        },
+        {
+          "id": "point-2",
+          "text": "Testing a carefully selected subset leaves most of the produced straps intact."
+        },
+        {
+          "id": "point-3",
+          "text": "A complete frame and random selection can reduce convenience-selection bias, although sampling variation remains."
+        }
+      ],
+      "model": "A census would destroy the entire batch of straps. I would choose an appropriate random sample of distinct items from the full batch frame, carry out the tests and state the uncertainty associated with observing only some straps.",
+      "sourceEvaluationIds": [
+        "census-destructive",
+        "sample-speed",
+        "srs-frame"
+      ],
+      "examinerFocus": "The need to destroy each tested item is the decisive argument against a census.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-quota-not-stratified",
+      "type": "evaluation",
+      "level": "foundation",
+      "methodId": "quota",
+      "coverageArea": "methods",
+      "title": "The same groups but different sampling",
+      "context": "An interviewer needs 30 commuters and 20 non-commuters, then recruits the first willing passers-by in each group and calls the method stratified random sampling.",
+      "task": "Identify the actual method and explain the distinction.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Specified totals of 30 commuters and 20 non-commuters are quotas."
+        },
+        {
+          "id": "point-2",
+          "text": "The respondents in each group were recruited non-randomly from willing passers-by."
+        },
+        {
+          "id": "point-3",
+          "text": "This is quota sampling; stratified random sampling requires random selection within each stratum."
+        }
+      ],
+      "model": "The group targets make this a quota sample. The interviewer filled them non-randomly with willing people. Stratified random sampling could have the same group totals, but the individuals within each stratum would be selected randomly.",
+      "sourceEvaluationIds": [
+        "quota-proportions",
+        "quota-selection",
+        "strata-random"
+      ],
+      "examinerFocus": "Controlled group totals do not by themselves imply random selection.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-weekend-staff",
+      "type": "evaluation",
+      "level": "develop",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "title": "Missing weekend workers",
+      "context": "A school draws random employee IDs from a weekday staff directory and concludes the results represent all employees, including those who only work at weekends.",
+      "task": "Evaluate the sampling frame and the conclusion.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Random selection is impartial only among units actually included in the sampling frame."
+        },
+        {
+          "id": "point-2",
+          "text": "Weekend-only workers are absent and therefore have zero selection chance."
+        },
+        {
+          "id": "point-3",
+          "text": "Use a complete staff register or restrict the claim to the weekday-listed employees."
+        }
+      ],
+      "model": "The random draw may be performed correctly, but the list excludes weekend-only employees. I would verify a full employee frame before drawing again, or make a narrower claim about weekday-listed employees.",
+      "sourceEvaluationIds": [
+        "srs-frame",
+        "sample-bias"
+      ],
+      "examinerFocus": "Do not confuse a correct random-number generator with a complete frame.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-library-nonresponse",
+      "type": "evaluation",
+      "level": "develop",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "title": "Random invitations, few responses",
+      "context": "A town library randomly invites 200 registered borrowers to comment on opening times, but only 62 reply. A student claims bias is impossible because invitation was random.",
+      "task": "Explain the remaining risk and a reasonable response.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The initial invitation sample was random, but only 62 of 200 people provided data."
+        },
+        {
+          "id": "point-2",
+          "text": "The 138 nonrespondents may have systematically different preferences."
+        },
+        {
+          "id": "point-3",
+          "text": "Report the response rate, follow up nonrespondents where appropriate and qualify the conclusion."
+        }
+      ],
+      "model": "Random invitation cannot guarantee representative returned questionnaires. The 138 nonrespondents might have different needs. I would disclose the response rate and attempt an appropriate follow-up before generalising.",
+      "sourceEvaluationIds": [
+        "sample-bias",
+        "srs-objective"
+      ],
+      "examinerFocus": "Separate the random selection of invitations from who actually responded.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-machine-cycle",
+      "type": "evaluation",
+      "level": "develop",
+      "methodId": "systematic",
+      "coverageArea": "methods",
+      "title": "A periodic manufacturing list",
+      "context": "A machine repeats eight settings in order. Its log has 640 items, and a systematic sample of 80 uses interval eight with one random starting position.",
+      "task": "Explain the risk and propose a more representative alternative.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The systematic interval is 640/80 = 8, matching the machine cycle."
+        },
+        {
+          "id": "point-2",
+          "text": "Every selected unit can occupy the same position in each repeated eight-item cycle."
+        },
+        {
+          "id": "point-3",
+          "text": "Simple random selection across the list or stratification by machine setting may better cover the population."
+        }
+      ],
+      "model": "The interval equals the machine's repeated cycle length. Starting randomly still leads to the same position in every cycle, potentially ignoring seven settings. A different selection design is needed if all settings should be represented.",
+      "sourceEvaluationIds": [
+        "sys-periodic",
+        "strata-comparison"
+      ],
+      "examinerFocus": "A random start alone does not remove periodicity aligned with the sampling interval.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-overlap-strata",
+      "type": "evaluation",
+      "level": "develop",
+      "methodId": "stratified",
+      "coverageArea": "methods",
+      "title": "Overlapping strata at school",
+      "context": "A study uses 'plays music' and 'plays sport' as the two strata, although many students belong to both. Separate draws are planned without removing overlap.",
+      "task": "Explain why this is invalid as written and correct the classification.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The two proposed strata overlap and are not mutually exclusive."
+        },
+        {
+          "id": "point-2",
+          "text": "Overlapping lists may give some pupils duplicated eligibility or unequal selection opportunities."
+        },
+        {
+          "id": "point-3",
+          "text": "Redefine exhaustive non-overlapping groups, such as music only, sport only, both and neither, before drawing randomly."
+        }
+      ],
+      "model": "Pupils who play both music and sport appear in two lists. I would partition the population into non-overlapping groups and then decide allocations and choose randomly within each clearly defined stratum.",
+      "sourceEvaluationIds": [
+        "strata-classify",
+        "strata-random"
+      ],
+      "examinerFocus": "Accurate group percentages cannot repair overlapping group membership.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-cinema-quotas",
+      "type": "evaluation",
+      "level": "develop",
+      "methodId": "quota",
+      "coverageArea": "methods",
+      "title": "Late-night cinema quotas",
+      "context": "An interviewer obtains exactly 60 student and 40 adult responses outside a late-night cinema. They claim the chosen group totals make selection completely unbiased.",
+      "task": "Evaluate the argument and improve the procedure.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The two fixed quotas control only the recorded student/adult proportions."
+        },
+        {
+          "id": "point-2",
+          "text": "Cinema visitors at one time may differ from others within each group, and recruitment is non-random."
+        },
+        {
+          "id": "point-3",
+          "text": "Broaden the times and places, acknowledge bias, or use random selection within suitable strata."
+        }
+      ],
+      "model": "The quota totals do not eliminate selection bias. The sample may overrepresent people who attend the cinema late at night. I would broaden recruitment and qualify the claim, or use a probability design for the wider population.",
+      "sourceEvaluationIds": [
+        "quota-proportions",
+        "quota-selection",
+        "quota-no-frame"
+      ],
+      "examinerFocus": "Explain what quotas control and what remains uncontrolled.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-app-only",
+      "type": "evaluation",
+      "level": "extend",
+      "methodId": "opportunity",
+      "coverageArea": "inference",
+      "title": "Survey responses from an app",
+      "context": "A city council surveys residents only through its own smartphone app. It receives 900 voluntary replies, then says it has measured the views of all city residents.",
+      "task": "Evaluate the inference and propose better coverage.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "City residents who do not use the app have no opportunity to respond."
+        },
+        {
+          "id": "point-2",
+          "text": "Voluntary app respondents may differ systematically from the wider target population."
+        },
+        {
+          "id": "point-3",
+          "text": "Provide additional recruitment routes, build a broader frame or restrict the stated population."
+        }
+      ],
+      "model": "Although 900 people replied, the survey excludes residents without the app and relies on self-selection. It cannot automatically represent all city residents. Other contact routes or a narrower conclusion are needed.",
+      "sourceEvaluationIds": [
+        "opp-unrepresentative",
+        "sample-bias"
+      ],
+      "examinerFocus": "A large response count does not establish a probability sample.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-close-polls",
+      "type": "evaluation",
+      "level": "extend",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "title": "Two close survey estimates",
+      "context": "Two independent random surveys estimate that 46% and 49% of residents support a proposal. No sample sizes, response rates or intervals are supplied.",
+      "task": "Explain what the percentages alone establish and what remains uncertain.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Two independent random samples can return different proportions due to sampling variation."
+        },
+        {
+          "id": "point-2",
+          "text": "A difference of three percentage points is not evidence by itself that either method was wrong."
+        },
+        {
+          "id": "point-3",
+          "text": "Without sample sizes or uncertainty information, no strong claim about a population difference or statistical significance is justified."
+        }
+      ],
+      "model": "The random samples may contain different respondents. The three-point difference may arise through sampling variation. I would need sample sizes, response information and uncertainty estimates to judge how much weight to give the difference.",
+      "sourceEvaluationIds": [
+        "sample-variation",
+        "srs-equal"
+      ],
+      "examinerFocus": "Do not invent a confidence interval without knowing the sample sizes.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-invalid-random-digits",
+      "type": "evaluation",
+      "level": "extend",
+      "methodId": "simple-random",
+      "coverageArea": "methods",
+      "title": "Invalid three-digit labels",
+      "context": "An investigator numbers 180 pupils from 001 to 180 and reads an unrestricted random digit table in groups of three. They count 000, 999 and repeats as different pupils.",
+      "task": "Describe the errors and correct the procedure.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Valid labels are 001–180; reject 000 and 181–999 from the unrestricted table."
+        },
+        {
+          "id": "point-2",
+          "text": "Repeated valid labels must be ignored if 20 distinct pupils are required."
+        },
+        {
+          "id": "point-3",
+          "text": "Continue until 20 distinct valid numbers have been accepted, then select their matching pupils."
+        }
+      ],
+      "model": "The numbers 000 and 999 do not identify pupils on the register. Repeated labels also fail to add a different pupil. I would ignore invalid and repeated numbers until 20 distinct valid labels identify the sample.",
+      "sourceEvaluationIds": [
+        "srs-equal",
+        "srs-frame"
+      ],
+      "examinerFocus": "An unrestricted digit source requires invalid-label rejection; a bounded generator does not.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-noninteger-515",
+      "type": "evaluation",
+      "level": "extend",
+      "methodId": "systematic",
+      "coverageArea": "methods",
+      "title": "When N/n is not an integer",
+      "context": "An ordered frame contains 515 units and 40 are required. A researcher writes '515/40 = 12.875, so always round to 13 and select any starting position from 1 to 13'.",
+      "task": "Critique the method and provide one feasible fixed-interval pattern.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The ratio 515/40 = 12.875 is not an integer; universal rounding is not justified."
+        },
+        {
+          "id": "point-2",
+          "text": "For interval 13, a start above 8 makes the 40th position exceed 515 because it is start + 39×13."
+        },
+        {
+          "id": "point-3",
+          "text": "One feasible plan uses interval 13 and a random start from 1–8, while recognising its coverage limitations."
+        }
+      ],
+      "model": "Choosing any start from 1 to 13 with interval 13 can run beyond 515. A start from 1 to 8 gives 40 positions because the final value is start + 507. This is one possible fixed-interval scheme, not a universal claim of equal inclusion probabilities.",
+      "sourceEvaluationIds": [
+        "sys-noninteger",
+        "sys-frame"
+      ],
+      "examinerFocus": "Check the final position and acknowledge that restricted starts may have unequal coverage.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-strat-rounding",
+      "type": "evaluation",
+      "level": "extend",
+      "methodId": "stratified",
+      "coverageArea": "methods",
+      "title": "Rounding subgroup allocations",
+      "context": "A researcher divides 780 members into three disjoint strata with 405, 225 and 150 members. They need 78 in the sample and round up each proportional allocation independently.",
+      "task": "Show the numerical problem and an acceptable selection plan.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The exact proportional allocations are 40.5, 22.5 and 15."
+        },
+        {
+          "id": "point-2",
+          "text": "Rounding everything upward yields 41+23+15 = 79, not the intended sample of 78."
+        },
+        {
+          "id": "point-3",
+          "text": "A defensible allocation such as 41,22,15 or 40,23,15 totals 78; draw randomly within each stratum."
+        }
+      ],
+      "model": "The exact allocations are 40.5, 22.5 and 15. If both halves round up, the total is 79 rather than the intended 78. One defensible allocation is 41, 22 and 15; I would then choose that many distinct members randomly from each group's complete list.",
+      "sourceEvaluationIds": [
+        "strata-proportions",
+        "strata-random"
+      ],
+      "examinerFocus": "An allocation is not complete until whole-number counts total the specified n.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
     }
   ]
 }
