@@ -33,8 +33,8 @@ test('unified navigation keeps ten solo games, leads to multiplayer and the live
   await page.locator('.arcade-path-card.is-awards').click();
   await expect(page).toHaveURL(/\/awards\.html$/);
   await expect(page.getByRole('heading',{name:'Good thinking deserves a little glory.'})).toBeVisible();
-  await expect(page.locator('#cabinet-count')).toHaveText('0 / 16');
-  await expect(page.locator('.trophy-card')).toHaveCount(16);
+  await expect(page.locator('#cabinet-count')).toHaveText('0 / 26');
+  await expect(page.locator('.trophy-card')).toHaveCount(26);
   await page.getByRole('link',{name:'Multiplayer',exact:true}).click();
   await expect(page).toHaveURL(/\/multiplayer\.html$/);
   await expect(page.locator('#entry')).toBeVisible();
