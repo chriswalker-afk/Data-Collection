@@ -45,9 +45,8 @@ export function createCeremonyUI({make,button,actionRow,command,stageKicker}){
             'ceremony-podium-rank'));
         const names=node('div',undefined,'ceremony-podium-names');
         for(const person of group.rows)names.append(personWithCritter(person,'large'));
-        item.append(names);
-        if(group.rows.length>1)item.append(node('span',group.rows.length+' joint winners','ceremony-people-caption'));
-        item.append(node('span',group.rows[0].score.toLocaleString('en-GB')+' points','ceremony-podium-score'));
+        if(group.rows.length>1)names.append(node('span',group.rows.length+' joint winners','ceremony-people-caption'));
+        item.append(names,node('span',group.rows[0].score.toLocaleString('en-GB')+' points','ceremony-podium-score'));
         stand.append(item);
       }
       container.append(stand);
