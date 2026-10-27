@@ -2953,6 +2953,579 @@
         "Identify the population, selection frame or recruitment venue and the specific group size before describing how participants enter the sample.",
         "State the method's defining selection rule, apply the numbers in this scenario and explain one important limitation or safeguard."
       ]
+    },
+    {
+      "id": "eval-d-city-cycling",
+      "type": "evaluation",
+      "level": "foundation",
+      "methodId": "opportunity",
+      "coverageArea": "inference",
+      "title": "Cycling opinions and the city",
+      "context": "A student asks 25 volunteers at a cycling-club meeting about preferred transport and writes that most city residents prefer cycling.",
+      "task": "Evaluate this conclusion and suggest a more defensible investigation.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The target population is all city residents, not the cycling-club volunteers."
+        },
+        {
+          "id": "point-2",
+          "text": "Cycling-club attendees and willing volunteers may be particularly likely to cycle."
+        },
+        {
+          "id": "point-3",
+          "text": "Use a wider sampling frame to select residents, or restrict conclusions to those surveyed."
+        }
+      ],
+      "model": "A cycling club is not a random selection of city residents. Its members may be more positive about cycling. I would broaden the sample of residents and examine nonresponse, or only describe these 25 volunteers.",
+      "sourceEvaluationIds": [
+        "opp-unrepresentative",
+        "sample-bias"
+      ],
+      "examinerFocus": "Connect the sampling mechanism to the target population; sample size alone is insufficient.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-incomplete-census",
+      "type": "evaluation",
+      "level": "foundation",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "title": "An incomplete census register",
+      "context": "A survey team visits all 320 households on an old register, but 45 newly built occupied homes are missing. They claim to have surveyed every village household.",
+      "task": "Explain the coverage error and an appropriate correction.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The original frame omits 45 eligible households in the village."
+        },
+        {
+          "id": "point-2",
+          "text": "Visiting every listed home is not a complete census of the village's current population."
+        },
+        {
+          "id": "point-3",
+          "text": "Update and verify the full household register, and address any nonresponse."
+        }
+      ],
+      "model": "The register omits 45 homes, so covering the old list does not make the result a village-wide census. The team must update the frame before claiming to have covered every eligible household.",
+      "sourceEvaluationIds": [
+        "srs-frame",
+        "sample-bias"
+      ],
+      "examinerFocus": "Coverage of the defined population matters, not merely coverage of the available list.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-two-school-samples",
+      "type": "evaluation",
+      "level": "foundation",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "title": "Two samples of school pupils",
+      "context": "Two students take independent simple random samples of 40 pupils. One finds 55% enjoy morning lessons and the other finds 45%.",
+      "task": "Explain whether the difference proves that one sampling procedure was wrong.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Two valid random draws may select different pupils from the same population."
+        },
+        {
+          "id": "point-2",
+          "text": "Sample percentages differ naturally due to sampling variation."
+        },
+        {
+          "id": "point-3",
+          "text": "Neither percentage is automatically the exact population percentage."
+        }
+      ],
+      "model": "These random samples may contain different pupils, so the two percentages can differ even if both selections are properly made. This is sampling variation; neither result alone establishes the exact school-wide proportion.",
+      "sourceEvaluationIds": [
+        "sample-variation",
+        "srs-equal"
+      ],
+      "examinerFocus": "Avoid treating two differing point estimates as proof that the selection method was invalid.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-strap-destruction",
+      "type": "evaluation",
+      "level": "foundation",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "title": "Destructive strap testing",
+      "context": "A factory produces 5,000 climbing straps. Testing a strap to its failure load destroys it; a manager proposes testing all 5,000 to avoid sampling uncertainty.",
+      "task": "Explain why a census is unsuitable and propose a sample.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Testing every strap destructively would destroy all saleable straps in the batch."
+        },
+        {
+          "id": "point-2",
+          "text": "Testing a carefully selected subset leaves most of the produced straps intact."
+        },
+        {
+          "id": "point-3",
+          "text": "A complete frame and random selection can reduce convenience-selection bias, although sampling variation remains."
+        }
+      ],
+      "model": "A census would destroy the entire batch of straps. I would choose an appropriate random sample of distinct items from the full batch frame, carry out the tests and state the uncertainty associated with observing only some straps.",
+      "sourceEvaluationIds": [
+        "census-destructive",
+        "sample-speed",
+        "srs-frame"
+      ],
+      "examinerFocus": "The need to destroy each tested item is the decisive argument against a census.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-quota-not-stratified",
+      "type": "evaluation",
+      "level": "foundation",
+      "methodId": "quota",
+      "coverageArea": "methods",
+      "title": "The same groups but different sampling",
+      "context": "An interviewer needs 30 commuters and 20 non-commuters, then recruits the first willing passers-by in each group and calls the method stratified random sampling.",
+      "task": "Identify the actual method and explain the distinction.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Specified totals of 30 commuters and 20 non-commuters are quotas."
+        },
+        {
+          "id": "point-2",
+          "text": "The respondents in each group were recruited non-randomly from willing passers-by."
+        },
+        {
+          "id": "point-3",
+          "text": "This is quota sampling; stratified random sampling requires random selection within each stratum."
+        }
+      ],
+      "model": "The group targets make this a quota sample. The interviewer filled them non-randomly with willing people. Stratified random sampling could have the same group totals, but the individuals within each stratum would be selected randomly.",
+      "sourceEvaluationIds": [
+        "quota-proportions",
+        "quota-selection",
+        "strata-random"
+      ],
+      "examinerFocus": "Controlled group totals do not by themselves imply random selection.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-weekend-staff",
+      "type": "evaluation",
+      "level": "develop",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "title": "Missing weekend workers",
+      "context": "A school draws random employee IDs from a weekday staff directory and concludes the results represent all employees, including those who only work at weekends.",
+      "task": "Evaluate the sampling frame and the conclusion.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Random selection is impartial only among units actually included in the sampling frame."
+        },
+        {
+          "id": "point-2",
+          "text": "Weekend-only workers are absent and therefore have zero selection chance."
+        },
+        {
+          "id": "point-3",
+          "text": "Use a complete staff register or restrict the claim to the weekday-listed employees."
+        }
+      ],
+      "model": "The random draw may be performed correctly, but the list excludes weekend-only employees. I would verify a full employee frame before drawing again, or make a narrower claim about weekday-listed employees.",
+      "sourceEvaluationIds": [
+        "srs-frame",
+        "sample-bias"
+      ],
+      "examinerFocus": "Do not confuse a correct random-number generator with a complete frame.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-library-nonresponse",
+      "type": "evaluation",
+      "level": "develop",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "title": "Random invitations, few responses",
+      "context": "A town library randomly invites 200 registered borrowers to comment on opening times, but only 62 reply. A student claims bias is impossible because invitation was random.",
+      "task": "Explain the remaining risk and a reasonable response.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The initial invitation sample was random, but only 62 of 200 people provided data."
+        },
+        {
+          "id": "point-2",
+          "text": "The 138 nonrespondents may have systematically different preferences."
+        },
+        {
+          "id": "point-3",
+          "text": "Report the response rate, follow up nonrespondents where appropriate and qualify the conclusion."
+        }
+      ],
+      "model": "Random invitation cannot guarantee representative returned questionnaires. The 138 nonrespondents might have different needs. I would disclose the response rate and attempt an appropriate follow-up before generalising.",
+      "sourceEvaluationIds": [
+        "sample-bias",
+        "srs-objective"
+      ],
+      "examinerFocus": "Separate the random selection of invitations from who actually responded.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-machine-cycle",
+      "type": "evaluation",
+      "level": "develop",
+      "methodId": "systematic",
+      "coverageArea": "methods",
+      "title": "A periodic manufacturing list",
+      "context": "A machine repeats eight settings in order. Its log has 640 items, and a systematic sample of 80 uses interval eight with one random starting position.",
+      "task": "Explain the risk and propose a more representative alternative.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The systematic interval is 640/80 = 8, matching the machine cycle."
+        },
+        {
+          "id": "point-2",
+          "text": "Every selected unit can occupy the same position in each repeated eight-item cycle."
+        },
+        {
+          "id": "point-3",
+          "text": "Simple random selection across the list or stratification by machine setting may better cover the population."
+        }
+      ],
+      "model": "The interval equals the machine's repeated cycle length. Starting randomly still leads to the same position in every cycle, potentially ignoring seven settings. A different selection design is needed if all settings should be represented.",
+      "sourceEvaluationIds": [
+        "sys-periodic",
+        "strata-comparison"
+      ],
+      "examinerFocus": "A random start alone does not remove periodicity aligned with the sampling interval.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-overlap-strata",
+      "type": "evaluation",
+      "level": "develop",
+      "methodId": "stratified",
+      "coverageArea": "methods",
+      "title": "Overlapping strata at school",
+      "context": "A study uses 'plays music' and 'plays sport' as the two strata, although many students belong to both. Separate draws are planned without removing overlap.",
+      "task": "Explain why this is invalid as written and correct the classification.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The two proposed strata overlap and are not mutually exclusive."
+        },
+        {
+          "id": "point-2",
+          "text": "Overlapping lists may give some pupils duplicated eligibility or unequal selection opportunities."
+        },
+        {
+          "id": "point-3",
+          "text": "Redefine exhaustive non-overlapping groups, such as music only, sport only, both and neither, before drawing randomly."
+        }
+      ],
+      "model": "Pupils who play both music and sport appear in two lists. I would partition the population into non-overlapping groups and then decide allocations and choose randomly within each clearly defined stratum.",
+      "sourceEvaluationIds": [
+        "strata-classify",
+        "strata-random"
+      ],
+      "examinerFocus": "Accurate group percentages cannot repair overlapping group membership.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-cinema-quotas",
+      "type": "evaluation",
+      "level": "develop",
+      "methodId": "quota",
+      "coverageArea": "methods",
+      "title": "Late-night cinema quotas",
+      "context": "An interviewer obtains exactly 60 student and 40 adult responses outside a late-night cinema. They claim the chosen group totals make selection completely unbiased.",
+      "task": "Evaluate the argument and improve the procedure.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The two fixed quotas control only the recorded student/adult proportions."
+        },
+        {
+          "id": "point-2",
+          "text": "Cinema visitors at one time may differ from others within each group, and recruitment is non-random."
+        },
+        {
+          "id": "point-3",
+          "text": "Broaden the times and places, acknowledge bias, or use random selection within suitable strata."
+        }
+      ],
+      "model": "The quota totals do not eliminate selection bias. The sample may overrepresent people who attend the cinema late at night. I would broaden recruitment and qualify the claim, or use a probability design for the wider population.",
+      "sourceEvaluationIds": [
+        "quota-proportions",
+        "quota-selection",
+        "quota-no-frame"
+      ],
+      "examinerFocus": "Explain what quotas control and what remains uncontrolled.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-app-only",
+      "type": "evaluation",
+      "level": "extend",
+      "methodId": "opportunity",
+      "coverageArea": "inference",
+      "title": "Survey responses from an app",
+      "context": "A city council surveys residents only through its own smartphone app. It receives 900 voluntary replies, then says it has measured the views of all city residents.",
+      "task": "Evaluate the inference and propose better coverage.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "City residents who do not use the app have no opportunity to respond."
+        },
+        {
+          "id": "point-2",
+          "text": "Voluntary app respondents may differ systematically from the wider target population."
+        },
+        {
+          "id": "point-3",
+          "text": "Provide additional recruitment routes, build a broader frame or restrict the stated population."
+        }
+      ],
+      "model": "Although 900 people replied, the survey excludes residents without the app and relies on self-selection. It cannot automatically represent all city residents. Other contact routes or a narrower conclusion are needed.",
+      "sourceEvaluationIds": [
+        "opp-unrepresentative",
+        "sample-bias"
+      ],
+      "examinerFocus": "A large response count does not establish a probability sample.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-close-polls",
+      "type": "evaluation",
+      "level": "extend",
+      "methodId": "simple-random",
+      "coverageArea": "inference",
+      "title": "Two close survey estimates",
+      "context": "Two independent random surveys estimate that 46% and 49% of residents support a proposal. No sample sizes, response rates or intervals are supplied.",
+      "task": "Explain what the percentages alone establish and what remains uncertain.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Two independent random samples can return different proportions due to sampling variation."
+        },
+        {
+          "id": "point-2",
+          "text": "A difference of three percentage points is not evidence by itself that either method was wrong."
+        },
+        {
+          "id": "point-3",
+          "text": "Without sample sizes or uncertainty information, no strong claim about a population difference or statistical significance is justified."
+        }
+      ],
+      "model": "The random samples may contain different respondents. The three-point difference may arise through sampling variation. I would need sample sizes, response information and uncertainty estimates to judge how much weight to give the difference.",
+      "sourceEvaluationIds": [
+        "sample-variation",
+        "srs-equal"
+      ],
+      "examinerFocus": "Do not invent a confidence interval without knowing the sample sizes.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-invalid-random-digits",
+      "type": "evaluation",
+      "level": "extend",
+      "methodId": "simple-random",
+      "coverageArea": "methods",
+      "title": "Invalid three-digit labels",
+      "context": "An investigator numbers 180 pupils from 001 to 180 and reads an unrestricted random digit table in groups of three. They count 000, 999 and repeats as different pupils.",
+      "task": "Describe the errors and correct the procedure.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "Valid labels are 001–180; reject 000 and 181–999 from the unrestricted table."
+        },
+        {
+          "id": "point-2",
+          "text": "Repeated valid labels must be ignored if 20 distinct pupils are required."
+        },
+        {
+          "id": "point-3",
+          "text": "Continue until 20 distinct valid numbers have been accepted, then select their matching pupils."
+        }
+      ],
+      "model": "The numbers 000 and 999 do not identify pupils on the register. Repeated labels also fail to add a different pupil. I would ignore invalid and repeated numbers until 20 distinct valid labels identify the sample.",
+      "sourceEvaluationIds": [
+        "srs-equal",
+        "srs-frame"
+      ],
+      "examinerFocus": "An unrestricted digit source requires invalid-label rejection; a bounded generator does not.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-noninteger-515",
+      "type": "evaluation",
+      "level": "extend",
+      "methodId": "systematic",
+      "coverageArea": "methods",
+      "title": "When N/n is not an integer",
+      "context": "An ordered frame contains 515 units and 40 are required. A researcher writes '515/40 = 12.875, so always round to 13 and select any starting position from 1 to 13'.",
+      "task": "Critique the method and provide one feasible fixed-interval pattern.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The ratio 515/40 = 12.875 is not an integer; universal rounding is not justified."
+        },
+        {
+          "id": "point-2",
+          "text": "For interval 13, a start above 8 makes the 40th position exceed 515 because it is start + 39×13."
+        },
+        {
+          "id": "point-3",
+          "text": "One feasible plan uses interval 13 and a random start from 1–8, while recognising its coverage limitations."
+        }
+      ],
+      "model": "Choosing any start from 1 to 13 with interval 13 can run beyond 515. A start from 1 to 8 gives 40 positions because the final value is start + 507. This is one possible fixed-interval scheme, not a universal claim of equal inclusion probabilities.",
+      "sourceEvaluationIds": [
+        "sys-noninteger",
+        "sys-frame"
+      ],
+      "examinerFocus": "Check the final position and acknowledge that restricted starts may have unequal coverage.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
+    },
+    {
+      "id": "eval-d-strat-rounding",
+      "type": "evaluation",
+      "level": "extend",
+      "methodId": "stratified",
+      "coverageArea": "methods",
+      "title": "Rounding subgroup allocations",
+      "context": "A researcher divides 780 members into three disjoint strata with 405, 225 and 150 members. They need 78 in the sample and round up each proportional allocation independently.",
+      "task": "Show the numerical problem and an acceptable selection plan.",
+      "checklist": [
+        {
+          "id": "point-1",
+          "text": "The exact proportional allocations are 40.5, 22.5 and 15."
+        },
+        {
+          "id": "point-2",
+          "text": "Rounding everything upward yields 41+23+15 = 79, not the intended sample of 78."
+        },
+        {
+          "id": "point-3",
+          "text": "A defensible allocation such as 41,22,15 or 40,23,15 totals 78; draw randomly within each stratum."
+        }
+      ],
+      "model": "The exact allocations are 40.5, 22.5 and 15. If both halves round up, the total is 79. One defensible allocation is 41, 22 and 15; I would then choose that many distinct members randomly from each group's complete list.",
+      "sourceEvaluationIds": [
+        "strata-proportions",
+        "strata-random"
+      ],
+      "examinerFocus": "An allocation is not complete until whole-number counts total the specified n.",
+      "sourceIds": [
+        "pearson-textbook-ch1",
+        "pearson-9ma0-guidance"
+      ],
+      "hints": [
+        "Identify the intended population and the actual group selected; decide which important individuals may be missed or misrepresented.",
+        "Describe the method's genuine strength and the limitation shown in this particular context, then give an appropriately qualified conclusion or improvement."
+      ]
     }
   ]
 }
