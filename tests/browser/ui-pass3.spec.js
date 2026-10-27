@@ -142,6 +142,11 @@ test('print media preserves the exam report and hides interactive controls and p
 test('contrast and touch targets are independently checkable, not dependent on colour alone',async({page})=>{
  await page.setViewportSize({width:1280,height:800});
  await page.goto('/#/cloze/data');
+ // Route rendering is asynchronous on slower mobile Chromium devices.
+ // Wait for the actual instructional and task elements before testing style.
+ for(const selector of ['.practice-guide-label','.practice-guide-copy','.cloze-sentence']){
+  await expect(page.locator(selector).first()).toBeVisible();
+ }
  const styles=await page.evaluate(()=>{
   const channel=value=>{
    const n=Number(value)/255;
