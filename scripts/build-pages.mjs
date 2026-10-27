@@ -69,7 +69,7 @@ if(!readFileSync(join(output,'src/app.js'),'utf8').includes("'./critter-lab/inde
 if(!readFileSync(join(output,'multiplayer.html'),'utf8').includes('href="./critter-lab/index.html"')){
   throw new Error('Multiplayer join screen is missing its Critter Lab link');
 }
-for(const name of ['multiplayer/worker.js','multiplayer/rules.js','multiplayer/scenarios.js','multiplayer/modes.js','multiplayer/game-bank.js','multiplayer/ceremony-rules.js','multiplayer/team-rules.js','multiplayer/blitz-rules.js']){
+for(const name of ['multiplayer/worker.js','multiplayer/rules.js','multiplayer/scenarios.js','multiplayer/modes.js','multiplayer/game-bank.js','multiplayer/ceremony-rules.js','multiplayer/team-rules.js','multiplayer/blitz-rules.js','multiplayer/race-rules.js']){
   if(existsSync(join(output,name)))throw new Error('Worker backend must not be deployed to Pages: '+name);
 }
 console.log('Pages publish artifact verified: three Arcade modes plus Critter Lab, styles, scripts and content exist.');
