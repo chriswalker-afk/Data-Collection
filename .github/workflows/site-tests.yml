@@ -89,3 +89,35 @@ jobs:
         run: node scripts/multiplayer-avatar-smoke.mjs
         env:
           MULTIPLAYER_API: https://sampling-arcade-multiplayer-stage.chris-walker-d8b.workers.dev
+
+  critter-visual:
+    name: Critter Lab 45-player visual and accessibility audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    needs: unit-and-content
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install chromium
+      - name: Test real critters, mobile layouts, motion and class finale
+        run: npx playwright test tests/browser/multiplayer-critter-polish.spec.js --project=desktop-chromium --workers=1
+        env:
+          CRITTER_VISUAL_AUDIT: '1'
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: critter-lab-projector-and-mobile-previews
+          path: test-results/ui-pass3-critter-*.png
+          if-no-files-found: ignore
+          retention-days: 7
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: critter-lab-browser-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

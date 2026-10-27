@@ -23,7 +23,11 @@ const overflow=page=>page.evaluate(()=>({
   available:document.querySelector('#players')?.clientWidth
 }));
 
-test('lobby critter personality is calm, locally recognizable and reduced-motion safe',async({page,browser,isMobile})=>{
+// A separate Wrangler process prevents 45-player load from sharing local rate limits
+// with unrelated browser regression tests, while keeping the full-suite gate intact.
+test.describe('Isolated Critter Lab visual audit',()=>{
+  test.skip(process.env.CRITTER_VISUAL_AUDIT!=='1','Runs as a dedicated 45-player CI smoke job');
+  test('lobby critter personality is calm, locally recognizable and reduced-motion safe',async({page,browser,isMobile})=>{
   test.skip(isMobile,'Explicit mobile layout is covered in the 45-player test.');
   const code=await host(page);
   const student=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
@@ -93,4 +97,6 @@ test('45 critters fit phone and projector widths, and every student joins the fi
       await page.screenshot({path:'test-results/ui-pass3-critter-finale-'+width+'.png'});
     }
   }
+});
+
 });
