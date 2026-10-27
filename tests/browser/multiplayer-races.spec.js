@@ -200,7 +200,7 @@ test('race rejects invalid parameters and forged grades without granting any vic
   type:'blitz-answer',questionKey:q.questionKey,...answer('which',q)
  },400);
 });
-test('mobile student's Perfect Run progress and feedback survive a refresh',async({page,browser,request,isMobile})=>{
+test("Mobile student's Perfect Run progress and feedback survive a refresh",async({page,browser,request,isMobile})=>{
  test.skip(isMobile,'This test explicitly opens a separate mobile student browser.');
  const student=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
  try{
