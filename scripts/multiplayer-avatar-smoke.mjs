@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+const api=(process.env.MULTIPLAYER_API||'').replace(/\/$/,'');
+if(!/^https:\/\/[-a-z\d.]+\.workers\.dev$/.test(api))throw Error('Use staging workers.dev only');
+async function call(path,method='GET',data,token){
+ const response=await fetch(api+path,{method,headers:{...(data?{'Content-Type':'application/json'}:{}),...(token?{Authorization:'Bearer '+token}:{})},...(data?{body:JSON.stringify(data)}:{})});
+ return {status:response.status,result:await response.json()};
+}
+const avatar={version:1,head:'cat',body:'dino',legs:'flamingo',colours:{head:'grape-purple',body:'leaf-green',legs:'sunset-orange'}};
+const room=await call('/rooms','POST',{game:'which',roundLength:5});
+assert.equal(room.status,201);
+const path='/rooms/'+room.result.code;
+const bad=await call(path+'/join','POST',{name:'Malformed Critter',avatar:{...avatar,head:'<script>'}});
+assert.equal(bad.status,400);
+const joined=await call(path+'/join','POST',{name:'Rainbow Critter',avatar});
+assert.equal(joined.status,201);
+const host=room.result.token,guest=joined.result.token;
+const snapshot=await call(path+'/state','GET',undefined,host);
+assert.equal(snapshot.status,200);
+assert.deepEqual(snapshot.result.players[0].avatar,avatar);
+const edit={...avatar,head:'panda'};
+const forbidden=await call(path+'/command','POST',{type:'avatar-set',avatar:edit},host);
+assert.equal(forbidden.status,400);
+assert.equal((await call(path+'/command','POST',{type:'avatar-set',avatar:edit},guest)).status,200);
+assert.equal((await call(path+'/state','GET',undefined,host)).result.players[0].avatar.head,'panda');
+assert.equal((await call(path+'/command','POST',{type:'start'},host)).status,200);
+assert.equal((await call(path+'/command','POST',{type:'avatar-set',avatar},guest)).status,400);
+const during=await call(path+'/state','GET',undefined,guest);
+assert.equal(during.result.players[0].avatar.head,'panda');
+assert.equal(during.result.players[0].score,0);
+const legacy=await call(path+'/join','POST',{name:'Too late'});
+assert.equal(legacy.status,400);
+console.log('PASS: Cloudflare staging avatar join, validation, authenticated lobby changes, immutable in-game display, zero scoring effect.');
