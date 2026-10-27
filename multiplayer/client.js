@@ -420,7 +420,7 @@ function render(){
   }
 
   const activeMosaicOption=document.activeElement?.dataset?.mosaicOption;
-  const activeMosaicRound=room.mosaic?.me?.task?.roundId||null;
+  const activeMosaicRound=document.activeElement?.dataset?.mosaicRound||null;
   const focused=document.activeElement?.dataset?.method;
   const activeInput=document.activeElement?.id==='arena-speed-answer';
   const cursor=activeInput?document.activeElement.selectionStart:null;
