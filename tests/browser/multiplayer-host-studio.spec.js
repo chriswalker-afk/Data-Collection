@@ -33,9 +33,14 @@ test('objective presets and previews never create unfinished gameplay rooms',asy
  await expect(page.locator('#create')).toBeEnabled();
  await expect(page.locator('#studio-preview-availability')).toContainText('Ready to host now');
  await expect(page.locator('#studio-minutes')).toBeVisible();
+ for(const objective of ['bullseye','perfect']){
+  await selectObjective(page,objective);
+  await expect(page.locator('#create')).toBeEnabled();
+  await expect(page.locator('#studio-preview-availability')).toContainText('Ready to host now');
+  await expect(page.locator('#studio-minutes')).toBeVisible();
+  await expect(page.locator('#studio-future-note')).toBeHidden();
+ }
  for(const [objective,target,needle] of [
-  ['bullseye','#studio-accuracy-target','80% accuracy'],
-  ['perfect','#studio-streak-target','5 correct answers consecutively'],
   ['class','#studio-class-metric','shared']
  ]){
   await selectObjective(page,objective);
