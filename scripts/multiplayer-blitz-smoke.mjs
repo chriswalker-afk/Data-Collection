@@ -4,7 +4,7 @@ import {GAME_SORT_BOARDS} from '../multiplayer/game-bank.js';
 
 const api=(process.env.MULTIPLAYER_API||'').replace(/\/$/,'');
 const expected=process.env.EXPECTED_BUILD_SHA||'';
-assert.match(api,/^https:\/\/sampling-arcade-(?:blitz-pass2|races-pass3)-test\.[-\w]+\.workers\.dev$/);
+assert.match(api,/^https:\/\/sampling-arcade-(?:(?:blitz-pass2|races-pass3)-test|multiplayer-stage)\.[-\w]+\.workers\.dev$/);
 assert.match(expected,/^[a-f\d]{40}$/);
 const concepts=JSON.parse(readFileSync('content/concepts.json','utf8')).concepts;
 const scenarios=JSON.parse(readFileSync('content/scenarios.json','utf8')).scenarios;
