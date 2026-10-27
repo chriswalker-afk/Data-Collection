@@ -130,6 +130,13 @@ function publicState(room,participant,now,connections,prepared=preparedView(room
     code:room.code,status:room.status,game,roundLength:room.roundLength,
     objective:room.objective||'classic',blitz:pacedPublicState(room,participant,now),
     quest:classQuestProgress(room),
+    questSetup:isClassQuest(room.objective)?{
+      metric:room.questSettings.classMetric,
+      accuracy:room.questSettings.classAccuracy,
+      correct:room.questSettings.classCorrect,
+      participation:room.questSettings.classParticipation,
+      perStudent:room.questSettings.classPerStudent
+    }:null,
     teamCount:room.teamCount||0,goalTarget:room.goalTarget||0,
     teams:prepared.teams,classQuest:prepared.classQuest,
     teacherFeedback:prepared.teacherFeedback,questionPulse:prepared.questionPulse,
