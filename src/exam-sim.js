@@ -237,7 +237,7 @@ export function reportCsv(paper,questions,methods,{includeDrafts=false}={}){
   const byId=new Map(questions.map(q=>[q.id,q]));
   const summary=paperSummary(paper,questions,methods);
   const columns=['Question ID','Question','Skill','Level','Assessment','Numeric correct','Numeric possible',
-    'Self-checked points','Self-check total','Hint used','Revision recommended',...(includeDrafts?['Written draft']:[])];
+    'Self-checked points','Self-check total','Hint used','Revision recommended',...(includeDrafts?['Written draft','Improvement note']:[])];
   function safeCell(value){
     let cell=String(value??'');
     // CSV files are often opened by spreadsheet programs. Prevent pasted text from becoming a formula.
@@ -250,9 +250,9 @@ export function reportCsv(paper,questions,methods,{includeDrafts=false}={}){
     return [q.id,q.title,q.type,q.level,numerical?'Numerical: automatically checked':'Written: student self-review',
       numerical?row.score?.correctParts??'':'',
       numerical?row.score?.totalParts??'':'',
-      numerical?'':entry.stage==='answer'?'':entry.included.length,
+      numerical?'':entry.stage==='answer'?'':entry.draft.trim()?entry.included.length:0,
       numerical?'':points.length,
-      row.hintsUsed?'Yes':'No',row.needsReview?'Yes':'No',...(includeDrafts?[numerical?'':row.draft]:[])];
+      row.hintsUsed?'Yes':'No',row.needsReview?'Yes':'No',...(includeDrafts?[numerical?'':row.draft,numerical?'':row.improvement||'']:[])];
   });
   return [columns,...rows].map(row=>row.map(safeCell).join(',')).join('\r\n')+'\r\n';
 }
