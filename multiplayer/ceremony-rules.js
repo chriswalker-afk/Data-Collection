@@ -4,6 +4,7 @@ import {teamStandings,classQuestSnapshot} from './team-rules.js';
 import {blitzStandings} from './blitz-rules.js';
 import {isRace,raceStandings} from './race-rules.js';
 import {classQuestProgress} from './class-quest-rules.js';
+import {isMosaic} from './relay-adapter.js';
 // Pass 5: entirely server-derived classroom achievements and a deterministic ceremony.
 // No individual achievement or point total is accepted from a browser request.
 const validScore=n=>Number.isSafeInteger(n)&&n>=0;
@@ -26,6 +27,10 @@ function longestFullStreak(rows){
   return best;
 }
 export function roomAwards(room){
+  // Relay awards belong to the whole classroom. Never derive an individual
+  // podium from unrelated scores or assign quiz awards without graded rows.
+  if(isMosaic(room.objective))return {standings:[],
+    earned:Object.fromEntries((room.players||[]).map(p=>[p.id,[]]))};
   const game=room.game||'which';
   const paced=room.objective==='blitz'||isRace(room.objective);
   const podium=room.objective==='class'?[]:paced?
@@ -83,6 +88,25 @@ export function roomAwards(room){
   return {standings,earned};
 }
 export function makeCeremony(room){
+  if(isMosaic(room.objective)){
+    const m=room.mosaic;
+    const earned=Object.fromEntries((room.players||[]).map(p=>[p.id,[]]));
+    const achieved=Boolean(m?.achieved&&m?.finishReason==='target');
+    const tiles=m?.tiles?.length||0,target=m?.targetTiles||0;
+    const contributors=m?.teams?.filter(team=>team.tiles>0).length||0;
+    return {earned,slides:[
+      {kind:'welcome',title:'Our Class Mosaic Celebration',
+        subtitle:'Every checked mathematical contribution builds a stronger class.'},
+      {kind:'mosaic',title:achieved?'Our class mosaic is complete!':'Our shared mathematical journey',
+        achieved,completedTiles:tiles,targetTiles:target,contributingTeams:contributors,
+        totalTeams:m?.teams?.length||0,tiles:m?.tiles?.map(tile=>({index:tile.index,teamId:tile.teamId}))||[],
+        subtitle:achieved?'Every team contributed — we achieved this together.':
+          'The full mosaic was not completed, but every verified tile represents mathematical teamwork.'},
+      {kind:'finale',title:achieved?'Together, we made it!':'Well done, mathematical collaborators!',
+        subtitle:'Keep questioning, explaining and improving together.',
+        awardedCount:0,recipientsCount:0}
+    ]};
+  }
   const {standings,earned}=roomAwards(room);
   const players=room.players||[];
   const slides=[
