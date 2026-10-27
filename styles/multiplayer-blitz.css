@@ -56,3 +56,16 @@
 @media(prefers-reduced-motion:reduce){
  .multiplayer-room.is-blitz *{scroll-behavior:auto}
 }
+
+/* Rolling window and streak progress are mathematical status, not decoration. */
+.multiplayer-stage .blitz-race-progress{
+  border:1.5px solid #87bda0;background:#d6eee0;color:#165b40;font-weight:890;
+  font-variant-numeric:tabular-nums;
+}
+.multiplayer-stage .blitz-feedback-heading{line-height:1.35}
+.multiplayer-stage.is-blitz .blitz-answer-review{max-width:100%;overflow-wrap:anywhere}
+.multiplayer-stage.is-blitz .blitz-live-summary{margin-bottom:18px}
+@media(max-width:390px){
+  .multiplayer-stage .blitz-live-summary span{flex:1 1 100%;text-align:center}
+  .multiplayer-stage.is-blitz .blitz-clock{width:100%;justify-content:center}
+}
