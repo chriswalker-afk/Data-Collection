@@ -151,6 +151,9 @@ export function createBlitzUI({button,command,refreshStage,stageKicker}){
   function render(room,isHost,stage){
     const state=room.blitz;if(!state)return;
     stage.classList.add('is-blitz');
+    const timer=create('p','blitz-clock','Preparing countdown…');
+    timer.id='blitz-clock';timer.setAttribute('aria-live','off');
+    stage.append(timer);
     if(isHost){
       stage.append(stageKicker('BLITZ · TEACHER VIEW'));
       const heading=create('h2','', 'Your class is in full flow');
