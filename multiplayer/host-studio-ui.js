@@ -1,6 +1,6 @@
 import {
   STUDIO_STORAGE_KEY, DEFAULT_DRAFT, OBJECTIVES, FORMATS, GAMES, CLASS_METRICS,
-  cleanStudioDraft, presetStudioDraft, validateStudioDraft, legacyRoomSettings, describeStudioDraft
+  cleanStudioDraft, presetStudioDraft, validateStudioDraft, liveRoomSettings, describeStudioDraft
 } from './host-studio.js';
 
 // Host Studio is a real draft/configurator, not a substitute for a game engine.
@@ -87,8 +87,11 @@ export function createHostStudio(root) {
     for(const [id,key] of Object.entries(numericFields))find(id).value=String(draft[key]);
     for(const [id,key] of Object.entries(stringFields))find(id).value=draft[key];
     find('studio-leaderboard').checked=draft.showLeaderboard;
-    find('studio-advanced-live-note').hidden=draft.objective!=='classic';
-    find('studio-advanced-future-fields').hidden=draft.objective==='classic';
+    find('studio-advanced-live-note').hidden=!['classic','blitz'].includes(draft.objective);
+    find('studio-advanced-live-note').textContent=draft.objective==='blitz'?
+      'Blitz is live with accuracy-first scoring, a varied audited question bank and an always-visible leaderboard. Additional modifiers arrive in later passes.':
+      'Classic uses the current accuracy-first scoring, full checked question bank and live leaderboard. Additional modifiers arrive with the new engines.';
+    find('studio-advanced-future-fields').hidden=['classic','blitz'].includes(draft.objective);
     renderPreview();
   }
   function renderPreview(){
@@ -102,13 +105,18 @@ export function createHostStudio(root) {
     find('studio-validation').textContent=message;
     find('studio-validation').hidden=!message;
     create.disabled=!validation.playable;
-    create.textContent=validation.playable?'Create room ↗':'Preview only · Not yet playable';
+    create.textContent=validation.playable?
+      (draft.objective==='blitz'?'Create Blitz room ↗':'Create room ↗'):
+      'Preview only · Not yet playable';
     find('studio-preview').dataset.availability=validation.playable?'live':'preview';
   }
   root.addEventListener('change',event=>{
     const field=event.target;
     if(field.name==='studio-objective'&&Object.hasOwn(OBJECTIVES,field.value)){
       draft=presetStudioDraft(draft,draft.preset,field.value);
+      if(draft.objective==='blitz'){
+        draft.difficulty='mixed';draft.questionOrder='varied';draft.showLeaderboard=true;
+      }
     }else if(field.name==='studio-format'&&Object.hasOwn(FORMATS,field.value)){
       draft.format=field.value;
     }else if(field.id==='game-mode'&&Object.hasOwn(GAMES,field.value)){
@@ -144,6 +152,6 @@ export function createHostStudio(root) {
   render();
   return {
     draft:()=>({...draft}),
-    liveSettings:()=>legacyRoomSettings(draft)
+    liveSettings:()=>liveRoomSettings(draft)
   };
 }
