@@ -18,7 +18,7 @@ test('only Bullseye/Perfect Run are races, while Classic and Blitz retain their 
  assert.deepEqual(['classic','blitz','bullseye','perfect','class'].map(isRace),
    [false,false,true,true,false]);
  assert.deepEqual(['classic','blitz','bullseye','perfect','class'].map(isPaced),
-   [false,true,true,true,false]);
+   [false,true,true,true,true]);
 });
 test('race settings are strictly validated on the Worker',()=>{
  assert.equal(validRaceSettings(settings('bullseye')),true);
