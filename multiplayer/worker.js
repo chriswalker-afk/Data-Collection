@@ -1,4 +1,5 @@
 import {DurableObject} from 'cloudflare:workers';
+import {safeAvatar,validAvatar} from './avatar.js';
 import {SCENARIOS} from './scenarios.js';
 import {ROUND_LENGTHS,cleanNickname,secureIndex} from './rules.js';
 import {GAME_MODES,validLength,questionTimeMs,makeGameDeck,safeGameQuestion,revealGameAnswer,gradeGameAnswer} from './modes.js';
@@ -90,7 +91,7 @@ function publicState(room,participant,now,connections,prepared=preparedView(room
     teacherFeedback:prepared.teacherFeedback,questionPulse:prepared.questionPulse,
     questionSeconds:questionTimeMs(game)/1000,locked:Boolean(room.locked),
     players:room.players.map(p=>({
-      id:p.id,name:p.name,score:prepared.visibleScores.get(p.id)||0,
+      id:p.id,name:p.name,avatar:safeAvatar(p.avatar),score:prepared.visibleScores.get(p.id)||0,
       teamId:p.teamId||null,online:connections.has(p.id),
       answered:prepared.answered.has(p.id)
     })),
@@ -154,7 +155,7 @@ export class GameRoom extends DurableObject{
     const room=this.room(),person=this.authenticate(token,room);
     return !person?{error:'Session not found'}:publicState(room,person,Date.now(),this.currentConnections());
   }
-  async join(name,clientKey){
+  async join(name,clientKey,avatar){
     if(!await this.allowRate('join:'+String(clientKey).slice(0,24),75,60_000))return {error:'Too many join attempts; try again shortly',status:429};
     // Re-read after the awaited limiter so simultaneous joins never overwrite
     // one another's participants from an earlier room snapshot.
@@ -166,7 +167,8 @@ export class GameRoom extends DurableObject{
     if(room.players.length>=MAX_PLAYERS)return {error:'This classroom is full'};
     if(room.players.some(p=>p.name.toLocaleLowerCase('en-GB')===nickname.toLocaleLowerCase('en-GB')))
       return {error:'Nickname already in use'};
-    const person={id:crypto.randomUUID(),token:crypto.randomUUID(),name:nickname,score:0,
+    if(avatar!==undefined&&!validAvatar(avatar))return {error:'Invalid critter configuration'};
+    const person={id:crypto.randomUUID(),token:crypto.randomUUID(),name:nickname,avatar:safeAvatar(avatar),score:0,
       teamId:nextTeamId(room.players,room.teamCount||0)};
     room.players.push(person);this.save(room);this.broadcast();
     return {code:room.code,token:person.token};
@@ -183,7 +185,12 @@ export class GameRoom extends DurableObject{
     const room=this.room(),person=this.authenticate(token,room);
     if(!person)return {error:'Session not found',status:401};
     if(!command||typeof command.type!=='string')return {error:'Invalid action'};
-    if(command.type==='lock'&&person.host&&room.status==='lobby'){
+    if(command.type==='avatar-set'&&!person.host&&room.status==='lobby'){
+      if(!validAvatar(command.avatar))return {error:'Invalid critter configuration'};
+      const player=room.players.find(p=>p.id===person.id);
+      if(!player)return {error:'Participant not found'};
+      player.avatar=safeAvatar(command.avatar);
+    }else if(command.type==='lock'&&person.host&&room.status==='lobby'){
       room.locked=true;
     }else if(command.type==='unlock'&&person.host&&room.status==='lobby'){
       room.locked=false;
@@ -349,7 +356,7 @@ export default {
     }
     const url=new URL(request.url);
     if(url.pathname==='/health'&&request.method==='GET')
-      return json(request,{ok:true,service:'sampling-arcade-multiplayer',version:6,transport:'websocket',features:['teams','class-goals','teacher-feedback','ceremony'],games:Object.keys(GAME_MODES)});
+      return json(request,{ok:true,service:'sampling-arcade-multiplayer',version:7,transport:'websocket',features:['teams','class-goals','teacher-feedback','ceremony','avatars'],games:Object.keys(GAME_MODES)});
     if(url.pathname==='/rooms'&&request.method==='POST'){
       let body;try{body=await smallJSON(request);}catch(e){return fail(request,e.message==='Request too large'?e.message:'Invalid JSON',e.message==='Request too large'?413:400);}
       const roundLength=Number(body.roundLength),game=body.game===undefined?'which':body.game;
@@ -373,7 +380,7 @@ export default {
     if(operation==='ws'&&request.method==='GET')return stub.fetch(request);
     if(operation==='join'&&request.method==='POST'){
       let body;try{body=await smallJSON(request);}catch{return fail(request,'Invalid JSON');}
-      const result=await stub.join(body.name,await fingerprint(request));
+      const result=await stub.join(body.name,await fingerprint(request),body.avatar);
       return result.error?fail(request,result.error,result.status||400):json(request,result,201);
     }
     const token=authorizedToken(request);
