@@ -5,7 +5,7 @@ import {readFileSync} from 'node:fs';
 // Never test an older staging Worker and mark the new code green.
 const api=(process.env.MULTIPLAYER_API||'').replace(/\/$/,'');
 const expected=process.env.EXPECTED_BUILD_SHA||'';
-assert.match(api,/^https:\/\/sampling-arcade-races-pass3-test\.[-\w]+\.workers\.dev$/);
+assert.match(api,/^https:\/\/sampling-arcade-(?:races-pass3-test|multiplayer-stage)\.[-\w]+\.workers\.dev$/);
 assert.match(expected,/^[a-f\d]{40}$/);
 const scenarios=JSON.parse(readFileSync('content/scenarios.json','utf8')).scenarios;
 const concepts=JSON.parse(readFileSync('content/concepts.json','utf8')).concepts;
