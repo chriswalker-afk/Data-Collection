@@ -58,7 +58,9 @@ export function createHostStudio(root) {
     }
     picker.value=String(draft.length);
     find('mode-description').textContent=draft.objective==='classic'?
-      MODE_DESCRIPTIONS[draft.game]:PACED_DESCRIPTIONS[draft.game];
+      MODE_DESCRIPTIONS[draft.game]:draft.objective==='class'?
+      'Complete independent checked tasks to build a shared class goal. Each question or board contributes to collective progress.':
+      PACED_DESCRIPTIONS[draft.game];
   }
   function show(id,visible){find(id).hidden=!visible;}
   function render(){
@@ -81,10 +83,10 @@ export function createHostStudio(root) {
     show('studio-class-goal-row',draft.objective==='classic');
     show('studio-team-count-row',draft.format==='squad'||draft.format==='relay');
     show('studio-future-settings',draft.objective!=='classic');
-    show('studio-minutes-row',['blitz','bullseye','perfect'].includes(draft.objective));
+    show('studio-minutes-row',['blitz','bullseye','perfect','class'].includes(draft.objective));
     find('studio-minutes-label').textContent=draft.objective==='blitz'?
       'Blitz time limit (minutes)':'Race safety limit (minutes)';
-    show('studio-future-note',draft.objective==='class');
+    show('studio-future-note',false);
     show('studio-accuracy-target-row',draft.objective==='bullseye');
     show('studio-accuracy-window-row',draft.objective==='bullseye');
     show('studio-streak-target-row',draft.objective==='perfect');
@@ -97,9 +99,11 @@ export function createHostStudio(root) {
     for(const [id,key] of Object.entries(numericFields))find(id).value=String(draft[key]);
     for(const [id,key] of Object.entries(stringFields))find(id).value=draft[key];
     find('studio-leaderboard').checked=draft.showLeaderboard;
-    const isPaced=['blitz','bullseye','perfect'].includes(draft.objective);
+    const isPaced=['blitz','bullseye','perfect','class'].includes(draft.objective);
     find('studio-advanced-live-note').hidden=!(draft.objective==='classic'||isPaced);
-    find('studio-advanced-live-note').textContent=isPaced?
+    find('studio-advanced-live-note').textContent=draft.objective==='class'?
+      'Class Quest has a shared progress board, not an individual leaderboard. Difficulty and alternate question-order modifiers are not yet supported.':
+      isPaced?
       'These modes use the vetted, varied question bank, checked answers and a visible leaderboard. Custom difficulty and hidden leaderboards are not yet supported.':
       'Classic uses the current checked question bank, class controls and leaderboard.';
     find('studio-advanced-future-fields').hidden=draft.objective==='classic'||isPaced;
@@ -119,7 +123,8 @@ export function createHostStudio(root) {
     create.textContent=validation.playable?
       (draft.objective==='blitz'?'Create Blitz room ↗':
         draft.objective==='bullseye'?'Create Bullseye room ↗':
-        draft.objective==='perfect'?'Create Perfect Run room ↗':'Create room ↗'):
+        draft.objective==='perfect'?'Create Perfect Run room ↗':
+        draft.objective==='class'?'Create Class Quest room ↗':'Create room ↗'):
       'Preview only · Not yet playable';
     find('studio-preview').dataset.availability=validation.playable?'live':'preview';
   }
@@ -127,7 +132,7 @@ export function createHostStudio(root) {
     const field=event.target;
     if(field.name==='studio-objective'&&Object.hasOwn(OBJECTIVES,field.value)){
       draft=presetStudioDraft(draft,draft.preset,field.value);
-      if(['blitz','bullseye','perfect'].includes(draft.objective)){
+      if(['blitz','bullseye','perfect','class'].includes(draft.objective)){
         draft.difficulty='mixed';draft.questionOrder='varied';draft.showLeaderboard=true;
       }
     }else if(field.name==='studio-format'&&Object.hasOwn(FORMATS,field.value)){
