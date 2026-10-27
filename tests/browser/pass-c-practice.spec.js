@@ -35,8 +35,10 @@ test('Build the Method presents a meaningful scenario brief and student-controll
  const current=all.find(x=>x.id===currentId);
  await expect(page.locator('.build-case-context')).toHaveText(current.context);
  await expect(page.locator('.build-case-task')).toHaveText(current.task);
- expect(current.steps.map(s=>s.text)).toEqual(expect.arrayContaining(
-   await page.locator('.exam-step-copy').allInnerTexts()));
+ for(const step of current.steps){
+  await expect(page.locator('.exam-step[data-step-id="'+step.id+'"] .exam-step-copy'))
+    .toContainText(step.text);
+ }
  await page.locator('#build-level').selectOption('develop');
  await expect(page.locator('[data-case-level]')).toHaveAttribute('data-case-level','develop');
  await expect(page.locator('.build-case-label')).toHaveText('DEVELOP CASE');
