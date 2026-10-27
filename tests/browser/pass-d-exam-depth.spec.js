@@ -126,7 +126,7 @@ test('constrained random digit model explains out-of-range labels and duplicate 
 });
 
 for(const width of [320,390,768,1280]){
- test('Pass D's extended calculations and written feedback fit a '+width+'px screen',async({page})=>{
+ test('Pass D extended calculations and written feedback fit '+width+'px',async({page})=>{
   await page.setViewportSize({width,height:800});
   await startSaved(page,'alloc-d-reef-zones');
   let dim=await overflow(page);
