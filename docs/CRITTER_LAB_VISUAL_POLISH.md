@@ -15,7 +15,7 @@ This pass changes **only presentation**. The Cloudflare Durable Object protocol,
 
 ## Verification
 
-Run `npm run check` and `npm run test:e2e` plus the existing multiplayer staging smoke test. The new browser audit checks the lobby, mobile sizes 320/390/768, 1920px projector, a 45-player roster, full-class finale, reduced motion, and no horizontal overflow. The existing ceremony test asserts correct podium placement and achievement receipts.
+Run `npm run check` and `npm run test:e2e` plus the existing multiplayer staging smoke test. The new browser audit runs in a dedicated isolated CI job (`CRITTER_VISUAL_AUDIT=1 npx playwright test tests/browser/multiplayer-critter-polish.spec.js --project=desktop-chromium --workers=1`) so its 45-player load never shares the local classroom rate limiter with the full Playwright suite. It checks the lobby, 320/390/768/1920px widths, the 45-player roster, whole-class finale, reduced motion, and horizontal overflow. The existing ceremony test asserts correct podium placement and achievement receipts.
 
 ## Revert
 
