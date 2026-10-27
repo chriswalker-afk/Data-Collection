@@ -1,4 +1,5 @@
 import {ARENA_AWARDS} from './award-catalogue.js';
+import {safeAvatar} from './avatar.js';
 import {teamStandings,classQuestSnapshot} from './team-rules.js';
 // Pass 5: entirely server-derived classroom achievements and a deterministic ceremony.
 // No individual achievement or point total is accepted from a browser request.
@@ -26,7 +27,7 @@ export function roomAwards(room){
   const podium=[...(room.players||[])].filter(p=>validScore(p.score)&&p.score>0)
     .sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name,'en-GB'))
     .map((p,index,arr)=>({
-      id:p.id,name:p.name,score:p.score,
+      id:p.id,name:p.name,avatar:safeAvatar(p.avatar),score:p.score,
       rank:index>0&&arr[index-1].score===p.score?null:index+1
     }));
   let lastRank=0;
@@ -97,7 +98,7 @@ export function makeCeremony(room){
       'No positive scores this round. Celebrate the learning, not an invented winner.'});
   for(const award of ARENA_AWARDS){
     const recipients=players.filter(p=>earned[p.id]?.includes(award.id))
-      .map(p=>({id:p.id,name:p.name}));
+      .map(p=>({id:p.id,name:p.name,avatar:safeAvatar(p.avatar)}));
     if(recipients.length)slides.push({
       kind:'award',award,title:award.name,recipients
     });

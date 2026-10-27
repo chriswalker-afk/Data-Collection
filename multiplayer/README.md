@@ -2,6 +2,10 @@
 
 The original ten Solo Arcade games remain available at `index.html`, with their own local progress and sixteen Solo trophies. Multiplayer at `multiplayer.html` runs separately, without student accounts. Its temporary, nickname-only classrooms are coordinated by a Cloudflare Worker and SQLite-backed Durable Objects.
 
+## Critter Lab character integration
+
+Student avatars are small cosmetic allowlisted configurations, not raw image uploads. The Worker validates head, body, legs and each palette at join and on authenticated lobby-only updates. WebSocket state includes each player's selected critter; previously created rooms and clients receive a safe default. The client renders the original same-origin SVG assets in the roster, leaderboard and server-derived award recipient/podium views. Server scoring, team balancing and prize criteria do not depend on avatars. Reconnection reuses stored room state; students may change their local character while waiting for the teacher.
+
 ## Classroom journey
 
 1. Teacher chooses **Which Method?**, **Speed Recall**, **Match Up** or **Sort It!**, and a challenge length. Game instructions and timings adapt to that mode.

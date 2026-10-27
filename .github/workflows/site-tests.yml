@@ -85,3 +85,7 @@ jobs:
         run: node scripts/multiplayer-smoke.mjs
         env:
           MULTIPLAYER_API: https://sampling-arcade-multiplayer-stage.chris-walker-d8b.workers.dev
+      - name: Verify cosmetic avatar protocol on staging
+        run: node scripts/multiplayer-avatar-smoke.mjs
+        env:
+          MULTIPLAYER_API: https://sampling-arcade-multiplayer-stage.chris-walker-d8b.workers.dev
