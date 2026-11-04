@@ -8,7 +8,16 @@ A polished, accessible set of Year 12 **Edexcel A level Mathematics (9MA0)** rev
 
 **UI Pass 2:** all ten activities now use consistent *Practising → What to do → Question* framing, shared controls and panel styling, and clear distinction between checked answers and self-reviewed writing. The mathematics and local student progress stores are unchanged.
 
-**Website:** https://chriswalker-afk.github.io/Data-Collection/ (published from `main` through GitHub Pages Actions).
+**Website:** https://sampling.mrwalkermaths.com/ (custom domain; original GitHub Pages address: https://chriswalker-afk.github.io/Data-Collection/). The Solo Arcade, Multiplayer Arena, My Awards and Critter Lab remain one site, published from `main` using GitHub Pages Actions.
+
+### Custom domain migration
+
+- **DNS:** Cloudflare `sampling.mrwalkermaths.com` is a DNS-only CNAME to `chriswalker-afk.github.io`.
+- **GitHub Pages setting:** In [Settings → Pages](https://github.com/chriswalker-afk/Data-Collection/settings/pages), set **Custom domain** to `sampling.mrwalkermaths.com` and click Save. This site publishes a `dist/` artifact with GitHub Actions, so a `CNAME` file would not activate the domain. Enable **Enforce HTTPS** after its certificate is approved.
+- **Multiplayer:** The Cloudflare Worker restricts browser origins. `multiplayer/origin-policy.js` explicitly permits the legacy GitHub origin and `https://sampling.mrwalkermaths.com` without opening access to arbitrary domains. The updated Worker must be deployed to production before classroom games can work at the new domain. Changing Pages DNS alone is not sufficient.
+- **Worker release:** Changes to `multiplayer/origin-policy.js` on `main` trigger [Release Sampling Arcade domain-aware Worker](.github/workflows/release-domain-worker.yml). This validates the same source revision on staging, checks browser CORS and multiplayer room creation, and only then deploys and tests production. GitHub Actions must have `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets; if not, add them and manually run that workflow from `main`. Other site updates do not redeploy the Worker.
+- **Local data:** Browser storage is origin-specific. Students using the old address should export supported progress and awards backups before switching, restore them on the new domain, and choose their Critter Lab avatar again if needed. Shared rooms are short-lived, and saved room sessions are not transferred across domains.
+
 
 **Critter Lab (new):** Students can build and independently colour an original animal avatar at [Critter Lab](./critter-lab/index.html), accessed from the Sampling homepage or the Multiplayer join screen. The builder runs entirely on the same GitHub Pages origin, saves only a versioned, allowlisted configuration in local storage, and needs no login. **Room-wide avatar visibility is not yet enabled**: no changes have been made to the Cloudflare Worker, scores or ceremonies. See [integration handover](docs/CRITTER_LAB_INTEGRATION.md).
 
