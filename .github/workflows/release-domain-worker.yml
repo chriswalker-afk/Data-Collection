@@ -1,0 +1,69 @@
+name: Release Sampling Arcade domain-aware Worker
+on:
+  push:
+    branches: [main]
+    paths:
+      # Deploy only when the Worker origin allowlist changes; regular site
+      # updates must never redeploy the classroom backend.
+      - multiplayer/origin-policy.js
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Share the staging lock with the existing exact-revision release workflow.
+concurrency:
+  group: sampling-arcade-worker-staging
+  cancel-in-progress: false
+
+jobs:
+  verify-and-release:
+    name: Validate staging, then release production Worker
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Validate domain policy and content
+        run: |
+          node --test tests/domain-portability.test.mjs
+          node --check multiplayer/worker.js
+          node scripts/build-pages.mjs
+      - name: Require real Cloudflare deployment credentials
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "::error::Set GitHub Actions secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID to release multiplayer."
+            exit 1
+          fi
+      - name: Deploy exact revision to isolated staging Worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler deploy --config multiplayer/wrangler.stage.jsonc --var BUILD_SHA:${{ github.sha }}
+      - name: Check exact staging SHA and both browser origins
+        env:
+          MULTIPLAYER_API: https://sampling-arcade-multiplayer-stage.chris-walker-d8b.workers.dev
+          EXPECTED_BUILD_SHA: ${{ github.sha }}
+        run: |
+          node scripts/staging-revision-check.mjs
+          node scripts/verify-multiplayer-origins.mjs
+          node scripts/multiplayer-smoke.mjs
+          node scripts/multiplayer-avatar-smoke.mjs
+      - name: Deploy identical source revision to production Worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler deploy --config multiplayer/wrangler.jsonc --var BUILD_SHA:${{ github.sha }}
+      - name: Verify production origin policy and real classroom service
+        env:
+          MULTIPLAYER_API: https://sampling-arcade-multiplayer.chris-walker-d8b.workers.dev
+        run: |
+          node scripts/verify-multiplayer-origins.mjs
+          node scripts/multiplayer-smoke.mjs
