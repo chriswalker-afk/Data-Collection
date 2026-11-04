@@ -1,11 +1,8 @@
 name: Release Sampling Arcade domain-aware Worker
+# Production can also be managed through the connected Cloudflare account.
+# Running Wrangler from GitHub requires real Cloudflare Actions secrets; fail
+# closed rather than automatically launch a release without credentials.
 on:
-  push:
-    branches: [main]
-    paths:
-      # Deploy only when the Worker origin allowlist changes; regular site
-      # updates must never redeploy the classroom backend.
-      - multiplayer/origin-policy.js
   workflow_dispatch:
 
 permissions:
