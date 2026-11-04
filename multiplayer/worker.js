@@ -1,4 +1,5 @@
 import {DurableObject} from 'cloudflare:workers';
+import {allowedBrowserOrigin, corsResponseOrigin} from './origin-policy.js';
 import {safeAvatar,validAvatar} from './avatar.js';
 import {SCENARIOS} from './scenarios.js';
 import {ROUND_LENGTHS,cleanNickname,secureIndex,roomCreationRateLimits} from './rules.js';
@@ -19,8 +20,7 @@ import {
 } from './team-rules.js';
 
 // A separate, short-lived classroom service; no student identities or logins.
-const LIVE_ORIGIN='https://chriswalker-afk.github.io';
-const LOCAL_ORIGINS=new Set(['http://127.0.0.1:4173','http://localhost:4173']);
+// The strict allowlist lives in origin-policy.js so both public hosts share the same Worker.
 const ROOM_TTL_MS=3*60*60*1000;
 const QUESTION_MS=20_000;
 const MAX_PLAYERS=45;
@@ -41,14 +41,14 @@ function authorizedToken(request){
 function headers(request){
   const origin=request.headers.get('Origin');
   return {'content-type':'application/json; charset=utf-8','cache-control':'no-store',
-    'access-control-allow-origin':origin&&LOCAL_ORIGINS.has(origin)?origin:LIVE_ORIGIN,
+    'access-control-allow-origin':corsResponseOrigin(origin),
     'vary':'Origin'};
 }
 function json(request,data,status=200){return new Response(JSON.stringify(data),{status,headers:headers(request)});}
 function fail(request,message,status=400){return json(request,{error:message},status);}
 function validateOrigin(request){
   const origin=request.headers.get('Origin');
-  return !origin||origin===LIVE_ORIGIN||LOCAL_ORIGINS.has(origin);
+  return allowedBrowserOrigin(origin);
 }
 function pickCode(){let code='';for(let i=0;i<6;i++)code+=String(secureIndex(10));return code;}
 async function fingerprint(request){
